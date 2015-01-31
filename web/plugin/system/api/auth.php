@@ -6,41 +6,65 @@ use \engine\lib\secure as Secure;
 
 class auth {
 
-    private $permissions = array();
     private $authKey = 'auth_id';
+    private $authUser = 'auth_user';
 
-    public function getAuthID () {
-        global $app;
+    public function isSignedIn () {
+        return !empty($_SESSION[$this->authKey]);
+    }
+
+    public function getAuthenticatedUser () {
+        // global $app;
         if (!isset($_SESSION[$this->authKey]))
             $_SESSION[$this->authKey] = null;
-        if (isset($_SESSION[$this->authKey])) {
-            $this->permissions = API::getAPI('account:permissions')->getPermissions($_SESSION[$this->authKey]);
+        // if (isset($_SESSION[$this->authKey])) {
+            // $this->permissions = API::getAPI('account:permissions')->getPermissions($_SESSION[$this->authKey]);
             // $configPermissions = $app->getSettings()->data->getPermissions($_SESSION['UserID']);
             // $permissions = $this->fetch($configPermissions, true) ?: array();
-            if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
-                return $this->clearAuthID();
-            }
-        }
+        // }
         return $_SESSION[$this->authKey];
     }
 
+    public function getAuthenticatedUserJSON () {
+        $user = $this->getAuthenticatedUser();
+        if (empty($user)) {
+            return null;
+        }
+        unset($user['Addresses']);
+        return json_encode($user);
+    }
+
     public function ifYouCan ($action) {
-        if (!isset($this->permissions['Can' . $action]))
+        $user = $this->getAuthenticatedUser();
+        if (empty($user)) {
             return false;
-        return $this->permissions['Can' . $action];
+        }
+        if (!isset($user['Permissions']['Can' . $action]))
+            return false;
+        return $user['Permissions']['Can' . $action];
     }
 
     public function updateSessionAuth () {
-        $authID = $this->getAuthID();
-        setcookie($this->authKey, $authID, time() + 3600, '/');
+        global $app;
+        if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
+            $this->clearAuthID();
+        }
+        $user = $this->getAuthenticatedUser();
+        // $authID = $this->getAuthID();
+        $authID = empty($user) ? null : $user['ID'];
+        $prolongation = 0;
+        if ($this->isSignedIn()) {
+            $prolongation = 3600;
+        }
+        setcookie($this->authKey, $authID, time() + $prolongation, '/');
     }
 
     public function clearAuthID () {
         if (!empty($_SESSION[$this->authKey])) {
-            API::getAPI('account:user')->setOffline($_SESSION[$this->authKey]);
+            API::getAPI('account:user')->setOffline($_SESSION[$this->authKey]['ID']);
         }
         $_SESSION[$this->authKey] = null;
-        $this->permissions = array();
+        // $this->permissions = array();
         return null;
     }
 
@@ -68,17 +92,18 @@ class auth {
             $password = Secure::EncodeUserPassword($password);
 
             $user = API::getAPI('account:user')->getActiveUserByCredentials($email, $password);
-            $UserID = null;
+            // $UserID = null;
             // var_dump($config);
             if (empty($user))
                 $resp['error'] = 'WrongCredentials';
             else {
-                $UserID = intval($user['ID']);
-                $_SESSION[$this->authKey] = $UserID;
+                // $UserID = $user['ID'];
+                // $_SESSION[$this->authKey] = $UserID;
+                $_SESSION[$this->authKey] = $user;
                 // set online state for account
-                API::getAPI('account:user')->setOnline($UserID);
+                API::getAPI('account:user')->setOnline($user['ID']);
             }
-            $resp[$this->authKey] = $this->getAuthID();
+            // $resp[$this->authKey] = $this->getAuthID();
             $this->updateSessionAuth();
         // }
         // if (isset($req->get['signout'])) {

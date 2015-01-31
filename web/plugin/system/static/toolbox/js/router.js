@@ -24,6 +24,14 @@ define("plugin/system/toolbox/js/router", [
         });
     });
 
+    Backbone.on('changed:plugin-shop-currency', function () {
+        settings.fetch({
+            success: function() {
+                Router.prototype.settings = settings.toSettings();
+            }
+        });
+    });
+
     var routes = {
         // "shop/stats": "stats",
         "!/system": "dashboard",
@@ -54,7 +62,7 @@ define("plugin/system/toolbox/js/router", [
         },
 
         dashboard: function () {
-            require(['plugin/shop/toolbox/js/view/dashboard'], function (ViewDashboard) {
+            require(['plugin/system/toolbox/js/view/dashboard'], function (ViewDashboard) {
                 // debugger;
                 // create new view
                 var dashboard = new ViewDashboard();

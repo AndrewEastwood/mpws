@@ -64,6 +64,9 @@ class user {
         $query["fields"] = array("ID");
         $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
         $user = $app->getDB()->query($query);
+        var_dump($user);
+        if (!is_null($user))
+            $user = $this->__attachUserDetails($user);
         return $user;
     }
 
