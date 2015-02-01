@@ -68,6 +68,7 @@ class site {
             URL_PUBLIC_TITLE: '" . $Title . "',
             URL_API: '" . $urls['api'] . "',
             URL_UPLOAD: '" . $urls['upload'] . "',
+            AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
             USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . ",
             URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',

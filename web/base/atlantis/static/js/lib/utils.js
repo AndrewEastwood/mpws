@@ -150,7 +150,8 @@ define("default/js/lib/utils", [
             queryParams: Utils.isCollectionView(obj) && obj.collection.queryParams || {},
             // displayItems: obj && obj.displayItems || [],
             instances: APP.instances,
-            isToolbox: APP.config.ISTOOLBOX
+            isToolbox: APP.config.ISTOOLBOX,
+            appConfig: APP.config
         }
     }
 

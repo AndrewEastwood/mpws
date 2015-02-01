@@ -8,7 +8,9 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
         // menu
         menu: {
             title: 'Система',
-            customers: 'Сайти'
+            customers: 'Сайти',
+            migrations: 'Міграції БД',
+            users: 'Користувачі'
         }
 
 

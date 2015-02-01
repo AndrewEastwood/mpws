@@ -1,33 +1,18 @@
-<a href="javascript://"><i class="fa fa-shopping-cart fa-fw"></i> {{lang.menu.title}}<span class="fa arrow"></span></a>
+<a href="javascript://"><i class="fa fa-gear fa-fw"></i> {{lang.menu.title}}<span class="fa arrow"></span></a>
 <ul class="nav nav-second-level collapse">
-    <li rel="menu" class="menu-shop-products">
-        <a href="{{bb_link instances.shop.urls.contentList asRoot=true}}">
-            <i class="fa fa-fw fa-shopping-cart"></i> {{lang.menu.customers}}
+    <li rel="menu" class="menu-system-customers">
+        <a href="{{bb_link instances.system.urls.customers asRoot=true}}">
+            <i class="fa fa-fw fa-sitemap"></i> {{lang.menu.customers}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-orders">
-        <a href="{{bb_link instances.shop.urls.ordersList asRoot=true}}">
-            <i class="fa fa-fw fa-usd"></i> {{lang.pluginMenu_Orders}}
+    <li rel="menu" class="menu-system-migrations">
+        <a href="{{bb_link instances.system.urls.migrations asRoot=true}}">
+            <i class="fa fa-fw fa-database"></i> {{lang.menu.migrations}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-settings">
-        <a href="{{bb_link instances.shop.urls.shopSettings asRoot=true}}">
-            <i class="fa fa-fw fa-cog"></i> {{lang.pluginMenu_Settings}}
-        </a>
-    </li>
-    <li rel="menu" class="menu-shop-promo">
-        <a href="{{bb_link instances.shop.urls.promo asRoot=true}}">
-            <i class="fa fa-fw fa-gift"></i> {{lang.pluginMenu_Promo}}
-        </a>
-    </li>
-    <li rel="menu" class="menu-shop-feeds">
-        <a href="{{bb_link instances.shop.urls.feeds asRoot=true}}">
-            <i class="fa fa-fw fa-retweet"></i> {{lang.pluginMenu_Feeds}}
-        </a>
-    </li>
-    <li rel="menu" class="menu-shop-reports hidden">
-        <a href="{{bb_link instances.shop.urls.reports asRoot=true}}">
-            <i class="fa fa-fw fa-signal"></i> {{lang.pluginMenu_Reports}}
+    <li rel="menu" class="menu-system-users">
+        <a href="{{bb_link instances.system.urls.users asRoot=true}}">
+            <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>
 </ul>

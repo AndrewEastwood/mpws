@@ -1197,7 +1197,7 @@ class dbquery {
     public static function shopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
         global $app;
         if (!is_string($comparator))
-            $comparator = self::DEFAULT_COMPARATOR;
+            $comparator = $app->getDB()->DEFAULT_COMPARATOR;
         $config = self::shopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(

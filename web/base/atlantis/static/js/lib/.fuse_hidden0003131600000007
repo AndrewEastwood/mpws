@@ -11,8 +11,8 @@ define("default/js/lib/auth", [
     var Auth = _.extend({
         verifyStatus: function () {
             // debugger;
-            var user = Auth.getUserID();
-            if (Auth.user === user) {
+            var user = Auth.getSessionUser();
+            if (Auth.user && Auth.user.ID === user.ID) {
                 return;
             }
             Auth.user = user;
@@ -24,8 +24,13 @@ define("default/js/lib/auth", [
                 Sandbox.eventNotify("global:auth:status:inactive");
             }
         },
-        getUserID: function () {
+        getSessionUser: function () {
             return Cache.getCookie(authKey) || null;
+        },
+        getUserID: function () {
+            debugger
+            var user = Auth.getSessionUser();
+            return user ? user.ID : null;
         },
         getStatus: function (callback) {
             var query = {
@@ -33,7 +38,7 @@ define("default/js/lib/auth", [
             };
             return $.get(APP.getAuthLink(query), function (response) {
                 if (_.isFunction(callback))
-                    callback(Auth.getUserID(), response);
+                    callback(Auth.getSessionUser(), response);
             });
         },
         signin: function (email, password, remember, callback) {
@@ -46,7 +51,7 @@ define("default/js/lib/auth", [
                 remember: remember,
             }, function (response) {
                 if (_.isFunction(callback))
-                    callback(Auth.getUserID(), response);
+                    callback(Auth.getSessionUser(), response);
             });
         },
         signout: function (callback) {
@@ -58,7 +63,7 @@ define("default/js/lib/auth", [
                 type: 'DELETE',
                 success: function (response) {
                     if (_.isFunction(callback))
-                        callback(Auth.getUserID(), response);
+                        callback(Auth.getSessionUser(), response);
                 }
             });
         }

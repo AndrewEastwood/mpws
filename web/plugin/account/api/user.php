@@ -32,6 +32,9 @@ class user {
         unset($user['Permissions']['DateCreated']);
         unset($user['Password']);
 
+        // customizations
+        $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
+
         return $user;
     }
 
@@ -61,10 +64,10 @@ class user {
         global $app;
         $query = dbquery::getUserByCredentials($login, $password);
         // avoid removed account
-        $query["fields"] = array("ID");
+        // $query["fields"] = array("ID");
         $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
         $user = $app->getDB()->query($query);
-        var_dump($user);
+        // var_dump($user);
         if (!is_null($user))
             $user = $this->__attachUserDetails($user);
         return $user;

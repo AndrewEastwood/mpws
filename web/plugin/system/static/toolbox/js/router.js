@@ -5,12 +5,8 @@ define("plugin/system/toolbox/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/system/common/js/collection/settings',
     'default/js/lib/handlebarsHelpers'
-], function (require, Sandbox, $, _, Backbone, Cache, SiteSettings) {
-
-    var settings = new SiteSettings();
-    var $dfdSettings = settings.fetch();
+], function (require, Sandbox, $, _, Backbone, Cache) {
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         require(['plugin/system/toolbox/js/view/menu'], function (ViewMenu) {
@@ -21,14 +17,6 @@ define("plugin/system/toolbox/js/router", [
                 el: menu.$el,
                 append: true
             });
-        });
-    });
-
-    Backbone.on('changed:plugin-shop-currency', function () {
-        settings.fetch({
-            success: function() {
-                Router.prototype.settings = settings.toSettings();
-            }
         });
     });
 
@@ -62,16 +50,16 @@ define("plugin/system/toolbox/js/router", [
         },
 
         dashboard: function () {
-            require(['plugin/system/toolbox/js/view/dashboard'], function (ViewDashboard) {
-                // debugger;
-                // create new view
-                var dashboard = new ViewDashboard();
-                dashboard.render();
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'DashboardForPlugin_shop',
-                    el: dashboard.$el
-                });
-            });
+            // require(['plugin/system/toolbox/js/view/dashboard'], function (ViewDashboard) {
+            //     // debugger;
+            //     // create new view
+            //     var dashboard = new ViewDashboard();
+            //     dashboard.render();
+            //     Sandbox.eventNotify('global:content:render', {
+            //         name: 'DashboardForPlugin_shop',
+            //         el: dashboard.$el
+            //     });
+            // });
         },
         productCreate: function () {
             require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
@@ -300,14 +288,6 @@ define("plugin/system/toolbox/js/router", [
             });
         }
 
-    }, {
-        preload: function (callback) {
-            $dfdSettings.done(function () {
-                Router.prototype.settings = settings.toSettings();
-                // console.log('shop settings ready: calling callback');
-                callback();
-            });
-        }
     });
 
     return Router;
