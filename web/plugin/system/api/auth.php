@@ -30,7 +30,7 @@ class auth {
     public function refreshSessionUserInfo () {
         $user = $this->getAuthenticatedUser();
         if (!empty($user)) {
-            $user = API::getAPI('account:user')->getUserByID($user['ID']);
+            $user = API::getAPI('system:user')->getUserByID($user['ID']);
         }
         $_SESSION[$this->authKey] = $user;
         $this->updateSessionAuth();
@@ -52,7 +52,7 @@ class auth {
         $prolongation = 0;
         $authID = null;
         if ($user) {
-            $user = API::getAPI('account:user')->getUserByID($user['ID']);
+            $user = API::getAPI('system:user')->getUserByID($user['ID']);
             $_SESSION[$this->authKey] = $user;
             $authID = $user['ID'];
             if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
@@ -66,7 +66,7 @@ class auth {
 
     public function clearAuthID () {
         if (!empty($_SESSION[$this->authKey])) {
-            API::getAPI('account:user')->setOffline($_SESSION[$this->authKey]['ID']);
+            API::getAPI('system:user')->setOffline($_SESSION[$this->authKey]['ID']);
         }
         $_SESSION[$this->authKey] = null;
         // $this->permissions = array();
@@ -96,7 +96,7 @@ class auth {
 
             $password = Secure::EncodeUserPassword($password);
 
-            $user = API::getAPI('account:user')->getActiveUserByCredentials($email, $password);
+            $user = API::getAPI('system:user')->getActiveUserByCredentials($email, $password);
             // $UserID = null;
             // var_dump($config);
             if (empty($user))
@@ -108,7 +108,7 @@ class auth {
                 // $_SESSION[$this->authKey] = $UserID;
                 $_SESSION[$this->authKey] = $user;
                 // set online state for account
-                API::getAPI('account:user')->setOnline($user['ID']);
+                API::getAPI('system:user')->setOnline($user['ID']);
             }
             // $resp[$this->authKey] = $this->getAuthID();
             $this->updateSessionAuth();

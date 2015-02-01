@@ -1,12 +1,12 @@
-define("plugin/system/toolbox/js/view/listCustomers", [
+define("plugin/system/toolbox/js/view/listUsers", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
     /* collection */
-    "plugin/system/toolbox/js/collection/listCustomers",
+    "plugin/system/toolbox/js/collection/listUsers",
     /* template */
-    'default/js/plugin/hbs!plugin/system/toolbox/hbs/buttonMenuCustomerListItem',
+    'default/js/plugin/hbs!plugin/system/toolbox/hbs/buttonMenuUserListItem',
     /* lang */
     'default/js/plugin/i18n!plugin/system/toolbox/nls/translation',
     /* extensions */
@@ -14,7 +14,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, lang, Spinner) {
+], function (Sandbox, Backbone, Utils, Backgrid, CollectionUsers, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -257,7 +257,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
     var ListOrders = Backbone.View.extend({
         initialize: function (options) {
             this.options = options || {};
-            this.collection = this.collection || new CollectionCustomers();
+            this.collection = this.collection || new CollectionUsers();
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'request', this.startLoadingAnim);
             this.listenTo(this.collection, 'sync error', this.stopLoadingAnim);

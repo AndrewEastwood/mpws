@@ -32,7 +32,7 @@ define("customer/js/router", [
     $('head title').text(APP.config.URL_PUBLIC_TITLE);
     $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_TITLE);
 
-    if (!APP.hasPlugin('account')) {
+    if (!APP.hasPlugin('system')) {
         throw "Account plugin is unavailable";
     }
 

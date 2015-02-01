@@ -51,16 +51,16 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             }
         };
 
-        var columnAccountFullName = {
-            name: "AccountFullName",
-            label: lang.pluginMenu_Orders_Grid_Column_AccountFullName,
+        var columnUserFullName = {
+            name: "UserFullName",
+            label: lang.pluginMenu_Orders_Grid_Column_UserFullName,
             cell: "string",
             editable: false
         };
 
-        var columnAccountPhone = {
-            name: "AccountPhone",
-            label: lang.pluginMenu_Orders_Grid_Column_AccountPhone,
+        var columnUserPhone = {
+            name: "UserPhone",
+            label: lang.pluginMenu_Orders_Grid_Column_UserPhone,
             cell: "string",
             editable: false
         };
@@ -175,8 +175,8 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         return _.extend({}, {
             columnActions: columnActions,
             columnHash: columnHash,
-            columnAccountFullName: columnAccountFullName,
-            columnAccountPhone: columnAccountPhone,
+            columnUserFullName: columnUserFullName,
+            columnUserPhone: columnUserPhone,
             columnInfoTotal: columnInfoTotal,
             columnHasPromo: columnHasPromo,
             columnDiscount: columnDiscount,

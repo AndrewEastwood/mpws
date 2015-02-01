@@ -75,22 +75,22 @@
                     {{#if instances.shop.settings.ShowName._isActive}}
                     <li class="list-group-item">
                         <span class="prefix">Імя:</span>
-                        <span><strong>{{data.account.FirstName}} {{data.account.LastName}}</strong></span>
+                        <span><strong>{{data.user.FirstName}} {{data.user.LastName}}</strong></span>
                     </li>
                     {{/if}}
                     {{#if instances.shop.settings.ShowEMail._isActive}}
                     <li class="list-group-item">
                         <span class="prefix">Ел.адреса:</span>
-                        {{#if data.account.EMail}}
+                        {{#if data.user.EMail}}
                             <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left hidden"></i>
                         {{/if}}
-                        <span><strong>{{data.account.EMail}}</strong></span>
+                        <span><strong>{{data.user.EMail}}</strong></span>
                     </li>
                     {{/if}}
                     {{#if instances.shop.settings.ShowPhone._isActive}}
                     <li class="list-group-item">
                         <span class="prefix">Телефон:</span>
-                        <span><strong>{{data.account.Phone}}</strong></span>
+                        <span><strong>{{data.user.Phone}}</strong></span>
                     </li>
                     {{/if}}
                 </ul>

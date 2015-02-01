@@ -59,8 +59,13 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
             var _orders = resp.items;
             _(_orders).map(function (orderEntry) {
                 // debugger;
-                orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
-                orderEntry.AccountPhone = orderEntry.account.Phone;
+                orderEntry.AccountFullName = '';
+                orderEntry.AccountPhone = '';
+                orderEntry.AccountPhone = '';
+                if (orderEntry.user) {
+                    orderEntry.UserFullName = orderEntry.user.FirstName + ' ' + orderEntry.user.LastName;
+                    orderEntry.UserPhone = orderEntry.user.Phone;
+                }
                 orderEntry.InfoTotal = orderEntry.info.total;
                 orderEntry.HasPromo = !!orderEntry.promo;
                 orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;

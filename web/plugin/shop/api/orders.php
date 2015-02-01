@@ -172,8 +172,8 @@ class orders {
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
-        $apiAccountUser = API::getAPI('account:user');
-        $apiAccountAddr = API::getAPI('account:address');
+        $apiAccountUser = API::getAPI('system:user');
+        $apiAccountAddr = API::getAPI('system:address');
         $formSettings = API::getAPI('shop:settings')->getSettingsMapFormOrder();
 
         // var_dump($formSettings);
@@ -288,7 +288,7 @@ class orders {
             // start creating order
             $dataOrder = array();
             $dataOrder["UserID"] = $userID;
-            $dataOrder["AccountAddressesID"] = $addressID;
+            $dataOrder["UserAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
             $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
             $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
@@ -441,7 +441,7 @@ class orders {
 
         $orderID = isset($order['ID']) ? $order['ID'] : null;
         $order['promo'] = null;
-        $order['account'] = null;
+        $order['user'] = null;
         $order['address'] = null;
         $order['delivery'] = null;
         $productItems = array();
@@ -500,13 +500,13 @@ class orders {
             );
             // $order['_currencyName'] = $customerCurrencyName;
             // attach account and address
-            if ($app->getSite()->hasPlugin('account')) {
-                if (isset($order['AccountAddressesID']))
-                    $order['address'] = API::getAPI('account:address')->getAddressByID($order['AccountAddressesID']);
+            if ($app->getSite()->hasPlugin('system')) {
+                if (isset($order['UserAddressesID']))
+                    $order['address'] = API::getAPI('system:address')->getAddressByID($order['UserAddressesID']);
                 if (isset($order['UserID']))
-                    $order['account'] = API::getAPI('account:user')->getUserByID($order['UserID']);
+                    $order['user'] = API::getAPI('system:user')->getUserByID($order['UserID']);
                 unset($order['UserID']);
-                unset($order['AccountAddressesID']);
+                unset($order['UserAddressesID']);
             }
             // get promo
             if (!empty($order['PromoID']))
