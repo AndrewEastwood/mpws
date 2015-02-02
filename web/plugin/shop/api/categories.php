@@ -242,7 +242,7 @@ class categories {
             $success = true;
         } catch (Exception $e) {
             $app->getDB()->rollBack();
-            $errors[] = 'CategoryUpdateError';
+            $errors[] = 'CategoryDeleteError';
         }
 
         $result = $this->getCategoryByID($CategoryID);

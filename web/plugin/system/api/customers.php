@@ -1,11 +1,18 @@
 <?php
 namespace web\plugin\system\api;
 
+use \engine\lib\api as API;
+use \engine\lib\validate as Validate;
 use Exception;
 
 class customers {
 
     var $customersCache = array();
+    private $_statuses = array('ACTIVE', 'REMOVED');
+
+    public function getCustomerStatuses () {
+        return $this->_statuses;
+    }
 
     public function switchToDefaultCustomer () {
         global $app;
@@ -83,7 +90,7 @@ class customers {
         // adjusting
         $ID = intval($customer['ID']);
         $customer['ID'] = $ID;
-        $customer['Settings'] = $this->getCustomerSettings($ID) ?: array();
+        $customer['Settings'] = API::getAPI('system:settings')->getSettings($ID);
         // var_dump($customer);
         return $customer;
     }
@@ -120,32 +127,138 @@ class customers {
                 return $_items;
             }
         );
+        $options['useCustomerID'] = false;
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getCustomerSettings ($ID) {
         global $app;
-        $config = dbquery::getCustomerSettings($ID);
-        $settingsRaw = $app->getDB()->query($config, false);
-        $settings = array();
-        foreach ($settingsRaw as $key => $value) {
-            $settings[$value['Property']] = $value['Value'];
+
+    }
+
+    public function createCustomer ($reqData) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        $CustomerID = null;
+
+        $validatedDataObj = Validate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 100)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $app->getDB()->beginTransaction();
+
+                $configCreateCustomer = dbquery::createCustomer($validatedValues);
+                $CustomerID = $app->getDB()->query($configCreateCustomer, false) ?: null;
+
+                if (empty($CustomerID))
+                    throw new Exception('CustomerCreateError');
+
+                $app->getDB()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $app->getDB()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if ($success && !empty($CustomerID))
+            $result = $this->getCustomerByID($CustomerID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function updateCustomer ($CustomerID, $reqData) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        $CustomerID = null;
+
+        $validatedDataObj = Validate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 100)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $app->getDB()->beginTransaction();
+
+                $configCreateCustomer = dbquery::updateCustomer($validatedValues);
+                $CustomerID = $app->getDB()->query($configCreateCustomer, false) ?: null;
+
+                if (empty($CustomerID))
+                    throw new Exception('CustomerUpdateError');
+
+                $app->getDB()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $app->getDB()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if ($success && !empty($CustomerID))
+            $result = $this->getCustomerByID($CustomerID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function removeCustomer ($CustomerID) {
+        global $app;
+        $errors = array();
+        $success = false;
+
+        try {
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::deleteCustomer($CustomerID);
+            $app->getDB()->query($config, false);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = 'CustomerDeleteError';
         }
-        // var_dump($settings);
-        return $settings;
+
+        $result = $this->getCustomerByID($CustomerID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
-    public function addCustomer () {
-
-    }
-
-    public function updateCustomer () {
-        
-    }
-
-    public function removeCustomer () {
-        
+    public function get (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            if (is_numeric($req->get['id'])) {
+                $CustomerID = intval($req->get['id']);
+                $resp = $this->getCustomerByID($CustomerID);
+            } else {
+                $resp = $this->getCustomerByName($req->get['id']);
+            }
+        } else {
+            $resp = $this->getCustomers_List($req->get);
+        }
     }
 
 /*    public function get (&$resp, $req) {

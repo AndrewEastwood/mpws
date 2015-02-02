@@ -1,7 +1,7 @@
 <?php
 namespace web\plugin\system\api;
+
 use \engine\lib\validate as Validate;
-use \engine\lib\api as API;
 
 class address {
 
@@ -71,7 +71,7 @@ class address {
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateUser = dbquery::addAddress($data);
+                $configCreateUser = dbquery::createAddress($data);
 
                 $AddressID = $app->getDB()->query($configCreateUser) ?: null;
 

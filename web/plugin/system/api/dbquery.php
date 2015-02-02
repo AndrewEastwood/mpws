@@ -7,6 +7,7 @@ class dbquery {
     public static $statusCustomer = array('ACTIVE','REMOVED');
     public static $statusCustomerSettings = array('ACTIVE','DISABLED');
 
+    // TASKS
     public static function addTask ($data) {
         global $app;
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -169,6 +170,12 @@ class dbquery {
         ));
     }
 
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // CUSTOMERS
+    // -----------------------------------------------
+    // -----------------------------------------------
+
     public static function getCustomer ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
@@ -254,7 +261,55 @@ class dbquery {
         return $config;
     }
 
-    public static function getCustomerSetting ($customerID, $id = null) {
+    public static function createCustomer ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customer",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public static function updateCustomer ($CustomerID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customer",
+            "condition" => array(
+                "ID" => $app->getDB()->createCondition($CustomerID)
+            ),
+            "action" => "update",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public static function deleteCustomer ($CustomerID) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["Status"] = "REMOVED";
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customer",
+            "condition" => array(
+                "ID" => $app->getDB()->createCondition($CustomerID)
+            ),
+            "action" => "update",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // CUSTOMERS SETTINGS
+    // -----------------------------------------------
+    // -----------------------------------------------
+
+    public static function getCustomerSettingByID ($customerID, $id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_customerSettings",
@@ -280,10 +335,9 @@ class dbquery {
         return $config;
     }
 
-
-    public static function addCustomerParameter ($data) {
+    public static function createCustomerSettings ($data) {
         global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();//???? data is array with settings
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_customerSettings",
             "action" => "insert",
@@ -291,6 +345,25 @@ class dbquery {
             "options" => null
         ));
     }
+
+    public static function updateCustomerSettings ($data) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customerSettings",
+            "action" => "update",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+
+
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // USERS
+    // -----------------------------------------------
+    // -----------------------------------------------
 
 
     public static function getUser () {
@@ -332,7 +405,6 @@ class dbquery {
         );
         return $config;
     }
-
 
     public static function getUserByValidationString ($ValidationString) {
         global $app;
@@ -402,7 +474,7 @@ class dbquery {
         ));
     }
 
-    public static function online ($UserID) {
+    public static function setUserOnline ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_users",
@@ -418,7 +490,7 @@ class dbquery {
         ));
     }
 
-    public static function offline ($UserID) {
+    public static function setUserOffline ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_users",
@@ -434,6 +506,12 @@ class dbquery {
         ));
     }
 
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // USER PERMISSIONS
+    // -----------------------------------------------
+    // -----------------------------------------------
     public static function getPermissions ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
@@ -449,7 +527,7 @@ class dbquery {
         ));
     }
 
-    public static function addPermissions ($data) {
+    public static function createPermissions ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -475,6 +553,26 @@ class dbquery {
         ));
     }
 
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // USER ADDRESSES
+    // -----------------------------------------------
+    // -----------------------------------------------
+    public static function getAddress ($AddressID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_userAddresses",
+            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
+            "condition" => array(
+                "ID" => $app->getDB()->createCondition($AddressID),
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
     public static function getUserAddresses ($UserID, $withRemoved = false) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
@@ -492,36 +590,7 @@ class dbquery {
         return $config;
     }
 
-    // public static function getUserAddress ($UserID, $AddressID) {
-    //     return $app->getDB()->createDBQuery(array(
-    //         "source" => "mpws_userAddresses",
-    //         "fields" => array("*"),
-    //         "condition" => array(
-    //             "ID" => $app->getDB()->createCondition($AddressID),
-    //             "UserID" => $app->getDB()->createCondition($UserID),
-    //             "Status" => $app->getDB()->createCondition("ACTIVE")
-    //         ),
-    //         "options" => array(
-    //             "expandSingleRecord" => true
-    //         )
-    //     ));
-    // }
-
-    public static function getAddress ($AddressID) {
-        global $app;
-        return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_userAddresses",
-            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($AddressID),
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
-    public static function addAddress ($data) {
+    public static function createAddress ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -563,7 +632,11 @@ class dbquery {
         ));
     }
 
-    // >>>> User statistics
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // USER STATS
+    // -----------------------------------------------
+    // -----------------------------------------------
     public static function stat_UsersOverview () {
         global $app;
         $config = self::getUser();
@@ -600,7 +673,6 @@ class dbquery {
         unset($config['additional']);
         return $config;
     }
-    // <<<< User statistics
 }
 
 ?>

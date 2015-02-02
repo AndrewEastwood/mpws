@@ -449,6 +449,10 @@ class database {
         $limit = $dsConfig['limit'];
         $page = 1;
         $items = array();
+        $useCustomerID = true;
+        if (isset($options['useCustomerID'])) {
+            $useCustomerID = $options['useCustomerID'];
+        }
 
         if ($dsConfig['action'] !== "select")
             throw new Exception("ErrorProcessingDataListMethod", 1);
@@ -482,8 +486,8 @@ class database {
         // var_dump($dsConfig['condition']);
         // get data total records
         $configCount = $this->getTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
-        
-        $countData = $this->query($configCount);
+
+        $countData = $this->query($configCount, $useCustomerID);
         $count = intval($countData["ItemsCount"]);
 
         if (!empty($options)) {
@@ -516,7 +520,7 @@ class database {
 
         // var_dump($dsConfig);
         // get data
-        $items = $this->query($dsConfig) ?: array();
+        $items = $this->query($dsConfig, $useCustomerID) ?: array();
         // var_dump($items);
 
         if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
@@ -541,6 +545,7 @@ class database {
             $listInfo["order"] = $dsConfig['order']['ordering'];
         }
 
+        $rez["type"] = "list";
         $rez["info"] = $listInfo;
         $rez["items"] = $items ?: array();
 

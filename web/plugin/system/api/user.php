@@ -244,12 +244,12 @@ class user {
 
     public function setOffline ($UserID) {
         global $app;
-        $app->getDB()->query(dbquery::offline($UserID));
+        $app->getDB()->query(dbquery::setUserOffline($UserID));
     }
 
     public function setOnline ($UserID) {
         global $app;
-        $app->getDB()->query(dbquery::online($UserID));
+        $app->getDB()->query(dbquery::setUserOnline($UserID));
     }
 
 

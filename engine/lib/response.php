@@ -15,8 +15,9 @@ class response {
     }
 
     static function getJSONResponse () {
-        $output = new \engine\lib\dataobject(self::$_RESPONSE);
-        $_out = $output->toJSON();
+        // $output = new \engine\lib\dataobject(self::$_RESPONSE);
+        // $_out = $output->toJSON();
+        $_out = json_encode(self::$_RESPONSE);
         if ($_out === "null")
             $_out = "{}";
         return $_out;
