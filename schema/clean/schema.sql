@@ -44,9 +44,13 @@ DROP TABLE IF EXISTS `mpws_customerSettings`;
 CREATE TABLE `mpws_customerSettings` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Property` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Value` text COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','DISABLED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Title` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT 'no title',
+  `Plugins` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'system',
+  `Lang` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT 'en-US',
+  `Locale` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'en',
+  `Host` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT 'localhost',
+  `Protocol` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'http',
+  `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   UNIQUE KEY `ID_2` (`ID`),
   KEY `CustomerID` (`CustomerID`),
@@ -106,6 +110,7 @@ CREATE TABLE `mpws_permissions` (
   `CanUpload` tinyint(1) NOT NULL DEFAULT '0',
   `CanViewReports` tinyint(1) NOT NULL,
   `CanAddUsers` tinyint(1) NOT NULL,
+  `CanMaintain` tinyint(1) NOT NULL DEFAULT '0',
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -476,7 +481,7 @@ CREATE TABLE `shop_orders` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `UserID` int(11) DEFAULT NULL,
-  `AccountAddressesID` int(11) NOT NULL,
+  `UserAddressesID` int(11) NOT NULL,
   `DeliveryID` int(11) DEFAULT NULL,
   `ExchangeRateID` int(11) NOT NULL,
   `CustomerCurrencyRate` decimal(10,2) NOT NULL,
@@ -494,14 +499,14 @@ CREATE TABLE `shop_orders` (
   KEY `AccountID` (`UserID`),
   KEY `Hash` (`Hash`),
   KEY `CustomerID` (`CustomerID`),
-  KEY `AccountAddressesID` (`AccountAddressesID`),
+  KEY `AccountAddressesID` (`UserAddressesID`),
   KEY `DeliveryID` (`DeliveryID`),
   KEY `ExchangeRateID` (`ExchangeRateID`),
   CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_userAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_4` FOREIGN KEY (`DeliveryID`) REFERENCES `shop_deliveryAgencies` (`ID`),
   CONSTRAINT `shop_orders_ibfk_5` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_6` FOREIGN KEY (`ExchangeRateID`) REFERENCES `shop_currency` (`ID`)
+  CONSTRAINT `shop_orders_ibfk_6` FOREIGN KEY (`ExchangeRateID`) REFERENCES `shop_currency` (`ID`),
+  CONSTRAINT `shop_orders_ibfk_7` FOREIGN KEY (`UserAddressesID`) REFERENCES `mpws_userAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -799,4 +804,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-27  2:41:33
+-- Dump completed on 2015-02-03 23:32:48
