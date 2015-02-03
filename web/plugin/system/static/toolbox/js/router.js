@@ -102,7 +102,7 @@ define("plugin/system/toolbox/js/router", [
         },
 
         users: function () {
-            require(['plugin/system/toolbox/js/view/managerUsers'], function (Dashboard) {
+            require(['plugin/system/toolbox/js/view/listUsers'], function (Dashboard) {
                 // debugger;
                 // create new view
                 var dashboard = new Dashboard();

@@ -90,7 +90,7 @@ class customers {
         // adjusting
         $ID = intval($customer['ID']);
         $customer['ID'] = $ID;
-        $customer['Settings'] = API::getAPI('system:settings')->getSettings($ID);
+        $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
         // var_dump($customer);
         return $customer;
     }

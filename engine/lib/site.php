@@ -26,6 +26,7 @@ class site {
 
         // get customer name
         $displayCustomer = $app->displayCustomer();
+        $websiteCustomer = $app->customerName();
 
         // system config
         $version = $app->getAppName();
@@ -34,13 +35,13 @@ class site {
 
         // TODO: get Plugins, Title, Locale, Lang and all other public customer's settings from DB
         // and expose in the template : >>>>>
-        $lang = $customer['Settings']['lang'];
-        $locale = $customer['Settings']['locale'];
-        $plugins = explode(',', $customer['Settings']['plugins']);
+        $lang = $customer['Settings']['Lang'];
+        $locale = $customer['Settings']['Locale'];
+        $plugins = $customer['Settings']['Plugins'];
         $Homepage = $customer['HomePage'];
-        $Host = $customer['Settings']['host'];
-        $Scheme = $customer['Settings']['scheme'];
-        $Title = $customer['Settings']['title'];
+        $Host = $customer['Settings']['Host'];
+        $Scheme = $customer['Settings']['Protocol'];
+        $Title = $customer['Settings']['Title'];
         // <<< get from db according to display customer
 
         $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layout, $app->isDebug());
@@ -57,6 +58,7 @@ class site {
             LOCALE: '" . $locale . "',
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
             ISDEV: " . ($app->isDebug() ? 'true' : 'false') . ",
+            ENV: '" . $app->getEnvironment() . "',
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             MPWS_VERSION: '" . $version . "',
@@ -71,7 +73,7 @@ class site {
             AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
             USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . ",
             URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $websiteCustomer, true) . "',
             URL_STATIC_PLUGIN: '" . Path::createPath('plugin', true) . "',
             URL_STATIC_DEFAULT: '" . Path::createPath('base', $version, true) . "',
             ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'

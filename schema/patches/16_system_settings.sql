@@ -4,4 +4,5 @@ ALTER TABLE `mpws_customerSettings`
   DROP `Value`,
   DROP `Status`;
   ALTER TABLE `mpws_customerSettings` ADD `HomePage` VARCHAR(200) NOT NULL DEFAULT 'localhost' AFTER `Schema`;
+  ALTER TABLE `mpws_customerSettings` CHANGE `Schema` `Protocol` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'http';
   UPDATE  `mpws_patches` SET LastPatchNo=16;

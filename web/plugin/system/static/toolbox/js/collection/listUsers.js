@@ -1,6 +1,6 @@
-define('plugin/system/toolbox/js/collection/listCustomers', [
+define('plugin/system/toolbox/js/collection/listUsers', [
     'default/js/lib/underscore',
-    'plugin/system/toolbox/js/model/customer',
+    'plugin/system/common/js/model/user',
     'default/js/lib/backbone-paginator',
     'default/js/lib/cache'
 ], function (_, ModelCustomer, PageableCollection, Cache) {

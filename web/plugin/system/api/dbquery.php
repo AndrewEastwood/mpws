@@ -309,35 +309,34 @@ class dbquery {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public static function getCustomerSettingByID ($customerID, $id = null) {
+    public static function getCustomerSettingsByCustomerID ($CustomerID = null) {
+        global $app;
+        $config = self::getCustomerSettingsByID();
+        $config['condition'] = array (
+            'CustomerID' => $app->getDB()->createCondition($CustomerID)
+        );
+        return $config;
+    }
+
+    public static function getCustomerSettingsByID ($SettingID = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_customerSettings",
             "action" => "select",
-            "fields" => array("ID", "CustomerID", "Property", "Value", "Status"),
+            "fields" => array("*"),
             "condition" => array(
-                "CustomerID" => $app->getDB()->createCondition($customerID)
+                "ID" => $app->getDB()->createCondition($SettingID)
             ),
             "options" => array(
                 "expandSingleRecord" => true
             )
         ));
-        if ($id !== null) {
-            $config['condition']['ID'] = $app->getDB()->createCondition($id);
-        }
-        return $config;
-    }
-
-    public static function getCustomerSettings ($customerID) {
-        $config = self::getCustomerSetting($customerID);
-        $config['limit'] = 64;
-        unset($config['options']);
         return $config;
     }
 
     public static function createCustomerSettings ($data) {
         global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();//???? data is array with settings
+        $data["DateCreated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_customerSettings",
             "action" => "insert",

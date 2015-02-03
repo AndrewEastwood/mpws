@@ -10,7 +10,7 @@ class permissions {
             "CanEdit" => 0,
             "CanViewReports" => 0,
             "CanAddUsers" => 0,
-            "CanUpload" => 0
+            "CanUpload" => 0,
             "CanManage" => 0
         );
         return array_merge($perms, $customPermissions);
