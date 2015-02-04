@@ -13,15 +13,15 @@ define("plugin/shop/toolbox/js/router", [
     var $dfdSettings = settings.fetch();
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
-            var menu = new ViewMenu();
-            menu.render();
-            Sandbox.eventNotify('customer:menu:set', {
-                name: 'MenuLeft',
-                el: menu.$el,
-                append: true
-            });
-        });
+        // require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
+        //     var menu = new ViewMenu();
+        //     menu.render();
+        //     Sandbox.eventNotify('customer:menu:set', {
+        //         name: 'MenuLeft',
+        //         el: menu.$el,
+        //         append: true
+        //     });
+        // });
     });
 
     Backbone.on('changed:plugin-shop-currency', function () {

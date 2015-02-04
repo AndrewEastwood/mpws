@@ -1,5 +1,9 @@
+<a href="/">
+    <i class="fa fa-dashboard fa-fw"></i> {{lang.menu.dashboard}}
+</a>
 <a href="javascript://"><i class="fa fa-gear fa-fw"></i> {{lang.menu.title}}<span class="fa arrow"></span></a>
 <ul class="nav nav-second-level collapse">
+    {{#if data.Permissions.CanMaintain}}
     <li rel="menu" class="menu-system-customers">
         <a href="{{bb_link instances.system.urls.customers asRoot=true}}">
             <i class="fa fa-fw fa-sitemap"></i> {{lang.menu.customers}}
@@ -10,6 +14,7 @@
             <i class="fa fa-fw fa-database"></i> {{lang.menu.migrations}}
         </a>
     </li>
+    {{/if}}
     <li rel="menu" class="menu-system-users">
         <a href="{{bb_link instances.system.urls.users asRoot=true}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}

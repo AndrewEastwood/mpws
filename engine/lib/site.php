@@ -72,10 +72,10 @@ class site {
             URL_UPLOAD: '" . $urls['upload'] . "',
             AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
             USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . ",
-            URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $websiteCustomer, true) . "',
-            URL_STATIC_PLUGIN: '" . Path::createPath('plugin', true) . "',
-            URL_STATIC_DEFAULT: '" . Path::createPath('base', $version, true) . "',
+            URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer) . "',
+            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $websiteCustomer) . "',
+            URL_STATIC_PLUGIN: '" . Path::createPath('plugin') . "',
+            URL_STATIC_DEFAULT: '" . Path::createPath('base', $version) . "',
             ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
@@ -102,11 +102,11 @@ class site {
     public function hasPlugin ($pluginName) {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
-        $plugins = $customer['Settings']['plugins'];
+        $plugins = $customer['Settings']['Plugins'];
         if (empty($plugins)) {
             return false;
         }
-        return in_array($pluginName, explode(',', $plugins));
+        return in_array($pluginName, $plugins);
         // return isset($plugins[$pluginName]);
     }
 

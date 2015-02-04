@@ -22,18 +22,19 @@ requirejs.config({
 
 define("customer/js/router", [
     'default/js/lib/sandbox',
+    'cmn_jquery',
+    'default/js/lib/underscore',
     'default/js/lib/auth',
     'default/js/lib/cache',
     'default/js/lib/bootstrap',
     'customer/js/lib/sb-admin-2',
     'customer/js/lib/metisMenu'
-], function (Sandbox, Auth, Cache) {
+], function (Sandbox, $, _, Auth, Cache) {
 
-    $('head title').text(APP.config.URL_PUBLIC_TITLE);
-    $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_TITLE);
+    // APP.dfd.systemMenu = new $.Deferred();
 
     if (!APP.hasPlugin('system')) {
-        throw "Account plugin is unavailable";
+        throw "System plugin is unavailable";
     }
 
     var _ifNotAuthorizedNavigateToSignin = function () {
@@ -48,6 +49,21 @@ define("customer/js/router", [
             }
         }
     }
+
+    var renderMenuPlaceholdersFn = function () {
+        // create containers for the rest plugins
+        var menus = [], $menuItem;
+        _(APP.config.PLUGINS).each(function (pluginName) {
+            $menuItem = $('<li>').attr({
+                name: 'MenuForPlugin_' + pluginName,
+                id: 'menu-' + pluginName + '-ID',
+                "class": 'menu-' + pluginName,
+                rel: 'menu'
+            });
+            menus.push($menuItem);
+        });
+        return menus;
+    };
 
     Sandbox.eventSubscribe('global:page:signout', function () {
         _ifNotAuthorizedNavigateToSignin();
@@ -81,5 +97,8 @@ define("customer/js/router", [
     // CustomerClass.waitPlugins = true;
 
     // return CustomerClass;
-
+    $('head title').text(APP.config.URL_PUBLIC_TITLE);
+    $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_TITLE);
+    $('#side-menu').empty().append(renderMenuPlaceholdersFn());
+    
 });

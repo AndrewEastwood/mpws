@@ -16,6 +16,7 @@ define("plugin/system/toolbox/js/view/menu", [
         template: tpl,
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            return this;
         }
     });
 

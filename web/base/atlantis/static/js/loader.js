@@ -51,7 +51,7 @@ var APP = {
                 // plugin paths
                 plugin: this.config.URL_STATIC_PLUGIN,
                 // version suppress
-                cmn_jquery: this.config.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
+                cmn_jquery: this.config.URL_STATIC_DEFAULT + '/js/lib/jquery-1.9.1'
             },
             waitSeconds: 20,
             urlArgs: "mpws_bust=" + (this.config.ISDEV ? (new Date()).getTime() : this.config.BUILD)

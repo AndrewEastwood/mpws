@@ -6,6 +6,7 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
     return _.extend({}, {
         menu: {
             title: 'Система',
+            dashboard: 'Огляд системи',
             customers: 'Сайти',
             migrations: 'Маграції БД',
             users: 'Користувачі'
@@ -13,7 +14,7 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
         form: {
             signin: {
                 title: 'Вхід у систему',
-                generalError: 'НЕвірний логін або пароль',
+                generalError: 'Невірний логін або пароль',
                 fieldLogin: 'Лоігн',
                 fieldPassword: 'Пароль',
                 buttonSubmit: 'Вхід'
