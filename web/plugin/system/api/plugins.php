@@ -2,6 +2,7 @@
 namespace web\plugin\system\api;
 
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 
 class plugins {
 
@@ -16,6 +17,10 @@ class plugins {
     }
 
     public function get (&$resp) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         $resp = $this->getInstalledPlugins();
     }
 }

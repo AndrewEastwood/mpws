@@ -146,7 +146,8 @@ class customers {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 100)
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 100),
+            'Status' => array('string', 'skipIfEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -185,11 +186,11 @@ class customers {
         $result = array();
         $errors = array();
         $success = false;
-        $CustomerID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 100)
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 100),
+            'Status' => array('string', 'skipIfEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -199,11 +200,8 @@ class customers {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCustomer = dbquery::updateCustomer($validatedValues);
-                $CustomerID = $app->getDB()->query($configCreateCustomer, false) ?: null;
-
-                if (empty($CustomerID))
-                    throw new Exception('CustomerUpdateError');
+                $configCreateCustomer = dbquery::updateCustomer($CustomerID, $validatedValues);
+                $app->getDB()->query($configCreateCustomer, false) ?: null;
 
                 $app->getDB()->commit();
 
@@ -261,6 +259,20 @@ class customers {
         }
     }
 
+    public function patch (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $CustomerID = intval($req->get['id']);
+            $resp = $this->updateCustomer($CustomerID, $req->data);
+            // $this->_getOrSetCachedState('changed:product', true);
+        }
+    }
+
 /*    public function get (&$resp, $req) {
         if (!empty($req->get['id'])) {
             if (is_numeric($req->get['id'])) {
@@ -291,19 +303,6 @@ class customers {
         // $this->_getOrSetCachedState('changed:product', true);
     }
 
-    public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $ProductID = intval($req->get['id']);
-            $resp = $this->updateProduct($ProductID, $req->data);
-            // $this->_getOrSetCachedState('changed:product', true);
-        }
-    }
 
     public function delete (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {

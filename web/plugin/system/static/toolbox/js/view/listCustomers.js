@@ -172,7 +172,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
         },
         render: function () {
             console.log('listCustomers: render');
-            debugger;
+            // debugger;
             this.$el.off().empty();
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);

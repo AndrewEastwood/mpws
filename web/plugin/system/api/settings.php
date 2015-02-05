@@ -154,7 +154,7 @@ class settings {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Manage') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -162,7 +162,7 @@ class settings {
     }
 
     public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Manage') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
