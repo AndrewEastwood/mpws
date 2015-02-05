@@ -61,6 +61,7 @@ define('plugin/system/toolbox/js/collection/listCustomers', [
         },
 
         parseState: function (resp, queryParams, state, options) {
+            // debugger
             var state = {
                 totalRecords: 0,
                 currentPage: 1
@@ -71,7 +72,6 @@ define('plugin/system/toolbox/js/collection/listCustomers', [
                     state.totalRecords = parseInt(resp.info.total_entries, 10) || 0;
                     state.currentPage = parseInt(resp.info.page, 10) || 1;
                 }
-                this.extras._category = resp._category || null;
             }
             return state;
         },

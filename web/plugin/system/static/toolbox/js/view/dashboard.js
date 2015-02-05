@@ -5,13 +5,12 @@ define("plugin/system/toolbox/js/view/dashboard", [
     'default/js/lib/utils',
     /* template */
     'default/js/plugin/hbs!plugin/system/toolbox/hbs/dashboard',
-    'default/js/plugin/hbs!default/hbs/animationFacebook',
     /* lang */
     'default/js/plugin/i18n!plugin/system/toolbox/nls/translation',
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
     'default/js/plugin/goog!visualization,1,packages:[corechart]'
-], function (Backbone, _, ModelStats, Utils, tpl, tplFBAnim, lang) {
+], function (Backbone, _, ModelStats, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         attributes: {
@@ -38,16 +37,6 @@ define("plugin/system/toolbox/js/view/dashboard", [
             //     name: 'DashboardForPlugin_system',
             //     "class": 'dashboard-container'
             // }).html($sysTpl));
-
-            // create containers for the rest plugins
-            _(APP.instances).each(function (pluginInstance, pluginName) {
-                if (pluginName !== 'system') {
-                    self.$('.system-other-plugins').append($('<div/>').attr({
-                        name: 'DashboardForPlugin_' + pluginName,
-                        "class": 'dashboard-container'
-                    }).html(tplFBAnim()));
-                }
-            });
 
             // template for system dashaboard
             // var $sysTpl = tpl(Utils.getHBSTemplateData(this));

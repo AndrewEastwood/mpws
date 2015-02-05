@@ -8,11 +8,11 @@ define("plugin/shop/toolbox/js/view/menu", [
 ], function (Sandbox, Backbone, Utils, tpl, lang) {
 
     var Menu = Backbone.View.extend({
-        tagName: 'li',
-        id: 'shop-menu-ID',
-        attributes: {
-            rel: "menu"
-        },
+        // tagName: 'li',
+        // id: 'shop-menu-ID',
+        // attributes: {
+        //     rel: "menu"
+        // },
         lang: lang,
         template: tpl,
         initialize: function () {
@@ -24,6 +24,8 @@ define("plugin/shop/toolbox/js/view/menu", [
         },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el = $(this.$el.html());
+            return this;
         }
     });
 

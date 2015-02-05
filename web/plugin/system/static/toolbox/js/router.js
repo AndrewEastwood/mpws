@@ -11,8 +11,8 @@ define("plugin/system/toolbox/js/router", [
     // this is the user instance
     var menuView = null;
     var user = new User();
-    APP.dfd.systemDashboard = new $.Deferred();
-    APP.dfd.systemMenu = new $.Deferred();
+    // APP.dfd.systemDashboard = new $.Deferred();
+    // APP.dfd.systemMenu = new $.Deferred();
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         var authUserID = Auth.getUserID();
@@ -31,17 +31,16 @@ define("plugin/system/toolbox/js/router", [
             });
         }
         // show this menu when user is can manage
-        // require(['plugin/system/toolbox/js/view/menu'], function (ViewMenu) {
-        //     menuView = new ViewMenu({
-        //         model: user
-        //     });
-        //     menuView.render();
-        //     Sandbox.eventNotify('customer:menu:set', {
-        //         name: 'MenuLeft',
-        //         el: menuView.$el,
-        //         append: true
-        //     });
-        // });
+        require(['plugin/system/toolbox/js/view/menu'], function (ViewMenu) {
+            menuView = new ViewMenu({
+                model: user
+            });
+            menuView.render();
+            Sandbox.eventNotify('global:content:render', {
+                name: 'MenuForPlugin_system',
+                el: menuView.$el
+            });
+        });
     });
 
     Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
@@ -51,40 +50,7 @@ define("plugin/system/toolbox/js/router", [
         }
     });
 
-    Sandbox.eventSubscribe('global:page:signin', function (data) {
-        var self = this;
-        if (Auth.getUserID()) {
-            return;
-        }
-        require(['plugin/system/toolbox/js/view/signin'], function (SignIn) {
-            var signin = new SignIn();
-            signin.render();
-            // debugger;
-            Sandbox.eventNotify('global:content:render', {
-                name: 'CommonBodyCenter',
-                el: signin.$el
-            });
-        });
-    });
-
-    Sandbox.eventSubscribe('global:page:index', function () {
-        if (!Auth.getUserID()) {
-            return;
-        }
-        require(['plugin/system/toolbox/js/view/dashboard'], function (ViewDashboard) {
-            var dashboard = new ViewDashboard();
-            dashboard.render();
-            Sandbox.eventNotify('global:content:render', {
-                name: 'CommonBodyCenter',
-                el: dashboard.$el
-            });
-            // APP.dfd.dashboard.resolve();
-            // Sandbox.eventNotify('plugin:dashboard:ready', dashboard);
-        });
-    });
-
     var routes = {
-        "": "dashboard",
         "!/system/customers": "customers",
         "!/system/customer/edit/:id": "customerEdit",
         "!/system/customer/new": "customerCreate",
@@ -101,6 +67,12 @@ define("plugin/system/toolbox/js/router", [
 
         initialize: function () {
             var self = this;
+            Sandbox.eventSubscribe('global:page:index', function () {
+                self.dashboard();
+            });
+            Sandbox.eventSubscribe('global:page:signin', function () {
+                self.signin();
+            });
             // if (APP.dfd.dashboard) {
             //     APP.dfd.dashboard.done(function () {
             //         self.dashboard();
@@ -108,19 +80,47 @@ define("plugin/system/toolbox/js/router", [
             // }
         },
 
+        signin: function () {
+            if (Auth.getUserID()) {
+                return;
+            }
+            require(['plugin/system/toolbox/js/view/signin'], function (SignIn) {
+                var signin = new SignIn();
+                signin.render();
+                // debugger;
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: signin.$el
+                });
+            });
+        },
         dashboard: function () {
+            if (!Auth.getUserID()) {
+                return;
+            }
             // debugger
             require(['plugin/system/toolbox/js/view/dashboard'], function (Dashboard) {
                 // debugger;
                 // create new view
                 var dashboard = new Dashboard();
                 dashboard.model.fetch();
-
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
+                    name: 'DashboardForPlugin_system',
                     el: dashboard.$el
                 });
-                APP.dfd.dashboard.resolve();
+            });
+        },
+
+        customers: function () {
+            require(['plugin/system/toolbox/js/view/listCustomers'], function (ViewListCustomers) {
+                // debugger;
+                // create new view
+                var viewListCustomers = new ViewListCustomers();
+                viewListCustomers.collection.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewListCustomers.$el
+                });
             });
         },
 
@@ -130,9 +130,8 @@ define("plugin/system/toolbox/js/router", [
                 // create new view
                 var dashboard = new Dashboard();
                 dashboard.model.fetch();
-
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'DashboardForPlugin_system',
+                    name: 'CommonBodyCenter',
                     el: dashboard.$el
                 });
             });

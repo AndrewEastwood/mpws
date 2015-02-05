@@ -378,17 +378,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
     require([APP.config.ROUTER], function (CustomerRouter) {
         if (_.isFunction(CustomerRouter)) {
-                    // console.log('INIT customer');
-            // if (!!CustomerRouter.waitPlugins) {
-                // Sandbox.eventSubscribe('global:loader:complete', function () {
-                    var customerRouter = new CustomerRouter();
-                    APP.instances['CustomerRouter'] = customerRouter;
-                    // console.log(customerRouter);
-                // });
-            // } else {
-            //     var customerRouter = new CustomerRouter();
-            //     APP.instances['CustomerRouter'] = customerRouter;
-            // }
+            var customerRouter = new CustomerRouter();
+            APP.instances['CustomerRouter'] = customerRouter;
         }
         if (CustomerRouter && _.isFunction(CustomerRouter.releasePlugins)) {
             CustomerRouter.releasePlugins(releasePluginsFn);

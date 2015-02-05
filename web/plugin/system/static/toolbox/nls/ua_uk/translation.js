@@ -19,6 +19,30 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
                 fieldPassword: 'Пароль',
                 buttonSubmit: 'Вхід'
             }
+        },
+        managers: {
+            customers: {
+                title: 'Сайти',
+                noData: 'Нема даних'
+            },
+            users: {
+                title: 'Користувачі'
+            }
+        },
+        lists: {
+            customers: {
+                columnID: '#',
+                columnName: 'Назва',
+                columnStatus: 'Статус',
+                columnDateCreated: 'Дата Створення',
+                columnDateUpdated: 'Дата Оновлення',
+            }
+        },
+        customer: {
+            statuses: {
+                ACTIVE: 'Активний',
+                REMOVED: 'Видалений'
+            }
         }
     }, CustomerPluginAccount);
 });

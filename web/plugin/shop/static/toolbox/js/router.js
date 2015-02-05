@@ -13,15 +13,14 @@ define("plugin/shop/toolbox/js/router", [
     var $dfdSettings = settings.fetch();
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        // require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
-        //     var menu = new ViewMenu();
-        //     menu.render();
-        //     Sandbox.eventNotify('customer:menu:set', {
-        //         name: 'MenuLeft',
-        //         el: menu.$el,
-        //         append: true
-        //     });
-        // });
+        require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
+            var menu = new ViewMenu();
+            menu.render();
+            Sandbox.eventNotify('global:content:render', {
+                name: 'MenuForPlugin_shop',
+                el: menu.$el
+            });
+        });
     });
 
     Backbone.on('changed:plugin-shop-currency', function () {
@@ -35,11 +34,11 @@ define("plugin/shop/toolbox/js/router", [
     var routes = {
         // "shop/stats": "stats",
         "!/shop/content": "contentList",
-        "!/shop/content/:status": "contentListPage",
+        "!/shop/content/:status": "contentListByStatus",
         "!/shop/product/new": "productCreate",
         "!/shop/product/edit/:id": "productEdit",
         "!/shop/orders": "ordersList",
-        "!/shop/orders/:status": "ordersListPage",
+        "!/shop/orders/:status": "ordersListByStatus",
         "!/shop/order/edit/:id": "orderEdit",
         "!/shop/order/print/:id": "orderPrint",
         "!/shop/order/email_tracking/:id": "orderEmailTracking",
@@ -66,11 +65,14 @@ define("plugin/shop/toolbox/js/router", [
 
         initialize: function () {
             var self = this;
-            if (APP.dfd.dashboard) {
-                APP.dfd.dashboard.done(function () {
-                    self.dashboard();
-                });
-            }
+            // if (APP.dfd.dashboard) {
+            //     APP.dfd.dashboard.done(function () {
+            //         self.dashboard();
+            //     });
+            // }
+            Sandbox.eventSubscribe('global:page:index', function () {
+                self.dashboard();
+            });
         },
 
         dashboard: function () {
@@ -108,9 +110,9 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         contentList: function () {
-            this.contentListPage();
+            this.contentListByStatus();
         },
-        contentListPage: function (status) {
+        contentListByStatus: function (status) {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
             require(['plugin/shop/toolbox/js/view/managerContent'], function (ManagerContent) {
                 // create new view
@@ -148,9 +150,9 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         ordersList: function () {
-            this.ordersListPage();
+            this.ordersListByStatus();
         },
-        ordersListPage: function (status) {
+        ordersListByStatus: function (status) {
             // set active menu
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {

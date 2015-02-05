@@ -1,5 +1,4 @@
 define("plugin/system/toolbox/js/view/listCustomers", [
-    'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
@@ -14,7 +13,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -39,9 +38,9 @@ define("plugin/system/toolbox/js/view/listCustomers", [
 
     function getColumns() {
         // TODO: do smth to fetch states from server
-        var statuses = ["ACTIVE", "ARCHIVED", "DISCOUNT", "DEFECT", "WAITING", "PREORDER"];
+        var statuses = ["ACTIVE", "REMOVED"];
         var orderStatusValues = _(statuses).map(function (status) {
-            return [lang["product_status_" + status] || status, status];
+            return [lang.customer.statuses[status] || status, status];
         });
 
         var columnActions = {
@@ -61,7 +60,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
         };
         var columnID = {
             name: "ID",
-            label: lang.pluginMenu_Products_Grid_Column_ID,
+            label: lang.lists.customers.columnID,
             cell: 'html',
             editable: false,
             sortable: false,
@@ -75,7 +74,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
 
         var columnName = {
             name: "Name",
-            label: lang.pluginMenu_Products_Grid_Column_Name,
+            label: lang.lists.customers.columnName,
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -94,117 +93,9 @@ define("plugin/system/toolbox/js/view/listCustomers", [
             })
         };
 
-        var columnModel = {
-            name: "Model",
-            label: lang.pluginMenu_Products_Grid_Column_Model,
-            cell: Backgrid.StringCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Model", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        };
-
-        var columnOriginName = {
-            name: "OriginName",
-            label: lang.pluginMenu_Products_Grid_Column_OriginName,
-            cell: "string",
-            editable: false,
-            formatter: {
-                fromRaw: function (value, model) {
-                    return model.get('_origin').Name
-                }
-            }
-        };
-
-        var columnCategoryName = {
-            name: "CategoryName",
-            label: lang.pluginMenu_Products_Grid_Column_CategoryName,
-            cell: "string",
-            editable: false,
-            formatter: {
-                fromRaw: function (value, model) {
-                    return model.get('_category').Name
-                }
-            }
-        };
-
-        var columnSKU = {
-            name: "SKU",
-            label: lang.pluginMenu_Products_Grid_Column_SKU,
-            cell: Backgrid.StringCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:SKU", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        };
-
-        var columnPrice = {
-            name: "Price",
-            label: lang.pluginMenu_Products_Grid_Column_Price,
-            cell: Backgrid.NumberCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Price", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            }),
-            formatter: {
-                fromRaw: function (value, model) {
-                    var _prices = model.get('_prices'),
-                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-                    if (_currencyDisplay) {
-                        if (_currencyDisplay.showBeforeValue) {
-                            return _currencyDisplay.text + _prices.price;
-                        } else {
-                            return _prices.price + _currencyDisplay.text;
-                        }
-                    } else {
-                        return _prices.price;
-                    }
-                },
-                toRaw: function (value) {
-                    var matches = value.replace( /^\D+/g, '').match(/^([0-9\.]+)/)
-                    if (matches && matches[1])
-                        return parseFloat(matches[0]);
-                    throw "CanParseProductPrise"
-                }
-            }
-        };
-
         var columnStatus = {
             name: "Status",
-            label: lang.pluginMenu_Products_Grid_Column_Status,
+            label: lang.lists.customers.columnStatus,
             cell: Backgrid.SelectCell.extend({
                 // It's possible to render an option group or use a
                 // function to provide option values too.
@@ -227,14 +118,14 @@ define("plugin/system/toolbox/js/view/listCustomers", [
 
         var columnDateUpdated = {
             name: "DateUpdated",
-            label: lang.pluginMenu_Products_Grid_Column_DateUpdated,
+            label: lang.lists.customers.columnDateUpdated,
             cell: "string",
             editable: false
         };
 
         var columnDateCreated = {
             name: "DateCreated",
-            label: lang.pluginMenu_Products_Grid_Column_DateCreated,
+            label: lang.lists.customers.columnDateCreated,
             cell: "string",
             editable: false
         };
@@ -243,18 +134,13 @@ define("plugin/system/toolbox/js/view/listCustomers", [
             columnActions: columnActions,
             columnID: columnID,
             columnName: columnName,
-            columnModel: columnModel,
-            columnOriginName: columnOriginName,
-            columnCategoryName: columnCategoryName,
-            columnSKU: columnSKU,
-            columnPrice: columnPrice,
             columnStatus: columnStatus,
             columnDateUpdated: columnDateUpdated,
             columnDateCreated: columnDateCreated
         });
     }
 
-    var ListOrders = Backbone.View.extend({
+    var ListCustomers = Backbone.View.extend({
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionCustomers();
@@ -285,8 +171,8 @@ define("plugin/system/toolbox/js/view/listCustomers", [
             this.$('.mpwsDataSpinner').remove();
         },
         render: function () {
-            console.log('listOrders: render');
-            // debugger;
+            console.log('listCustomers: render');
+            debugger;
             this.$el.off().empty();
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);
@@ -298,5 +184,5 @@ define("plugin/system/toolbox/js/view/listCustomers", [
         }
     });
 
-    return ListOrders;
+    return ListCustomers;
 });

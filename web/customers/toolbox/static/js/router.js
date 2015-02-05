@@ -26,12 +26,13 @@ define("customer/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/auth',
     'default/js/lib/cache',
+    'default/js/plugin/hbs!default/hbs/animationFacebook',
     'default/js/lib/bootstrap',
     'customer/js/lib/sb-admin-2',
     'customer/js/lib/metisMenu'
-], function (Sandbox, $, _, Auth, Cache) {
+], function (Sandbox, $, _, Auth, Cache, tplFBAnim) {
 
-    // APP.dfd.systemMenu = new $.Deferred();
+    APP.dfd.customerReady = new $.Deferred();
 
     if (!APP.hasPlugin('system')) {
         throw "System plugin is unavailable";
@@ -65,6 +66,22 @@ define("customer/js/router", [
         return menus;
     };
 
+    var renderDashboardPlaceholdersFn = function () {
+        // create containers for the rest plugins
+        var blocks = [], $blockItem;
+        _(APP.config.PLUGINS).each(function (pluginName) {
+            $blockItem = $('<div>').attr({
+                name: 'DashboardForPlugin_' + pluginName,
+                id: 'dashboard-container-' + pluginName + '-ID',
+                "class": 'dashboard-container dashboard-container-' + pluginName,
+                rel: 'menu'
+            });
+            $blockItem.html(tplFBAnim());
+            blocks.push($blockItem);
+        });
+        return blocks;
+    }
+
     Sandbox.eventSubscribe('global:page:signout', function () {
         _ifNotAuthorizedNavigateToSignin();
     });
@@ -92,6 +109,14 @@ define("customer/js/router", [
         $('#side-menu').metisMenu();
     });
 
+    Sandbox.eventSubscribe('global:page:index', function () {
+        // debugger
+        Sandbox.eventNotify('global:content:render', {
+            name: 'CommonBodyCenter',
+            el: $('<div>').addClass('dashboard').html(renderDashboardPlaceholdersFn())
+        });
+    });
+
     // function CustomerClass () {}
 
     // CustomerClass.waitPlugins = true;
@@ -100,5 +125,5 @@ define("customer/js/router", [
     $('head title').text(APP.config.URL_PUBLIC_TITLE);
     $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_TITLE);
     $('#side-menu').empty().append(renderMenuPlaceholdersFn());
-    
+
 });

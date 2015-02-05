@@ -7,15 +7,11 @@ define("plugin/system/toolbox/js/view/menu", [
 ], function (Backbone, Utils, tpl, lang) {
 
     var Menu = Backbone.View.extend({
-        tagName: 'li',
-        id: 'system-menu-ID',
-        attributes: {
-            rel: "menu"
-        },
         lang: lang,
         template: tpl,
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el = $(this.$el.html());
             return this;
         }
     });
