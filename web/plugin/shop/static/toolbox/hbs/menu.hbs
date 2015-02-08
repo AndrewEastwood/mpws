@@ -1,5 +1,8 @@
-<a href="javascript://"><i class="fa fa-shopping-cart fa-fw"></i> {{lang.pluginMenuTitle}}<span class="fa arrow"></span></a>
-<ul class="nav nav-second-level collapse">
+<a href="javascript://" data-toggle="collapse" data-target="#menu_shop">
+    <i class="fa fa-shopping-cart fa-fw"></i> {{lang.pluginMenuTitle}}
+    <i class="fa fa-fw fa-caret-down"></i>
+</a>
+<ul class="collapse" id="menu_shop">
     <li rel="menu" class="menu-shop-products">
         <a href="{{bb_link instances.shop.urls.contentList asRoot=true}}">
             <i class="fa fa-fw fa-shopping-cart"></i> {{lang.pluginMenu_Products}}

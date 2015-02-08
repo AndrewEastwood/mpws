@@ -12,10 +12,11 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
         url: function () {
             var urlOptions = {
                 source: 'shop',
-                fn: 'promos',
-                expired: !!this.queryParams.expired
+                fn: 'promos'
             };
-
+            if (this.queryParams.expired) {
+                urlOptions.expired = true;
+            }
             return APP.getApiLink(urlOptions);
         },
 
@@ -27,6 +28,7 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 
         initialize: function () {
             this.extras = {};
+            // debugger
             // You can remap the query parameters from `state` keys from
             // the default to those your server supports
             this.queryParams = Cache.get('shopPromosListRD') || {
@@ -66,12 +68,19 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
         },
 
         parseRecords: function (resp) {
+            // debugger
             this.extras.withExpired = this.queryParams.expired;
             return resp.items;
         },
 
         fetchWithExpired: function (includeExpired, fetchOptions) {
-            this.queryParams.expired = includeExpired;
+            // debugger
+            // debugger
+            if (includeExpired)
+                this.queryParams.expired = includeExpired;
+            else
+                delete this.queryParams.expired;
+            Cache.set('shopPromosListRD', this.queryParams);
             this.fetch(fetchOptions);
         }
 

@@ -3,27 +3,12 @@ namespace web\plugin\system\api;
 
 use \engine\lib\api as API;
 use \engine\lib\validate as Validate;
-use \engine\lib\path as Path;
 use Exception;
 
 class customers {
 
     var $customersCache = array();
     private $_statuses = array('ACTIVE', 'REMOVED');
-
-    public function getCustomerUploadInnerDir ($subDir = '') {
-        global $app;
-        $path = '';
-        if (empty($subDir))
-            $path = Path::createDirPath('customers', $app->customerName());
-        else
-            $path = Path::createDirPath('customers', $app->customerName(), $subDir);
-        return $path;
-    }
-    public function getCustomerUploadInnerImagePath ($name, $subDir = false) {
-        $path = $this->getCustomerUploadInnerDir($subDir);
-        return $path . $name;
-    }
 
     public function getCustomerStatuses () {
         return $this->_statuses;
@@ -49,7 +34,7 @@ class customers {
         $ID = $customer['ID'];
         $_SESSION['site_id'] = $ID;
         $this->customersCache[$ID] = $customer;
-        $this->customersCache[$customer['HostName']] = $customer;
+        $this->customersCache[$customer['Name']] = $customer;
         return $customer;
     }
 
@@ -67,7 +52,7 @@ class customers {
         }
         $_SESSION['site_id'] = $ID;
         $this->customersCache[$ID] = $customer;
-        $this->customersCache[$customer['HostName']] = $customer;
+        $this->customersCache[$customer['Name']] = $customer;
         return $customer;
     }
 
@@ -105,9 +90,8 @@ class customers {
         // adjusting
         $ID = intval($customer['ID']);
         $customer['ID'] = $ID;
-        // $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
+        $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
         $customer['isBlocked'] = $customer['Status'] != 'ACTIVE';
-        $customer['Plugins'] = explode(",", $customer['Plugins']);
         // var_dump($customer);
         return $customer;
     }
@@ -122,7 +106,7 @@ class customers {
     public function getCustomerByName ($customerName) {
         global $app;
         $config = dbquery::getCustomer();
-        $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
+        $config['condition']['Name'] = $app->getDB()->createCondition($customerName);
         $customer = $app->getDB()->query($config, false);
         // echo 2121212;
         // var_dump($customer);
@@ -149,6 +133,11 @@ class customers {
         return $dataList;
     }
 
+    public function getCustomerSettings ($ID) {
+        global $app;
+
+    }
+
     public function createCustomer ($reqData) {
         global $app;
         $result = array();
@@ -158,14 +147,13 @@ class customers {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'HostName' => array('string', 'notEmpty', 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 200)
             'Title' => array('string', 'skipIfUnset', 'max' => 200),
             'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200),
-            'Logo' => array('string', 'skipIfEmpty'),
+            'Plugins' => array('string', 'skipIfUnset', 'max' => 500),
             'Lang' => array('string', 'skipIfUnset', 'max' => 50),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
-            'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -206,53 +194,15 @@ class customers {
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'HostName' => array('string', 'notEmpty', 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 200),
-            'Title' => array('string', 'skipIfUnset', 'max' => 200),
-            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200),
-            'Logo' => array('string', 'skipIfUnset'),
-            'Lang' => array('string', 'skipIfUnset', 'max' => 50),
-            'Locale' => array('string', 'skipIfUnset', 'max' => 10),
-            'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
-            'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 100),
+            'Status' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
-
-                if (isset($reqData['Logo'])) {
-                    $customer = $this->getCustomerByID($CustomerID);
-
-                    $currentFileName = empty($customer['Logo']) ? "" : $customer['Logo']['name'];
-                    $newFileName = isset($validatedValues['Logo']) ? $validatedValues['Logo'] : null;
-
-                    if ($newFileName !== $currentFileName) {
-                        if (empty($newFileName) && !empty($currentFileName)) {
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName, 'sm'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName, 'xs'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName));
-                            $validatedValues['Logo'] = null;
-                        }
-                        if (!empty($newFileName)) {
-                            $currentFileName = $newFileName;
-                            $newFileName = uniqid(time());
-                            $smImagePath = 'sm' . Path::getDirectorySeparator() . $currentFileName;
-                            $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
-                            $normalImagePath = $currentFileName;
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCustomerUploadInnerDir('sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCustomerUploadInnerDir('xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCustomerUploadInnerDir(), $newFileName);
-                            $validatedValues['Logo'] = $uploadInfo['filename'];
-                        }
-                    }
-                }
-
-                if (isset($validatedValues['Plugins'])) {
-                    $pList = explode(',', $validatedValues['Plugins']);
-                    // move system plugin to be firs in the list
-                }
 
                 $app->getDB()->beginTransaction();
 

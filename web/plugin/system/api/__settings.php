@@ -7,19 +7,6 @@ use Exception;
 
 class settings {
 
-    // public static function getNewCustomersSettings (array $customSettings = array()) {
-    //     $settings = array(
-    //         "plugins" => "system",
-    //         "title" => "default site title",
-    //         "lang" => "en-US",
-    //         "locale" => "en",
-    //         "host" => "localhost",
-    //         "scheme" => "http",
-    //         "homepage" => "http://localhost"
-    //     );
-    //     return array_merge($settings, $customSettings);
-    // }
-
     public function getSettingsForRuntimeCustomer () {
         $CustomerID = API::getApi('system:customers')->getRuntimeCustomerID();
         return $this->getSettingsByCustomerID($CustomerID);
@@ -49,10 +36,11 @@ class settings {
         $validatedDataObj = Validate::getValidData($reqData, array(
             'CustomerID' => array('int', 'min' => 0),
             'Title' => array('string', 'skipIfUnset', 'max' => 200),
+            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200),
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500),
             'Lang' => array('string', 'skipIfUnset', 'max' => 50),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10),
-            'Host' => array('string', 'skipIfUnset', 'max' => 100),
+            'HostName' => array('string', 'skipIfUnset', 'max' => 100),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 200)
         ));

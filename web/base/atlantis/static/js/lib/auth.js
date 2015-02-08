@@ -10,16 +10,19 @@ define("default/js/lib/auth", [
 
     var Auth = _.extend({
         verifyStatus: function () {
-            // debugger;
             var user = Auth.getUserID();
+            Backbone.trigger('auth:info', user);
             if (Auth.user === user) {
+                // Sandbox.eventNotify("global:auth:status:unchanged", user);
                 return;
             }
             Auth.user = user;
             if (Auth.user) {
+                // Backbone.trigger('auth:registered', user);
                 this.trigger('registered');
                 Sandbox.eventNotify("global:auth:status:active");
             } else {
+                // Backbone.trigger('auth:guest', user);
                 this.trigger('guest');
                 Sandbox.eventNotify("global:auth:status:inactive");
             }

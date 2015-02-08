@@ -24,38 +24,20 @@ DROP TABLE IF EXISTS `mpws_customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` text COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `HostName` text COLLATE utf8_bin NOT NULL,
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
+  `Title` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT 'your new site',
+  `AdminTitle` varchar(200) COLLATE utf8_bin NOT NULL,
+  `Logo` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `Lang` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT 'en-US',
+  `Locale` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'en',
+  `Protocol` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'http',
+  `Plugins` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'system',
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `mpws_customerSettings`
---
-
-DROP TABLE IF EXISTS `mpws_customerSettings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_customerSettings` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `Title` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT 'no title',
-  `Plugins` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'system',
-  `Lang` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT 'en-US',
-  `Locale` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'en',
-  `Host` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT 'localhost',
-  `Protocol` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'http',
-  `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  UNIQUE KEY `ID_2` (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  KEY `ID` (`ID`),
-  CONSTRAINT `mpws_customerSettings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -804,4 +786,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-03 23:32:48
+-- Dump completed on 2015-02-09  0:00:25

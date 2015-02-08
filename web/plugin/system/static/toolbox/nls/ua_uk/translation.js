@@ -34,6 +34,8 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
                 columnID: '#',
                 columnName: 'Назва',
                 columnStatus: 'Статус',
+                columnLang: 'Мова',
+                columnLocale: 'Локалізація',
                 columnDateCreated: 'Дата Створення',
                 columnDateUpdated: 'Дата Оновлення',
             }
@@ -42,6 +44,30 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
             statuses: {
                 ACTIVE: 'Активний',
                 REMOVED: 'Видалений'
+            }
+        },
+        editors: {
+            customer: {
+                titleForNew: 'Створення сайту',
+                titleForExistent: 'Редагування сайту',
+                errors: {
+                    title: ''
+                },
+                labelHostName: 'Хост',
+                labelHomePage: 'Домашня сторінка',
+                labelTitle: 'Заголовок',
+                labelAdminTitle: 'Зголовок адміністрування',
+                labelLogo: 'Логотип',
+                labelLang: 'Мова',
+                labelLocale: 'Локалізація',
+                labelProtocol: 'Протокол',
+                buttonSave: 'Зберегти',
+                buttonClose: 'Скасувати',
+                messageSuccess: 'Сайт оновлено успішно',
+                messageError: 'Помилка збереження/оновлення',
+                plugins: {
+                    title: 'Додатки'
+                }
             }
         }
     }, CustomerPluginAccount);

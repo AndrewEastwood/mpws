@@ -207,7 +207,7 @@ class dbquery {
 
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["mpws_customer.Name"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%', 'like');
+                $config['condition']["mpws_customer.HostName"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%', 'like');
                 // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
                 // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
@@ -225,20 +225,15 @@ class dbquery {
                                 $valToSearch = intval($valToSearch);
                                 break;
                             case 'n':
-                                $conditionField = "mpws_customer.Name";
+                                $conditionField = "mpws_customer.HostName";
                                 $valToSearch = '%' . $valToSearch . '%';
                                 $conditionOp = 'like';
                                 break;
-                            case 'd':
-                                $conditionField = "mpws_customer.Description";
-                                $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
-                                break;
-                            case 'm':
-                                $conditionField = "mpws_customer.Model";
-                                $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
-                                break;
+                            // case 'd':
+                            //     $conditionField = "mpws_customer.Description";
+                            //     $valToSearch = '%' . $valToSearch . '%';
+                            //     $conditionOp = 'like';
+                            //     break;
                         }
                         // var_dump($conditionField);
                         // var_dump($valToSearch);
@@ -287,7 +282,7 @@ class dbquery {
         ));
     }
 
-    public static function deleteCustomer ($CustomerID) {
+    public static function archiveCustomer ($CustomerID) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["Status"] = "REMOVED";
@@ -309,7 +304,7 @@ class dbquery {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public static function getCustomerSettingsByCustomerID ($CustomerID = null) {
+/*    public static function getCustomerSettingsByCustomerID ($CustomerID = null) {
         global $app;
         $config = self::getCustomerSettingsByID();
         $config['condition'] = array (
@@ -353,7 +348,7 @@ class dbquery {
             "data" => $data,
             "options" => null
         ));
-    }
+    }*/
 
 
 

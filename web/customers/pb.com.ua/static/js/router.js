@@ -9,7 +9,7 @@ define("customer/js/router", [
     var _customerOptions = {};
 
     _customerOptions.site = {
-        title: APP.config.URL_PUBLIC_TITLE,
+        title: APP.config.TITLE,
         logoImageUrl: APP.config.URL_PUBLIC_HOMEPAGE + APP.config.PATH_STATIC_BASE + APP.config.URL_STATIC_CUSTOMER + 'img/logo.png'
     };
 

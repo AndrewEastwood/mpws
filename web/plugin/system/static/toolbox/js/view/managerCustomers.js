@@ -1,21 +1,37 @@
-define('plugin/shop/toolbox/js/view/managerCustomers', [
+define('plugin/system/toolbox/js/view/managerCustomers', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/view/listCustomers',
+    'plugin/system/toolbox/js/view/listCustomers',
+    'default/js/lib/bootstrap-dialog',
+    'default/js/lib/bootstrap-alert',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerCustomers',
+    'default/js/plugin/hbs!plugin/system/toolbox/hbs/managerCustomers',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Backbone, Utils, ViewListCustomers, tpl, lang) {
+    'default/js/plugin/i18n!plugin/system/toolbox/nls/translation'
+], function (Backbone, Utils, ViewListCustomers, BootstrapDialog, BSAlert, tpl, lang) {
 
     var ManagerCustomers = Backbone.View.extend({
         template: tpl,
         lang: lang,
         className: 'system-manager-customers',
-        initialize: function () {
+        events: {
+            'click a.js-customer-remove': 'customerRemove',
+            'click a.js-customer-restore': 'customerRestore'
+        },
+        initialize: function (options) {
+            this.options = options || {};
             this.viewCustomerList = new ViewListCustomers();
+            if (this.options.status) {
+                this.viewCustomerList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            }
             this.collection = this.viewCustomerList.collection;
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'sync', this.updateTabs);
+        },
+        updateTabs: function () {
+            var status = this.collection.getCustomQueryField('Status') || 'active';
+            this.$('.tab-link').removeClass('active');
+            this.$('.tab-link.customers-' + status.toLowerCase()).addClass('active');
         },
         render: function () {
             // TODO:
@@ -25,9 +41,57 @@ define('plugin/shop/toolbox/js/view/managerCustomers', [
                 this.viewCustomerList.grid.emptyText = lang.managers.customers.noData;
                 this.viewCustomerList.render();
                 // show sub-view
-                this.$('.list').html(this.viewCustomerList.$el);
+                this.$('.customer-list').html(this.viewCustomerList.$el);
             }
             return this;
+        },
+        customerRestore: function (event) {
+            var that = this;
+            BootstrapDialog.confirm("Do you want to remove customer?", function (rez) {
+                if (rez) {
+                    var $item = $(event.target);
+                    var id = parseInt($item.data('id'), 10);
+                    var model = that.collection.get(id);
+                    if (model && model.save) {
+                        model.save({
+                            Status: 'ACTIVE'
+                        }, {
+                            patch: true,
+                            success: function () {
+                                that.collection.fetch({
+                                    reset: true
+                                });
+                            },
+                            error: function () {
+                                BSAlert.danger('Unable to comple action.');
+                            }
+                        });
+                    }
+                }
+            });
+        },
+        customerRemove: function (event) {
+            var that = this;
+            BootstrapDialog.confirm("Do you want to remove customer?", function (rez) {
+                if (rez) {
+                    var $item = $(event.target);
+                    var id = parseInt($item.data('id'), 10);
+                    var model = that.collection.get(id);
+                    if (model && model.destroy) {
+                        model.destroy({
+                            success: function () {
+                                that.collection.fetch({
+                                    reset: true
+                                });
+                            },
+                            error: function () {
+                                // data.instance.refresh();
+                                BSAlert.danger('Unable to comple action.');
+                            }
+                        });
+                    }
+                }
+            });
         }
     });
 

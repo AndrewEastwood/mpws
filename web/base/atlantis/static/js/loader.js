@@ -328,6 +328,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         Backbone.history.start();
         // notify all that loader completed its tasks
         Sandbox.eventNotify('global:loader:complete');
+        Backbone.trigger('global:loader:complete');
         // return Site;
         $(window).trigger('hashchange');
         // get auth status

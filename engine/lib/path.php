@@ -18,6 +18,12 @@ class path {
     public static function getDirectorySeparator () {
         return '/';
     }
+    public static function getDirNameEngine () {
+        return 'engine';
+    }
+    public static function getDirNameMW () {
+        return 'middlewares';
+    }
     public static function getDirNameWeb () {
         return 'web';
     }
@@ -30,24 +36,15 @@ class path {
     public static function getDirNamePlugin () {
         return 'plugin';
     }
-    // public static function getDirNameConfig () {
-    //     return 'config';
-    // }
     public static function getDirNameApi () {
         return 'api';
     }
-    // public static function getDirNameTask () {
-    //     return 'task';
-    // }
     public static function getDirNameTemp () {
         return 'temp';
     }
     public static function getDirNameUploads () {
         return 'uploads';
     }
-    // public static function getDirNameWebUploads () {
-    //     return 'u';
-    // }
 
     public static function rootPath () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);
@@ -104,72 +101,6 @@ class path {
         return self::getDirWeb() . self::getDirNamePlugin() . self::getDirectorySeparator();
     }
 
-    // public static function getCustomerConfigurationFiles ($customer) {
-    //     return glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
-    // }
-
-    // public static function getDefaultConfigurationFiles ($customer) {
-    //     return glob(self::getDefaultDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
-    // }
-
-    // public static function getPluginConfigurationFiles ($name) {
-    //     return glob(self::getPluginDir($name) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
-    // }
-
-    // public static function getPluginApiFiles ($name) {
-    //     return glob(self::getPluginDir($name) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php');
-    // }
-
-    // public static function getCustomerConfigurationFilesMap ($customer) {
-    //     return self::listWithPathsToNamePathMap(self::getCustomerConfigurationFiles($customer));
-    // }
-
-    // public static function getDefaultConfigurationFilesMap ($version) {
-    //     return self::listWithPathsToNamePathMap(self::getDefaultConfigurationFiles($version));
-    // }
-
-    // public static function getPluginConfigurationFilesMap ($name) {
-    //     return self::listWithPathsToNamePathMap(self::getPluginConfigurationFiles($name));
-    // }
-
-    // public static function getPluginApiFilesMap ($name) {
-    //     return self::listWithPathsToNamePathMap(self::getPluginApiFiles($name));
-    // }
-
-    // public static function getPluginApiFilesMap ($name) {
-    //     return self::listWithPathsToNamePathMap(self::getPluginApiFiles($name));
-    // }
-
-    // public static function listWithPathsToNamePathMap (array $listWithPaths) {
-    //     $map = array();
-    //     foreach ($listWithPaths as $value) {
-    //         $pInfo = pathinfo($value);
-    //         $map[$pInfo['filename']] = $value;
-    //     }
-    //     return $map;
-    // }
-
-    // public static function getCustomerConfigNames ($customer) {
-    //     $files = glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
-    //     return self::getFileNamesFromFileList($files);
-    // }
-    // public static function getDefaultConfigNames ($version) {
-    //     $files = glob(self::getDefaultDir($version) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
-    //     return self::getFileNamesFromFileList($files);
-    // }
-    // public static function getPluginConfigNames ($plugin) {
-    //     $files = glob(self::getPluginDir($plugin) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
-    //     return self::getFileNamesFromFileList($files);
-    // }
-    // public static function getPluginApiNames ($plugin) {
-    //     $files = glob(self::getPluginDir($plugin) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php') ?: array();
-    //     return self::getFileNamesFromFileList($files);
-    // }
-    // public static function getPluginTaskNames ($plugin) {
-    //     $files = glob(self::getPluginDir($plugin) . self::getDirNameTask() . self::getDirectorySeparator() . '*.php') ?: array();
-    //     return self::getFileNamesFromFileList($files);
-    // }
-
     public static function getFileNamesFromFileList (array $list) {
         $names = array();
         foreach ($list as $value) {
@@ -178,20 +109,6 @@ class path {
         }
         return $names;
     }
-
-    static function getCustomerMetaData ($customer) {
-        $dir = self::getCustomerDir($customer);
-        $metadata = null;
-        if (file_exists($dir . '/.metadata'))
-            $metadata = parse_ini_file($dir . '/.metadata', true);
-        return $metadata;
-    }
-
-    // public static function getUploadWebDirectory (/* args */) {
-    //     $args = func_get_args();
-    //     array_unshift($args, Path::getDirNameWebUploads());
-    //     return call_user_func_array(__NAMESPACE__ .'\Path::createDirPath', $args);
-    // }
 
     public static function getUploadDirectory (/* args */) {
         $args = func_get_args();

@@ -73,7 +73,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
         };
 
         var columnName = {
-            name: "Name",
+            name: "HostName",
             label: lang.lists.customers.columnName,
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
@@ -116,6 +116,20 @@ define("plugin/system/toolbox/js/view/listCustomers", [
             })
         };
 
+        var columnLang = {
+            name: "Lang",
+            label: lang.lists.customers.columnLang,
+            cell: "string",
+            editable: false
+        };
+
+        var columnLocale = {
+            name: "Locale",
+            label: lang.lists.customers.columnLocale,
+            cell: "string",
+            editable: false
+        };
+
         var columnDateUpdated = {
             name: "DateUpdated",
             label: lang.lists.customers.columnDateUpdated,
@@ -134,6 +148,8 @@ define("plugin/system/toolbox/js/view/listCustomers", [
             columnActions: columnActions,
             columnID: columnID,
             columnName: columnName,
+            columnLang: columnLang,
+            columnLocale: columnLocale,
             columnStatus: columnStatus,
             columnDateUpdated: columnDateUpdated,
             columnDateCreated: columnDateCreated

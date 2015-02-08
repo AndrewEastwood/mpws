@@ -34,12 +34,6 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
             if (!this.options.Status)
                 this.options.Status = "NEW";
         },
-        refreshBadges: function (stats) {
-            this.$('.tab-link .badge').html("0");
-            _(stats).each(function (count, status) {
-                this.$('.tab-link.orders-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
-            });
-        },
         showExpired: function (event) {
             this.viewPromosList.collection.fetchWithExpired($(event.target).is(':checked'), {
                 reset: true

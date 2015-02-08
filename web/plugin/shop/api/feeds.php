@@ -153,6 +153,7 @@ class feeds {
 
         if (ob_get_level() == 0) ob_start();
 
+        $customer = API::getApi('system:customers')->getRuntimeCustomer();
         $feedPath = Path::rootPath() . $this->getFeedFilePathByName($name);
         // $objPHPExcel = new PHPExcel();
         $objPHPExcel = new PHPExcel();
@@ -258,7 +259,7 @@ class feeds {
             foreach ($imagesUrls as $imgUrl) {
                 $urlInfo = parse_url($imgUrl);
                 $pInfo = pathinfo($urlInfo['path']);
-                if ($urlInfo['host'] !== $this->getCustomerConfiguration()->display->Host) {
+                if ($urlInfo['host'] !== $customer['Settings']['Host']) {
                     // $imagesToDownload[] = $imgUrl;
                     // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
                     //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
@@ -383,6 +384,7 @@ class feeds {
 
     public function generateProductFeed () {
         global $app;
+        $customer = API::getApi('system:customers')->getRuntimeCustomer();
         $options = array('limit' => 0);
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
@@ -416,7 +418,7 @@ class feeds {
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '://' . $this->getCustomerConfiguration()->display->Host . $value['normal'];
+                    $images[] = $customer['Settings']['Protocol'] . '://' . $customer['Settings']['Host'] . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {

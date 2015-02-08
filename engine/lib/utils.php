@@ -5,7 +5,7 @@ namespace engine\lib;
 use engine\lib\path as Path;
 
 class utils {
-    
+
     /**
      * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
      * keys to arrays rather than overwriting the value in the first array with the duplicate
@@ -42,29 +42,6 @@ class utils {
     static function clean_cyr_to_lat ($text) {
         $latText = '';
         $latText = self::url_slug($text, array('transliterate' => true));
-        // $chrArray = preg_split('//u',$text, -1, PREG_SPLIT_NO_EMPTY);
-        // $cyr  = array('а','б','в','г','д','e','ж','з','и','й','к','л','м','н','о','п','р','с','т','у', 
-        // 'ф','х','ц','ч','ш','щ','ъ','ь', 'ю','я','А','Б','В','Г','Д','Е','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У',
-        // 'Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ь', 'Ю','Я' );
-        // $lat = array( 'a','b','v','g','d','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u',
-        // 'f' ,'h' ,'ts' ,'ch','sh' ,'sht' ,'a' ,'y' ,'yu' ,'ya','A','B','V','G','D','E','Zh',
-        // 'Z','I','Y','K','L','M','N','O','P','R','S','T','U',
-        // 'F' ,'H' ,'Ts' ,'Ch','Sh' ,'Sht' ,'A' ,'Y' ,'Yu' ,'Ya' );
-        // // var_dump($text);
-        // // var_dump($chrArray);
-        // for ($i = 0, $len = count($chrArray); $i < $len; $i++) {
-        //     $c = $chrArray[$i];
-        //     if ($c === ' ') {
-        //         $latText .= ' ';
-        //     } else {
-        //         $idx = array_search($c, $cyr);
-        //         // var_dump($c);
-        //         // var_dump($idx);
-        //         if ($idx >= 0) {
-        //             $latText .= $lat[$idx];
-        //         }
-        //     }
-        // }
         return $latText;
     }
     
@@ -145,56 +122,12 @@ class utils {
         return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
     }
 
-    static function getCustomerNS ($customerName) {
-        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNameCustomer() . '\\' . $customerName;
-    }
-    static function getDefaultNS ($version) {
-        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNameDefault() . '\\' . $version;
-    }
-    static function getCustomerClassName ($customerName, $customerClassName = 'customer') {
-        return self::getCustomerNS($customerName) . '\\' . $customerClassName;
-    }
-    static function getCustomerConfigClassName ($customerName, $configName) {
-        return self::getCustomerNS($customerName) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
-    }
-    static function getDefaultConfigClassName ($version, $configName) {
-        return self::getDefaultNS($version) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
-    }
-    static function getPluginClassName ($pluginName, $pluginClassName = 'plugin') {
-        // $pluginClass = '\\web\\plugin\\' . $pluginName . '\\plugin';
-        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . $pluginClassName;
-    }
-    static function getPluginConfigClassName ($configName, $pluginName) {
-        // $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
-        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameConfig() . '\\' . $configName;
-    }
     static function getApiClassName ($pluginName, $apiName) {
-        // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
         return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameApi() . '\\' . $apiName;
     }
 
-    static function getExistsArrayValueByKey (/* args */) {
-        $args = func_get_args();
-        $len = count($args);
-        if ($len < 2) {
-            throw 'Wrong arguments passed';
-        }
-        $arr = $args[0];
-        $value = null;
-        for ($i = 1; $i < $len; $i++) {
-            if (isset($arr[$args[$i]])) {
-                $value = $arr[$args[$i]];
-                break;
-            }
-        }
-        return $value;
-    }
-
-    static function array_get_value (array $array, $key, $defaultValue) {
-        if (isset($array[$key])) {
-            return $array[$key];
-        }
-        return $defaultValue;
+    static function getMWClassName ($mwName) {
+        return '\\' . Path::getDirNameEngine() . '\\' . Path::getDirNameMW() . '\\' . $mwName;
     }
 
 }

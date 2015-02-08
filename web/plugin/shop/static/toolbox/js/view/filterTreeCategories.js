@@ -191,11 +191,13 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
             }).on('move_node.jstree', function (e, data) {
                 // debugger;
                 var newParentNode = data.instance.get_node(data.parent);
+                var nodeData = newParentNode.data || {};
+                var parentID = nodeData.id || null;
                 var id = parseInt(data.node.id, 10);
                 var model = self.collection.get(id);
-                if (model && model.save) {
+                if (model && model.save && model.get('ParentID') !== parentID) {
                     model.save({
-                        ParentID: newParentNode.data.id >= 0 ? newParentNode.data.id : null
+                        ParentID: parentID >= 0 ? parentID : null
                     }, {
                         patch: true,
                         success: function (model, resp, options) {
@@ -208,6 +210,8 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                             data.instance.refresh();
                         }
                     });
+                } else {
+                    data.instance.refresh();
                 }
             }).on('activate_node.jstree', function (e, data) {
                 var id = parseInt(data.node.data.id, 10) || void(0);

@@ -176,32 +176,36 @@ class categories {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $category = $this->getCategoryByID($CategoryID);
+                if (isset($reqData['file1'])) {
+                    $category = $this->getCategoryByID($CategoryID);
 
-                $fileName = empty($category['Image']) ? "" : $category['Image']['name'];
-                $newFileName = null;
+                    $currentFileName = empty($category['Image']) ? "" : $category['Image']['name'];
+                    $newFileName = null;
 
-                if (!empty($validatedValues['file1'])) {
-                    $newFileName = $validatedValues['file1'];
-                    unset($validatedValues['file1']);
-                }
+                    if (!empty($validatedValues['file1'])) {
+                        $newFileName = $validatedValues['file1'];
+                        unset($validatedValues['file1']);
+                    }
 
-                if (empty($newFileName) && !empty($fileName)) {
-                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName, 'sm'));
-                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName, 'xs'));
-                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName));
-                    $validatedValues['Image'] = null;
-                }
-                if (!empty($newFileName)) {
-                    $fileName = $newFileName;
-                    $newFileName = uniqid(time());
-                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
-                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
-                    $normalImagePath = $fileName;
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
-                    $validatedValues['Image'] = $uploadInfo['filename'];
+                    if ($newFileName !== $currentFileName) {
+                        if (empty($newFileName) && !empty($currentFileName)) {
+                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName, 'sm'));
+                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName, 'xs'));
+                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName));
+                            $validatedValues['Image'] = null;
+                        }
+                        if (!empty($newFileName)) {
+                            $currentFileName = $newFileName;
+                            $newFileName = uniqid(time());
+                            $smImagePath = 'sm' . Path::getDirectorySeparator() . $currentFileName;
+                            $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
+                            $normalImagePath = $currentFileName;
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                            $validatedValues['Image'] = $uploadInfo['filename'];
+                        }
+                    }
                 }
 
                 $app->getDB()->beginTransaction();

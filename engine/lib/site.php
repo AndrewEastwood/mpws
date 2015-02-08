@@ -33,15 +33,19 @@ class site {
         $layout = $app->getSettings('layout');
         $layoutBody = $app->getSettings('layoutBody');
 
+        if ($customer['isBlocked'] && !$app->isToolbox()) {
+            $layout = 'blocked.hbs';
+        }
+
         // TODO: get Plugins, Title, Locale, Lang and all other public customer's settings from DB
         // and expose in the template : >>>>>
-        $lang = $customer['Settings']['Lang'];
-        $locale = $customer['Settings']['Locale'];
-        $plugins = $customer['Settings']['Plugins'];
+        $lang = $customer['Lang'];
+        $locale = $customer['Locale'];
+        $plugins = $customer['Plugins'];
         $Homepage = $customer['HomePage'];
-        $Host = $customer['Settings']['Host'];
-        $Scheme = $customer['Settings']['Protocol'];
-        $Title = $customer['Settings']['Title'];
+        $Host = $customer['HostName'];
+        $Scheme = $customer['Protocol'];
+        $Title = $customer['Title'];
         // <<< get from db according to display customer
 
         $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layout, $app->isDebug());
@@ -67,7 +71,7 @@ class site {
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
-            URL_PUBLIC_TITLE: '" . $Title . "',
+            TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "',
             URL_API: '" . $urls['api'] . "',
             URL_UPLOAD: '" . $urls['upload'] . "',
             AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
@@ -102,7 +106,7 @@ class site {
     public function hasPlugin ($pluginName) {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
-        $plugins = $customer['Settings']['Plugins'];
+        $plugins = $customer['Plugins'];
         if (empty($plugins)) {
             return false;
         }

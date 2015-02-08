@@ -8,7 +8,30 @@
                 {{lang.managers.customers.title}}
             </div>
             <!-- /.panel-heading -->
-            <div class="panel-body list"></div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-tabs-plugin-system-customers">
+                        <li class="tab-link customers-active">
+                            <a href="{{bb_link instances.system.urls.customerListByStatus status="ACTIVE" asRoot=true}}">
+                                <i class="fa fa-check-circle"></i>
+                                {{lang.customer.statuses.ACTIVE}}
+                            </a>
+                        </li>
+                        <li class="tab-link customers-removed">
+                            <a href="{{bb_link instances.system.urls.customerListByStatus status="REMOVED" asRoot=true}}">
+                                <i class="fa fa-trash-o"></i>
+                                {{lang.customer.statuses.REMOVED}}
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div class="tab-pane active customer-list"></div>
+                    </div>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
             <!-- /.panel-body -->
         </div>
     </div>

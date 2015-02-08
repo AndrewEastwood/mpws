@@ -424,12 +424,7 @@ class database {
         );
 
         return Utils::array_merge_recursive_distinct ($queryDefault, $queryExtend);
-        // return $this->extendConfigs($queryDefault, $queryExtend, true);
     }
-
-    // public function extendConfigs ($configA, $configB = null) {
-    //     return Utils::array_merge_recursive_distinct ($configA, $configB);
-    // }
 
     public function getTableRecordsCount ($table, $condition = array()) {
         return $this->createDBQuery(array(

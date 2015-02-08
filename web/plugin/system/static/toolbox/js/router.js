@@ -13,6 +13,9 @@ define("plugin/system/toolbox/js/router", [
     var user = new User();
     // APP.dfd.systemDashboard = new $.Deferred();
     // APP.dfd.systemMenu = new $.Deferred();
+    // Backbone.on('auth:info auth:registered', function () {
+    //     debugger
+    // });
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         var authUserID = Auth.getUserID();
@@ -31,6 +34,7 @@ define("plugin/system/toolbox/js/router", [
             });
         }
         // show this menu when user is can manage
+        // debugger
         require(['plugin/system/toolbox/js/view/menu'], function (ViewMenu) {
             menuView = new ViewMenu({
                 model: user
@@ -50,8 +54,11 @@ define("plugin/system/toolbox/js/router", [
         }
     });
 
+    Auth.getStatus();
+
     var routes = {
-        "!/system/customers": "customers",
+        "!/system/customers": "customerList",
+        "!/system/customer/:status": "customerListByStatus",
         "!/system/customer/edit/:id": "customerEdit",
         "!/system/customer/new": "customerCreate",
         "!/system/migrations": "migrations",
@@ -111,15 +118,58 @@ define("plugin/system/toolbox/js/router", [
             });
         },
 
-        customers: function () {
-            require(['plugin/system/toolbox/js/view/listCustomers'], function (ViewListCustomers) {
+        customerList: function () {
+            require(['plugin/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
                 // debugger;
                 // create new view
-                var viewListCustomers = new ViewListCustomers();
-                viewListCustomers.collection.fetch({reset: true});
+                var viewManagerCustomers = new ViewManagerCustomers();
+                viewManagerCustomers.collection.fetch({reset: true});
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: viewListCustomers.$el
+                    el: viewManagerCustomers.$el
+                });
+            });
+        },
+
+        customerListByStatus: function (status) {
+            require(['plugin/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
+                // debugger;
+                // create new view
+                var options = status ? {
+                    status: status
+                } : {};
+                var viewManagerCustomers = new ViewManagerCustomers(options);
+                viewManagerCustomers.collection.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewManagerCustomers.$el
+                });
+            });
+        },
+
+        customerEdit: function (id) {
+            require(['plugin/system/toolbox/js/view/editCustomer'], function (ViewEditCustomer) {
+                // debugger;
+                // create new view
+                var viewEditCustomer = new ViewEditCustomer();
+                viewEditCustomer.model.set('ID', id, {silent: true});
+                viewEditCustomer.model.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewEditCustomer.$el
+                });
+            });
+        },
+
+        customerCreate: function () {
+            require(['plugin/system/toolbox/js/view/editCustomer'], function (ViewEditCustomer) {
+                // debugger;
+                // create new view
+                var viewEditCustomer = new ViewEditCustomer();
+                viewEditCustomer.model.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewEditCustomer.$el
                 });
             });
         },

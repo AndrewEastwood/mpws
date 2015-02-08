@@ -1,0 +1,4 @@
+ALTER TABLE `mpws_customer` CHANGE `Name` `HostName` TEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL;
+ALTER TABLE `mpws_customer` ADD `Title` VARCHAR(200) NOT NULL DEFAULT 'your new site' AFTER `HomePage`, ADD `Logo` VARCHAR(100) NULL DEFAULT NULL AFTER `Title`, ADD `Lang` VARCHAR(50) NOT NULL DEFAULT 'en-US' AFTER `Logo`, ADD `Locale` VARCHAR(10) NOT NULL DEFAULT 'en' AFTER `Lang`, ADD `Protocol` VARCHAR(10) NOT NULL DEFAULT 'http' AFTER `Locale`, ADD `Plugins` VARCHAR(500) NOT NULL DEFAULT 'system' AFTER `Protocol`;
+DROP TABLE mpws_customerSettings;
+ALTER TABLE `mpws_customer` ADD `AdminTitle` VARCHAR(200) NOT NULL AFTER `Title`;

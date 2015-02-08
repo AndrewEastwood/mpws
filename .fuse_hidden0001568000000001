@@ -33,7 +33,7 @@ use \engine\lib\path as Path;
 use \engine\lib\utils as Utils;
 use \engine\lib\database as DB;
 use \engine\lib\site as Site;
-use \engine\lib\middleware as Middlewares;
+use \engine\lib\middlewares as Middlewares;
 
 // detect running customer name
 // define('DR', glGetDocumentRoot());
@@ -58,7 +58,7 @@ Request::setPhpInput(file_get_contents('php://input'));
 
 class app {
 
-    // private $isDebug = true;
+    private $isDebug = true;
     private $isToolbox = false;
     private $customerName = false;
     private $displayCustomer = false;
@@ -127,7 +127,7 @@ class app {
             $this->customerName = implode('.', array_splice($host_parts, 1));
         else
             $this->customerName = $h;
-        // $this->customerName = str_replace('.', '_', $this->customerName);
+        $this->customerName = str_replace('.', '_', $this->customerName);
         // get display customer
         $this->displayCustomer = $this->isToolbox() ? 'toolbox' : $this->customerName();
         // get build version
@@ -160,7 +160,7 @@ class app {
     }
 
     public function getEnvironment () {
-        return strtolower($this->environment);
+        return $this->environment;
     }
 
     public function getBuildVersion () {
@@ -168,7 +168,7 @@ class app {
     }
 
     public function isDebug () {
-        return $this->getEnvironment() === 'development';
+        return $this->isDebug;
     }
 
     public function isToolbox () {
@@ -209,8 +209,7 @@ class app {
 
         $this->site->init();
 
-        Middlewares::register(array('siteAccess'));
-        Middlewares::process();
+        Middlewares::process()
 
         // $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);
