@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
-    var version = grunt.option('version') || 'atlantis';
-    var customer = grunt.option('customer') || '*';
+    var version = grunt.option('ver') || 'atlantis';
+    var customer = grunt.option('app') || '**';
     // var mode = grunt.option('mode') || 'all';
     // var allModes = ['site', 'toolbox'];
 

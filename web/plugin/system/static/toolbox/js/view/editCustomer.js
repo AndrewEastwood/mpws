@@ -95,6 +95,9 @@ define("plugin/system/toolbox/js/view/editCustomer", [
                 that.$('.js-plugins').empty();
                 var customerPlugins = that.model.get('Plugins');
                 _(data).each(function (pName) {
+                    if (pName === "system") {
+                        return;
+                    }
                     var isActivated = _(customerPlugins).indexOf(pName) >= 0;
                     that.$('.js-plugins').append(
                         $('<label>').html(

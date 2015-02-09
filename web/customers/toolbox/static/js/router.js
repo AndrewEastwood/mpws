@@ -72,7 +72,7 @@ define("customer/js/router", [
             $blockItem = $('<div>').attr({
                 name: 'DashboardForPlugin_' + pluginName,
                 id: 'dashboard-container-' + pluginName + '-ID',
-                "class": 'dashboard-container dashboard-container-' + pluginName,
+                "class": 'well dashboard-container dashboard-container-' + pluginName,
                 rel: 'menu'
             });
             $blockItem.html(tplFBAnim());

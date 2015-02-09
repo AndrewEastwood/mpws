@@ -158,20 +158,33 @@ class customers {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'HostName' => array('string', 'notEmpty', 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 200),
-            'Title' => array('string', 'skipIfUnset', 'max' => 200),
-            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'localhost'),
+            'Title' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'Happy Site :)'),
+            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'MPWS Admin'),
             'Logo' => array('string', 'skipIfEmpty'),
-            'Lang' => array('string', 'skipIfUnset', 'max' => 50),
-            'Locale' => array('string', 'skipIfUnset', 'max' => 10),
-            'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
-            'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
+            'Lang' => array('string', 'skipIfUnset', 'max' => 50, 'defaultValueIfUnset' => 'en'),
+            'Locale' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'en_us'),
+            'Protocol' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'http'),
+            'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfUnset' => 'system')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+
+                // adjust plugins
+                $pList = array('system');
+                if (isset($validatedValues['Plugins']) && !empty($validatedValues['Plugins'])) {
+                    $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
+                    foreach ($reqPluginsList as $key => $value) {
+                        $value = trim($value);
+                        if (!empty($value) && $value !== 'system') {
+                            $pList[] = $value;
+                        }
+                    }
+                }
+                $validatedValues['Plugins'] = implode(',', $pList);
 
                 $app->getDB()->beginTransaction();
 
@@ -249,10 +262,18 @@ class customers {
                     }
                 }
 
-                if (isset($validatedValues['Plugins'])) {
-                    $pList = explode(',', $validatedValues['Plugins']);
-                    // move system plugin to be firs in the list
+                // adjust plugins
+                $pList = array('system');
+                if (isset($validatedValues['Plugins']) && !empty($validatedValues['Plugins'])) {
+                    $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
+                    foreach ($reqPluginsList as $key => $value) {
+                        $value = trim($value);
+                        if (!empty($value) && $value !== 'system') {
+                            $pList[] = $value;
+                        }
+                    }
                 }
+                $validatedValues['Plugins'] = implode(',', $pList);
 
                 $app->getDB()->beginTransaction();
 
