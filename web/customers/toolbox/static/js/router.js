@@ -40,7 +40,7 @@ define("customer/js/router", [
 
     var _ifNotAuthorizedNavigateToSignin = function () {
         if (!Auth.getUserID()) {
-            APP.xhrAbortAll();
+            // APP.xhrAbortAll();
             if (!/!\/signin/.test(Backbone.history.getHash())) {
                 Backbone.history.fragment = false;
                 window.location.href = '/#!/signin';

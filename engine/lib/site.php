@@ -71,6 +71,7 @@ class site {
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
+            URL_PUBLIC_LOGO: '" . $customer['Logo']['normal'] . "',
             TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "',
             URL_API: '" . $urls['api'] . "',
             URL_UPLOAD: '" . $urls['upload'] . "',

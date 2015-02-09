@@ -182,16 +182,16 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // });
     }
 
-    var xhrPool = [];
-    $(document).ajaxSend(function (e, jqXHR) {
-        xhrPool.push(jqXHR);
-    });
+    // var xhrPool = [];
+    // $(document).ajaxSend(function (e, jqXHR) {
+    //     xhrPool.push(jqXHR);
+    // });
     $(document).ajaxComplete(function (event, jqXHR) {
-        xhrPool = $.grep(xhrPool, function (x) {
-            return x != jqXHR
-        });
-        if (!jqXHR.responseText)
-            return;
+        // xhrPool = $.grep(xhrPool, function (x) {
+        //     return x != jqXHR
+        // });
+        // if (!jqXHR.responseText)
+        //     return;
         var response = jqXHR.responseText;
         try {
             // debugger;
@@ -205,11 +205,11 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // }
         Sandbox.eventNotify("global:ajax:responce", response);
     });
-    APP.xhrAbortAll = function () {
-        $.each(xhrPool, function (idx, jqXHR) {
-            jqXHR.abort();
-        });
-    };
+    // APP.xhrAbortAll = function () {
+    //     $.each(xhrPool, function (idx, jqXHR) {
+    //         jqXHR.abort();
+    //     });
+    // };
 
     APP.Cache = Cache;
 

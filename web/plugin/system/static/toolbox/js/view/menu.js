@@ -9,6 +9,9 @@ define("plugin/system/toolbox/js/view/menu", [
     var Menu = Backbone.View.extend({
         lang: lang,
         template: tpl,
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+        },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             this.$el = $(this.$el.html());

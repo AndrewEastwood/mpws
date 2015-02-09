@@ -8,6 +8,7 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
             title: 'Система',
             dashboard: 'Огляд системи',
             customers: 'Сайти',
+            customerEdit: 'Редагувати',
             migrations: 'Маграції БД',
             users: 'Користувачі'
         },

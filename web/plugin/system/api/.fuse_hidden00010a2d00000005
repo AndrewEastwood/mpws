@@ -351,28 +351,26 @@ class user {
     }
 
     public function get (&$resp, $req) {
-        $allAccess = API::getAPI('system:auth')->ifYouCan('Admin') ||
-            API::getAPI('system:auth')->ifYouCan('AddUsers') ||
-            API::getAPI('system:auth')->ifYouCan('Maintain');
-
-        if (empty($req->get['id']) && $allAccess) {
+        if (!empty($req->get['activate'])) {
+            $ValidationString = $req->get['activate'];
+            $resp = $this->activateUserByValidationStyring($ValidationString);
+            return;
+        } elseif (is_string($req->get['id'])) {
+            $resp = $this->getUserByValidationString($req->get['id']);
+            return;
+        }
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
             $resp = $this->getUsers_List($req->get);
             return;
         } else {
-            if (is_numeric($req->get['id']) && $allAccess) {
+            if (is_numeric($req->get['id'])) {
                 $UserID = intval($req->get['id']);
                 $resp = $this->getUserByID($UserID);
-                return;
-            } elseif (is_string($req->get['id'])) {
-                $resp = $this->getUserByValidationString($req->get['id']);
-                return;
-            } elseif (!empty($req->get['activate'])) {
-                $ValidationString = $req->get['activate'];
-                $resp = $this->activateUserByValidationStyring($ValidationString);
-                return;
-            } else {
-                $resp['error'] = "AccessDenied";
-                return;
+            return;
             }
         }
     }

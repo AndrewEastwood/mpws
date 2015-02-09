@@ -17,26 +17,11 @@
             <i class="fa fa-fw fa-database"></i> {{lang.menu.migrations}}
         </a>
     </li>
+    {{/if}}
     <li rel="menu" class="menu-system-users">
         <a href="{{bb_link instances.system.urls.users asRoot=true}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>
-    {{else}}
-    {{#if data.Permissions.CanAdmin}}
-    <li rel="menu" class="menu-system-customers">
-        <a href="{{bb_link instances.system.urls.customerEdit id="1" asRoot=true}}">
-            <i class="fa fa-fw fa-pencil"></i> {{lang.menu.customerEdit}}
-        </a>
-    </li>
-    {{/if}}
-    {{#or data.Permissions.CanAdmin data.Permissions.AddUsers}}
-    <li rel="menu" class="menu-system-users">
-        <a href="{{bb_link instances.system.urls.users asRoot=true}}">
-            <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
-        </a>
-    </li>
-    {{/or}}
-    {{/if}}
 </ul>
 <!-- /.nav-second-level -->

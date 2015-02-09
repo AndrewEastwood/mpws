@@ -43,14 +43,13 @@ define("plugin/system/toolbox/js/view/editCustomer", [
                     label: lang.editors.customer.buttonClose,
                     cssClass: 'btn-default btn-link',
                     action: function (dialog) {
-                        debugger
+                        // debugger
                         Backbone.history.navigate(APP.instances.system.urls.customerList, true);
                     }
                 }, {
                     label: lang.editors.customer.buttonSave,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        debugger;
                         that.model.save({
                             HostName: that.$('.js-hostname').val(),
                             HomePage: that.$('.js-homepage').val(),
@@ -67,9 +66,10 @@ define("plugin/system/toolbox/js/view/editCustomer", [
                             success: function (model, response) {
                                 // debugger;
                                 if (response && response.success) {
-                                    BSAlerts.success(lang.editors.customer.messageSuccess);
+                                    BSAlert.success(lang.editors.customer.messageSuccess);
+                                    // window.location.reload();
                                 } else {
-                                    BSAlerts.danger(lang.editors.customer.messageError);
+                                    BSAlert.danger(lang.editors.customer.messageError);
                                 }
                             }
                         });

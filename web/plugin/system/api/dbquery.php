@@ -506,7 +506,7 @@ class dbquery {
     // USER PERMISSIONS
     // -----------------------------------------------
     // -----------------------------------------------
-    public static function getPermissions ($UserID) {
+    public static function getUserPermissionsByUserID ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_permissions",
@@ -521,10 +521,11 @@ class dbquery {
         ));
     }
 
-    public static function createPermissions ($data) {
+    public static function createUserPermissions ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
+        $data['UserID'] = $UserID;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_permissions",
             "action" => "insert",
@@ -533,7 +534,7 @@ class dbquery {
         ));
     }
 
-    public static function updatePermissions ($UserID, $data) {
+    public static function updateUserPermissions ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(

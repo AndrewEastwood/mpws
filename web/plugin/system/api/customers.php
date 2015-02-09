@@ -109,6 +109,14 @@ class customers {
         $customer['isBlocked'] = $customer['Status'] != 'ACTIVE';
         $customer['Plugins'] = explode(",", $customer['Plugins']);
         // var_dump($customer);
+        if (!empty($customer['Logo'])) {
+            $customer['Logo'] = array(
+                'name' => $customer['Logo'],
+                'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo']),
+                'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo'], 'sm'),
+                'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo'], 'xs')
+            );
+        }
         return $customer;
     }
 
@@ -290,8 +298,7 @@ class customers {
         else
             $errors = $validatedDataObj["errors"];
 
-        if ($success && !empty($CustomerID))
-            $result = $this->getCustomerByID($CustomerID);
+        $result = $this->getCustomerByID($CustomerID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
