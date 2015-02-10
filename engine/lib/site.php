@@ -58,6 +58,11 @@ class site {
 
         $urls = $app->getSettings('urls');
         $staticPath = $urls['static'];
+        $staticPathCustomer = $staticPath . Path::createPath(Path::getDirNameCustomer(), $displayCustomer);
+        $logoUrl = $staticPathCustomer . '/img/logo.png';
+        if (!empty($customer['Logo'])) {
+            $logoUrl = $customer['Logo']['normal'];
+        }
         $initialJS = "{
             LOCALE: '" . $locale . "',
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
@@ -71,13 +76,13 @@ class site {
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
-            URL_PUBLIC_LOGO: '" . $customer['Logo']['normal'] . "',
+            URL_PUBLIC_LOGO: '" . $logoUrl . "',
             TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "',
             URL_API: '" . $urls['api'] . "',
             URL_UPLOAD: '" . $urls['upload'] . "',
             AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
             USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . ",
-            URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer) . "',
+            URL_STATIC_CUSTOMER: '" . $staticPathCustomer . "',
             URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $websiteCustomer) . "',
             URL_STATIC_PLUGIN: '" . Path::createPath('plugin') . "',
             URL_STATIC_DEFAULT: '" . Path::createPath('base', $version) . "',
