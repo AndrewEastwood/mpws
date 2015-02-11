@@ -11,10 +11,10 @@ use ArrayObject;
 
 class settings {
 
-
-
     public function __construct () {
-        $this->SETTING_TYPE = (object)$this->SETTING_TYPE_LIST;
+        $types = array_keys(dbquery::$SETTING_TYPE_TO_DBTABLE_MAP);
+        $this->SETTING_TYPE_ARRAY = $types;
+        $this->SETTING_TYPE = (object)array_combine($types, $types);
     }
 
     // -----------------------------------------------
@@ -22,6 +22,18 @@ class settings {
     // SETTINGS
     // -----------------------------------------------
     // -----------------------------------------------
+
+    public function getCustomerAlerts () {}
+    public function getCustomerExchangeRates () {}
+    public function getCustomerAddresses () {}
+    public function getCustomer () {}
+
+    /// TODO: create function that returns settings tree
+/*
+ALERTS
+*/
+
+
     public function getSettingByID ($type, $id) {
         global $app;
         if (empty($id) || !is_numeric($id))
@@ -56,7 +68,11 @@ class settings {
     public function toList (array $options = array()) {
         global $app;
         $list = array();
-        foreach (keys($this->SETTING_TYPE_LIST) as $type) {
+        foreach ($this->SETTING_TYPE_ARRAY as $type) {
+            // $settingsCount = $this->getCustomerSettingsCount($type);
+            // if (empty($settingsCount) && dbquery::isOneForCustomer($type)) {
+            //     $this->create($type, array());
+            // }
             $list[$type] = $this->getSettingsByType($type);
         }
         // $list['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
@@ -71,40 +87,28 @@ class settings {
         $success = false;
         $settingID = null;
 
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Property' => array('string'),
-            'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset'),
-            'Type' => array('string')
-        ));
+        try {
 
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-                $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $app->getSite()->getRuntimeCustomerID();
-                $validatedValues["CustomerID"] = $CustomerID;
+            $reqData["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+            $config = dbquery::shopCreateSetting($type, $reqData);
 
-                $config = dbquery::shopCreateSetting($validatedValues);
+            $app->getDB()->beginTransaction();
 
-                $app->getDB()->beginTransaction();
+            $settingID = $app->getDB()->query($config) ?: null;
 
-                $settingID = $app->getDB()->query($config) ?: null;
-
-                if (empty($settingID)) {
-                    throw new Exception('SettingCreateError');
-                }
-
-                $app->getDB()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
+            if (empty($settingID)) {
+                throw new Exception('SettingCreateError');
             }
-        else
-            $errors = $validatedDataObj["errors"];
 
-        $result = $this->findByID($type, $settingID);
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result = $this->getSettingByID($type, $settingID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -180,27 +184,25 @@ class settings {
         return $result;
     }
 
-    // private function getRequestSettingTypeObj ($req) {
-    //     $typeObj = array(
-    //         'error' => false,
-    //         'allowMultiple' => false,
-    //         'name' => null,
-    //         'key' => null
-    //     );
-    //     if (empty($req->get['type'])) {
-    //         $typeObj['error'] = 'MissedParameter_type';
-    //     } else {
-    //         $type = $req->get['type'];
-    //         if (!isset($this->SETTING_TYPE_LIST[$type])) {
-    //             $typeObj['error'] = 'UnknownParameterType_' . $type;
-    //         } else {
-    //             $typeObj = in_array($type, $this->ALLOW_MULTIPLE_SETTINGS);
-    //             $typeObj['key'] = $type;
-    //             $typeObj['name'] = $this->SETTING_TYPE_LIST[$type];
-    //         }
-    //     }
-    //     return $typeObj;
-    // }
+    private function getVerifiedSettingsTypeObj ($req) {
+        $typeObj = array(
+            'error' => false,
+            'single' => false,
+            'type' => null
+        );
+        if (!isset($req->get['type'])) {
+            $typeObj['error'] = 'MissedParameter_type';
+        } else {
+            $type = dbquery::getVerifiedSettingsType($req->get['type']);
+            $typeObj['type'] = $type;
+            if (is_null($type)) {
+                $typeObj['error'] = 'WrongSettingsType_' . $req->get['type'];
+            } else {
+                $typeObj['single'] = dbquery::isOneForCustomer($type);
+            }
+        }
+        return (object)$typeObj;
+    }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -208,6 +210,15 @@ class settings {
     // -----------------------------------------------
     // -----------------------------------------------
 
+    public function getCustomerSettingsCount ($type) {
+        global $app;
+        $config = dbquery::customerSettingsCount($type);
+        $sCount = $app->getDB()->query($config);
+        if (empty($sCount)) {
+            return null;
+        }
+        return intval($sCount['ItemsCount']);
+    }
     public function getSettingsFormOrder () {
         return $this->getSettingsByType($this->SETTING_TYPE->FORMORDER);
     }
@@ -227,35 +238,40 @@ class settings {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        // $typeObj = $this->getRequestSettingTypeObj($req);
-        if ()
+        $typeObj = $this->getVerifiedSettingsTypeObj($req);
+        
         if (!empty($req->get['id'])) {
-            $resp = $this->getSettingByID($typeObj['name'], $req->get['id']);
+            $resp = $this->getSettingByID($typeObj->type, $req->get['id']);
         } else {
-            if (empty($typeObj['name'])) {
+            if (empty($typeObj->type)) {
                 $resp = $this->toList();
             } else {
-                $resp = $this->getSettingsByType($typeObj['name']);
+                $resp = $this->getSettingsByType($typeObj->type);
             }
         }
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $typeObj = $this->getRequestSettingTypeObj($req);
-        $settings = $this->getSettingsByType($typeObj['name']);
-        $prop = null;
-        if (isset($req->data['ID'])) {
-            $prop = $this->findByName($req->get['type'], $req->data['Property']);
-        }
-        if (empty($prop)) {
-            $resp = $this->create($req->get['type'], $req->data);
-        } else {
-            $resp = $this->update($req->get['type'], $prop['ID'], $req->data);
-        }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        //     $resp['error'] = "AccessDenied";
+        //     return;
+        // }
+        $typeObj = $this->getVerifiedSettingsTypeObj($req);
+        // var_dump($typeObj);
+        // header('HTTP/1.1 500');
+        $settingsCount = $this->getCustomerSettingsCount($typeObj->type);
+        var_dump($settingsCount);
+        // var_dump($req->data);
+        // $settings = $this->getSettingsByType($typeObj['name']);
+        // $prop = null;
+        // if (isset($req->data['ID'])) {
+        //     $prop = $this->findByName($req->get['type'], $req->data['Property']);
+        // }
+        // if (empty($prop)) {
+            $resp = $this->create($typeObj->type, $req->data);
+        // } else {
+        //     $resp = $this->update($req->get['type'], $prop['ID'], $req->data);
+        // }
     }
 
     public function patch (&$resp, $req) {

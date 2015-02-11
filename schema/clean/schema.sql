@@ -726,14 +726,11 @@ CREATE TABLE `shop_settingsAddress` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ShopName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `Country` varchar(50) COLLATE utf8_bin NOT NULL,
+  `City` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
-  `ContactLabel` varchar(200) COLLATE utf8_bin NOT NULL,
-  `ContactValue` varchar(50) COLLATE utf8_bin NOT NULL,
-  `TextShipping` text COLLATE utf8_bin NOT NULL,
-  `TextPayment` text COLLATE utf8_bin NOT NULL,
-  `TextWarranty` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -833,6 +830,24 @@ CREATE TABLE `shop_settingsFormOrder` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `shop_settingsInfo`
+--
+
+DROP TABLE IF EXISTS `shop_settingsInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsInfo` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Shipping` text COLLATE utf8_bin NOT NULL,
+  `Payment` text COLLATE utf8_bin NOT NULL,
+  `Warranty` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `shop_settingsMisc`
 --
 
@@ -864,6 +879,7 @@ DROP TABLE IF EXISTS `shop_settingsOpenHours`;
 CREATE TABLE `shop_settingsOpenHours` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `ShopAddressID` int(11) NOT NULL,
   `Monday` varchar(50) COLLATE utf8_bin NOT NULL,
   `Tuesday` varchar(50) COLLATE utf8_bin NOT NULL,
   `Wednesday` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -873,7 +889,30 @@ CREATE TABLE `shop_settingsOpenHours` (
   `Sunday` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
+  KEY `AddressID` (`ShopAddressID`),
+  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shop_settingsPhones`
+--
+
+DROP TABLE IF EXISTS `shop_settingsPhones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsPhones` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ShopAddressID` int(11) NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Value` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`ShopAddressID`),
+  KEY `ShopAddressID` (`ShopAddressID`),
+  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -895,6 +934,7 @@ CREATE TABLE `shop_settingsProduct` (
   `ShowWarrantyInfo` tinyint(1) NOT NULL DEFAULT '1',
   `ShowContacts` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
+  UNIQUE KEY `CustomerID_2` (`CustomerID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsProduct_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -1035,4 +1075,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-11  2:57:41
+-- Dump completed on 2015-02-12  1:02:41

@@ -1014,14 +1014,11 @@ CREATE TABLE `shop_settingsAddress` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ShopName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `Country` varchar(50) COLLATE utf8_bin NOT NULL,
+  `City` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
-  `ContactLabel` varchar(200) COLLATE utf8_bin NOT NULL,
-  `ContactValue` varchar(50) COLLATE utf8_bin NOT NULL,
-  `TextShipping` text COLLATE utf8_bin NOT NULL,
-  `TextPayment` text COLLATE utf8_bin NOT NULL,
-  `TextWarranty` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1060,7 +1057,7 @@ CREATE TABLE `shop_settingsAlerts` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAlerts_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1069,6 +1066,7 @@ CREATE TABLE `shop_settingsAlerts` (
 
 LOCK TABLES `shop_settingsAlerts` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAlerts` DISABLE KEYS */;
+INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,1,1,1,1,1,1,1,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `shop_settingsAlerts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1088,7 +1086,7 @@ CREATE TABLE `shop_settingsExchangeRates` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsExchangeRates_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1097,6 +1095,7 @@ CREATE TABLE `shop_settingsExchangeRates` (
 
 LOCK TABLES `shop_settingsExchangeRates` WRITE;
 /*!40000 ALTER TABLE `shop_settingsExchangeRates` DISABLE KEYS */;
+INSERT INTO `shop_settingsExchangeRates` VALUES (1,1,'','',0);
 /*!40000 ALTER TABLE `shop_settingsExchangeRates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1153,7 +1152,7 @@ CREATE TABLE `shop_settingsFormOrder` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsFormOrder_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1162,7 +1161,36 @@ CREATE TABLE `shop_settingsFormOrder` (
 
 LOCK TABLES `shop_settingsFormOrder` WRITE;
 /*!40000 ALTER TABLE `shop_settingsFormOrder` DISABLE KEYS */;
+INSERT INTO `shop_settingsFormOrder` VALUES (1,1,1,1,1,1,1,1,1,1,1,'',1);
 /*!40000 ALTER TABLE `shop_settingsFormOrder` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsInfo`
+--
+
+DROP TABLE IF EXISTS `shop_settingsInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsInfo` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Shipping` text COLLATE utf8_bin NOT NULL,
+  `Payment` text COLLATE utf8_bin NOT NULL,
+  `Warranty` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsInfo`
+--
+
+LOCK TABLES `shop_settingsInfo` WRITE;
+/*!40000 ALTER TABLE `shop_settingsInfo` DISABLE KEYS */;
+INSERT INTO `shop_settingsInfo` VALUES (1,1,'','','');
+/*!40000 ALTER TABLE `shop_settingsInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1184,7 +1212,7 @@ CREATE TABLE `shop_settingsMisc` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsMisc_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1193,6 +1221,7 @@ CREATE TABLE `shop_settingsMisc` (
 
 LOCK TABLES `shop_settingsMisc` WRITE;
 /*!40000 ALTER TABLE `shop_settingsMisc` DISABLE KEYS */;
+INSERT INTO `shop_settingsMisc` VALUES (1,1,'',NULL,NULL,'ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `shop_settingsMisc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1206,6 +1235,7 @@ DROP TABLE IF EXISTS `shop_settingsOpenHours`;
 CREATE TABLE `shop_settingsOpenHours` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `ShopAddressID` int(11) NOT NULL,
   `Monday` varchar(50) COLLATE utf8_bin NOT NULL,
   `Tuesday` varchar(50) COLLATE utf8_bin NOT NULL,
   `Wednesday` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -1215,8 +1245,10 @@ CREATE TABLE `shop_settingsOpenHours` (
   `Sunday` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
+  KEY `AddressID` (`ShopAddressID`),
+  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1226,6 +1258,36 @@ CREATE TABLE `shop_settingsOpenHours` (
 LOCK TABLES `shop_settingsOpenHours` WRITE;
 /*!40000 ALTER TABLE `shop_settingsOpenHours` DISABLE KEYS */;
 /*!40000 ALTER TABLE `shop_settingsOpenHours` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsPhones`
+--
+
+DROP TABLE IF EXISTS `shop_settingsPhones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsPhones` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ShopAddressID` int(11) NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Value` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`ShopAddressID`),
+  KEY `ShopAddressID` (`ShopAddressID`),
+  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsPhones`
+--
+
+LOCK TABLES `shop_settingsPhones` WRITE;
+/*!40000 ALTER TABLE `shop_settingsPhones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsPhones` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1246,9 +1308,10 @@ CREATE TABLE `shop_settingsProduct` (
   `ShowWarrantyInfo` tinyint(1) NOT NULL DEFAULT '1',
   `ShowContacts` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
+  UNIQUE KEY `CustomerID_2` (`CustomerID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsProduct_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1257,6 +1320,7 @@ CREATE TABLE `shop_settingsProduct` (
 
 LOCK TABLES `shop_settingsProduct` WRITE;
 /*!40000 ALTER TABLE `shop_settingsProduct` DISABLE KEYS */;
+INSERT INTO `shop_settingsProduct` VALUES (2,1,1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `shop_settingsProduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1282,7 +1346,7 @@ CREATE TABLE `shop_settingsSeo` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsSeo_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1291,6 +1355,7 @@ CREATE TABLE `shop_settingsSeo` (
 
 LOCK TABLES `shop_settingsSeo` WRITE;
 /*!40000 ALTER TABLE `shop_settingsSeo` DISABLE KEYS */;
+INSERT INTO `shop_settingsSeo` VALUES (1,1,'','','','','','','','','');
 /*!40000 ALTER TABLE `shop_settingsSeo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1313,7 +1378,7 @@ CREATE TABLE `shop_settingsWebsite` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsWebsite_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1322,6 +1387,7 @@ CREATE TABLE `shop_settingsWebsite` (
 
 LOCK TABLES `shop_settingsWebsite` WRITE;
 /*!40000 ALTER TABLE `shop_settingsWebsite` DISABLE KEYS */;
+INSERT INTO `shop_settingsWebsite` VALUES (1,1,1,NULL,NULL,'ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `shop_settingsWebsite` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1413,4 +1479,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-11  2:57:42
+-- Dump completed on 2015-02-12  1:02:42

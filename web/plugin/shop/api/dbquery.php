@@ -846,50 +846,58 @@ class dbquery {
 
 
 
-
-
-
-
-
-
     // shop settings >>>>>
     // public static function setting
-
     public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY');
-    public static $SETTING_TYPE_LIST = array(
-        'ADDRESS' => 'Address',
-        'ALERTS' => 'Alerts',
-        'EXCHANAGERATES' => 'ExchangeRates',
-        'EXCHANAGERATESDISPLAY' => 'ExchangeRatesDisplay',
-        'FORMORDER' => 'FormOrder',
-        'MISC' => 'Misc',
-        'OPENHOURS' => 'OpenHours',
-        'PRODUCT' => 'Product',
-        'SEO' => 'Seo',
-        'WEBSITE' => 'Website'
+    public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
+        'ADDRESS' => 'shop_settingsAddress',
+        'ALERTS' => 'shop_settingsAlerts',
+        'EXCHANAGERATES' => 'shop_settingsExchangeRates',
+        'EXCHANAGERATESDISPLAY' => 'shop_settingsExchangeRatesDisplay',
+        'FORMORDER' => 'shop_settingsFormOrder',
+        'INFO' => 'shop_settingsInfo',
+        // 'MISC' => 'shop_settingsMisc',
+        'OPENHOURS' => 'shop_settingsOpenHours',
+        'PHONES' => 'shop_settingsPhones',
+        'PRODUCT' => 'shop_settingsProduct',
+        'SEO' => 'shop_settingsSeo',
+        'WEBSITE' => 'shop_settingsWebsite'
     );
 
     public static function isOneForCustomer ($type) {
-        return in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
+        return !in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
     }
 
-    public static function isValidSettingsType ($type) {
-        return isset(self::$SETTING_TYPE_LIST[$type]) ? $type : null;
+    public static function getVerifiedSettingsType ($type) {
+        return isset(self::$SETTING_TYPE_TO_DBTABLE_MAP[$type]) ? $type : null;
     }
 
     public static function getSettingsDBTableNameByType ($type) {
-        if (self::isValidSettingsType($type)) {
-            return self::$SETTING_TYPE_LIST[$type];
+        if (self::getVerifiedSettingsType($type)) {
+            return self::$SETTING_TYPE_TO_DBTABLE_MAP[$type];
         }
         throw new Exception("Unknown shop settings type", 1);
     }
 
+    public static function customerSettingsCount ($type) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
+            "action" => "select",
+            "source" => self::getSettingsDBTableNameByType($type),
+            "fields" => array("@COUNT(*) AS ItemsCount"),
+            "options" => array(
+                "expandSingleRecord" => true
+            ),
+            "limit" => 1
+        ));
+        return $config;
+    }
 
     public static function shopGetSettingByID ($type, $id) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
-            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "source" => self::getSettingsDBTableNameByType($type),
             "condition" => array(),
             "fields" => array("*"),
             "options" => array(
@@ -914,7 +922,7 @@ class dbquery {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
-            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "source" => self::getSettingsDBTableNameByType($type),
             "fields" => array("*"),
             "limit" => 0,
             "options" => array()
@@ -929,7 +937,7 @@ class dbquery {
     public static function shopCreateSetting ($type, $data) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "source" => self::getSettingsDBTableNameByType($type),
             "action" => "insert",
             "data" => $data,
             "options" => null,
@@ -942,7 +950,7 @@ class dbquery {
     public static function shopUpdateSetting ($type, $id, $data) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "source" => self::getSettingsDBTableNameByType($type),
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
@@ -959,7 +967,7 @@ class dbquery {
         // $data["DateUpdated"] = $app->getDB()->getDate();
         // $data["Status"] = 'REMOVED';
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "source" => self::getSettingsDBTableNameByType($type),
             "action" => "delete",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
