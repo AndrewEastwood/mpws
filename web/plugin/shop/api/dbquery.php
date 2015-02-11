@@ -852,59 +852,84 @@ class dbquery {
 
 
 
-    // shop delivery agencies >>>>>
-    public static function shopGetSettingByID ($type, $id = null) {
+    // shop settings >>>>>
+    // public static function setting
+
+    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY');
+    public static $SETTING_TYPE_LIST = array(
+        'ADDRESS' => 'Address',
+        'ALERTS' => 'Alerts',
+        'EXCHANAGERATES' => 'ExchangeRates',
+        'EXCHANAGERATESDISPLAY' => 'ExchangeRatesDisplay',
+        'FORMORDER' => 'FormOrder',
+        'MISC' => 'Misc',
+        'OPENHOURS' => 'OpenHours',
+        'PRODUCT' => 'Product',
+        'SEO' => 'Seo',
+        'WEBSITE' => 'Website'
+    );
+
+    public static function isOneForCustomer ($type) {
+        return in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
+    }
+
+    public static function isValidSettingsType ($type) {
+        return isset(self::$SETTING_TYPE_LIST[$type]) ? $type : null;
+    }
+
+    public static function getSettingsDBTableNameByType ($type) {
+        if (self::isValidSettingsType($type)) {
+            return self::$SETTING_TYPE_LIST[$type];
+        }
+        throw new Exception("Unknown shop settings type", 1);
+    }
+
+
+    public static function shopGetSettingByID ($type, $id) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
-            "source" => "shop_settings" . $type,
+            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
             "condition" => array(),
-            "fields" => array("ID", "Property", "Label", "Value", "Status", "DateCreated"),
+            "fields" => array("*"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
             "limit" => 1
         ));
-
-        if (!is_null($id))
-            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
-
+        // if (!is_null($id))
+        $config["condition"]["ID"] = $app->getDB()->createCondition($id);
         return $config;
     }
 
-    public static function shopGetSettingByName ($type, $name = null) {
-        global $app;
-        $config = self::shopGetSettingByID($type);
-        unset($config['condition']['ID']);
-        $config['condition']['Property'] = $app->getDB()->createCondition($name);
-        return $config;
-    }
+    // public static function shopGetSettingByName ($type, $name = null) {
+    //     global $app;
+    //     $config = self::shopGetSettingByID($type);
+    //     unset($config['condition']['ID']);
+    //     $config['condition']['Property'] = $app->getDB()->createCondition($name);
+    //     return $config;
+    // }
 
     public static function shopGetSettingByType ($type) {
         global $app;
-        $config = self::shopGetSettingByID($type);
-        unset($config['condition']['ID']);
-        $config['limit'] = 0;
-        // $config['condition']['Type'] = $app->getDB()->createCondition($type);
-        return $config;
-    }
-
-    public static function shopGetSettingsList ($type, array $options = array()) {
-        global $app;
-        $config = self::shopGetSettingByID($type);
-        $config['fields'] = array("ID");
-        $config['limit'] = 0;
-        $config['options']['expandSingleRecord'] = false;
+        $config = $app->getDB()->createDBQuery(array(
+            "action" => "select",
+            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "fields" => array("*"),
+            "limit" => 0,
+            "options" => array()
+        ));
+        if (self::isOneForCustomer($type)) {
+            $config["limit"] = 1;
+            $config["options"]["expandSingleRecord"] = true;
+        }
         return $config;
     }
 
     public static function shopCreateSetting ($type, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
-        $data["Status"] = 'ACTIVE';
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . $type,
+            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
             "action" => "insert",
             "data" => $data,
             "options" => null,
@@ -916,9 +941,8 @@ class dbquery {
 
     public static function shopUpdateSetting ($type, $id, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . $type,
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
@@ -926,28 +950,22 @@ class dbquery {
             "data" => $data,
             "options" => null
         ));
-    }
-
-    public static function shopUpdateSettingByName ($type, $id, $data) {
-        global $app;
-        $config = self::shopUpdateSetting($type, $id, $data);
-        unset($config['condition']['ID']);
-        $config['condition']['Property'] = $app->getDB()->createCondition($id);
+        // $config['condition'][$name] = $app->getDB()->createCondition($id);
         return $config;
     }
 
     public static function shopRemoveSetting ($type, $id) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["Status"] = 'REMOVED';
+        // $data["DateUpdated"] = $app->getDB()->getDate();
+        // $data["Status"] = 'REMOVED';
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings" . $type,
-            "action" => "update",
+            "source" => "shop_settings" . self::getSettingsDBTableNameByType($type),
+            "action" => "delete",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
-            ),
-            "data" => $data,
-            "options" => null
+            )//,
+            // "data" => $data,
+            // "options" => null
         ));
     }
     // <<<<< shop delivery agencies

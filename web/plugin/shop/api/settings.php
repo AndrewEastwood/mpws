@@ -11,16 +11,7 @@ use ArrayObject;
 
 class settings {
 
-    public $SETTING_TYPE_LIST = array(
-        'ADDRESS' => 'Address',
-        'ALERTS' => 'Alerts',
-        'EXCHANAGERATES' => 'ExchangeRates',
-        'OPENHOURS' => 'OpenHours',
-        'FORMORDER' => 'FormOrder',
-        'WEBSITE' => 'Website',
-        'MISC' => 'Misc',
-        'PRODUCT' => 'Product'
-    );
+
 
     public function __construct () {
         $this->SETTING_TYPE = (object)$this->SETTING_TYPE_LIST;
@@ -31,7 +22,7 @@ class settings {
     // SETTINGS
     // -----------------------------------------------
     // -----------------------------------------------
-    public function findByID ($type, $id) {
+    public function getSettingByID ($type, $id) {
         global $app;
         if (empty($id) || !is_numeric($id))
             return null;
@@ -40,18 +31,11 @@ class settings {
         return $this->__adjustSettingItem($setting);
     }
 
-    public function findByName ($type, $name) {
-        global $app;
-        $config = dbquery::shopGetSettingByName($type, $name);
-        $setting = $app->getDB()->query($config);
-        return $this->__adjustSettingItem($setting);
-    }
-
     public function getSettingsByType ($type) {
         global $app;
         $config = dbquery::shopGetSettingByType($type);
         $settings = $app->getDB()->query($config);
-        if (empty($setting))
+        if (empty($settings))
             return null;
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
@@ -64,20 +48,19 @@ class settings {
         if (empty($setting))
             return null;
         $setting['ID'] = intval($setting['ID']);
-        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
-        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
+        // $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
+        // $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
         return $setting;
     }
 
     public function toList (array $options = array()) {
         global $app;
         $list = array();
-        $types = (array)$this->SETTING_TYPE;
-        foreach ($types as $type) {
+        foreach (keys($this->SETTING_TYPE_LIST) as $type) {
             $list[$type] = $this->getSettingsByType($type);
         }
-        $list['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
-        $list['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
+        // $list['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
+        // $list['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
         return $list;
     }
 
@@ -87,10 +70,6 @@ class settings {
         $errors = array();
         $success = false;
         $settingID = null;
-
-        if (!isset($this->SETTING_TYPE_LIST[$type])) {
-            throw new Exception('UnknownSettingsType_' . $type);
-        }
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Property' => array('string'),
@@ -138,10 +117,6 @@ class settings {
         $errors = array();
         $success = false;
 
-        if (!isset($this->SETTING_TYPE_LIST[$type])) {
-            throw new Exception('UnknownSettingsType_' . $type);
-        }
-
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
@@ -188,10 +163,6 @@ class settings {
         $errors = array();
         $success = false;
 
-        if (!isset($this->SETTING_TYPE_LIST[$type])) {
-            throw new Exception('UnknownSettingsType_' . $type);
-        }
-
         try {
             $app->getDB()->beginTransaction();
             $config = dbquery::shopRemoveSetting($settingID);
@@ -208,6 +179,28 @@ class settings {
 
         return $result;
     }
+
+    // private function getRequestSettingTypeObj ($req) {
+    //     $typeObj = array(
+    //         'error' => false,
+    //         'allowMultiple' => false,
+    //         'name' => null,
+    //         'key' => null
+    //     );
+    //     if (empty($req->get['type'])) {
+    //         $typeObj['error'] = 'MissedParameter_type';
+    //     } else {
+    //         $type = $req->get['type'];
+    //         if (!isset($this->SETTING_TYPE_LIST[$type])) {
+    //             $typeObj['error'] = 'UnknownParameterType_' . $type;
+    //         } else {
+    //             $typeObj = in_array($type, $this->ALLOW_MULTIPLE_SETTINGS);
+    //             $typeObj['key'] = $type;
+    //             $typeObj['name'] = $this->SETTING_TYPE_LIST[$type];
+    //         }
+    //     }
+    //     return $typeObj;
+    // }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -234,24 +227,16 @@ class settings {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        $data = $req->get;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $data['_fStatus'] = "ACTIVE";
-        }
-        if (!empty($data['id'])) {
-            if (empty($req->get['type'])) {
-                $resp['error'] = 'MissedParameter_type';
-                return;
-            }
-            $resp = $this->findByID($req->get['type'], $data['id']);
-        } elseif (!empty($data['name'])) {
-            if (empty($req->get['type'])) {
-                $resp['error'] = 'MissedParameter_type';
-                return;
-            }
-            $resp = $this->findByName($req->get['type'], $data['name']);
+        // $typeObj = $this->getRequestSettingTypeObj($req);
+        if ()
+        if (!empty($req->get['id'])) {
+            $resp = $this->getSettingByID($typeObj['name'], $req->get['id']);
         } else {
-            $resp = $this->toList($data);
+            if (empty($typeObj['name'])) {
+                $resp = $this->toList();
+            } else {
+                $resp = $this->getSettingsByType($typeObj['name']);
+            }
         }
     }
 
@@ -260,12 +245,10 @@ class settings {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['type'])) {
-            $resp['error'] = 'MissedParameter_type';
-            return;
-        }
+        $typeObj = $this->getRequestSettingTypeObj($req);
+        $settings = $this->getSettingsByType($typeObj['name']);
         $prop = null;
-        if (isset($req->data['Property'])) {
+        if (isset($req->data['ID'])) {
             $prop = $this->findByName($req->get['type'], $req->data['Property']);
         }
         if (empty($prop)) {
