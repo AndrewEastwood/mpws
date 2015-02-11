@@ -57,7 +57,7 @@ CREATE TABLE `mpws_customer` (
 
 LOCK TABLES `mpws_customer` WRITE;
 /*!40000 ALTER TABLE `mpws_customer` DISABLE KEYS */;
-INSERT INTO `mpws_customer` VALUES (1,'pb.com.ua','http://pb.com.ua','LEOGROUP','LEOGROUP - Адміністрування',NULL,'ua','ua_uk','http','shop,system','ACTIVE','2014-11-18 11:02:37','2015-02-08 23:50:18');
+INSERT INTO `mpws_customer` VALUES (1,'pb.com.ua','http://pb.com.ua','LEOGROUP','LEOGROUP - Адміністрування','142351283954d915074d95a.png','ua','ua_uk','http','system,shop','ACTIVE','2014-11-18 11:02:37','2015-02-09 22:15:05');
 /*!40000 ALTER TABLE `mpws_customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,6 +91,32 @@ CREATE TABLE `mpws_jobs` (
 LOCK TABLES `mpws_jobs` WRITE;
 /*!40000 ALTER TABLE `mpws_jobs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `mpws_jobs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mpws_menu`
+--
+
+DROP TABLE IF EXISTS `mpws_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_menu` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Status` set('ACTIVE','DISABLED','REMOVED','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mpws_menu`
+--
+
+LOCK TABLES `mpws_menu` WRITE;
+/*!40000 ALTER TABLE `mpws_menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mpws_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -978,6 +1004,328 @@ INSERT INTO `shop_settings` VALUES (1,1,'UsePromo','','1','ACTIVE','WEBSITE','20
 UNLOCK TABLES;
 
 --
+-- Table structure for table `shop_settingsAddress`
+--
+
+DROP TABLE IF EXISTS `shop_settingsAddress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsAddress` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ShopName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
+  `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
+  `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
+  `ContactLabel` varchar(200) COLLATE utf8_bin NOT NULL,
+  `ContactValue` varchar(50) COLLATE utf8_bin NOT NULL,
+  `TextShipping` text COLLATE utf8_bin NOT NULL,
+  `TextPayment` text COLLATE utf8_bin NOT NULL,
+  `TextWarranty` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsAddress`
+--
+
+LOCK TABLES `shop_settingsAddress` WRITE;
+/*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsAlerts`
+--
+
+DROP TABLE IF EXISTS `shop_settingsAlerts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsAlerts` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AllowAlerts` tinyint(1) NOT NULL DEFAULT '1',
+  `UsePromo` tinyint(1) NOT NULL DEFAULT '1',
+  `NewProductAdded` tinyint(1) NOT NULL DEFAULT '1',
+  `ProductPriceGoesDown` tinyint(1) NOT NULL DEFAULT '1',
+  `PromoIsStarted` tinyint(1) NOT NULL DEFAULT '1',
+  `AddedNewOrigin` tinyint(1) NOT NULL DEFAULT '1',
+  `AddedNewCategory` tinyint(1) NOT NULL DEFAULT '1',
+  `AddedNewDiscountedProduct` tinyint(1) NOT NULL DEFAULT '1',
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsAlerts_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsAlerts`
+--
+
+LOCK TABLES `shop_settingsAlerts` WRITE;
+/*!40000 ALTER TABLE `shop_settingsAlerts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsAlerts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsExchangeRates`
+--
+
+DROP TABLE IF EXISTS `shop_settingsExchangeRates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsExchangeRates` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `DBPriceCurrencyType` varchar(50) COLLATE utf8_bin NOT NULL,
+  `SiteDefaultPriceCurrencyType` varchar(50) COLLATE utf8_bin NOT NULL,
+  `ShowSiteCurrencySelector` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsExchangeRates_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsExchangeRates`
+--
+
+LOCK TABLES `shop_settingsExchangeRates` WRITE;
+/*!40000 ALTER TABLE `shop_settingsExchangeRates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsExchangeRates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsExchangeRatesDisplay`
+--
+
+DROP TABLE IF EXISTS `shop_settingsExchangeRatesDisplay`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsExchangeRatesDisplay` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `CurrencyID` int(11) NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Sign` varchar(10) COLLATE utf8_bin NOT NULL,
+  `ShowSignBeforeValue` tinyint(1) NOT NULL,
+  `Format` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsExchangeRatesDisplay`
+--
+
+LOCK TABLES `shop_settingsExchangeRatesDisplay` WRITE;
+/*!40000 ALTER TABLE `shop_settingsExchangeRatesDisplay` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsExchangeRatesDisplay` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsFormOrder`
+--
+
+DROP TABLE IF EXISTS `shop_settingsFormOrder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsFormOrder` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ShowName` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowEMail` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowPhone` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowAddress` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowPOBox` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowCountry` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowCity` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowDeliveryAganet` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowComment` tinyint(1) NOT NULL DEFAULT '1',
+  `SucessTextLines` text COLLATE utf8_bin NOT NULL,
+  `ShowOrderTrackingLink` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsFormOrder_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsFormOrder`
+--
+
+LOCK TABLES `shop_settingsFormOrder` WRITE;
+/*!40000 ALTER TABLE `shop_settingsFormOrder` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsFormOrder` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsMisc`
+--
+
+DROP TABLE IF EXISTS `shop_settingsMisc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsMisc` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Property` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `Value` text COLLATE utf8_bin,
+  `Status` enum('ACTIVE','DISABLED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsMisc_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsMisc`
+--
+
+LOCK TABLES `shop_settingsMisc` WRITE;
+/*!40000 ALTER TABLE `shop_settingsMisc` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsMisc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsOpenHours`
+--
+
+DROP TABLE IF EXISTS `shop_settingsOpenHours`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsOpenHours` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Monday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Tuesday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Wednesday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Thursday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Friday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Saturday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Sunday` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsOpenHours`
+--
+
+LOCK TABLES `shop_settingsOpenHours` WRITE;
+/*!40000 ALTER TABLE `shop_settingsOpenHours` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsOpenHours` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsProduct`
+--
+
+DROP TABLE IF EXISTS `shop_settingsProduct`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsProduct` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ShowOpenHours` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowDeliveryInfo` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowPaymentInfo` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowSocialSharing` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowPriceChart` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowWarrantyInfo` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowContacts` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsProduct_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsProduct`
+--
+
+LOCK TABLES `shop_settingsProduct` WRITE;
+/*!40000 ALTER TABLE `shop_settingsProduct` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsProduct` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsSeo`
+--
+
+DROP TABLE IF EXISTS `shop_settingsSeo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsSeo` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ProductKeywords` varchar(500) COLLATE utf8_bin NOT NULL,
+  `CategoryKeywords` varchar(500) COLLATE utf8_bin NOT NULL,
+  `HomePageKeywords` varchar(500) COLLATE utf8_bin NOT NULL,
+  `ProductDescription` varchar(500) COLLATE utf8_bin NOT NULL,
+  `CategoryDescription` varchar(500) COLLATE utf8_bin NOT NULL,
+  `HomePageDescription` varchar(500) COLLATE utf8_bin NOT NULL,
+  `ProductPageTitle` varchar(500) COLLATE utf8_bin NOT NULL,
+  `CategoryPageTitle` varchar(500) COLLATE utf8_bin NOT NULL,
+  `HomePageTitle` varchar(500) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsSeo_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsSeo`
+--
+
+LOCK TABLES `shop_settingsSeo` WRITE;
+/*!40000 ALTER TABLE `shop_settingsSeo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsSeo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_settingsWebsite`
+--
+
+DROP TABLE IF EXISTS `shop_settingsWebsite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settingsWebsite` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `DeliveryAllowSelfPickup` tinyint(1) NOT NULL DEFAULT '1',
+  `Label` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `Value` text COLLATE utf8_bin,
+  `Status` enum('ACTIVE','DISABLED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settingsWebsite_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_settingsWebsite`
+--
+
+LOCK TABLES `shop_settingsWebsite` WRITE;
+/*!40000 ALTER TABLE `shop_settingsWebsite` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_settingsWebsite` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping routines for database 'mpws_light'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `getShopCatalogBrands` */;
@@ -1065,4 +1413,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-09  0:00:25
+-- Dump completed on 2015-02-11  2:57:42

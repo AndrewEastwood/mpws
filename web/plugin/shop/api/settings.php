@@ -11,19 +11,19 @@ use ArrayObject;
 
 class settings {
 
-    public $SETTING_TYPE = array(
-        'ADDRESS' => 'ADDRESS',
-        'ALERTS' => 'ALERTS',
-        'EXCHANAGERATES' => 'EXCHANAGERATES',
-        'OPENHOURS' => 'OPENHOURS',
-        'FORMORDER' => 'FORMORDER',
-        'WEBSITE' => 'WEBSITE',
-        'MISC' => 'MISC',
-        'PRODUCT' => 'PRODUCT'
+    public $SETTING_TYPE_LIST = array(
+        'ADDRESS' => 'Address',
+        'ALERTS' => 'Alerts',
+        'EXCHANAGERATES' => 'ExchangeRates',
+        'OPENHOURS' => 'OpenHours',
+        'FORMORDER' => 'FormOrder',
+        'WEBSITE' => 'Website',
+        'MISC' => 'Misc',
+        'PRODUCT' => 'Product'
     );
 
     public function __construct () {
-        $this->SETTING_TYPE = (object)$this->SETTING_TYPE;
+        $this->SETTING_TYPE = (object)$this->SETTING_TYPE_LIST;
     }
 
     // -----------------------------------------------
@@ -31,18 +31,18 @@ class settings {
     // SETTINGS
     // -----------------------------------------------
     // -----------------------------------------------
-    public function findByID ($id) {
+    public function findByID ($type, $id) {
         global $app;
         if (empty($id) || !is_numeric($id))
             return null;
-        $config = dbquery::shopGetSettingByID($id);
+        $config = dbquery::shopGetSettingByID($type, $id);
         $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
 
-    public function findByName ($name) {
+    public function findByName ($type, $name) {
         global $app;
-        $config = dbquery::shopGetSettingByName($name);
+        $config = dbquery::shopGetSettingByName($type, $name);
         $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
@@ -51,6 +51,8 @@ class settings {
         global $app;
         $config = dbquery::shopGetSettingByType($type);
         $settings = $app->getDB()->query($config);
+        if (empty($setting))
+            return null;
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
         }
@@ -69,29 +71,26 @@ class settings {
 
     public function toList (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetSettingsList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $settingItem) {
-                    $_items[] = $self->findByID($settingItem['ID']);
-                }
-                return $_items;
-            }
-        );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
-        $dataList['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
-        $dataList['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
-        return $dataList;
+        $list = array();
+        $types = (array)$this->SETTING_TYPE;
+        foreach ($types as $type) {
+            $list[$type] = $this->getSettingsByType($type);
+        }
+        $list['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
+        $list['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
+        return $list;
     }
 
-    public function create ($reqData) {
+    public function create ($type, $reqData) {
         global $app;
         $result = array();
         $errors = array();
         $success = false;
         $settingID = null;
+
+        if (!isset($this->SETTING_TYPE_LIST[$type])) {
+            throw new Exception('UnknownSettingsType_' . $type);
+        }
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Property' => array('string'),
@@ -126,23 +125,28 @@ class settings {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->findByID($settingID);
+        $result = $this->findByID($type, $settingID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
         return $result;
     }
 
-    public function update ($nameOrID, $reqData) {
+    public function update ($type, $nameOrID, $reqData) {
         global $app;
         $result = array();
         $errors = array();
         $success = false;
 
+        if (!isset($this->SETTING_TYPE_LIST[$type])) {
+            throw new Exception('UnknownSettingsType_' . $type);
+        }
+
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
-            'Status' => array('skipIfUnset')
+            'Status' => array('skipIfUnset'),
+            'Type' => array('string')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -168,9 +172,9 @@ class settings {
             $errors = $validatedDataObj["errors"];
 
         if (is_numeric($nameOrID)) {
-            $result = $this->findByID($nameOrID);
+            $result = $this->findByID($type, $nameOrID);
         } else {
-            $result = $this->findByName($nameOrID);
+            $result = $this->findByName($type, $nameOrID);
         }
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -178,11 +182,15 @@ class settings {
         return $result;
     }
 
-    public function remove ($settingID) {
+    public function remove ($type, $settingID) {
         global $app;
         $result = array();
         $errors = array();
         $success = false;
+
+        if (!isset($this->SETTING_TYPE_LIST[$type])) {
+            throw new Exception('UnknownSettingsType_' . $type);
+        }
 
         try {
             $app->getDB()->beginTransaction();
@@ -231,9 +239,17 @@ class settings {
             $data['_fStatus'] = "ACTIVE";
         }
         if (!empty($data['id'])) {
-            $resp = $this->findByID($data['id']);
-        } else if (!empty($data['name'])) {
-            $resp = $this->findByName($data['name']);
+            if (empty($req->get['type'])) {
+                $resp['error'] = 'MissedParameter_type';
+                return;
+            }
+            $resp = $this->findByID($req->get['type'], $data['id']);
+        } elseif (!empty($data['name'])) {
+            if (empty($req->get['type'])) {
+                $resp['error'] = 'MissedParameter_type';
+                return;
+            }
+            $resp = $this->findByName($req->get['type'], $data['name']);
         } else {
             $resp = $this->toList($data);
         }
@@ -244,21 +260,28 @@ class settings {
             $resp['error'] = "AccessDenied";
             return;
         }
+        if (empty($req->get['type'])) {
+            $resp['error'] = 'MissedParameter_type';
+            return;
+        }
         $prop = null;
         if (isset($req->data['Property'])) {
-            $prop = $this->findByName($req->data['Property']);
+            $prop = $this->findByName($req->get['type'], $req->data['Property']);
         }
         if (empty($prop)) {
-            $resp = $this->create($req->data);
+            $resp = $this->create($req->get['type'], $req->data);
         } else {
-            $resp = $this->update($prop['ID'], $req->data);
+            $resp = $this->update($req->get['type'], $prop['ID'], $req->data);
         }
-        // $this->_getOrSetCachedState('changed:settings', true);
     }
 
     public function patch (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['type'])) {
+            $resp['error'] = 'MissedParameter_type';
             return;
         }
         if (empty($req->get['id'])) {
@@ -268,8 +291,7 @@ class settings {
             if (!isset($req->get['id']) && isset($req->get['name'])) {
                 $settingID = $req->get['name'];
             }
-            $resp = $this->update($settingID, $req->data);
-            // $this->_getOrSetCachedState('changed:setting', true);
+            $resp = $this->update($req->get['type'], $settingID, $req->data);
         }
     }
 
@@ -280,10 +302,11 @@ class settings {
         }
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
+        } elseif (empty($req->get['type'])) {
+            $resp['error'] = 'MissedParameter_type';
         } else {
             $settingID = intval($req->get['id']);
-            $resp = $this->remove($settingID);
-            // $this->_getOrSetCachedState('changed:setting', true);
+            $resp = $this->remove($req->get['type'], $settingID);
         }
     }
 

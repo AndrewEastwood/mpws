@@ -853,13 +853,13 @@ class dbquery {
 
 
     // shop delivery agencies >>>>>
-    public static function shopGetSettingByID ($id = null) {
+    public static function shopGetSettingByID ($type, $id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
-            "source" => "shop_settings",
+            "source" => "shop_settings" . $type,
             "condition" => array(),
-            "fields" => array("ID", "Property", "Label", "Value", "Status", "Type", "DateCreated"),
+            "fields" => array("ID", "Property", "Label", "Value", "Status", "DateCreated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -872,39 +872,39 @@ class dbquery {
         return $config;
     }
 
-    public static function shopGetSettingByName ($name = null) {
+    public static function shopGetSettingByName ($type, $name = null) {
         global $app;
-        $config = self::shopGetSettingByID();
+        $config = self::shopGetSettingByID($type);
         unset($config['condition']['ID']);
         $config['condition']['Property'] = $app->getDB()->createCondition($name);
         return $config;
     }
 
-    public static function shopGetSettingByType ($type = null) {
+    public static function shopGetSettingByType ($type) {
         global $app;
-        $config = self::shopGetSettingByID();
+        $config = self::shopGetSettingByID($type);
         unset($config['condition']['ID']);
         $config['limit'] = 0;
-        $config['condition']['Type'] = $app->getDB()->createCondition($type);
+        // $config['condition']['Type'] = $app->getDB()->createCondition($type);
         return $config;
     }
 
-    public static function shopGetSettingsList (array $options = array()) {
+    public static function shopGetSettingsList ($type, array $options = array()) {
         global $app;
-        $config = self::shopGetSettingByID();
+        $config = self::shopGetSettingByID($type);
         $config['fields'] = array("ID");
         $config['limit'] = 0;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    public static function shopCreateSetting ($data) {
+    public static function shopCreateSetting ($type, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $data["Status"] = 'ACTIVE';
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings",
+            "source" => "shop_settings" . $type,
             "action" => "insert",
             "data" => $data,
             "options" => null,
@@ -914,11 +914,11 @@ class dbquery {
         ));
     }
 
-    public static function shopUpdateSetting ($id, $data) {
+    public static function shopUpdateSetting ($type, $id, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings",
+            "source" => "shop_settings" . $type,
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
@@ -928,20 +928,20 @@ class dbquery {
         ));
     }
 
-    public static function shopUpdateSettingByName ($id, $data) {
+    public static function shopUpdateSettingByName ($type, $id, $data) {
         global $app;
-        $config = self::shopUpdateSetting($id, $data);
+        $config = self::shopUpdateSetting($type, $id, $data);
         unset($config['condition']['ID']);
         $config['condition']['Property'] = $app->getDB()->createCondition($id);
         return $config;
     }
 
-    public static function shopRemoveSetting ($id) {
+    public static function shopRemoveSetting ($type, $id) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["Status"] = 'REMOVED';
         return $app->getDB()->createDBQuery(array(
-            "source" => "shop_settings",
+            "source" => "shop_settings" . $type,
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
