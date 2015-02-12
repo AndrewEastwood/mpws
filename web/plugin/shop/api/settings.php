@@ -23,27 +23,51 @@ class settings {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public function getCustomerAlerts () {}
-    public function getCustomerExchangeRates () {}
-    public function getCustomerAddresses () {}
-    public function getCustomer () {}
+    public function getSettingsAddresses () {
+        $items = $this->getSettingsByType($this->SETTING_TYPE->ADDRESS);
+        $this->__adjustSettingItem($items);
+        $items['Phones'] = $this->getSettingsByType($this->SETTING_TYPE->PHONES) ?: array();
+        $items['OpenHours'] = $this->getSettingsByType($this->SETTING_TYPE->OPENHOURS) ?: array();
+        return $items;
+    }
+    public function getSettingsAlerts () {
+        $items = $this->getSettingsByType($this->SETTING_TYPE->ALERTS);
+        $items["AllowAlerts"] = intval($items["AllowAlerts"]) === 1;
+        $items["UsePromo"] = intval($items["UsePromo"]) === 1;
+        $items["NewProductAdded"] = intval($items["NewProductAdded"]) === 1;
+        $items["ProductPriceGoesDown"] = intval($items["ProductPriceGoesDown"]) === 1;
+        $items["PromoIsStarted"] = intval($items["PromoIsStarted"]) === 1;
+        $items["AddedNewOrigin"] = intval($items["AddedNewOrigin"]) === 1;
+        $items["AddedNewCategory"] = intval($items["AddedNewCategory"]) === 1;
+        $items["AddedNewDiscountedProduct"] = intval($items["AddedNewDiscountedProduct"]) === 1;
+        return $this->__adjustSettingItem($items);
+    }
+    public function getSettingsExchangeRates () {}
+    public function getSettingsExchangeRatesDisplay () {}
+    public function getSettingsInfo (
+        $items = $this->getSettingsByType($this->SETTING_TYPE->INFO);
+        return $this->__adjustSettingItem($items);
+    ) {}
+    public function getSettingsMisc () {
+        $items = $this->getSettingsByType($this->SETTING_TYPE->MISC);
+        return $this->__adjustSettingItem($items);
+    }
+    public function getSettingsProduct () {
+        $items = $this->getSettingsByType($this->SETTING_TYPE->PRODUCT);
+        return $this->__adjustSettingItem($items);
+    }
+    public function getSettingsSeo () {
+        $items = $this->getSettingsByType($this->SETTING_TYPE->SEO);
+        return $this->__adjustSettingItem($items);
+    }
+    public function getSettingsWebsite () {}
 
     /// TODO: create function that returns settings tree
 /*
 ALERTS
 */
 
-
-    public function getSettingByID ($type, $id) {
-        global $app;
-        if (empty($id) || !is_numeric($id))
-            return null;
-        $config = dbquery::shopGetSettingByID($type, $id);
-        $setting = $app->getDB()->query($config);
-        return $this->__adjustSettingItem($setting);
-    }
-
-    public function getSettingsByType ($type) {
+    private function getSettingsByType ($type) {
         global $app;
         $config = dbquery::shopGetSettingByType($type);
         $settings = $app->getDB()->query($config);
@@ -55,29 +79,24 @@ ALERTS
         return $settings;
     }
 
-    private function __adjustSettingItem ($setting) {
+    private function __adjustSettingItem (&$setting) {
         global $app;
-        if (empty($setting))
+        if (empty($setting)) {
             return null;
+        }
         $setting['ID'] = intval($setting['ID']);
-        // $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
-        // $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
+        // if (isset($setting['CustomerID'])) {
+        //     unset($setting['CustomerID']);
+        // }
         return $setting;
     }
 
-    public function toList (array $options = array()) {
-        global $app;
-        $list = array();
-        foreach ($this->SETTING_TYPE_ARRAY as $type) {
-            // $settingsCount = $this->getCustomerSettingsCount($type);
-            // if (empty($settingsCount) && dbquery::isOneForCustomer($type)) {
-            //     $this->create($type, array());
-            // }
-            $list[$type] = $this->getSettingsByType($type);
-        }
-        // $list['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
-        // $list['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
-        return $list;
+    public function getSettings () {
+        $settings = array();
+        $settings[$this->SETTING_TYPE->ADDRESS] = $this->getSettingsAddresses();
+        $settings[$this->SETTING_TYPE->ALERTS] = $this->getSettingsAlerts();
+        $settings[$this->SETTING_TYPE->INFO] = $this->getSettingsInfo();
+        return $settings;
     }
 
     public function create ($type, $reqData) {
@@ -239,24 +258,39 @@ ALERTS
 
     public function get (&$resp, $req) {
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
-        
-        if (!empty($req->get['id'])) {
-            $resp = $this->getSettingByID($typeObj->type, $req->get['id']);
+        if (empty($typeObj->type)) {
+            $resp = $this->getSettings();
         } else {
-            if (empty($typeObj->type)) {
-                $resp = $this->toList();
-            } else {
-                $resp = $this->getSettingsByType($typeObj->type);
+            switch ($typeObj->type) {
+                case 'SEO':
+                    $resp = $this->getSettingsSeo();
+                    break;
+                case 'ALERTS':
+                    $resp = $this->getSettingsAlerts();
+                    break;
+                case 'OPENHOURS':
+                    $resp = $this->getSettingsOpenHours();
+                    break;
+                case 'OPENHOURS':
+                    $resp = $this->getSettingsOpenHours();
+                    break;
+                case 'INFO':
+                    $resp = $this->getSettingsInfo();
+                    break;
+                default:
+                    # code...
+                    break;
             }
         }
     }
 
     public function post (&$resp, $req) {
-        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        $typeObj = $this->getVerifiedSettingsTypeObj($req);
+        
+/*        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
         //     $resp['error'] = "AccessDenied";
         //     return;
         // }
-        $typeObj = $this->getVerifiedSettingsTypeObj($req);
         // var_dump($typeObj);
         // header('HTTP/1.1 500');
         $settingsCount = $this->getCustomerSettingsCount($typeObj->type);
@@ -271,7 +305,7 @@ ALERTS
             $resp = $this->create($typeObj->type, $req->data);
         // } else {
         //     $resp = $this->update($req->get['type'], $prop['ID'], $req->data);
-        // }
+        // }*/
     }
 
     public function patch (&$resp, $req) {

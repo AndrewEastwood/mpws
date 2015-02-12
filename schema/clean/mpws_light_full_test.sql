@@ -1044,16 +1044,14 @@ DROP TABLE IF EXISTS `shop_settingsAlerts`;
 CREATE TABLE `shop_settingsAlerts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `AllowAlerts` tinyint(1) NOT NULL DEFAULT '1',
-  `UsePromo` tinyint(1) NOT NULL DEFAULT '1',
-  `NewProductAdded` tinyint(1) NOT NULL DEFAULT '1',
-  `ProductPriceGoesDown` tinyint(1) NOT NULL DEFAULT '1',
-  `PromoIsStarted` tinyint(1) NOT NULL DEFAULT '1',
-  `AddedNewOrigin` tinyint(1) NOT NULL DEFAULT '1',
-  `AddedNewCategory` tinyint(1) NOT NULL DEFAULT '1',
-  `AddedNewDiscountedProduct` tinyint(1) NOT NULL DEFAULT '1',
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
+  `AllowAlerts` tinyint(1) NOT NULL DEFAULT '0',
+  `UsePromo` tinyint(1) NOT NULL DEFAULT '0',
+  `NewProductAdded` tinyint(1) NOT NULL DEFAULT '0',
+  `ProductPriceGoesDown` tinyint(1) NOT NULL DEFAULT '0',
+  `PromoIsStarted` tinyint(1) NOT NULL DEFAULT '0',
+  `AddedNewOrigin` tinyint(1) NOT NULL DEFAULT '0',
+  `AddedNewCategory` tinyint(1) NOT NULL DEFAULT '0',
+  `AddedNewDiscountedProduct` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAlerts_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1066,7 +1064,7 @@ CREATE TABLE `shop_settingsAlerts` (
 
 LOCK TABLES `shop_settingsAlerts` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAlerts` DISABLE KEYS */;
-INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,1,1,1,1,1,1,1,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `shop_settingsAlerts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1138,17 +1136,17 @@ DROP TABLE IF EXISTS `shop_settingsFormOrder`;
 CREATE TABLE `shop_settingsFormOrder` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `ShowName` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowEMail` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowPhone` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowAddress` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowPOBox` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowCountry` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowCity` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowDeliveryAganet` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowComment` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowName` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowEMail` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowPhone` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowAddress` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowPOBox` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowCountry` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowCity` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowDeliveryAganet` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowComment` tinyint(1) NOT NULL DEFAULT '0',
   `SucessTextLines` text COLLATE utf8_bin NOT NULL,
-  `ShowOrderTrackingLink` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowOrderTrackingLink` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsFormOrder_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1300,13 +1298,13 @@ DROP TABLE IF EXISTS `shop_settingsProduct`;
 CREATE TABLE `shop_settingsProduct` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `ShowOpenHours` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowDeliveryInfo` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowPaymentInfo` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowSocialSharing` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowPriceChart` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowWarrantyInfo` tinyint(1) NOT NULL DEFAULT '1',
-  `ShowContacts` tinyint(1) NOT NULL DEFAULT '1',
+  `ShowOpenHours` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowDeliveryInfo` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowPaymentInfo` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowSocialSharing` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowPriceChart` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowWarrantyInfo` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowContacts` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `CustomerID_2` (`CustomerID`),
   KEY `CustomerID` (`CustomerID`),
@@ -1369,12 +1367,7 @@ DROP TABLE IF EXISTS `shop_settingsWebsite`;
 CREATE TABLE `shop_settingsWebsite` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `DeliveryAllowSelfPickup` tinyint(1) NOT NULL DEFAULT '1',
-  `Label` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Value` text COLLATE utf8_bin,
-  `Status` enum('ACTIVE','DISABLED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
+  `DeliveryAllowSelfPickup` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsWebsite_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1387,7 +1380,7 @@ CREATE TABLE `shop_settingsWebsite` (
 
 LOCK TABLES `shop_settingsWebsite` WRITE;
 /*!40000 ALTER TABLE `shop_settingsWebsite` DISABLE KEYS */;
-INSERT INTO `shop_settingsWebsite` VALUES (1,1,1,NULL,NULL,'ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00');
+INSERT INTO `shop_settingsWebsite` VALUES (1,1,1);
 /*!40000 ALTER TABLE `shop_settingsWebsite` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1479,4 +1472,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-12  1:02:42
+-- Dump completed on 2015-02-12 10:21:41
