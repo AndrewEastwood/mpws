@@ -958,7 +958,6 @@ class dbquery {
             "data" => $data,
             "options" => null
         ));
-        // $config['condition'][$name] = $app->getDB()->createCondition($id);
         return $config;
     }
 
