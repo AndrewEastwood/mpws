@@ -1309,7 +1309,7 @@ CREATE TABLE `shop_settingsProduct` (
   UNIQUE KEY `CustomerID_2` (`CustomerID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsProduct_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1318,7 +1318,7 @@ CREATE TABLE `shop_settingsProduct` (
 
 LOCK TABLES `shop_settingsProduct` WRITE;
 /*!40000 ALTER TABLE `shop_settingsProduct` DISABLE KEYS */;
-INSERT INTO `shop_settingsProduct` VALUES (2,1,1,1,1,1,1,1,1);
+INSERT INTO `shop_settingsProduct` VALUES (12,1,0,0,0,0,0,0,0);
 /*!40000 ALTER TABLE `shop_settingsProduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1472,4 +1472,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-13 12:24:29
+-- Dump completed on 2015-02-14  1:13:35

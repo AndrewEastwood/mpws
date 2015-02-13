@@ -34,6 +34,9 @@ class settings {
     public function getSettingsAlerts () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ALERTS));
+        $this->__adjustSettingItem($items);
+        if (empty($items))
+            return $items;
         $items["AllowAlerts"] = intval($items["AllowAlerts"]) === 1;
         $items["UsePromo"] = intval($items["UsePromo"]) === 1;
         $items["NewProductAdded"] = intval($items["NewProductAdded"]) === 1;
@@ -42,7 +45,7 @@ class settings {
         $items["AddedNewOrigin"] = intval($items["AddedNewOrigin"]) === 1;
         $items["AddedNewCategory"] = intval($items["AddedNewCategory"]) === 1;
         $items["AddedNewDiscountedProduct"] = intval($items["AddedNewDiscountedProduct"]) === 1;
-        return $this->__adjustSettingItem($items);
+        return $items;
     }
     public function getSettingsExchangeRates () {}
     public function getSettingsExchangeRatesDisplay () {}
@@ -59,17 +62,29 @@ class settings {
     public function getSettingsProduct () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
-        return $this->__adjustSettingItem($items);
+        $this->__adjustSettingItem($items);
+        if (empty($items))
+            return $items;
+        $items["ShowOpenHours"] = intval($items["ShowOpenHours"]) === 1;
+        $items["ShowDeliveryInfo"] = intval($items["ShowDeliveryInfo"]) === 1;
+        $items["ShowPaymentInfo"] = intval($items["ShowPaymentInfo"]) === 1;
+        $items["ShowSocialSharing"] = intval($items["ShowSocialSharing"]) === 1;
+        $items["ShowPriceChart"] = intval($items["ShowPriceChart"]) === 1;
+        $items["ShowWarrantyInfo"] = intval($items["ShowWarrantyInfo"]) === 1;
+        $items["ShowContacts"] = intval($items["ShowContacts"]) === 1;
+        return $items;
     }
     public function getSettingsSeo () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->SEO));
         return $this->__adjustSettingItem($items);
     }
-    public function getSettingsWebsite () {
+    public function getSettingsFormOrder () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
-        // $items["AddedNewDiscountedProduct"] = intval($items["AddedNewDiscountedProduct"]) === 1;
+        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
+        $this->__adjustSettingItem($items);
+        if (empty($items))
+            return $items;
         $items["ShowName"] = intval($items["ShowName"]) === 1;
         $items["ShowEMail"] = intval($items["ShowEMail"]) === 1;
         $items["ShowPhone"] = intval($items["ShowPhone"]) === 1;
@@ -79,13 +94,13 @@ class settings {
         $items["ShowCity"] = intval($items["ShowCity"]) === 1;
         $items["ShowDeliveryAganet"] = intval($items["ShowDeliveryAganet"]) === 1;
         $items["ShowComment"] = intval($items["ShowComment"]) === 1;
-        $items["SucessTextLines"] = $items["AddedNewDiscountedProduct"];
+        $items["SucessTextLines"] = $items["SucessTextLines"];
         $items["ShowOrderTrackingLink"] = intval($items["ShowOrderTrackingLink"]) === 1;
-        return $this->__adjustSettingItem($items);
+        return $items;
     }
-    public function getSettingsFormOrder () {
+    public function getSettingsWebsite () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
+        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
         return $this->__adjustSettingItem($items);
     }
     public function getSettingByID ($type, $id) {
@@ -101,7 +116,7 @@ class settings {
         $settings[$this->SETTING_TYPE->ADDRESS] = $this->getSettingsAddresses();
         $settings[$this->SETTING_TYPE->ALERTS] = $this->getSettingsAlerts();
         $settings[$this->SETTING_TYPE->INFO] = $this->getSettingsInfo();
-        $settings[$this->SETTING_TYPE->MISC] = $this->getSettingsMisc();
+        // $settings[$this->SETTING_TYPE->MISC] = $this->getSettingsMisc();
         $settings[$this->SETTING_TYPE->PRODUCT] = $this->getSettingsProduct();
         $settings[$this->SETTING_TYPE->SEO] = $this->getSettingsSeo();
         $settings[$this->SETTING_TYPE->WEBSITE] = $this->getSettingsWebsite();
@@ -111,7 +126,7 @@ class settings {
     private function getSettingsByType ($type) {
         global $app;
         $settings = null;
-        switch ($typeObj->type) {
+        switch ($type) {
             case 'SEO':
                 $settings = $this->getSettingsSeo();
                 break;
@@ -129,6 +144,9 @@ class settings {
                 break;
             case 'FORMORDER':
                 $settings = $this->getSettingsFormOrder();
+                break;
+            case 'PRODUCT':
+                $settings = $this->getSettingsProduct();
                 break;
             default:
                 # code...
@@ -149,12 +167,13 @@ class settings {
         return $setting;
     }
 
-    public function createSettings ($type, $reqData) {
+    public function createOrUpdateSetting ($type, $reqData) {
         global $app;
         $result = array();
         $errors = array();
         $success = false;
-        $settingID = null;
+        $isUpdate = isset($reqData['ID']) && is_numeric($reqData['ID']);
+        $settingID = $isUpdate ? $reqData['ID'] : null;
 
         try {
 
@@ -166,11 +185,11 @@ class settings {
             $count = $this->getCustomerSettingsCount($type);
             $mustBeSingle = dbquery::isOneForCustomer($type);
 
-            if ($mustBeSingle && $count > 0) {
+            if ($mustBeSingle && $count > 0 && !$isUpdate) {
                 throw new Exception("PropertyAlreadyExists", 1);
             }
 
-            $dataRules = array();
+            $validatedDataObj = array();
             switch ($type) {
                 case 'SEO':
                     $dataRules = array(
@@ -184,18 +203,32 @@ class settings {
                         'CategoryPageTitle' => array('string', 'skipIfUnset'),
                         'HomePageTitle' => array('string', 'skipIfUnset')
                     );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'ALERTS':
                     $dataRules = array(
-                        'AllowAlerts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'UsePromo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'NewProductAdded' => array('bool', 'null', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ProductPriceGoesDown' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'PromoIsStarted' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'AddedNewOrigin' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'AddedNewCategory' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'AddedNewDiscountedProduct' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0)
+                        'AllowAlerts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'UsePromo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'NewProductAdded' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ProductPriceGoesDown' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'PromoIsStarted' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'AddedNewOrigin' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'AddedNewCategory' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'AddedNewDiscountedProduct' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
                     );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                    break;
+                case 'PRODUCT':
+                    $dataRules = array(
+                        'ShowOpenHours' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowDeliveryInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowPaymentInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowSocialSharing' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowPriceChart' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowWarrantyInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowContacts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'ADDRESS':
                     // $dataRules = $this->getSettingsAddresses();
@@ -208,36 +241,42 @@ class settings {
                     break;
                 case 'FORMORDER':
                     $dataRules = array(
-                        'ShowName' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowEMail' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowPhone' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowAddress' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowPOBox' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowCountry' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowCity' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowDeliveryAganet' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
-                        'ShowComment' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0),
+                        'ShowName' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowEMail' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowPhone' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowAddress' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowPOBox' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowCountry' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowCity' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowDeliveryAganet' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowComment' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
                         'SucessTextLines' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'ShowOrderTrackingLink' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0)
+                        'ShowOrderTrackingLink' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
                     );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
             }
-
-            $validatedDataObj = Validate::getValidData($reqData, $dataRules);
 
             if ($validatedDataObj["totalErrors"] == 0 && empty($errors)) {
                 try {
 
                     $validatedValues = $validatedDataObj['values'];
+                    // var_dump($validatedValues);
 
-                    $reqData["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
-                    $config = dbquery::shopCreateSetting($type, $reqData);
+                    $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                     $app->getDB()->beginTransaction();
 
-                    $settingID = $app->getDB()->query($config) ?: null;
+                    if ($isUpdate) {
+                        unset($validatedValues['ID']);
+                        $config = dbquery::shopUpdateSetting($type, $settingID, $validatedValues);
+                        $app->getDB()->query($config);
+                    } else {
+                        $config = dbquery::shopCreateSetting($type, $validatedValues);
+                        $settingID = $app->getDB()->query($config) ?: null;
+                    }
 
-                    if (empty($settingID)) {
+                    if (!$isUpdate && empty($settingID)) {
                         throw new Exception('SettingCreateError');
                     }
 
@@ -252,94 +291,12 @@ class settings {
                 $errors = $validatedDataObj["errors"];
             }
 
-            if ($success && !empty($settingID)) {
-                $result = $this->getSettingByID($type, $settingID);
+            if ($success && !empty($settingID) || $isUpdate) {
+                $result = $this->getSettingsByType($type);
             }
 
         } catch (Exception $e) {
             $errors[] = $e->getMessage();
-        }
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-
-    public function create ($type, $reqData) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        $settingID = null;
-
-        try {
-
-            $reqData["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
-            $config = dbquery::shopCreateSetting($type, $reqData);
-
-            $app->getDB()->beginTransaction();
-
-            $settingID = $app->getDB()->query($config) ?: null;
-
-            if (empty($settingID)) {
-                throw new Exception('SettingCreateError');
-            }
-
-            $app->getDB()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-
-        $result = $this->getSettingByID($type, $settingID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function update ($type, $nameOrID, $reqData) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset'),
-            'Status' => array('skipIfUnset'),
-            'Type' => array('string')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-                if (!empty($validatedValues)) {
-                    $app->getDB()->beginTransaction();
-                    if (is_numeric($nameOrID)) {
-                        $configSettingUpdate = dbquery::shopUpdateSetting($nameOrID, $validatedValues);
-                    } else {
-                        $configSettingUpdate = dbquery::shopUpdateSettingByName($nameOrID, $validatedValues);
-                    }
-                    $app->getDB()->query($configSettingUpdate);
-                    $app->getDB()->commit();
-                }
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        if (is_numeric($nameOrID)) {
-            $result = $this->findByID($type, $nameOrID);
-        } else {
-            $result = $this->findByName($type, $nameOrID);
         }
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -443,7 +400,7 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            $resp = $this->createSettings($typeObj->type, $req->data);
+            $resp = $this->createOrUpdateSetting($typeObj->type, $req->data);
         }
         
 /*        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
@@ -468,23 +425,29 @@ class settings {
     }
 
     public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['type'])) {
-            $resp['error'] = 'MissedParameter_type';
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
+        $typeObj = $this->getVerifiedSettingsTypeObj($req);
+        if ($typeObj->error) {
+            $resp['error'] = "WrongSettingsType";
         } else {
-            $settingID = intval($req->get['id']);
-            if (!isset($req->get['id']) && isset($req->get['name'])) {
-                $settingID = $req->get['name'];
-            }
-            $resp = $this->update($req->get['type'], $settingID, $req->data);
+            $resp = $this->createOrUpdateSetting($typeObj->type, $req->data);
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        //     $resp['error'] = "AccessDenied";
+        //     return;
+        // }
+        // if (empty($req->get['type'])) {
+        //     $resp['error'] = 'MissedParameter_type';
+        //     return;
+        // }
+        // if (empty($req->get['id'])) {
+        //     $resp['error'] = 'MissedParameter_id';
+        // } else {
+        //     $settingID = intval($req->get['id']);
+        //     if (!isset($req->get['id']) && isset($req->get['name'])) {
+        //         $settingID = $req->get['name'];
+        //     }
+        //     $resp = $this->update($req->get['type'], $settingID, $req->data);
+        // }
     }
 
     public function delete (&$resp, $req) {

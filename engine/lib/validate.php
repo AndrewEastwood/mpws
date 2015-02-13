@@ -65,56 +65,56 @@ class validate {
             $acceptedTypesCount = count($acceptedTypes);
 
             // string
-            if (in_array("string", $rules) && (!is_string($values[$keyToValidate]) || is_numeric($values[$keyToValidate]))) {
+            if (in_array("string", $rules, true) && (!is_string($values[$keyToValidate]) || is_numeric($values[$keyToValidate]))) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNoString";
                 $wrongTypeCount++;
             }
-            if (in_array("array", $rules) && !is_array($values[$keyToValidate])) {
+            if (in_array("array", $rules, true) && !is_array($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotArray";
                 $wrongTypeCount++;
             }
 
             // numeric
-            if (in_array("numeric", $rules) && !is_numeric($values[$keyToValidate])) {
+            if (in_array("numeric", $rules, true) && !is_numeric($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotNumeric";
                 $wrongTypeCount++;
             }
 
             // int
-            if (in_array("int", $rules) && !is_int($values[$keyToValidate])) {
+            if (in_array("int", $rules, true) && !is_int($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotInt";
                 $wrongTypeCount++;
             }
 
             // float
-            if (in_array("float", $rules) && !is_float($values[$keyToValidate])) {
+            if (in_array("float", $rules, true) && !is_float($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotFloat";
                 $wrongTypeCount++;
             }
 
             // bool
-            if (in_array("bool", $rules) && !is_bool($values[$keyToValidate])) {
+            if (in_array("bool", $rules, true) && !is_bool($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
                 $wrongTypeCount++;
             }
 
             // null
-            if (in_array("null", $rules) && !is_null($values[$keyToValidate])) {
+            if (in_array("null", $rules, true) && !is_null($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
                 $wrongTypeCount++;
-            } else if (in_array("notNull", $rules) && is_null($values[$keyToValidate])) {
+            } else if (in_array("notNull", $rules, true) && is_null($values[$keyToValidate])) {
                 // notnull
                 $errors[$keyToValidate][] = $keyToValidate . "IsNull";
                 $wrongTypeCount++;
             }
 
-            if (in_array("skipIfNull", $rules) && is_null($values[$keyToValidate])) {
+            if (in_array("skipIfNull", $rules, true) && is_null($values[$keyToValidate])) {
                 unset($errors[$keyToValidate]);
                 unset($values[$keyToValidate]);
                 continue;
             }
 
-            if (in_array("skipIfEmpty", $rules) && empty($values[$keyToValidate])) {
+            if (in_array("skipIfEmpty", $rules, true) && empty($values[$keyToValidate])) {
                 unset($errors[$keyToValidate]);
                 unset($values[$keyToValidate]);
                 continue;
@@ -134,7 +134,7 @@ class validate {
 
             // exists
             if (!array_key_exists($keyToValidate, $dataArray)) {
-                if (in_array("skipIfUnset", $rules)) {
+                if (in_array("skipIfUnset", $rules, true)) {
                     unset($errors[$keyToValidate]);
                     if (isset($rules["defaultValueIfUnset"]))
                         $values[$keyToValidate] = $rules["defaultValueIfUnset"];
@@ -149,23 +149,23 @@ class validate {
             }
 
             // notEmpty
-            if (in_array("notEmpty", $rules) && empty($dataArray[$keyToValidate])) {
+            if (in_array("notEmpty", $rules, true) && empty($dataArray[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsEmpty";
             }
 
             // email
-            if (in_array("isEmail", $rules) && false === filter_var($dataArray[$keyToValidate], FILTER_VALIDATE_EMAIL)) {
+            if (in_array("isEmail", $rules, true) && false === filter_var($dataArray[$keyToValidate], FILTER_VALIDATE_EMAIL)) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotEmail";
             }
 
             // email
-            if (in_array("isPassword", $rules)) {
+            if (in_array("isPassword", $rules, true)) {
                 $err = self::validatePassword($dataArray[$keyToValidate]);
                 $errors[$keyToValidate] = array_merge($errors[$keyToValidate], $err);
             }
 
             // phone
-            if (in_array("isPhone", $rules) && false === self::validatePhoneNumber($dataArray[$keyToValidate])) {
+            if (in_array("isPhone", $rules, true) && false === self::validatePhoneNumber($dataArray[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotPhone";
                 $errors[$keyToValidate][] = "FormatMustBe__" . str_replace(' ', '_', self::$FORMAT_PHONE);
             }
@@ -196,7 +196,7 @@ class validate {
             }
 
             // regex
-            if (in_array("regex", $rules) && preg_match($rules["regex"], $values[$keyToValidate]) !== 1) {
+            if (in_array("regex", $rules, true) && preg_match($rules["regex"], $values[$keyToValidate]) !== 1) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNull";
             }
 
@@ -208,6 +208,18 @@ class validate {
             // inPairWith
             if (isset($rules['inPairWith']) && !empty($rules['inPairWith']) && !isset($dataArray[$rules['inPairWith']])) {
                 $errors[$keyToValidate][] = $keyToValidate . "MissedRelatedField_" . $rules['inPairWith'];
+            }
+
+            // replace value if orig is true
+            if (isset($rules['ifTrueSet']) && $values[$keyToValidate]) {
+                $values[$keyToValidate] = $rules['ifTrueSet'];
+                // echo 'setting up true value';
+            }
+
+            // replace value if orig is true
+            if (isset($rules['ifFalseSet']) && !$values[$keyToValidate]) {
+                $values[$keyToValidate] = $rules['ifFalseSet'];
+                // echo 'setting up false value';
             }
 
             if (empty($errors[$keyToValidate]))
