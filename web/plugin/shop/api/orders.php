@@ -174,7 +174,7 @@ class orders {
 
         $apiAccountUser = API::getAPI('system:user');
         $apiAccountAddr = API::getAPI('system:address');
-        $formSettings = API::getAPI('shop:settings')->getSettingsMapFormOrder();
+        $formSettings = API::getAPI('shop:settings')->getSettingsFormOrder();
 
         // var_dump($formSettings);
         try {

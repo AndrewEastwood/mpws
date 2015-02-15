@@ -1022,7 +1022,7 @@ CREATE TABLE `shop_settingsAddress` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1031,6 +1031,7 @@ CREATE TABLE `shop_settingsAddress` (
 
 LOCK TABLES `shop_settingsAddress` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
+INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','',''),(2,1,'demo 1','Ukraine','','','',''),(3,1,'demo 1','Ukraine','','','',''),(4,1,'demo 1','Ukraine','','','','');
 /*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1244,9 +1245,9 @@ CREATE TABLE `shop_settingsOpenHours` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `AddressID` (`ShopAddressID`),
-  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1274,9 +1275,9 @@ CREATE TABLE `shop_settingsPhones` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`,`ShopAddressID`),
   KEY `ShopAddressID` (`ShopAddressID`),
-  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1285,6 +1286,7 @@ CREATE TABLE `shop_settingsPhones` (
 
 LOCK TABLES `shop_settingsPhones` WRITE;
 /*!40000 ALTER TABLE `shop_settingsPhones` DISABLE KEYS */;
+INSERT INTO `shop_settingsPhones` VALUES (1,1,1,'sales','12-12-1221');
 /*!40000 ALTER TABLE `shop_settingsPhones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1318,7 +1320,7 @@ CREATE TABLE `shop_settingsProduct` (
 
 LOCK TABLES `shop_settingsProduct` WRITE;
 /*!40000 ALTER TABLE `shop_settingsProduct` DISABLE KEYS */;
-INSERT INTO `shop_settingsProduct` VALUES (12,1,0,0,0,0,0,0,0);
+INSERT INTO `shop_settingsProduct` VALUES (12,1,1,0,0,0,0,0,0);
 /*!40000 ALTER TABLE `shop_settingsProduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1472,4 +1474,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-14  1:13:35
+-- Dump completed on 2015-02-16  0:31:39

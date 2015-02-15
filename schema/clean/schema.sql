@@ -888,8 +888,8 @@ CREATE TABLE `shop_settingsOpenHours` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `AddressID` (`ShopAddressID`),
-  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_settingsOpenHours_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsOpenHours_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_customerProductRequests` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -909,8 +909,8 @@ CREATE TABLE `shop_settingsPhones` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`,`ShopAddressID`),
   KEY `ShopAddressID` (`ShopAddressID`),
-  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_settingsPhones_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_settingsPhones_ibfk_2` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1068,4 +1068,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-14  1:13:35
+-- Dump completed on 2015-02-16  0:31:39

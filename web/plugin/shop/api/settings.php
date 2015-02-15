@@ -26,9 +26,17 @@ class settings {
     public function getSettingsAddresses () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ADDRESS));
-        $this->__adjustSettingItem($items);
-        $items['Phones'] = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PHONES) ?: array());
-        $items['OpenHours'] = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->OPENHOURS) ?: array());
+        foreach ($items as &$value) {
+            $value = $this->__adjustSettingItem($value);
+            // phones
+            $config = dbquery::shopGetSettingByType($this->SETTING_TYPE->PHONES);
+            $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($value['ID']);
+            $value['Phones'] = $app->getDB()->query($config) ?: array();
+            // open hours
+            $config = dbquery::shopGetSettingByType($this->SETTING_TYPE->OPENHOURS);
+            $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($value['ID']);
+            $value['OpenHours'] = $app->getDB()->query($config) ?: array();
+        }
         return $items;
     }
     public function getSettingsAlerts () {
@@ -52,17 +60,17 @@ class settings {
     public function getSettingsInfo () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->INFO));
-        return $this->__adjustSettingItem($items);
+        return $this->__adjustSettingItem($items) ?: array();
     }
     public function getSettingsMisc () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->MISC));
-        return $this->__adjustSettingItem($items);
+        return $this->__adjustSettingItem($items) ?: array();
     }
     public function getSettingsProduct () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
-        $this->__adjustSettingItem($items);
+        $this->__adjustSettingItem($items) ?: array();
         if (empty($items))
             return $items;
         $items["ShowOpenHours"] = intval($items["ShowOpenHours"]) === 1;
@@ -77,12 +85,12 @@ class settings {
     public function getSettingsSeo () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->SEO));
-        return $this->__adjustSettingItem($items);
+        return $this->__adjustSettingItem($items) ?: array();
     }
     public function getSettingsFormOrder () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
-        $this->__adjustSettingItem($items);
+        $this->__adjustSettingItem($items) ?: array();
         if (empty($items))
             return $items;
         $items["ShowName"] = intval($items["ShowName"]) === 1;
@@ -101,7 +109,7 @@ class settings {
     public function getSettingsWebsite () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
-        return $this->__adjustSettingItem($items);
+        return $this->__adjustSettingItem($items) ?: array();
     }
     public function getSettingByID ($type, $id) {
         global $app;
@@ -148,6 +156,9 @@ class settings {
             case 'PRODUCT':
                 $settings = $this->getSettingsProduct();
                 break;
+            case 'PHONES':
+                $settings = $this->getSettingsShopPhones();
+                break;
             default:
                 # code...
                 break;
@@ -167,13 +178,12 @@ class settings {
         return $setting;
     }
 
-    public function createOrUpdateSetting ($type, $reqData) {
+    public function createOrUpdateSetting ($type, $reqData, $settingID = null) {
         global $app;
         $result = array();
         $errors = array();
         $success = false;
-        $isUpdate = isset($reqData['ID']) && is_numeric($reqData['ID']);
-        $settingID = $isUpdate ? $reqData['ID'] : null;
+        $isUpdate = $settingID !== null;
 
         try {
 
@@ -186,7 +196,7 @@ class settings {
             $mustBeSingle = dbquery::isOneForCustomer($type);
 
             if ($mustBeSingle && $count > 0 && !$isUpdate) {
-                throw new Exception("PropertyAlreadyExists", 1);
+                throw new Exception("PropertyAlreadyExistsUsePatchMethod", 1);
             }
 
             $validatedDataObj = array();
@@ -231,6 +241,24 @@ class settings {
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'ADDRESS':
+                    $dataRules = array(
+                        'ShopName' => array('string', 'skipIfUnset'),
+                        'Country' => array('string', 'skipIfUnset'),
+                        'City' => array('string', 'skipIfUnset'),
+                        'AddressLine1' => array('string', 'skipIfUnset'),
+                        'AddressLine2' => array('string', 'skipIfUnset'),
+                        'AddressLine3' => array('string', 'skipIfUnset')
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                    // $dataRules = $this->getSettingsAddresses();
+                    break;
+                case 'PHONES':
+                    $dataRules = array(
+                        'ShopAddressID' => array('int'),
+                        'Label' => array('string'),
+                        'Value' => array('string')
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     // $dataRules = $this->getSettingsAddresses();
                     break;
                 case 'INFO':
@@ -347,15 +375,6 @@ class settings {
         return (object)$typeObj;
     }
 
-
-    private function setSettingsSeo ($reqData) {
-        global $app;
-        $result = array();
-        $count = $this->getCustomerSettingsCount($this->SETTING_TYPE->SEO);
-        $result['count'] = $count;
-        return $result;
-    }
-
     // -----------------------------------------------
     // -----------------------------------------------
     // WRAPPERS
@@ -371,14 +390,14 @@ class settings {
         }
         return intval($sCount['ItemsCount']);
     }
-    public function getSettingsMapFormOrder () {
-        $map = array();
-        $items = $this->getSettingsFormOrder();
-        foreach ($items as $value) {
-            $map[$value['Property']] = $value;
-        }
-        return $map;
-    }
+    // public function getSettingsMapFormOrder () {
+    //     $map = array();
+    //     $items = $this->getSettingsFormOrder();
+    //     foreach ($items as $value) {
+    //         $map[$value['Property']] = $value;
+    //     }
+    //     return $map;
+    // }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -429,7 +448,11 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            $resp = $this->createOrUpdateSetting($typeObj->type, $req->data);
+            $settingID = null;
+            if (isset($req->data['ID']) && is_numeric($req->data['ID'])) {
+                $settingID = intval($req->data['ID']);
+            }
+            $resp = $this->createOrUpdateSetting($typeObj->type, $req->data, $settingID);
         }
         // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
         //     $resp['error'] = "AccessDenied";
