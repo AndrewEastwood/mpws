@@ -281,8 +281,8 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewDeliveriesList.collection.fetch({
                     reset: true
                 });
-                pluginSettings.viewDeliveriesList.modelSelfService.fetch();
-                pluginSettings.viewAlerts.collection.fetch({
+                // pluginSettings.viewDeliveriesList.modelSelfService.fetch();
+                pluginSettings.viewAlerts.model.fetch({
                     reset: true
                 });
                 pluginSettings.viewWebsiteFormOrder.collection.fetch({
@@ -294,7 +294,7 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewProduct.collection.fetch({
                     reset: true
                 });
-                pluginSettings.viewSEO.collection.fetch({
+                pluginSettings.viewSEO.model.fetch({
                     reset: true
                 });
                 pluginSettings.viewExchangeRates.collection.fetch({

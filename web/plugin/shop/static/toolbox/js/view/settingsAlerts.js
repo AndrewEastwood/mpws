@@ -1,6 +1,6 @@
 define("plugin/shop/toolbox/js/view/settingsAlerts", [
     'default/js/lib/backbone',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -9,7 +9,7 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-switch'
-], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-yellow shop-settings-alerts",
@@ -25,12 +25,13 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'ALERTS');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.model = new ModelSetting({type: 'ALERTS'});
+            this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var tplData = Utils.getHBSTemplateData(this);
+            delete tplData.data.ID;
+            this.$el.html(tpl(tplData));
             var alertsEnabled = this.$('.shop-property-AllowAlerts .switcher').is(':checked');
             this.$('.switcher-main').html(this.$('.panel-body .shop-property-AllowAlerts').clone(true));
             this.$('.panel-body .shop-property-AllowAlerts').remove();
@@ -40,32 +41,27 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
             return this;
         },
         setSettingState: function (event, state, skip) {
+            var self = this;
             if (skip === true) {
                 return;
             }
-            var self = this,
-                $item = $(event.target).closest('.list-group-item'),
-                id = $item.data('id'),
-                model = this.collection.get(id);
+            var $item = $(event.target).closest('.list-group-item'),
+                propName = $item.data('id');
 
-            if (model) {
-                model.save({
-                    Status: !!state ? 'ACTIVE' : 'DISABLED'
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                        if (model.get('Property') === 'AllowAlerts') {
-                            self.$('.panel-body .list-group-item').toggleClass('disabled', !model.get('_isActive'));
-                            self.$('.panel-body .switcher').bootstrapSwitch('disabled', !model.get('_isActive'));
-                        }
-                    },
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        $item.find('.switcher').bootstrapSwitch('state', !state, true);
+            this.model.set(propName, !!state, {silent: true});
+            this.model.save(this.model.toJSON(), {
+                success: function (model) {
+                    $item.find('.switcher').bootstrapSwitch('state', model.get('AllowAlerts'), true);
+                    if (model.get('AllowAlerts')) {
+                        self.$('.panel-body .list-group-item').toggleClass('disabled', !model.get('AllowAlerts'));
+                        self.$('.panel-body .switcher').bootstrapSwitch('disabled', !model.get('AllowAlerts'));
                     }
-                });
-            }
+                },
+                error: function (model) {
+                    BSAlerts.danger(lang.settings_error_save);
+                    $item.find('.switcher').bootstrapSwitch('state', !state, true);
+                }
+            });
         }
     });
 

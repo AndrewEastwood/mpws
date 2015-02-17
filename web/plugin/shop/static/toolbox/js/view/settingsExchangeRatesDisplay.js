@@ -49,9 +49,8 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
             this.modelShowSiteCurrencySwitcher = new ModelSetting({
                 name: 'ShowSiteCurrencySelector'
             });
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'EXCHANGERATES');
-            this.collection.setCustomQueryField('Status', 'REMOVED:!=');
+            this.collection = new CollectionSettings('EXCHANGERATES');
+            // this.collection.setCustomQueryField('Status', 'REMOVED:!=');
             this.listenTo(this.modelDBPriceCurrency, 'change', this.renderDBCurrencyType);
             this.listenTo(this.modelSiteDefaultCurrency, 'change', this.renderSiteDefaultCurrency);
             this.listenTo(this.modelShowSiteCurrencySwitcher, 'change', this.renderShowSiteCurrencySwitcher);

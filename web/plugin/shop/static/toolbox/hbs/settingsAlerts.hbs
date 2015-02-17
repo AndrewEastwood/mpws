@@ -6,9 +6,9 @@
 <div class="panel-body">
     <div class="list-group">
     {{#each data}}
-        <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
-            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
-            <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
+        <a href="javascript://" class="list-group-item shop-property-{{@key}} alert" data-id="{{@key}}">
+            <input type="checkbox" class="switcher pull-right"{{#if this}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang.settings "" @key }}</span>
         </a>
     {{/each}}
     </div>

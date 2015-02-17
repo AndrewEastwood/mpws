@@ -25,8 +25,7 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'PRODUCT');
+            this.collection = new CollectionSettings('PRODUCT');
             this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {

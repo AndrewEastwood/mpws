@@ -29,9 +29,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'ADDRESS');
-            this.collection.setCustomQueryField('Status', 'REMOVED:!=');
+            this.collection = new CollectionSettings('ADDRESS');
             this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {

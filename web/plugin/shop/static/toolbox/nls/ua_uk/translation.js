@@ -222,6 +222,9 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
             editableEmptyRateValue: 'значення',
             editableEmptyCurrencyValue: 'валюта',
             message_confirmation_delete: 'Видалити цю валюту?'
+        },
+        settings: {
+            UsePromo: "Промоакції"
         }
     }, CustomerPluginShop);
 });

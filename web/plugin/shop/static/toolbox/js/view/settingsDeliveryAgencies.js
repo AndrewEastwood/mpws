@@ -11,7 +11,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable',
     'default/js/lib/bootstrap-switch'
-], function (Backbone, CollectionOrdersExpired, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, CollectionDeliveryAgencies, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -26,14 +26,14 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
             'save .editable': 'updateAgency'
         },
         initialize: function () {
-            this.collection = new CollectionOrdersExpired();
+            this.collection = new CollectionDeliveryAgencies();
             this.collection.queryParams.limit = 0;
             this.collection.setCustomQueryField('Status', 'REMOVED:!=');
-            this.modelSelfService = new ModelSetting({
-                name: 'DeliveryAllowSelfPickup'
-            });
+            // this.modelSelfService = new ModelSetting({
+            //     name: 'DeliveryAllowSelfPickup'
+            // });
             this.listenTo(this.collection, 'reset', this.render);
-            this.listenTo(this.modelSelfService, 'change', this.renderSelfServiceSwitcher);
+            // this.listenTo(this.modelSelfService, 'change', this.renderSelfServiceSwitcher);
             this.options = {};
             this.options.switchOptions = {
                 size: 'mini',
@@ -78,9 +78,9 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 }
             });
         },
-        renderSelfServiceSwitcher: function () {
-            this.$('.switcher-config-self-pickup').bootstrapSwitch('state', this.modelSelfService.get('_isActive'), true);
-        },
+        // renderSelfServiceSwitcher: function () {
+        //     this.$('.switcher-config-self-pickup').bootstrapSwitch('state', this.modelSelfService.get('_isActive'), true);
+        // },
         hideSaveButton: function (event) {
             var $item = $(event.target).closest('.list-group-item');
             $item.find('.create-delivery').addClass('hidden');

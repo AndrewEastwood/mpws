@@ -8,45 +8,44 @@ define('plugin/shop/common/js/collection/settings', [
 
     return Backbone.Collection.extend({
         model: ModelSetting,
-        // url: APP.getApiLink('shop', 'settings'),
-        // url: '/settings',
-        url: function () {
-            var _params = _.extend({
+
+        initialize: function (type) {
+            this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'settings'
-            }, this.queryParams);
-            return APP.getApiLink(_params);
+                fn: 'settings',
+                type: type || null
+            });
         },
 
-        initialize: function () {
-            this.queryParams = {};
+        // parse: function (data) {
+        //     // this.availableConversions = data.availableConversions;
+        //     // this.availableMutipliers = data.availableMutipliers;
+        //     return data;
+        // },
+
+        setSettingsType: function (type) {
+            this.type = type;
         },
 
-        parse: function (data) {
-            this.availableConversions = data.availableConversions;
-            this.availableMutipliers = data.availableMutipliers;
-            return data.items;
-        },
+        // setCustomQueryField: function (field, value) {
+        //     this.queryParams['_f' + field] = value;
+        // },
 
-        setCustomQueryField: function (field, value) {
-            this.queryParams['_f' + field] = value;
-        },
+        // getCustomQueryField: function (field) {
+        //     return this.queryParams["_f" + field];
+        // },
 
-        getCustomQueryField: function (field) {
-            return this.queryParams["_f" + field];
-        },
+        // setCustomQueryParam: function (param, value) {
+        //     this.queryParams['_p' + param] = value;
+        // },
 
-        setCustomQueryParam: function (param, value) {
-            this.queryParams['_p' + param] = value;
-        },
+        // getCustomQueryParam: function (param) {
+        //     return this.queryParams["_p" + param];
+        // },
 
-        getCustomQueryParam: function (param) {
-            return this.queryParams["_p" + param];
-        },
-
-        getPropertyByName: function (name) {
-            return this.findWhere('Property', name);
-        },
+        // getPropertyByName: function (name) {
+        //     return this.findWhere('Property', name);
+        // },
 
         toSettings: function () {
             var that = this,
@@ -58,60 +57,60 @@ define('plugin/shop/common/js/collection/settings', [
                 currencyList = {},
                 openHoursReg = /.*OpenHoursOn(.*)/,
                 contactReg = /.*_(\w+)_contact.*/;
-            this.each(function (model) {
-                property = model.get('Property');
-                settings[property] = model.toJSON();
-                // get addresses map
-                if (model.isAddress()) {
-                    uid = model.getAddressUID();
-                    addresses[uid] = addresses[uid] || {
-                        uid: uid,
-                        OpenHoursDaysMap: {},
-                        Contacts: [],
-                        OpenHoursToday: null
-                    };
-                    addresses[uid][model.getAddressFieldName()] = model.toJSON();
-                    openHoursData = property.match(openHoursReg);
-                    contactData = property.match(contactReg);
-                    if (openHoursData && openHoursData.length === 2) {
-                        // set day open hours value
-                        addresses[uid].OpenHoursDaysMap[openHoursData[1]] = {
-                            day: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('dddd'),
-                            dayShort: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('ddd'),
-                            hours: model.get('Value')
-                        };
-                    }
-                    if (contactData && contactData.length === 2) {
-                        addresses[uid].Contacts.push({
-                            type: contactData[1],
-                            label: model.get('Label'),
-                            contact: model.get('Value')
-                        });
-                    }
-                    // get todays open hours
-                    if (!addresses[uid].OpenHoursToday) {
-                        addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
-                    }
-                }
-                if (that.availableConversions[model.get('Property')]) {
-                    currencyList[model.get('Property')] = {
-                        name: model.get('Property'),
-                        text: model.get('Label'),
-                        showBeforeValue: model.get('Value') === "1",
-                        fromBaseToThis: that.availableConversions[model.get('Property')],
-                        fromThisToBase: that.availableMutipliers[model.get('Property')]
-                    };
-                }
-            });
-            settings.currencyList = currencyList;
-            settings.addresses = addresses
-            settings.addressCount = Object.getOwnPropertyNames(addresses).length;
-            if (settings.DBPriceCurrencyType) {
-                settings.DBPriceCurrencyType._display = currencyList[settings.DBPriceCurrencyType.Value];
-            }
-            if (settings.ShowSiteCurrencySelector) {
-                settings.ShowSiteCurrencySelector = settings.ShowSiteCurrencySelector._isActive;
-            }
+            // this.each(function (model) {
+            //     property = model.get('Property');
+            //     settings[property] = model.toJSON();
+            //     // get addresses map
+            //     if (model.isAddress()) {
+            //         uid = model.getAddressUID();
+            //         addresses[uid] = addresses[uid] || {
+            //             uid: uid,
+            //             OpenHoursDaysMap: {},
+            //             Contacts: [],
+            //             OpenHoursToday: null
+            //         };
+            //         addresses[uid][model.getAddressFieldName()] = model.toJSON();
+            //         openHoursData = property.match(openHoursReg);
+            //         contactData = property.match(contactReg);
+            //         if (openHoursData && openHoursData.length === 2) {
+            //             // set day open hours value
+            //             addresses[uid].OpenHoursDaysMap[openHoursData[1]] = {
+            //                 day: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('dddd'),
+            //                 dayShort: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('ddd'),
+            //                 hours: model.get('Value')
+            //             };
+            //         }
+            //         if (contactData && contactData.length === 2) {
+            //             addresses[uid].Contacts.push({
+            //                 type: contactData[1],
+            //                 label: model.get('Label'),
+            //                 contact: model.get('Value')
+            //             });
+            //         }
+            //         // get todays open hours
+            //         if (!addresses[uid].OpenHoursToday) {
+            //             addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
+            //         }
+            //     }
+            //     if (that.availableConversions[model.get('Property')]) {
+            //         currencyList[model.get('Property')] = {
+            //             name: model.get('Property'),
+            //             text: model.get('Label'),
+            //             showBeforeValue: model.get('Value') === "1",
+            //             fromBaseToThis: that.availableConversions[model.get('Property')],
+            //             fromThisToBase: that.availableMutipliers[model.get('Property')]
+            //         };
+            //     }
+            // });
+            // settings.currencyList = currencyList;
+            // settings.addresses = addresses
+            // settings.addressCount = Object.getOwnPropertyNames(addresses).length;
+            // if (settings.DBPriceCurrencyType) {
+            //     settings.DBPriceCurrencyType._display = currencyList[settings.DBPriceCurrencyType.Value];
+            // }
+            // if (settings.ShowSiteCurrencySelector) {
+            //     settings.ShowSiteCurrencySelector = settings.ShowSiteCurrencySelector._isActive;
+            // }
             return settings;
         }
     });

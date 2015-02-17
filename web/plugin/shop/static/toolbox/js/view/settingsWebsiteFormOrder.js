@@ -33,8 +33,7 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
                 savenochange: true,
                 unsavedclass: ''
             };
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'FORMORDER');
+            this.collection = new CollectionSettings('FORMORDER');
             this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {

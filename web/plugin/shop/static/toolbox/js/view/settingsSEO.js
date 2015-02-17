@@ -1,6 +1,6 @@
 define("plugin/shop/toolbox/js/view/settingsSEO", [
     'default/js/lib/backbone',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -9,7 +9,7 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-switch'
-], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-green shop-settings-seo",
@@ -27,9 +27,8 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
                 savenochange: true,
                 unsavedclass: ''
             };
-            this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'SEO');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.model = new ModelSetting({type: 'SEO'});
+            this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));

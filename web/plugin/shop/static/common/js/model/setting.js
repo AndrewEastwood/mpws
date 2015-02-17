@@ -5,16 +5,13 @@ define('plugin/shop/common/js/model/setting', [
 
     return Backbone.Model.extend({
         idAttribute: "ID",
-        url: function () {
-            var _params = {
+        initialize: function (opts) {
+            this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'settings'
-            };
-            if (!this.isNew())
-                _params.id = this.id;
-            if (this.isNew() && this.get('name'))
-                _params.name = this.get('name');
-            return APP.getApiLink(_params);
+                fn: 'settings',
+                type: opts && opts.type || null
+            });
+            this.unset('type', {silent: true});
         },
         isAddress: function () {
             return this.get('Type') === 'ADDRESS';

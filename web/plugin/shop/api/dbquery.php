@@ -848,7 +848,8 @@ class dbquery {
 
     // shop settings >>>>>
     // public static function setting
-    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY');
+    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY', 'PHONES', 'OPENHOURS');
+    public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY', 'PHONES');
     public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
         'ADDRESS' => 'shop_settingsAddress',
         'ALERTS' => 'shop_settingsAlerts',
@@ -866,6 +867,9 @@ class dbquery {
 
     public static function isOneForCustomer ($type) {
         return !in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
+    }
+    public static function settingCanBeRemoved ($type) {
+        return in_array($type, self::$ALLOW_SETTINGS_TO_DELETE);
     }
 
     public static function getVerifiedSettingsType ($type) {
@@ -909,15 +913,6 @@ class dbquery {
         $config["condition"]["ID"] = $app->getDB()->createCondition($id);
         return $config;
     }
-
-    // public static function shopGetSettingByName ($type, $name = null) {
-    //     global $app;
-    //     $config = self::shopGetSettingByID($type);
-    //     unset($config['condition']['ID']);
-    //     $config['condition']['Property'] = $app->getDB()->createCondition($name);
-    //     return $config;
-    // }
-
     public static function shopGetSettingByType ($type) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
@@ -933,7 +928,20 @@ class dbquery {
         }
         return $config;
     }
-
+    public static function shopGetSettingsAddressPhones ($addressID) {
+        global $app;
+        $config = self::shopGetSettingByType('PHONES');
+        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        return $config;
+    }
+    public static function shopGetSettingsAddressOpenHours ($addressID) {
+        global $app;
+        $config = self::shopGetSettingByType('OPENHOURS');
+        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        $config["limit"] = 1;
+        $config["options"]["expandSingleRecord"] = true;
+        return $config;
+    }
     public static function shopCreateSetting ($type, $data) {
         global $app;
         return $app->getDB()->createDBQuery(array(
@@ -963,16 +971,12 @@ class dbquery {
 
     public static function shopRemoveSetting ($type, $id) {
         global $app;
-        // $data["DateUpdated"] = $app->getDB()->getDate();
-        // $data["Status"] = 'REMOVED';
         return $app->getDB()->createDBQuery(array(
             "source" => self::getSettingsDBTableNameByType($type),
             "action" => "delete",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($id)
-            )//,
-            // "data" => $data,
-            // "options" => null
+            )
         ));
     }
     // <<<<< shop delivery agencies
