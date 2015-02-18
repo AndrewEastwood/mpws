@@ -25,7 +25,7 @@ RewriteRule ^static/(customers|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/
 
 # NEW API
 #RewriteRule ^static/(.*) /resources/$1 [QSA,L]
+RewriteRule ^api/(\w+)/(\w+)/(.*)? /engine/controllers/api.php?api=$1:$2&params=$3 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 [QSA,L]
-RewriteRule ^api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&$3 [QSA,L]
 RewriteRule ^upload/$ /engine/controllers/upload.php [QSA,L]

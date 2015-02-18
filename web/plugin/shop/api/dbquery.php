@@ -848,7 +848,7 @@ class dbquery {
 
     // shop settings >>>>>
     // public static function setting
-    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY', 'PHONES', 'OPENHOURS');
+    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES', 'OPENHOURS', 'INFO'*/);
     public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY', 'PHONES');
     public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
         'ADDRESS' => 'shop_settingsAddress',
@@ -937,6 +937,14 @@ class dbquery {
     public static function shopGetSettingsAddressOpenHours ($addressID) {
         global $app;
         $config = self::shopGetSettingByType('OPENHOURS');
+        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        $config["limit"] = 1;
+        $config["options"]["expandSingleRecord"] = true;
+        return $config;
+    }
+    public static function shopGetSettingsAddressInfo ($addressID) {
+        global $app;
+        $config = self::shopGetSettingByType('INFO');
         $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
         $config["limit"] = 1;
         $config["options"]["expandSingleRecord"] = true;

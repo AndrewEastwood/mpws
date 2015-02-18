@@ -19,7 +19,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
         template: tpl,
         events: {
             'switchChange.bootstrapSwitch .switcher': 'setAgencyState',
-            'switchChange.bootstrapSwitch .switcher-config-self-pickup': 'setSelfPickupMode',
+            // 'switchChange.bootstrapSwitch .switcher-config-self-pickup': 'setSelfPickupMode',
             'click .add-delivery': 'addAgency',
             'click .create-delivery': 'createAgency',
             'click .remove-delivery': 'deleteAgency',
@@ -32,7 +32,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
             // this.modelSelfService = new ModelSetting({
             //     name: 'DeliveryAllowSelfPickup'
             // });
-            this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'add remove sync', this.render);
             // this.listenTo(this.modelSelfService, 'change', this.renderSelfServiceSwitcher);
             this.options = {};
             this.options.switchOptions = {
@@ -63,21 +63,21 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
             this.delegateEvents();
             return this;
         },
-        setSelfPickupMode: function (event, state, skip) {
-            var self = this;
-            this.modelSelfService.save({
-                Status: !!state ? 'ACTIVE' : 'DISABLED'
-            }, {
-                patch: true,
-                success: function (model) {
-                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', model.get('_isActive'), true);
-                },
-                error: function (model) {
-                    BSAlerts.danger(lang.settings_error_save);
-                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', !state, true);
-                }
-            });
-        },
+        // setSelfPickupMode: function (event, state, skip) {
+        //     var self = this;
+        //     this.modelSelfService.save({
+        //         Status: !!state ? 'ACTIVE' : 'DISABLED'
+        //     }, {
+        //         patch: true,
+        //         success: function (model) {
+        //             self.$('.switcher-config-self-pickup').bootstrapSwitch('state', model.get('_isActive'), true);
+        //         },
+        //         error: function (model) {
+        //             BSAlerts.danger(lang.settings_error_save);
+        //             self.$('.switcher-config-self-pickup').bootstrapSwitch('state', !state, true);
+        //         }
+        //     });
+        // },
         // renderSelfServiceSwitcher: function () {
         //     this.$('.switcher-config-self-pickup').bootstrapSwitch('state', this.modelSelfService.get('_isActive'), true);
         // },
@@ -152,18 +152,29 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 model = this.collection.get(id);
 
             if (model && editData && editData.newValue) {
-                model.save({
-                    Name: editData.newValue
-                }, {
-                    patch: true,
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        self.collection.fetch({
-                            reset: true
-                        });
-                    }
+                model.set('Name', editData.newValue);
+                model.save().then(function () {
+                    self.collection.fetch({reset: true});
+                }, function () {
+                    BSAlerts.danger(lang.settings_error_save);
+                    that.model.set(that.model.previousAttributes());
+                    that.render();
                 });
             }
+
+            // if (model && editData && editData.newValue) {
+            //     model.save({
+            //         Name: editData.newValue
+            //     }, {
+            //         patch: true,
+            //         error: function (model) {
+            //             BSAlerts.danger(lang.settings_error_save);
+            //             self.collection.fetch({
+            //                 reset: true
+            //             });
+            //         }
+            //     });
+            // }
         },
         deleteAgency: function (event) {
             var self = this,
@@ -180,10 +191,17 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
 
             BootstrapDialog.confirm(lang.settings_msg_confirmation_delete_delivery, function (rez) {
                 if (rez) {
-                    model.destroy({
-                        success: function () {
-                            $item.remove();
-                        }
+                    // model.destroy({
+                    //     success: function () {
+                    //         $item.remove();
+                    //     }
+                    // });
+                    model.destroy().then(function () {
+                        self.collection.fetch({reset: true});
+                    }, function () {
+                        BSAlerts.danger(lang.settings_error_save);
+                        that.model.set(that.model.previousAttributes());
+                        that.render();
                     });
                 }
             });

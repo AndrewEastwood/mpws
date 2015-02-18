@@ -30,10 +30,6 @@ class settings {
             return null;
         }
         $item = $this->__adjustSettingItem($item);
-        // phones
-        $item['Phones'] = $this->getSettingsAddressPhones($addressID);
-        // open hours
-        $item['OpenHours'] = $this->getSettingsAddressesOpenHours($addressID);
         return $item;
     }
     public function getSettingsAddresses () {
@@ -41,10 +37,6 @@ class settings {
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ADDRESS));
         foreach ($items as &$value) {
             $value = $this->__adjustSettingItem($this->SETTING_TYPE->ADDRESS, $value);
-            // phones
-            $value['Phones'] = $this->getSettingsAddressPhones($value['ID']);
-            // open hours
-            $value['OpenHours'] = $this->getSettingsAddressesOpenHours($value['ID']);
         }
         return $items;
     }
@@ -57,72 +49,73 @@ class settings {
             $value = $this->__adjustSettingItem($this->SETTING_TYPE->PHONES, $value);
         return $items;
     }
-    public function getSettingsAddressesOpenHours ($addressID) {
+    public function getSettingsAddressOpenHours ($addressID) {
         global $app;
         // open hours
         $config = dbquery::shopGetSettingsAddressOpenHours($addressID);
-        $items = $app->getDB()->query($config) ?: array();
-        return $this->__adjustSettingItem($this->SETTING_TYPE->OPENHOURS, $items);
+        $item = $app->getDB()->query($config) ?: array();
+        return $this->__adjustSettingItem($this->SETTING_TYPE->OPENHOURS, $item);
+    }
+    public function getSettingsAddressInfo ($addressID) {
+        global $app;
+        $config = dbquery::shopGetSettingsAddressInfo($addressID);
+        $item = $app->getDB()->query($config) ?: array();
+        return $this->__adjustSettingItem($this->SETTING_TYPE->INFO, $item);
     }
     public function getSettingsAlerts () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ALERTS));
-        $this->__adjustSettingItem($this->SETTING_TYPE->ALERTS, $items);
-        if (empty($items))
-            return $items;
-        return $items;
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ALERTS));
+        $this->__adjustSettingItem($this->SETTING_TYPE->ALERTS, $item);
+        if (empty($item))
+            return $item;
+        return $item;
     }
     public function getSettingsExchangeRates () {}
     public function getSettingsExchangeRatesDisplay () {}
-    public function getSettingsInfo () {
-        global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->INFO));
-        return $this->__adjustSettingItem($this->SETTING_TYPE->INFO, $items) ?: array();
-    }
     public function getSettingsMisc () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->MISC));
-        return $this->__adjustSettingItem($this->SETTING_TYPE->MISC, $items) ?: array();
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->MISC));
+        return $this->__adjustSettingItem($this->SETTING_TYPE->MISC, $item) ?: array();
     }
     public function getSettingsProduct () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
-        $this->__adjustSettingItem($this->SETTING_TYPE->PRODUCT, $items) ?: array();
-        if (empty($items))
-            return $items;
-        return $items;
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
+        $this->__adjustSettingItem($this->SETTING_TYPE->PRODUCT, $item) ?: array();
+        if (empty($item))
+            return $item;
+        return $item;
     }
     public function getSettingsSeo () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->SEO));
-        return $this->__adjustSettingItem($this->SETTING_TYPE->SEO, $items) ?: array();
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->SEO));
+        return $this->__adjustSettingItem($this->SETTING_TYPE->SEO, $item) ?: array();
     }
     public function getSettingsFormOrder () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
-        $this->__adjustSettingItem($this->SETTING_TYPE->FORMORDER, $items) ?: array();
-        if (empty($items))
-            return $items;
-        return $items;
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
+        $this->__adjustSettingItem($this->SETTING_TYPE->FORMORDER, $item) ?: array();
+        if (empty($item))
+            return $item;
+        return $item;
     }
     public function getSettingsWebsite () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
-        return $this->__adjustSettingItem($this->SETTING_TYPE->WEBSITE, $items) ?: array();
+        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
+        return $this->__adjustSettingItem($this->SETTING_TYPE->WEBSITE, $item) ?: array();
     }
     public function getSettingByID ($type, $id) {
         global $app;
-        $items = null;
+        $item = null;
         try {
-            $items = $app->getDB()->query(dbquery::shopGetSettingByID($type, $id));
+            $item = $app->getDB()->query(dbquery::shopGetSettingByID($type, $id));
         } catch (Exception $ex) { }
-        return $this->__adjustSettingItem($type, $items);
+        return $this->__adjustSettingItem($type, $item);
     }
     public function getSettings () {
         $settings = array();
         $settings[$this->SETTING_TYPE->ADDRESS] = $this->getSettingsAddresses();
         $settings[$this->SETTING_TYPE->ALERTS] = $this->getSettingsAlerts();
-        $settings[$this->SETTING_TYPE->INFO] = $this->getSettingsInfo();
+        // $settings[$this->SETTING_TYPE->INFO] = $this->getSettingsAddressInfo();
         // $settings[$this->SETTING_TYPE->MISC] = $this->getSettingsMisc();
         $settings[$this->SETTING_TYPE->PRODUCT] = $this->getSettingsProduct();
         $settings[$this->SETTING_TYPE->SEO] = $this->getSettingsSeo();
@@ -136,10 +129,12 @@ class settings {
         if (empty($setting)) {
             return null;
         }
-        if (isset($setting['ID']))
+        if (isset($setting['ID'])) {
             $setting['ID'] = intval($setting['ID']);
-        if (isset($setting['ShopAddressID']))
+        }
+        if (isset($setting['ShopAddressID'])) {
             $setting['ShopAddressID'] = intval($setting['ShopAddressID']);
+        }
         if (isset($setting['CustomerID'])) {
             unset($setting['CustomerID']);
         }
@@ -156,6 +151,14 @@ class settings {
                 $setting["AddedNewDiscountedProduct"] = intval($setting["AddedNewDiscountedProduct"]) === 1;
                 break;
             case 'ADDRESS':
+                if (isset($setting['ID'])) {
+                    // phones
+                    $setting['Phones'] = $this->getSettingsAddressPhones($setting['ID']);
+                    // open hours
+                    $setting['OpenHours'] = $this->getSettingsAddressOpenHours($setting['ID']);
+                    // payment, shipping etc.
+                    $setting['Info'] = $this->getSettingsAddressInfo($setting['ID']);
+                }
                 break;
             case 'INFO':
                 break;
@@ -299,7 +302,7 @@ class settings {
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                        $ophrs = $this->getSettingsAddressesOpenHours($validatedDataObj['values']['ShopAddressID']);
+                        $ophrs = $this->getSettingsAddressOpenHours($validatedDataObj['values']['ShopAddressID']);
                         if (!empty($ophrs) && !$isUpdate) {
                             throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
                         }
@@ -309,7 +312,22 @@ class settings {
                     }
                     break;
                 case 'INFO':
-                    // $dataRules = $this->getSettingsInfo();
+                    $dataRules = array(
+                        'ShopAddressID' => array('int'),
+                        'Shipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Payment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Warranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => '')
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                    if (isset($validatedDataObj['values']['ShopAddressID'])) {
+                        $info = $this->getSettingsAddressInfo($validatedDataObj['values']['ShopAddressID']);
+                        if (!empty($info) && !$isUpdate) {
+                            throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
+                        }
+                    }
+                    if ($isUpdate) {
+                        unset($validatedDataObj['values']['ShopAddressID']);
+                    }
                     break;
                 case 'WEBSITE':
                     // $dataRules = $this->getSettingsWebsite();
@@ -495,7 +513,10 @@ class settings {
                         $resp = $this->getSettingsAddresses();
                     break;
                 case 'INFO':
-                    $resp = $this->getSettingsInfo();
+                    if (isset($req->get['address']) && is_numeric($req->get['address']))
+                        $resp = $this->getSettingsAddressInfo($req->get['address']);
+                    else
+                        $resp['error'] = "AddressIsMissing";
                     break;
                 case 'WEBSITE':
                     $resp = $this->getSettingsWebsite();
@@ -514,7 +535,7 @@ class settings {
                     break;
                 case 'OPENHOURS':
                     if (isset($req->get['address']) && is_numeric($req->get['address']))
-                        $resp = $this->getSettingsAddressesOpenHours($req->get['address']);
+                        $resp = $this->getSettingsAddressOpenHours($req->get['address']);
                     else
                         $resp['error'] = "AddressIsMissing";
                     break;

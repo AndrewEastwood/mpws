@@ -285,13 +285,13 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewAlerts.model.fetch({
                     reset: true
                 });
-                pluginSettings.viewWebsiteFormOrder.collection.fetch({
+                pluginSettings.viewWebsiteFormOrder.model.fetch({
                     reset: true
                 });
                 pluginSettings.viewAddress.collection.fetch({
                     reset: true
                 });
-                pluginSettings.viewProduct.collection.fetch({
+                pluginSettings.viewProduct.model.fetch({
                     reset: true
                 });
                 pluginSettings.viewSEO.model.fetch({

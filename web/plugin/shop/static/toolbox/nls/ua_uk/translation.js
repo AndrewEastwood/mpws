@@ -161,15 +161,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         listPromos_Column_Discount: 'Знижка (%)',
         listPromos_Promo_Grid_noData: 'Немає промо-кодів',
         manager_promoCodes_listTitle: 'Промо-коди',
-        setting_property_ShowAddress: 'адреса доставки',
-        setting_property_ShowCity: 'місто',
-        setting_property_ShowComment: 'побажання',
-        setting_property_ShowCountry: 'країна',
-        setting_property_ShowDeliveryAganet: 'перевізник',
-        setting_property_ShowEMail: 'ел.пошта',
-        setting_property_ShowName: 'імя',
-        setting_property_ShowPOBox: 'поштовий індекс',
-        setting_property_ShowPhone: 'контактний телефон',
         popup_settingAddress_title_new: 'Створення адреси',
         popup_settingAddress_title_edit: 'Редагування адреси',
         popup_promo_title_new: 'Створення промо-акції',
@@ -178,13 +169,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_promo_filed_DateStart: 'Початок акції',
         popup_promo_filed_DateExpire: 'Кінець акції',
         popup_promo_filed_Discount: 'Знижка %',
-        setting_property_ShowContacts: 'контакт для товару',
-        setting_property_ShowOpenHours: 'показувати графік роботи',
-        setting_property_ShowDeliveryInfo: 'показувати інформацію про доставку',
-        setting_property_ShowPaymentInfo: 'показувати інформацію про оплату',
-        setting_property_ShowSocialSharing: 'дозволити розміщення в соц. мережах',
-        setting_property_ShowPriceChart: 'показувати статистику цін',
-        setting_property_ShowWarrantyInfo: 'показувати інформацію про гарантії',
         productManager_Button_Upload_ProductFeed: 'Імпортувати',
         productManager_Button_Download_ProductFeed: 'Завантажити',
         settings_value_editable_emptytext: 'порожнє значення',
@@ -227,6 +211,26 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
                 ProductPageTitle: 'Зголовок товару',
                 CategoryPageTitle: 'Зголовок категорії',
                 HomePageTitle: 'Зголовок головної сторінки'
+            },
+            orderform: {
+                ShowAddress: 'адреса доставки',
+                ShowCity: 'місто',
+                ShowComment: 'побажання',
+                ShowCountry: 'країна',
+                ShowDeliveryAganet: 'перевізник',
+                ShowEMail: 'ел.пошта',
+                ShowName: 'імя',
+                ShowPOBox: 'поштовий індекс',
+                ShowPhone: 'контактний телефон'
+            },
+            product: {
+                ShowContacts: 'контакт для товару',
+                ShowOpenHours: 'показувати графік роботи',
+                ShowDeliveryInfo: 'показувати інформацію про доставку',
+                ShowPaymentInfo: 'показувати інформацію про оплату',
+                ShowSocialSharing: 'дозволити розміщення в соц. мережах',
+                ShowPriceChart: 'показувати статистику цін',
+                ShowWarrantyInfo: 'показувати інформацію про гарантії'
             }
         }
     }, CustomerPluginShop);

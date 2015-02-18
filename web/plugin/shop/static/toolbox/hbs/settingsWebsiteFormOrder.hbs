@@ -10,12 +10,9 @@
             <i class="fa fa-level-down"></i></span>
         </h5>
     {{#each data}}
-        <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
-            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
-            <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
-            {{#doesNotMatchAll Property 'ShowDeliveryAganet' 'ShowPhone'}}
-            <span class="property-value text-info hidden">{{Value}}</span>
-            {{/doesNotMatchAll}}
+        <a href="javascript://" class="list-group-item shop-property-{{@key}} alert" data-property="{{@key}}">
+            <input type="checkbox" class="switcher pull-right"{{#if this}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang.settings.orderform key=@key }}</span>
         </a>
     {{/each}}
     </div>

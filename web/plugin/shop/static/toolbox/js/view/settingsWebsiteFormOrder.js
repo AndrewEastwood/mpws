@@ -1,6 +1,6 @@
 define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
     'default/js/lib/backbone',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -10,7 +10,7 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-switch',
     'default/js/lib/bootstrap-editable'
-], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-green shop-settings-website-form-order",
@@ -26,73 +26,33 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.options.editableOptions = {
-                mode: 'popup',
-                name: 'Value',
-                emptytext: lang.settings_value_editable_emptytext,
-                savenochange: true,
-                unsavedclass: ''
-            };
-            this.collection = new CollectionSettings('FORMORDER');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.model = new ModelSetting({type: 'FORMORDER'});
+            this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
             var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var tplData = Utils.getHBSTemplateData(this);
+            tplData.data = _(tplData.data).omit('ID', 'SucessTextLines', 'ShowOrderTrackingLink', 'errors', 'success');
+            this.$el.html(tpl(tplData));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
-            this.$('.property-value').editable(this.options.editableOptions)
-                .on('save', function (e, params) {
-                    self.setSettingValue(e, params.newValue, params.oldValue);
-                });
             return this;
         },
-        setSettingValue: function (event, value, oldValue, skip) {
-            if (skip === true) {
-                return;
-            }
-            var self = this,
-                $item = $(event.target).closest('.list-group-item'),
-                id = $item.data('id'),
-                model = this.collection.get(id);
-
-            if (model) {
-                model.save({
-                    Value: value
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.property-value').text(value);
-                    },
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        $item.find('.property-value').text(oldValue);
-                    }
-                });
-            }
-        },
         setSettingStatus: function (event, status, skip) {
+
             if (skip === true) {
                 return;
             }
-            var self = this,
-                $item = $(event.target).closest('.list-group-item'),
-                id = $item.data('id'),
-                model = this.collection.get(id);
 
-            if (model) {
-                model.save({
-                    Status: !!status ? 'ACTIVE' : 'DISABLED'
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                    },
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        $item.find('.switcher').bootstrapSwitch('state', !status, true);
-                    }
-                });
-            }
+            var that = this,
+                $item = $(event.target).closest('.list-group-item'),
+                propName = $item.data('property');
+
+            this.model.set(propName, !!state);
+            this.model.save().then(this.render, function () {
+                BSAlerts.danger(lang.settings_error_save);
+                that.model.set(that.model.previousAttributes());
+                that.render();
+            });
         }
     });
 

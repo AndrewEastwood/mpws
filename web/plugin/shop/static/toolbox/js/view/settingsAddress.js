@@ -113,7 +113,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                             Status: !!state ? 'ACTIVE' : 'DISABLED'
                         }, {
                             wait: true,
-                            patch: true,
+                            // patch: true,
                             success: function (model) {
                                 allSuccess &= true;
                             },

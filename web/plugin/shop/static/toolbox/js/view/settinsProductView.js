@@ -1,6 +1,6 @@
 define("plugin/shop/toolbox/js/view/settinsProductView", [
     'default/js/lib/backbone',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -9,7 +9,7 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-switch'
-], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-green shop-settings-product-view",
@@ -25,37 +25,32 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.collection = new CollectionSettings('PRODUCT');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.model = new ModelSetting({type: 'PRODUCT'});
+            this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var tplData = Utils.getHBSTemplateData(this);
+            tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
+            this.$el.html(tpl(tplData));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             return this;
         },
         setSettingState: function (event, state, skip) {
+
             if (skip === true) {
                 return;
             }
-            var self = this,
-                $item = $(event.target).closest('.list-group-item'),
-                id = $item.data('id'),
-                model = this.collection.get(id);
 
-            if (model) {
-                model.save({
-                    Status: !!state ? 'ACTIVE' : 'DISABLED'
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                    },
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        $item.find('.switcher').bootstrapSwitch('state', !state, true);
-                    }
-                });
-            }
+            var that = this,
+                $item = $(event.target).closest('.list-group-item'),
+                propName = $item.data('property');
+
+            this.model.set(propName, !!state);
+            this.model.save().then(this.render, function () {
+                BSAlerts.danger(lang.settings_error_save);
+                that.model.set(that.model.previousAttributes());
+                that.render();
+            });
         }
     });
 

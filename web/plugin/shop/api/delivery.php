@@ -5,6 +5,7 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
@@ -51,7 +52,7 @@ class delivery {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300, 'defaultValueIfUnset' => '')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -95,7 +96,7 @@ class delivery {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300, 'defaultValueIfUnset' => ''),
             'Status' => array('string', 'skipIfUnset')
         ));
 
@@ -186,20 +187,18 @@ class delivery {
             return;
         }
         $resp = $this->createDeliveryAgency($req->data);
-        // $this->_getOrSetCachedState('changed:agencies', true);
     }
 
-    public function patch (&$resp, $req) {
+    public function put (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $agencyID = intval($req->get['id']);
+        if (isset($req->data['ID']) && is_numeric($req->data['ID'])) {
+            $agencyID = intval($req->data['ID']);
             $resp = $this->updateDeliveryAgency($agencyID, $req->data);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+        } else {
+            $resp['error'] = 'ID_IsMissing';
         }
     }
 
@@ -208,12 +207,12 @@ class delivery {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $agencyID = intval($req->get['id']);
+        // var_dump($req);
+        if (isset($req->get['params']) && is_numeric($req->get['params'])) {
+            $agencyID = intval($req->get['params']);
             $resp = $this->deleteDeliveryAgency($agencyID);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+        } else {
+            $resp['error'] = 'ID_IsMissing';
         }
     }
 }

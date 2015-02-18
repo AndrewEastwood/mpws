@@ -3,17 +3,8 @@ define('plugin/shop/toolbox/js/model/deliveryAgency', [
 ], function (Backbone) {
 
     var DeliveryAgency = Backbone.Model.extend({
-        idAttribute: "ID",
-        url: function () {
-            var _params = {
-                source: 'shop',
-                fn: 'delivery'
-            };
-            if (!this.isNew()) {
-                _params.id = this.id;
-            }
-            return APP.getApiLink(_params);
-        }
+        idAttribute: 'ID',
+        urlRoot: APP.getApiLink('shop', 'delivery')
     });
 
     return DeliveryAgency;

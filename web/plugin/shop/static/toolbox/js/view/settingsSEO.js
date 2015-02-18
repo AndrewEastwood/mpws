@@ -34,7 +34,6 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
             var tplData = Utils.getHBSTemplateData(this);
             tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
             this.$el.html(tpl(tplData));
-            // this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             return this;
         },
         editValue: function (event) {
@@ -70,19 +69,6 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
                         that.model.save().then($.proxy(dialog.close, dialog), function () {
                             BSAlerts.danger(lang.settings_error_save);
                         });
-                        // {
-                        //     Value: dialog.getMessage().val()
-                        // }, {
-                        //     wait: true,
-                        //     patch: true,
-                        //     success: function (model) {
-                        //         BSAlerts.success(lang.settings_message_success);
-                        //         dialog.close();
-                        //     },
-                        //     error: function (model) {
-                        //         BSAlerts.danger(lang.settings_error_save);
-                        //     }
-                        // });
                     }
                 }]
             });
