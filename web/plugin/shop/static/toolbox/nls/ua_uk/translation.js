@@ -161,13 +161,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         listPromos_Column_Discount: 'Знижка (%)',
         listPromos_Promo_Grid_noData: 'Немає промо-кодів',
         manager_promoCodes_listTitle: 'Промо-коди',
-        setting_property_AddedNewCategory: 'додався новий товар(и)',
-        setting_property_AddedNewDiscountedProduct: 'ціна товару(ів) знизилася',
-        setting_property_AddedNewOrigin: 'почалася промо акція',
-        setting_property_NewProductAdded: 'зявився новий виробник',
-        setting_property_ProductPriceGoesDown: 'зявилася нова категорія',
-        setting_property_PromoIsStarted: 'зявився вживаний/бракований товар',
-        setting_property_AllowAlerts: 'Дозволити сповіщення',
         setting_property_ShowAddress: 'адреса доставки',
         setting_property_ShowCity: 'місто',
         setting_property_ShowComment: 'побажання',
@@ -204,15 +197,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
             titleImport: 'Згенеровані фіди',
             titleExport: 'Завантажені фіди'
         },
-        setting_property_ProductKeywords: 'Ключові слова товару',
-        setting_property_CategoryKeywords: 'Ключові слова категорії',
-        setting_property_HomePageKeywords: 'Ключові слова головної сторінки',
-        setting_property_ProductDescription: 'Опис товару',
-        setting_property_CategoryDescription: 'Опис категорії',
-        setting_property_HomePageDescription: 'Опис головної сторінки',
-        setting_property_ProductPageTitle: 'Зголовок товару',
-        setting_property_CategoryPageTitle: 'Зголовок категорії',
-        setting_property_HomePageTitle: 'Зголовок головної сторінки',
         popup_seo_button_Close: 'Закрити',
         popup_seo_button_Save: 'Зберегти',
         rates: {
@@ -224,7 +208,26 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
             message_confirmation_delete: 'Видалити цю валюту?'
         },
         settings: {
-            UsePromo: "Промоакції"
+            alerts: {
+                AllowAlerts: 'Дозволити сповіщення',
+                NewProductAdded: 'додався новий товар(и)',
+                ProductPriceGoesDown: 'ціну на товар знижено',
+                PromoIsStarted: 'почалася промо акція',
+                AddedNewOrigin: 'зявився новий виробник',
+                AddedNewCategory: 'зявилася нова категорія',
+                AddedNewDiscountedProduct: 'зявився вживаний/бракований товар'
+            },
+            seo: {
+                ProductKeywords: 'Ключові слова товару',
+                CategoryKeywords: 'Ключові слова категорії',
+                HomePageKeywords: 'Ключові слова головної сторінки',
+                ProductDescription: 'Опис товару',
+                CategoryDescription: 'Опис категорії',
+                HomePageDescription: 'Опис головної сторінки',
+                ProductPageTitle: 'Зголовок товару',
+                CategoryPageTitle: 'Зголовок категорії',
+                HomePageTitle: 'Зголовок головної сторінки'
+            }
         }
     }, CustomerPluginShop);
 });

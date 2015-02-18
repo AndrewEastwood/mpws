@@ -8,7 +8,7 @@
     {{#each data}}
         <a href="javascript://" class="list-group-item shop-property-{{@key}} alert" data-id="{{@key}}">
             <input type="checkbox" class="switcher pull-right"{{#if this}}checked{{/if}}>
-            <span class="property-label">{{mpwsGetValueByKey ../lang.settings "" @key }}</span>
+            <span class="property-label">{{mpwsGetValueByKey ../lang.settings.alerts key=@key }}</span>
         </a>
     {{/each}}
     </div>

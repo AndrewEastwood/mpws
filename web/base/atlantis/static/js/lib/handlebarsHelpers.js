@@ -418,16 +418,13 @@ define("default/js/lib/handlebarsHelpers", [
     helpers.toLowerCase = function (str) {
         return str.toLowerCase();
     }
-    helpers.mpwsGetValueByKey = function (dictionary, key, prefix, suffix, getFirstPartSplittedBy, context) {
+    helpers.mpwsGetValueByKey = function (dictionary, context) {
         // debugger;
-        if (!context && suffix && suffix.hash) {
-            context = {
-                hash: _(suffix.hash).clone()
-            }
-            suffix = "";
-        }
-        var _key = prefix + key + suffix;
-        return dictionary[_key];
+        context = context || {hash: {}};
+        var key = context.hash.key || '',
+            prefix = context.hash.prefix || '',
+            suffix = context.hash.suffix || '';
+        return dictionary[prefix + key + suffix];
     }
     helpers.withItem = function(object, options) {
         // debugger;

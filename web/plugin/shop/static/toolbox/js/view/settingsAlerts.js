@@ -26,41 +26,38 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.model = new ModelSetting({type: 'ALERTS'});
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'sync', this.render);
+            _.bindAll(this, 'toggleAlerts');
         },
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
-            delete tplData.data.ID;
+            tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
             this.$el.html(tpl(tplData));
-            var alertsEnabled = this.$('.shop-property-AllowAlerts .switcher').is(':checked');
             this.$('.switcher-main').html(this.$('.panel-body .shop-property-AllowAlerts').clone(true));
             this.$('.panel-body .shop-property-AllowAlerts').remove();
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
-            this.$('.panel-body .list-group-item').toggleClass('disabled', !alertsEnabled);
-            this.$('.panel-body .switcher').bootstrapSwitch('disabled', !alertsEnabled);
+            this.toggleAlerts();
             return this;
         },
+        toggleAlerts: function () {
+            this.$('.panel-body .list-group-item').toggleClass('disabled', !this.model.get('AllowAlerts'));
+            this.$('.panel-body .switcher').bootstrapSwitch('disabled', !this.model.get('AllowAlerts'));
+        },
         setSettingState: function (event, state, skip) {
-            var self = this;
+
             if (skip === true) {
                 return;
             }
-            var $item = $(event.target).closest('.list-group-item'),
+
+            var that = this,
+                $item = $(event.target).closest('.list-group-item'),
                 propName = $item.data('id');
 
-            this.model.set(propName, !!state, {silent: true});
-            this.model.save(this.model.toJSON(), {
-                success: function (model) {
-                    $item.find('.switcher').bootstrapSwitch('state', model.get('AllowAlerts'), true);
-                    if (model.get('AllowAlerts')) {
-                        self.$('.panel-body .list-group-item').toggleClass('disabled', !model.get('AllowAlerts'));
-                        self.$('.panel-body .switcher').bootstrapSwitch('disabled', !model.get('AllowAlerts'));
-                    }
-                },
-                error: function (model) {
-                    BSAlerts.danger(lang.settings_error_save);
-                    $item.find('.switcher').bootstrapSwitch('state', !state, true);
-                }
+            this.model.set(propName, !!state);
+            this.model.save().then(this.render, function () {
+                BSAlerts.danger(lang.settings_error_save);
+                that.model.set(that.model.previousAttributes());
+                that.render();
             });
         }
     });

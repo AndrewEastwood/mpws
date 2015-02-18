@@ -16,61 +16,76 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
         template: tpl,
         lang: lang,
         events: {
-            'click .list-group-item': 'editValue'
+            'click a.list-group-item': 'editValue'
         },
         initialize: function () {
             this.options = {};
-            this.options.editableOptions = {
-                mode: 'inline',
-                name: 'Value',
-                emptytext: lang.settings_value_editable_emptytext,
-                savenochange: true,
-                unsavedclass: ''
-            };
+            // this.options.editableOptions = {
+            //     mode: 'inline',
+            //     name: 'Value',
+            //     emptytext: lang.settings_value_editable_emptytext,
+            //     savenochange: true,
+            //     unsavedclass: ''
+            // };
             this.model = new ModelSetting({type: 'SEO'});
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var tplData = Utils.getHBSTemplateData(this);
+            tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
+            this.$el.html(tpl(tplData));
+            // this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             return this;
         },
         editValue: function (event) {
-            var self = this,
+            var that = this,
                 $item = $(event.target).closest('.list-group-item'),
-                id = $item.data('id'),
-                model = this.collection.get(id);
-            if (model) {
-                BootstrapDialog.show({
-                    cssClass: 'popup-settings-seo',
-                    title: $item.find('.property-label').text(),
-                    message: $('<textarea>').text(model.get('Value')),
-                    buttons: [{
-                        label: lang.popup_seo_button_Close,
-                        cssClass: 'btn-default btn-link',
-                        action: function (dialog) {
-                            dialog.close();
-                        }
-                    }, {
-                        label: lang.popup_seo_button_Save,
-                        cssClass: 'btn-success btn-outline',
-                        action: function (dialog) {
-                            model.save({
-                                Value: dialog.getMessage().val()
-                            }, {
-                                wait: true,
-                                patch: true,
-                                success: function (model) {
-                                    BSAlerts.success(lang.settings_message_success);
-                                    dialog.close();
-                                },
-                                error: function (model) {
-                                    BSAlerts.danger(lang.settings_error_save);
-                                }
-                            });
-                        }
-                    }]
-                });
-            }
+                property = $item.data('property'),
+                isProduct = /^product/.test(property.toLowerCase()),
+                isCategory = /^category/.test(property.toLowerCase()),
+                isHome = /^home/.test(property.toLowerCase()),
+                $varInfoDiv = $('<ul>').html(this.$('.js-' + (isProduct ? 'product' : (isCategory ? 'cat' : 'home')) + '-vars').clone());
+
+            BootstrapDialog.show({
+                cssClass: 'popup-settings-seo',
+                title: $item.find('.property-label').text(),
+                message: $('<div>').append([$varInfoDiv, $('<hr>'), $('<textarea>').text(that.model.get(property))]),
+                onshow: function (dialog) {
+                    var $txtArea = dialog.getMessage().find('textarea');
+                    dialog.getMessage().find('ul .label').addClass('label-success').on('click', function () {
+                        $txtArea.val($txtArea.val() + ' [' + $(this).text() + ']');
+                    });
+                },
+                buttons: [{
+                    label: lang.popup_seo_button_Close,
+                    cssClass: 'btn-default btn-link',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
+                    label: lang.popup_seo_button_Save,
+                    cssClass: 'btn-success btn-outline',
+                    action: function (dialog) {
+                        that.model.set(property, dialog.getMessage().find('textarea').val());
+                        that.model.save().then($.proxy(dialog.close, dialog), function () {
+                            BSAlerts.danger(lang.settings_error_save);
+                        });
+                        // {
+                        //     Value: dialog.getMessage().val()
+                        // }, {
+                        //     wait: true,
+                        //     patch: true,
+                        //     success: function (model) {
+                        //         BSAlerts.success(lang.settings_message_success);
+                        //         dialog.close();
+                        //     },
+                        //     error: function (model) {
+                        //         BSAlerts.danger(lang.settings_error_save);
+                        //     }
+                        // });
+                    }
+                }]
+            });
         }
     });
 

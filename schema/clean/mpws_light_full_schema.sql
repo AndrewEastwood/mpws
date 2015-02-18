@@ -758,7 +758,6 @@ CREATE TABLE `shop_settingsAlerts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `AllowAlerts` tinyint(1) NOT NULL DEFAULT '0',
-  `UsePromo` tinyint(1) NOT NULL DEFAULT '0',
   `NewProductAdded` tinyint(1) NOT NULL DEFAULT '0',
   `ProductPriceGoesDown` tinyint(1) NOT NULL DEFAULT '0',
   `PromoIsStarted` tinyint(1) NOT NULL DEFAULT '0',
@@ -1078,4 +1077,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-18  0:24:01
+-- Dump completed on 2015-02-18 12:15:17

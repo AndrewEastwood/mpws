@@ -5,24 +5,24 @@
 </div>
 <div class="panel-body">
     <div class="alert alert-info">Список доступних змінних для різного типу контенту:</div>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <h5>Сторінка з товаром</h5>
+    <ul class="list-group hidden">
+        <li class="list-group-item js-product-vars">
+            <h5>Доступні змінні для сторінки з товаром</h5>
             <span class="label label-default">ProductName</span>
             <span class="label label-default">CategoryName</span>
             <span class="label label-default">OriginName</span>
             <span class="label label-default">ProductModel</span>
             <span class="label label-default">ProductDisplayTitle</span>
         </li>
-        <li class="list-group-item">
-            <h5>Сторінка каталогу (категорія)</h5>
+        <li class="list-group-item js-cat-vars">
+            <h5>Доступні змінні для сторінки каталогу (категорії)</h5>
             <span class="label label-default">CatalogFirst5ProductNames</span>
             <span class="label label-default">CategoryName</span>
             <span class="label label-default">CatalogFirst5OriginNames</span>
             <span class="label label-default">CatalogFirst5ProductModels</span>
         </li>
-        <li class="list-group-item">
-            <h5>Головна сторінка</h5>
+        <li class="list-group-item js-home-vars">
+            <h5>Доступні змінні для головної сторінка</h5>
             <span class="label label-default">CatalogFirst10ProductNames</span>
             <span class="label label-default">CatalogFirst10OriginNames</span>
             <span class="label label-default">CatalogFirst10ProductModels</span>
@@ -30,10 +30,10 @@
         </li>
     </ul>
     {{#each data}}
-        <a href="javascript://" class="list-group-item shop-property-{{Property}}" data-id="{{ID}}">
-            <i class="fa fa-pencil fa-fw"></i>
-            <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
-        </a>
+    <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
+        <i class="fa fa-pencil fa-fw"></i>
+        <span class="property-label">{{mpwsGetValueByKey ../lang.settings.seo key=@key }}</span>
+    </a>
     {{/each}}
 </div>
 <!-- /.panel-body -->

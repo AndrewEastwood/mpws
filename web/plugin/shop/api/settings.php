@@ -148,7 +148,6 @@ class settings {
                 break;
             case 'ALERTS':
                 $setting["AllowAlerts"] = intval($setting["AllowAlerts"]) === 1;
-                $setting["UsePromo"] = intval($setting["UsePromo"]) === 1;
                 $setting["NewProductAdded"] = intval($setting["NewProductAdded"]) === 1;
                 $setting["ProductPriceGoesDown"] = intval($setting["ProductPriceGoesDown"]) === 1;
                 $setting["PromoIsStarted"] = intval($setting["PromoIsStarted"]) === 1;
@@ -234,7 +233,6 @@ class settings {
                 case 'ALERTS':
                     $dataRules = array(
                         'AllowAlerts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'UsePromo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
                         'NewProductAdded' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
                         'ProductPriceGoesDown' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
                         'PromoIsStarted' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),

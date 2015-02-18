@@ -907,6 +907,16 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
 }
 
 .popup-settings-seo {
+    ul {
+        margin: 0px;
+        padding: 0px;
+        .label {
+            cursor: pointer;
+            &:hover {
+                background-color: darken(@label-success-bg, 10%);
+            }
+        }
+    }
     textarea {
         display: block;
         width: 100%;

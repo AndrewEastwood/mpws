@@ -1046,7 +1046,6 @@ CREATE TABLE `shop_settingsAlerts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `AllowAlerts` tinyint(1) NOT NULL DEFAULT '0',
-  `UsePromo` tinyint(1) NOT NULL DEFAULT '0',
   `NewProductAdded` tinyint(1) NOT NULL DEFAULT '0',
   `ProductPriceGoesDown` tinyint(1) NOT NULL DEFAULT '0',
   `PromoIsStarted` tinyint(1) NOT NULL DEFAULT '0',
@@ -1065,7 +1064,7 @@ CREATE TABLE `shop_settingsAlerts` (
 
 LOCK TABLES `shop_settingsAlerts` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAlerts` DISABLE KEYS */;
-INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,0,0,0,1,1,1,0);
+INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,0,0,1,1,1,1);
 /*!40000 ALTER TABLE `shop_settingsAlerts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1355,7 +1354,7 @@ CREATE TABLE `shop_settingsSeo` (
 
 LOCK TABLES `shop_settingsSeo` WRITE;
 /*!40000 ALTER TABLE `shop_settingsSeo` DISABLE KEYS */;
-INSERT INTO `shop_settingsSeo` VALUES (3,1,'test','','','','','','','','');
+INSERT INTO `shop_settingsSeo` VALUES (3,1,'testgdfgxfdgvgfdgfdggdfgdf','jghjghj','this is the main page. you can buy  [CatalogFirst10ProductNames]','',' [CatalogFirst5ProductNames] [CategoryName] [CatalogFirst5OriginNames] [CatalogFirst5ProductModels]','MAIN PAGE','','','');
 /*!40000 ALTER TABLE `shop_settingsSeo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1474,4 +1473,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-18  0:24:01
+-- Dump completed on 2015-02-18 12:15:17
