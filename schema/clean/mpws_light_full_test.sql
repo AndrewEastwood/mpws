@@ -1020,6 +1020,32 @@ CREATE TABLE `shop_settingsAddress` (
   `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
+  `MapUrl` varchar(100) COLLATE utf8_bin NOT NULL,
+  `SocialFacebook` varchar(150) COLLATE utf8_bin NOT NULL,
+  `SocialTwitter` varchar(150) COLLATE utf8_bin NOT NULL,
+  `SocialLinkedIn` varchar(150) COLLATE utf8_bin NOT NULL,
+  `SocialGooglePlus` varchar(150) COLLATE utf8_bin NOT NULL,
+  `PhoneHotline` varchar(15) COLLATE utf8_bin NOT NULL,
+  `Phone1Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Phone1Value` varchar(15) COLLATE utf8_bin NOT NULL,
+  `Phone2Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Phone2Value` varchar(15) COLLATE utf8_bin NOT NULL,
+  `Phone3Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Phone3Value` varchar(15) COLLATE utf8_bin NOT NULL,
+  `Phone4Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Phone4Value` varchar(15) COLLATE utf8_bin NOT NULL,
+  `Phone5Label` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Phone5Value` varchar(15) COLLATE utf8_bin NOT NULL,
+  `HoursMonday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursTuesday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursWednesday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursThursday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursFriday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursSturday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursSunday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `InfoPayment` text COLLATE utf8_bin NOT NULL,
+  `InfoShipping` text COLLATE utf8_bin NOT NULL,
+  `InfoWarranty` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1032,7 +1058,7 @@ CREATE TABLE `shop_settingsAddress` (
 
 LOCK TABLES `shop_settingsAddress` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
-INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','',''),(3,1,'demo 1','Ukraine','','','',''),(4,1,'demo 1','Ukraine','','','','');
+INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''),(3,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''),(4,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','');
 /*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1476,4 +1502,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-19  0:11:20
+-- Dump completed on 2015-02-19  1:34:29
