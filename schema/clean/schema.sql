@@ -836,11 +836,14 @@ DROP TABLE IF EXISTS `shop_settingsInfo`;
 CREATE TABLE `shop_settingsInfo` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `ShopAddressID` int(11) NOT NULL,
   `Shipping` text COLLATE utf8_bin NOT NULL,
   `Payment` text COLLATE utf8_bin NOT NULL,
   `Warranty` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `CustomerID` (`CustomerID`)
+  KEY `CustomerID` (`CustomerID`),
+  KEY `ShopAddressID` (`ShopAddressID`),
+  CONSTRAINT `shop_settingsInfo_ibfk_1` FOREIGN KEY (`ShopAddressID`) REFERENCES `shop_settingsAddress` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1067,4 +1070,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-18 12:15:17
+-- Dump completed on 2015-02-19  0:11:20
