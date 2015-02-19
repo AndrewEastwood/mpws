@@ -151,16 +151,7 @@ class settings {
                 $setting["AddedNewDiscountedProduct"] = intval($setting["AddedNewDiscountedProduct"]) === 1;
                 break;
             case 'ADDRESS':
-                if (isset($setting['ID'])) {
-                    // phones
-                    $setting['Phones'] = $this->getSettingsAddressPhones($setting['ID']);
-                    // open hours
-                    $setting['OpenHours'] = $this->getSettingsAddressOpenHours($setting['ID']);
-                    // payment, shipping etc.
-                    $setting['Info'] = $this->getSettingsAddressInfo($setting['ID']);
-                }
-                break;
-            case 'INFO':
+                $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
                 break;
             case 'WEBSITE':
                 break;
@@ -186,10 +177,10 @@ class settings {
                 $setting["ShowWarrantyInfo"] = intval($setting["ShowWarrantyInfo"]) === 1;
                 $setting["ShowContacts"] = intval($setting["ShowContacts"]) === 1;
                 break;
-            case 'PHONES':
-                break;
-            case 'OPENHOURS':
-                break;
+            // case 'PHONES':
+            //     break;
+            // case 'OPENHOURS':
+            //     break;
             default:
                 break;
         }
@@ -258,77 +249,98 @@ class settings {
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'ADDRESS':
-                    if ($count >= 3) {
+                    if (!$isUpdate && $count >= 3) {
                         throw new Exception("AddressLimitReached", 1);
                     }
                     $dataRules = array(
                         'ShopName' => array('string'),
-                        'Country' => array('string', 'skipIfUnset'),
-                        'City' => array('string', 'skipIfUnset'),
-                        'AddressLine1' => array('string', 'skipIfUnset'),
-                        'AddressLine2' => array('string', 'skipIfUnset'),
-                        'AddressLine3' => array('string', 'skipIfUnset')
+                        'Country' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'City' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'AddressLine1' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'AddressLine2' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'AddressLine3' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'AddressLine3' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'MapUrl' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'SocialFacebook' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'SocialTwitter' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'SocialLinkedIn' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'SocialGooglePlus' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'PhoneHotline' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone1Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone1Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone2Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone2Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone3Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone3Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone4Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone4Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone5Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone5Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursMonday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursTuesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursWednesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursThursday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursFriday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursSturday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursSunday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'InfoPayment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'InfoShipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'InfoWarranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Status' => array('string', 'skipIfUnset')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     // $dataRules = $this->getSettingsAddresses();
                     break;
-                case 'PHONES':
-                    $dataRules = array(
-                        'ShopAddressID' => array('int'),
-                        'Label' => array('string'),
-                        'Value' => array('string')
-                    );
-                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                    if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                        $phones = $this->getSettingsAddressPhones($validatedDataObj['values']['ShopAddressID']);
-                        if (count($phones) >= 10 && !$isUpdate) {
-                            throw new Exception("PhonesLimitReached", 1);
-                        }
-                    }
-                    if ($isUpdate) {
-                        unset($validatedDataObj['values']['ShopAddressID']);
-                    }
-                    break;
-                case 'OPENHOURS':
-                    $dataRules = array(
-                        'ShopAddressID' => array('int'),
-                        'Monday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Tuesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Wednesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Thursday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Friday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Saturday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Sunday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => '')
-                    );
-                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                    if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                        $ophrs = $this->getSettingsAddressOpenHours($validatedDataObj['values']['ShopAddressID']);
-                        if (!empty($ophrs) && !$isUpdate) {
-                            throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
-                        }
-                    }
-                    if ($isUpdate) {
-                        unset($validatedDataObj['values']['ShopAddressID']);
-                    }
-                    break;
-                case 'INFO':
-                    $dataRules = array(
-                        'ShopAddressID' => array('int'),
-                        'Shipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Payment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Warranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => '')
-                    );
-                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                    if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                        $info = $this->getSettingsAddressInfo($validatedDataObj['values']['ShopAddressID']);
-                        if (!empty($info) && !$isUpdate) {
-                            throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
-                        }
-                    }
-                    if ($isUpdate) {
-                        unset($validatedDataObj['values']['ShopAddressID']);
-                    }
-                    break;
+                // case 'PHONES':
+                //     $dataRules = array(
+                //         'ShopAddressID' => array('int'),
+                //         'Label' => array('string'),
+                //         'Value' => array('string')
+                //     );
+                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
+                //         $phones = $this->getSettingsAddressPhones($validatedDataObj['values']['ShopAddressID']);
+                //         if (count($phones) >= 10 && !$isUpdate) {
+                //             throw new Exception("PhonesLimitReached", 1);
+                //         }
+                //     }
+                //     if ($isUpdate) {
+                //         unset($validatedDataObj['values']['ShopAddressID']);
+                //     }
+                //     break;
+                // case 'OPENHOURS':
+                //     $dataRules = array(
+                //         'ShopAddressID' => array('int')
+                //     );
+                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
+                //         $ophrs = $this->getSettingsAddressOpenHours($validatedDataObj['values']['ShopAddressID']);
+                //         if (!empty($ophrs) && !$isUpdate) {
+                //             throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
+                //         }
+                //     }
+                //     if ($isUpdate) {
+                //         unset($validatedDataObj['values']['ShopAddressID']);
+                //     }
+                //     break;
+                // case 'INFO':
+                //     $dataRules = array(
+                //         'ShopAddressID' => array('int'),
+                //         'Shipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                //         'Payment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                //         'Warranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => '')
+                //     );
+                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
+                //         $info = $this->getSettingsAddressInfo($validatedDataObj['values']['ShopAddressID']);
+                //         if (!empty($info) && !$isUpdate) {
+                //             throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
+                //         }
+                //     }
+                //     if ($isUpdate) {
+                //         unset($validatedDataObj['values']['ShopAddressID']);
+                //     }
+                //     break;
                 case 'WEBSITE':
                     // $dataRules = $this->getSettingsWebsite();
                     break;
@@ -512,12 +524,12 @@ class settings {
                     else
                         $resp = $this->getSettingsAddresses();
                     break;
-                case 'INFO':
-                    if (isset($req->get['address']) && is_numeric($req->get['address']))
-                        $resp = $this->getSettingsAddressInfo($req->get['address']);
-                    else
-                        $resp['error'] = "AddressIsMissing";
-                    break;
+                // case 'INFO':
+                //     if (isset($req->get['address']) && is_numeric($req->get['address']))
+                //         $resp = $this->getSettingsAddressInfo($req->get['address']);
+                //     else
+                //         $resp['error'] = "AddressIsMissing";
+                //     break;
                 case 'WEBSITE':
                     $resp = $this->getSettingsWebsite();
                     break;
@@ -527,18 +539,18 @@ class settings {
                 case 'PRODUCT':
                     $resp = $this->getSettingsProduct();
                     break;
-                case 'PHONES':
-                    if (isset($req->get['address']) && is_numeric($req->get['address']))
-                        $resp = $this->getSettingsAddressPhones($req->get['address']);
-                    else
-                        $resp['error'] = "AddressIsMissing";
-                    break;
-                case 'OPENHOURS':
-                    if (isset($req->get['address']) && is_numeric($req->get['address']))
-                        $resp = $this->getSettingsAddressOpenHours($req->get['address']);
-                    else
-                        $resp['error'] = "AddressIsMissing";
-                    break;
+                // case 'PHONES':
+                //     if (isset($req->get['address']) && is_numeric($req->get['address']))
+                //         $resp = $this->getSettingsAddressPhones($req->get['address']);
+                //     else
+                //         $resp['error'] = "AddressIsMissing";
+                //     break;
+                // case 'OPENHOURS':
+                //     if (isset($req->get['address']) && is_numeric($req->get['address']))
+                //         $resp = $this->getSettingsAddressOpenHours($req->get['address']);
+                //     else
+                //         $resp['error'] = "AddressIsMissing";
+                //     break;
                 default:
                     $resp['error'] = "WrongSettingsType";
                     break;

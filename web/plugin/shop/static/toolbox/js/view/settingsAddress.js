@@ -29,15 +29,12 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.collection = new CollectionSettings('ADDRESS');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.collection = new CollectionSettings();
+            this.collection.setType('ADDRESS');
+            this.listenTo(this.collection, 'sync', this.render);
         },
         render: function () {
-            var data = Utils.getHBSTemplateData(this);
-            data.extras.shopNames = _(data.data).filter(function (item) {
-                return /ShopName$/.test(item.Property);
-            });
-            this.$el.html(tpl(data));
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             return this;
         },
@@ -95,41 +92,26 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 }
             });
         },
-        setSettingState: function (event, state, skip) {
-            if (skip === true) {
-                return;
-            }
+        setSettingState: function (event, state) {
+            // if (skip === true) {
+            //     return;
+            // }
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
-                model = this.collection.get(id),
-                addressUID = model.getAddressUID(),
-                allSuccess = true;
+                model = this.collection.get(id);
 
-            if (addressUID) {
-                this.collection.each(function (collectionModel) {
-                    if (collectionModel.getAddressUID() === addressUID) {
-                        collectionModel.save({
-                            Status: !!state ? 'ACTIVE' : 'DISABLED'
-                        }, {
-                            wait: true,
-                            // patch: true,
-                            success: function (model) {
-                                allSuccess &= true;
-                            },
-                            error: function (model) {
-                                allSuccess &= false;
-                            }
-                        });
-                    }
-                });
-
-                if (allSuccess) {
-                    $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                } else {
+            if (model) {
+                model.set('Status', !!state ? 'ACTIVE' : 'DISABLED');
+                model.save().fail(function () {
                     BSAlerts.danger(lang.settings_error_save);
-                    $item.find('.switcher').bootstrapSwitch('state', !state, true);
-                }
+                }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
+                // if (allSuccess) {
+                //     $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
+                // } else {
+                //     BSAlerts.danger(lang.settings_error_save);
+                //     $item.find('.switcher').bootstrapSwitch('state', !state, true);
+                // }
             }
         }
     });

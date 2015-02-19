@@ -27,7 +27,8 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
             //     savenochange: true,
             //     unsavedclass: ''
             // };
-            this.model = new ModelSetting({type: 'SEO'});
+            this.model = new ModelSetting();
+            this.model.setType('SEO');
             this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {

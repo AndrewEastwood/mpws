@@ -25,7 +25,8 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.model = new ModelSetting({type: 'PRODUCT'});
+            this.model = new ModelSetting();
+            this.model.setType('PRODUCT');
             this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {

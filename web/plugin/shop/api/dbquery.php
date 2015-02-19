@@ -849,17 +849,17 @@ class dbquery {
     // shop settings >>>>>
     // public static function setting
     public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES', 'OPENHOURS', 'INFO'*/);
-    public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY', 'PHONES');
+    public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES'*/);
     public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
         'ADDRESS' => 'shop_settingsAddress',
         'ALERTS' => 'shop_settingsAlerts',
         'EXCHANAGERATES' => 'shop_settingsExchangeRates',
         'EXCHANAGERATESDISPLAY' => 'shop_settingsExchangeRatesDisplay',
         'FORMORDER' => 'shop_settingsFormOrder',
-        'INFO' => 'shop_settingsInfo',
+        // 'INFO' => 'shop_settingsInfo',
         // 'MISC' => 'shop_settingsMisc',
-        'OPENHOURS' => 'shop_settingsOpenHours',
-        'PHONES' => 'shop_settingsPhones',
+        // 'OPENHOURS' => 'shop_settingsOpenHours',
+        // 'PHONES' => 'shop_settingsPhones',
         'PRODUCT' => 'shop_settingsProduct',
         'SEO' => 'shop_settingsSeo',
         'WEBSITE' => 'shop_settingsWebsite'

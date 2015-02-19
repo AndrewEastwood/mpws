@@ -26,8 +26,10 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.model = new ModelSetting({type: 'FORMORDER'});
+            this.model = new ModelSetting();
+            this.model.setType('FORMORDER');
             this.listenTo(this.model, 'sync', this.render);
+            _.bindAll(this, 'setSettingStatus', 'render');
         },
         render: function () {
             var self = this;
@@ -37,17 +39,11 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             return this;
         },
-        setSettingStatus: function (event, status, skip) {
-
-            if (skip === true) {
-                return;
-            }
-
+        setSettingStatus: function (event, status) {
             var that = this,
                 $item = $(event.target).closest('.list-group-item'),
                 propName = $item.data('property');
-
-            this.model.set(propName, !!state);
+            this.model.set(propName, !!status);
             this.model.save().then(this.render, function () {
                 BSAlerts.danger(lang.settings_error_save);
                 that.model.set(that.model.previousAttributes());

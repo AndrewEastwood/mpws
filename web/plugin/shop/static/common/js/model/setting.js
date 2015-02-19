@@ -4,36 +4,32 @@ define('plugin/shop/common/js/model/setting', [
 ], function (Backbone, _) {
 
     return Backbone.Model.extend({
-        idAttribute: "ID",
-        initialize: function (opts) {
-            this.url = APP.getApiLink({
+        idAttribute: 'ID',
+        url: function () {
+            return APP.getApiLink({
                 source: 'shop',
                 fn: 'settings',
-                type: opts && opts.type || null
+                type: this.sType || null
             });
-            this.unset('type', {silent: true});
+        },
+        initialize: function () {
+            // debugger
+            if (this.collection) {
+                this.setType(this.collection.getType());
+            }
+        },
+        getType: function () {
+            return this.sType;
+        },
+        setType: function (type) {
+            this.sType = type;
+            return this;
         },
         isAddress: function () {
-            return this.get('Type') === 'ADDRESS';
+            return this.sType === 'ADDRESS';
         },
         isCurrency: function () {
-            return this.get('Type') === 'EXCHANGERATES';
-        },
-        getAddressUID: function () {
-            if (this.isAddress()) {
-                var addressMatch = this.get('Property').match(/\w+_([0-9]+)_\w+/),
-                    addressUID = addressMatch && addressMatch[1];
-                return addressUID;
-            }
-            return false;
-        },
-        getAddressFieldName: function () {
-            if (this.isAddress()) {
-                var addressMatch = this.get('Property').match(/\w+_[0-9]+_(\w+)/),
-                    addressFieldsName = addressMatch && addressMatch[1];
-                return addressFieldsName;
-            }
-            return false;
+            return this.sType === 'EXCHANGERATES';
         }
     });
 

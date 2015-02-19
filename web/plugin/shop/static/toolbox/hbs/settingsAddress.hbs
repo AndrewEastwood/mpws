@@ -4,11 +4,11 @@
     <span class="switcher-main pull-right"></span>
 </div>
 <div class="panel-body">
-    {{#if extras.shopNames.length}}
-    {{#each extras.shopNames}}
+    {{#if data}}
+    {{#each data}}
         <a href="javascript://" class="list-group-item address" data-id="{{ID}}">
             <i class="fa fa-times fa-fw text-danger remove-address"></i>
-            <span class="edit-address">{{Value}}</span>
+            <span class="edit-address">{{ShopName}}</span>
             <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
         </a>
     {{/each}}

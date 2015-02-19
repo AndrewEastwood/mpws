@@ -547,7 +547,7 @@ CREATE TABLE `shop_deliveryAgencies` (
 
 LOCK TABLES `shop_deliveryAgencies` WRITE;
 /*!40000 ALTER TABLE `shop_deliveryAgencies` DISABLE KEYS */;
-INSERT INTO `shop_deliveryAgencies` VALUES (1,1,'Без назвиfdsfdsf',NULL,'REMOVED','2015-02-18 23:16:44','2015-02-18 23:16:59'),(2,1,'Без назвиfdfsf',NULL,'REMOVED','2015-02-18 23:17:06','2015-02-18 23:48:54'),(3,1,'Без назвиfdsfdsfsd',NULL,'REMOVED','2015-02-18 23:22:00','2015-02-18 23:50:41'),(4,1,'Без назвиfdsfsdf',NULL,'REMOVED','2015-02-18 23:51:14','2015-02-18 23:51:26'),(5,1,'Без назвиfsdfsdf',NULL,'REMOVED','2015-02-18 23:52:37','2015-02-18 23:52:41'),(6,1,'Без назви',NULL,'REMOVED','2015-02-18 23:52:58','2015-02-18 23:53:02'),(7,1,'Без назви',NULL,'REMOVED','2015-02-18 23:53:11','2015-02-18 23:53:17'),(8,1,'Без назви',NULL,'REMOVED','2015-02-18 23:53:46','2015-02-18 23:53:48'),(9,1,'Без назви',NULL,'REMOVED','2015-02-19 00:00:13','2015-02-19 00:00:16'),(10,1,'Без назви',NULL,'REMOVED','2015-02-19 00:00:49','2015-02-19 00:00:51'),(11,1,'Без назви',NULL,'REMOVED','2015-02-19 00:02:11','2015-02-19 00:02:12'),(12,1,'Без назви',NULL,'REMOVED','2015-02-19 00:02:27','2015-02-19 00:08:21'),(13,1,'Без назвиdsadas','','REMOVED','2015-02-19 00:08:24','2015-02-19 00:08:48'),(14,1,'Без назвиgfdgfdgfdfd','','ACTIVE','2015-02-19 00:09:48','2015-02-19 00:09:55');
+INSERT INTO `shop_deliveryAgencies` VALUES (1,1,'Без назвиfdsfdsf',NULL,'REMOVED','2015-02-18 23:16:44','2015-02-18 23:16:59'),(2,1,'Без назвиfdfsf',NULL,'REMOVED','2015-02-18 23:17:06','2015-02-18 23:48:54'),(3,1,'Без назвиfdsfdsfsd',NULL,'REMOVED','2015-02-18 23:22:00','2015-02-18 23:50:41'),(4,1,'Без назвиfdsfsdf',NULL,'REMOVED','2015-02-18 23:51:14','2015-02-18 23:51:26'),(5,1,'Без назвиfsdfsdf',NULL,'REMOVED','2015-02-18 23:52:37','2015-02-18 23:52:41'),(6,1,'Без назви',NULL,'REMOVED','2015-02-18 23:52:58','2015-02-18 23:53:02'),(7,1,'Без назви',NULL,'REMOVED','2015-02-18 23:53:11','2015-02-18 23:53:17'),(8,1,'Без назви',NULL,'REMOVED','2015-02-18 23:53:46','2015-02-18 23:53:48'),(9,1,'Без назви',NULL,'REMOVED','2015-02-19 00:00:13','2015-02-19 00:00:16'),(10,1,'Без назви',NULL,'REMOVED','2015-02-19 00:00:49','2015-02-19 00:00:51'),(11,1,'Без назви',NULL,'REMOVED','2015-02-19 00:02:11','2015-02-19 00:02:12'),(12,1,'Без назви',NULL,'REMOVED','2015-02-19 00:02:27','2015-02-19 00:08:21'),(13,1,'Без назвиdsadas','','REMOVED','2015-02-19 00:08:24','2015-02-19 00:08:48'),(14,1,'Без назвиgfdgfdgfdfdgdfgdfg','','ACTIVE','2015-02-19 00:09:48','2015-02-19 05:28:37');
 /*!40000 ALTER TABLE `shop_deliveryAgencies` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1046,6 +1046,7 @@ CREATE TABLE `shop_settingsAddress` (
   `InfoPayment` text COLLATE utf8_bin NOT NULL,
   `InfoShipping` text COLLATE utf8_bin NOT NULL,
   `InfoWarranty` text COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','DISABLED','','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1058,7 +1059,7 @@ CREATE TABLE `shop_settingsAddress` (
 
 LOCK TABLES `shop_settingsAddress` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
-INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''),(3,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''),(4,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','');
+INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(3,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(4,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE');
 /*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1091,7 +1092,7 @@ CREATE TABLE `shop_settingsAlerts` (
 
 LOCK TABLES `shop_settingsAlerts` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAlerts` DISABLE KEYS */;
-INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,0,0,1,1,1,1);
+INSERT INTO `shop_settingsAlerts` VALUES (1,1,1,0,0,1,1,1,0);
 /*!40000 ALTER TABLE `shop_settingsAlerts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1186,7 +1187,7 @@ CREATE TABLE `shop_settingsFormOrder` (
 
 LOCK TABLES `shop_settingsFormOrder` WRITE;
 /*!40000 ALTER TABLE `shop_settingsFormOrder` DISABLE KEYS */;
-INSERT INTO `shop_settingsFormOrder` VALUES (1,1,1,1,1,1,1,1,1,1,1,'',1);
+INSERT INTO `shop_settingsFormOrder` VALUES (1,1,0,0,1,1,1,1,1,1,1,'',1);
 /*!40000 ALTER TABLE `shop_settingsFormOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1348,7 +1349,7 @@ CREATE TABLE `shop_settingsProduct` (
 
 LOCK TABLES `shop_settingsProduct` WRITE;
 /*!40000 ALTER TABLE `shop_settingsProduct` DISABLE KEYS */;
-INSERT INTO `shop_settingsProduct` VALUES (12,1,1,1,1,1,1,1,1);
+INSERT INTO `shop_settingsProduct` VALUES (12,1,1,1,1,0,0,0,1);
 /*!40000 ALTER TABLE `shop_settingsProduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1383,7 +1384,7 @@ CREATE TABLE `shop_settingsSeo` (
 
 LOCK TABLES `shop_settingsSeo` WRITE;
 /*!40000 ALTER TABLE `shop_settingsSeo` DISABLE KEYS */;
-INSERT INTO `shop_settingsSeo` VALUES (3,1,'testgdfgxfdgvgfdgfdggdfgdf','jghjghj [CatalogFirst5ProductModels]','this is the main page. you can buy  [CatalogFirst10ProductNames]','',' [CatalogFirst5ProductNames] [CategoryName] [CatalogFirst5OriginNames] [CatalogFirst5ProductModels]','MAIN PAGE','','','');
+INSERT INTO `shop_settingsSeo` VALUES (3,1,'testgdfgxfdgvgfdgfdggdfgdf [ProductName] [ProductName] [ProductName]','jghjghj [CatalogFirst5ProductModels]','this is the main page. you can buy  [CatalogFirst10ProductNames]','',' [CatalogFirst5ProductNames] [CategoryName] [CatalogFirst5OriginNames] [CatalogFirst5ProductModels]','MAIN PAGE','','','');
 /*!40000 ALTER TABLE `shop_settingsSeo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1502,4 +1503,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-19  1:34:29
+-- Dump completed on 2015-02-19  5:36:26

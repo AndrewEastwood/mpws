@@ -757,6 +757,7 @@ CREATE TABLE `shop_settingsAddress` (
   `InfoPayment` text COLLATE utf8_bin NOT NULL,
   `InfoShipping` text COLLATE utf8_bin NOT NULL,
   `InfoWarranty` text COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','DISABLED','','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1096,4 +1097,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-19  1:34:29
+-- Dump completed on 2015-02-19  5:36:26

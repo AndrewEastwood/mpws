@@ -25,9 +25,10 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
-            this.model = new ModelSetting({type: 'ALERTS'});
+            this.model = new ModelSetting();
+            this.model.setType('ALERTS');
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'toggleAlerts');
+            _.bindAll(this, 'toggleAlerts', 'render');
         },
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
@@ -43,16 +44,13 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
             this.$('.panel-body .list-group-item').toggleClass('disabled', !this.model.get('AllowAlerts'));
             this.$('.panel-body .switcher').bootstrapSwitch('disabled', !this.model.get('AllowAlerts'));
         },
-        setSettingState: function (event, state, skip) {
-
-            if (skip === true) {
-                return;
-            }
+        setSettingState: function (event, state) {
 
             var that = this,
                 $item = $(event.target).closest('.list-group-item'),
-                propName = $item.data('id');
+                propName = $item.data('property');
 
+            debugger
             this.model.set(propName, !!state);
             this.model.save().then(this.render, function () {
                 BSAlerts.danger(lang.settings_error_save);

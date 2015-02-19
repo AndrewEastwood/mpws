@@ -9,12 +9,19 @@ define('plugin/shop/common/js/collection/settings', [
     return Backbone.Collection.extend({
         model: ModelSetting,
 
-        initialize: function (type) {
-            this.url = APP.getApiLink({
+        url: function () {
+            return APP.getApiLink({
                 source: 'shop',
                 fn: 'settings',
-                type: type || null
+                type: this.sType || null
             });
+        },
+        getType: function () {
+            return this.sType;
+        },
+        setType: function (type) {
+            this.sType = type;
+            return this;
         },
 
         // parse: function (data) {
@@ -23,9 +30,9 @@ define('plugin/shop/common/js/collection/settings', [
         //     return data;
         // },
 
-        setSettingsType: function (type) {
-            this.type = type;
-        },
+        // setSettingsType: function (type) {
+        //     this.type = type;
+        // },
 
         // setCustomQueryField: function (field, value) {
         //     this.queryParams['_f' + field] = value;
@@ -48,15 +55,16 @@ define('plugin/shop/common/js/collection/settings', [
         // },
 
         toSettings: function () {
-            var that = this,
-                uid = null;
-                property = null,
-                openHoursData = null,
-                settings = {},
-                addresses = {},
-                currencyList = {},
-                openHoursReg = /.*OpenHoursOn(.*)/,
-                contactReg = /.*_(\w+)_contact.*/;
+            return this.toJSON();
+            // var that = this,
+            //     uid = null;
+            //     property = null,
+            //     openHoursData = null,
+            //     settings = {},
+            //     addresses = {},
+            //     currencyList = {},
+            //     openHoursReg = /.*OpenHoursOn(.*)/,
+            //     contactReg = /.*_(\w+)_contact.*/;
             // this.each(function (model) {
             //     property = model.get('Property');
             //     settings[property] = model.toJSON();
@@ -111,7 +119,7 @@ define('plugin/shop/common/js/collection/settings', [
             // if (settings.ShowSiteCurrencySelector) {
             //     settings.ShowSiteCurrencySelector = settings.ShowSiteCurrencySelector._isActive;
             // }
-            return settings;
+            // return settings;
         }
     });
 
