@@ -1,5 +1,6 @@
 <ul class="nav nav-pills">
     <li class="tab tab-general active"><a href="#general" data-toggle="tab">Основні</a></li>
+    <li class="tab tab-social"><a href="#social" data-toggle="tab">Соц.Мережі</a></li>
     <li class="tab tab-contacts"><a href="#contacts" data-toggle="tab">Контакти</a></li>
     <li class="tab tab-openhours"><a href="#openhours" data-toggle="tab">Графік роботи</a></li>
     <li class="tab tab-shipping"><a href="#shipping" data-toggle="tab">Доставка</a></li>
@@ -15,60 +16,130 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="ShopName" class="form-control setting" id="{{extras.addressFields.ShopName.ID}}" value="{{extras.addressFields.ShopName.Value}}">
+                        <input type="text" id="js-ShopName" class="form-control setting" value="{{data.ShopName}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Країна</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-Country" class="form-control setting" value="{{data.Country}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Місто</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-City" class="form-control setting" value="{{data.City}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine1" class="form-control setting" id="{{extras.addressFields.AddressLine1.ID}}" value="{{extras.addressFields.AddressLine1.Value}}">
+                        <input type="text" id="js-AddressLine1" class="form-control setting" value="{{data.AddressLine1}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine2" class="form-control setting" id="{{extras.addressFields.AddressLine2.ID}}" value="{{extras.addressFields.AddressLine2.Value}}">
+                        <input type="text" id="js-AddressLine2" class="form-control setting" value="{{data.AddressLine2}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine3" class="form-control setting" id="{{extras.addressFields.AddressLine3.ID}}" value="{{extras.addressFields.AddressLine3.Value}}">
+                        <input type="text" id="js-AddressLine3" class="form-control setting" value="{{data.AddressLine3}}">
                     </div>
                 </div>
             </fieldset>
         </form>
     </div>
-    <div class="tab-pane fade fields" id="contacts">
-        {{#each extras.contactFields}}
-        <div class="form-group contact-template multiple-form-group input-group contact-item">
-            <i class="fa fa-times text-danger fa-fw remove-contact"></i>
-            <div class="input-group-btn">
-                <div class="wrapper">
-                    <button type="button" class="btn btn-link button-label{{#if_eq _viewFieldName 'Custom'}} custom-type{{/if_eq}}"><span class="concept">{{Label}}</span></button>
-                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                    <ul class="dropdown-menu contact-types" role="menu">
-                        <li><a href="javascript://" class="contact-type" data-type="Phone">Телефон</a></li>
-                        <li><a href="javascript://" class="contact-type" data-type="Fax">Факс</a></li>
-                        <li><a href="javascript://" class="contact-type" data-type="Skype">Skype</a></li>
-                        <li><a href="javascript://" class="contact-type" data-type="Email">E-mail</a></li>
-                        <li><a href="javascript://" class="contact-type" data-type="Www">Web</a></li>
-                        <li><a href="javascript://" class="contact-type" data-type="Map">Map</a></li>
-                        <li class="divider"></li>
-                        {{#if_eq _viewFieldName 'Custom'}}
-                        <li><a href="javascript://" class="contact-type custom-contact-type" data-type="Custom">{{Label}}</a></li>
-                        {{else}}
-                        <li><a href="javascript://" class="contact-type custom-contact-type" data-type="Custom">Свій тип</a></li>
-                        {{/if_eq}}
-                    </ul>
+    <div class="tab-pane fade fields" id="social">
+        <form class="form-horizontal" role="form">
+            <fieldset>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-12 control-label custom-text-left" for="textinput">
+                        <i class="fa fa-map-marker fa-fw text-danger"></i>
+                        Адреса карти (для приладу Google Maps)
+                    </label>
+                    <div class="col-sm-12">
+                        <input type="text" id="js-MapUrl" class="form-control setting" value="{{data.MapUrl}}">
+                    </div>
                 </div>
-            </div>
-            <input type="text" id="{{ID}}" class="form-control setting" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
-        </div>
-        {{/each}}
+                <hr/>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="textinput">
+                        <i class="fa fa-facebook fa-fw text-info"></i>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-SocialFacebook" class="form-control setting" value="{{data.SocialFacebook}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="textinput">
+                        <i class="fa fa-twitter fa-fw text-info"></i>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-SocialTwitter" class="form-control setting" value="{{data.SocialTwitter}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="textinput">
+                        <i class="fa fa-google-plus fa-fw text-danger"></i>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-SocialLinkedIn" class="form-control setting" value="{{data.SocialLinkedIn}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="textinput">
+                        <i class="fa fa-linkedin fa-fw text-warning"></i>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-SocialGooglePlus" class="form-control setting" value="{{data.SocialGooglePlus}}">
+                    </div>
+                </div>
+            <fieldset>
+        </form>
+    </div>
+    <div class="tab-pane fade fields" id="contacts">
+        <form class="form-horizontal" role="form">
+            <fieldset>
+                <div class="list-group">
+                    <a href="javascript://" class="list-group-item">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-danger" for="textinput">Гаряча лінія</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="js-PhoneHotline" class="form-control setting" value="{{data.PhoneHotline}}">
+                            </div>
+                        </div>
+                    </a>
+                {{#for 5}}
+                    <a href="javascript://" class="list-group-item">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">
+                                <i class="fa fa-phone-square fa-fw"></i> #{{$indexPlus1}}
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="js-Phone{{$indexPlus1}}Label" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Label"}}">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" id="js-Phone{{$indexPlus1}}Value" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Value"}}">
+                            </div>
+                        </div>
+                    </a>
+                {{/for}}
+                </div>
+            <fieldset>
+        </form>
     </div>
     <div class="tab-pane fade" id="openhours">
         <table class="table table-striped">
@@ -78,63 +149,41 @@
             </tr>
             <tr>
                 <td>Понеділок</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnMon.ID}}" data-property="OpenHoursOnMon">{{extras.openHoursFields.OpenHoursOnMon.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-monday">{{data.HoursMonday}}</span></td>
             </tr>
             <tr>
                 <td>Вівторок</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnTue.ID}}" data-property="OpenHoursOnTue">{{extras.openHoursFields.OpenHoursOnTue.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-tuesday">{{data.HoursTuesday}}</span></td>
             </tr>
             <tr>
                 <td>Середа</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnWed.ID}}" data-property="OpenHoursOnWed">{{extras.openHoursFields.OpenHoursOnWed.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-wednesday">{{data.HoursWednesday}}</span></td>
             </tr>
             <tr>
                 <td>Четвер</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnThu.ID}}" data-property="OpenHoursOnThu">{{extras.openHoursFields.OpenHoursOnThu.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-thursday">{{data.HoursThursday}}</span></td>
             </tr>
             <tr>
                 <td>Пятниця</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnFri.ID}}" data-property="OpenHoursOnFri">{{extras.openHoursFields.OpenHoursOnFri.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-friday">{{data.HoursFriday}}</span></td>
             </tr>
             <tr>
                 <td>Субота</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnSat.ID}}" data-property="OpenHoursOnSat">{{extras.openHoursFields.OpenHoursOnSat.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-sturday">{{data.HoursSturday}}</span></td>
             </tr>
             <tr>
                 <td>Неділя</td>
-                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnSun.ID}}" data-property="OpenHoursOnSun">{{extras.openHoursFields.OpenHoursOnSun.Value}}</span></td>
+                <td><span class="ediatble setting" id="js-hours-sunday">{{data.HoursSunday}}</span></td>
             </tr>
         </table>
     </div>
     <div class="tab-pane fade" id="shipping">
-        <div id="{{extras.information.Shipping.ID}}" data-type="wysihtml5" data-property="Shipping" class="setting shipping wysihtml5">{{{extras.information.Shipping.Value}}}</div>
+        <div id="js-info-InfoPayment" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoPayment}}}</div>
     </div>
     <div class="tab-pane fade" id="payments">
-        <div id="{{extras.information.Payment.ID}}" data-type="wysihtml5" data-property="Payment" class="setting payments wysihtml5">{{{extras.information.Payment.Value}}}</div>
+        <div id="js-info-InfoShipping" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoShipping}}}</div>
     </div>
     <div class="tab-pane fade" id="warranty">
-        <div id="{{extras.information.Warranty.ID}}" data-type="wysihtml5" data-property="Warranty" class="setting warranty wysihtml5">{{{extras.information.Warranty.Value}}}</div>
-    </div>
-</div>
-<div class="hidden">
-    <div class="form-group contact-template multiple-form-group input-group contact-item">
-        <i class="fa fa-times text-danger fa-fw remove-contact"></i>
-        <div class="input-group-btn">
-            <div class="wrapper">
-                <button type="button" class="btn btn-link button-label"><span class="concept">Телефон</span></button>
-                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                <ul class="dropdown-menu contact-types" role="menu">
-                    <li><a href="javascript://" class="contact-type" data-type="Phone">Телефон</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Fax">Факс</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Skype">Skype</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Email">E-mail</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Www">Web</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Map">Map</a></li>
-                    <li class="divider"></li>
-                    <li><a href="javascript://" class="contact-type" data-type="Custom">Свій тип</a></li>
-                </ul>
-            </div>
-        </div>
-        <input type="text" class="form-control setting" data-property="Phone" data-label="Телефон" value="">
+        <div id="js-info-InfoWarranty" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoWarranty}}}</div>
     </div>
 </div>

@@ -1020,7 +1020,7 @@ CREATE TABLE `shop_settingsAddress` (
   `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
-  `MapUrl` varchar(100) COLLATE utf8_bin NOT NULL,
+  `MapUrl` varchar(255) COLLATE utf8_bin NOT NULL,
   `SocialFacebook` varchar(150) COLLATE utf8_bin NOT NULL,
   `SocialTwitter` varchar(150) COLLATE utf8_bin NOT NULL,
   `SocialLinkedIn` varchar(150) COLLATE utf8_bin NOT NULL,
@@ -1503,4 +1503,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-19  5:36:26
+-- Dump completed on 2015-02-20  1:19:37

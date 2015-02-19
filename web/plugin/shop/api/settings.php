@@ -259,23 +259,22 @@ class settings {
                         'AddressLine1' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'AddressLine2' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'AddressLine3' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'AddressLine3' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'MapUrl' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'SocialFacebook' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'SocialTwitter' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'SocialLinkedIn' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'SocialGooglePlus' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'PhoneHotline' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone1Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone1Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone2Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone2Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone3Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone3Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone4Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone4Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone5Label' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'Phone5Value' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'PhoneHotline' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone1Label' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone1Value' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone2Label' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone2Value' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone3Label' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone3Value' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone4Label' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone4Value' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone5Label' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'Phone5Value' => array('skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursMonday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursTuesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursWednesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
@@ -289,6 +288,7 @@ class settings {
                         'Status' => array('string', 'skipIfUnset')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
+                    // var_dump($validatedDataObj['values']);
                     // $dataRules = $this->getSettingsAddresses();
                     break;
                 // case 'PHONES':

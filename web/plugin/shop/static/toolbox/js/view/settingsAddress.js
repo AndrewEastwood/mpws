@@ -53,42 +53,38 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
                 model = this.collection.get(id),
-                popup = new PopupSettingsAddress(),
-                addressUID = model.getAddressUID();
+                popup = null;
 
-            if (!addressUID) {
-                return;
-            }
-
-            popup.collection.setCustomQueryField('Property', 'Address_' + addressUID + '_%:LIKE');
-            popup.collection.setCustomQueryField('Type', 'ADDRESS');
-            popup.collection.setCustomQueryField('Status', 'REMOVED:!=');
-            popup.collection.fetch({
-                reset: true
-            });
-            popup.on('close', function () {
-                self.collection.fetch({
-                    reset: true
+            if (model) {
+                // debugger
+                popup = new PopupSettingsAddress({model: model});
+                popup.render();
+                popup.on('close', function () {
+                    self.collection.fetch({
+                        reset: true
+                    });
                 });
-            });
+            }
         },
         deleteAddress: function (event) {
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
-                model = this.collection.get(id),
-                addressUID = model.getAddressUID();
+                model = this.collection.get(id);
 
             BootstrapDialog.confirm(lang.settings_msg_confirmation_delete_address, function (rez) {
                 if (rez) {
-                    self.collection.each(function (collectionModel) {
-                        if (collectionModel.getAddressUID() === addressUID) {
-                            collectionModel.destroy({
-                                wait: true
-                            });
-                        }
-                    });
-                    self.collection.fetch({reset: true});
+                    model.destroy().fail(function () {
+                        BSAlerts.danger(lang.settings_error_save);
+                    }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
+                    // self.collection.each(function (collectionModel) {
+                    //     if (collectionModel.getAddressUID() === addressUID) {
+                    //         collectionModel.destroy({
+                    //             wait: true
+                    //         });
+                    //     }
+                    // });
+                    // self.collection.fetch({reset: true});
                 }
             });
         },

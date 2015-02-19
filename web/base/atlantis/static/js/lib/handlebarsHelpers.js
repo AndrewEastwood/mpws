@@ -442,6 +442,42 @@ define("default/js/lib/handlebarsHelpers", [
             result.push(options.fn(ary[i]));
         return result.join('');
     }
+    helpers.for = function (from, to, step, options) {
+        // if (!ary || ary.length == 0)
+        //     return options.inverse(this);
+        // debugger
+        if (typeof to === "undefined") {
+            throw "Neet at least one argument for this loop";
+        }
+
+        if (typeof step === "undefined") {
+            options = to;
+            step = 1;
+            to = from;
+            from = 0
+        }
+
+        if (typeof options === "undefined") {
+            options = step;
+            step = 1;
+        }
+
+        from = from || 0;
+        to = to || 0;
+        step = step && Math.abs(step) || 1;
+
+        var result = [];
+        for (var i = from; i < to; i += step) {
+            // debugger
+            result.push(options.fn(_.extend({}, this, {
+                $index: i,
+                $indexPlus1: i + 1,
+                $first: i === 0,
+                $last: i + step <= to
+            })));
+        }
+        return result.join('');
+    }
     var audaciousFn;
     helpers.recursive = function (children, options) {
         var out = '';

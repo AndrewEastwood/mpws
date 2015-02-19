@@ -50,7 +50,7 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                 $item = $(event.target).closest('.list-group-item'),
                 propName = $item.data('property');
 
-            debugger
+            // debugger
             this.model.set(propName, !!state);
             this.model.save().then(this.render, function () {
                 BSAlerts.danger(lang.settings_error_save);

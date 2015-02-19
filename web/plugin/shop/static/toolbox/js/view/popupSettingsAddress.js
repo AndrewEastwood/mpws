@@ -1,7 +1,7 @@
 define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -11,51 +11,23 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/components/bootstrap3-editable',
     'default/js/components/x-bootstrap-wysihtml5'
-], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang, dfdEditable, dfdXEditWysi) {
-
-    function _getTitle(isNew) {
-        if (isNew) {
-            return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_settingAddress_title_new);
-        } else {
-            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_settingAddress_title_edit);
-        }
-    }
+], function (Sandbox, Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
 
     var PopupSettingsAddress = Backbone.View.extend({
         template: tpl,
         lang: lang,
         events: {
-            'click .add-contact': 'addFormGroup',
-            'click .remove-contact': 'removeFormGroup',
-            'click .contact-types a': 'selectFormGroup',
-            'click .tab-contacts': 'showContactsButton',
-            'click .tab:not(.tab-contacts)': 'hideContactsButton'
+            'keypress #js-ShopName': 'updateTitle',
+            'keydown #js-ShopName': 'updateTitle',
+            'keyup #js-ShopName': 'updateTitle'
         },
-        showContactsButton: function () {
-            this.$('.add-contact').parent().removeClass('hidden');
-        },
-        hideContactsButton: function () {
-            this.$('.add-contact').parent().addClass('hidden');
-        },
-        getPropertyName: function (Name) {
-            if (this.options.isNew) {
-                return 'Address_' + this.options.newID + '_' + Name;
-            } else {
-                var model = this.collection.at(0),
-                    addressUID = model && model.getAddressUID();
-                if (addressUID) {
-                    return 'Address_' + addressUID + '_' + Name;
-                } else {
-                    throw 'Cannot find address uid in the model: ' + model.toJSON() + '; with collection len ' + this.collection.length;
-                }
+        initialize: function (options) {
+            var that = this;
+            this.options = options || {};
+            if (!this.model) {
+                this.model = new ModelSetting();
+                this.model.setType('ADDRESS');
             }
-        },
-        initialize: function () {
-            var self = this,
-                buttons = [];
-            this.collection = new CollectionSettings();
-            this.options = {};
-            this.options.newID = (new Date()).getTime();
             this.options.editableOptions = {
                 mode: 'popup',
                 name: 'Name',
@@ -67,171 +39,104 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     }
                 }
             };
-            buttons.push({
-                label: lang.popup_origin_button_Close,
-                cssClass: 'btn-default btn-link',
-                action: function (dialog) {
-                    dialog.close();
-                }
-            });
-            if (this.collection.isEmpty()) {
-                buttons.push({
-                    label: lang.popup_origin_button_Save,
-                    cssClass: 'btn-success btn-outline',
-                    action: function (dialog) {
-                        var modelID = null,
-                            model = null,
-                            property = null,
-                            value = null;
-                        self.$('.tab-content .setting').each(function () {
-                            modelID = $(this).attr('id');
-                            property = $(this).data('property');
-                            value = $(this).val() || $(this).text();
-                            if (/Shipping|Payment|Warranty/.test(property)) {
-                                value = $(this).editable('getValue', true);
-                            }
-                            if (modelID) {
-                                // update each field
-                                model = self.collection.get(modelID);
-                                // don't use wrong ids
-                                if (!model) {
-                                    return;
-                                }
-                                if ($(this).data('remove') === 1) {
-                                    model.destroy();
-                                } else {
-                                    model.save({
-                                        Property: self.getPropertyName(property),
-                                        Label: $(this).data('label') || null,
-                                        Value: value
-                                    }, {
-                                        patch: true
-                                    });
-                                }
-                            } else {
-                            // create new bunch of fields
-                                self.collection.create({
-                                    Property: self.getPropertyName(property),
-                                    Label: $(this).data('label') || null,
-                                    Value: value,
-                                    Type: 'ADDRESS'
-                                });
-                            }
-                        });
-                        dialog.close();
-                        self.trigger('close');
-                    }
-                });
-            }
-            this.listenTo(this.collection, 'reset', this.render);
-            this.$title = $('<span/>');
+            this.listenTo(this.model, 'sync', this.render);
+            // setup this view as dialog
             this.$dialog = new BootstrapDialog({
                 closable: false,
-                title: this.$title,
                 message: this.$el,
                 cssClass: 'popup-settings-address',
-                buttons: buttons
+                onhide: function () {
+                    that.stopListening(that.model);
+                },
+                buttons: [{
+                    label: lang.popup_origin_button_Close,
+                    cssClass: 'btn-default btn-link',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
+                    label: lang.popup_origin_button_Save,
+                    cssClass: 'btn-success btn-outline',
+                action: function (dialog) {
+                        that.model.set({
+                            ShopName :that.$('#js-ShopName').val(),
+                            Country :that.$('#js-Country').val(),
+                            City :that.$('#js-City').val(),
+                            AddressLine1 :that.$('#js-AddressLine1').val(),
+                            AddressLine2 :that.$('#js-AddressLine2').val(),
+                            AddressLine3 :that.$('#js-AddressLine3').val(),
+                            PhoneHotline: that.$('#js-PhoneHotline').val(),
+                            MapUrl: that.$('#js-MapUrl').val(),
+                            SocialFacebook: that.$('#js-SocialFacebook').val(),
+                            SocialTwitter: that.$('#js-SocialTwitter').val(),
+                            SocialLinkedIn: that.$('#js-SocialLinkedIn').val(),
+                            SocialGooglePlus: that.$('#js-SocialGooglePlus').val(),
+                            Phone1Label: that.$('#js-Phone1Label').val(),
+                            Phone1Value: that.$('#js-Phone1Value').val(),
+                            Phone2Label: that.$('#js-Phone2Label').val(),
+                            Phone2Value: that.$('#js-Phone2Value').val(),
+                            Phone3Label: that.$('#js-Phone3Label').val(),
+                            Phone3Value: that.$('#js-Phone3Value').val(),
+                            Phone4Label: that.$('#js-Phone4Label').val(),
+                            Phone4Value: that.$('#js-Phone4Value').val(),
+                            Phone5Label: that.$('#js-Phone5Label').val(),
+                            Phone5Value: that.$('#js-Phone5Value').val(),
+                            HoursMonday: that.$('#js-hours-monday').editable('getValue', true),
+                            HoursTuesday: that.$('#js-hours-tuesday').editable('getValue', true),
+                            HoursWednesday: that.$('#js-hours-wednesday').editable('getValue', true),
+                            HoursThursday: that.$('#js-hours-thursday').editable('getValue', true),
+                            HoursFriday: that.$('#js-hours-friday').editable('getValue', true),
+                            HoursSturday: that.$('#js-hours-sturday').editable('getValue', true),
+                            HoursSunday: that.$('#js-hours-sunday').editable('getValue', true),
+                            InfoPayment: that.$('#js-info-InfoPayment').editable('getValue', true),
+                            InfoShipping: that.$('#js-info-InfoShipping').editable('getValue', true),
+                            InfoWarranty: that.$('#js-info-InfoWarranty').editable('getValue', true),
+                        });
+                        that.model.save().then(function () {
+                            BSAlerts.success(lang.settings_message_success);
+                        }, function () {
+                            BSAlerts.danger(lang.settings_error_save);
+                            that.model.set(that.model.previousAttributes());
+                            that.render();
+                        });
+                    }
+                }]
             });
+            _.bindAll(this, 'updateTitle');
+        },
+        updateTitle: function () {
+            var $title = $('<span/>'),
+                shopName = this.$('#js-ShopName').val();
+                // debugger
+            if (this.model.isNew()) {
+                $title.append([$('<i/>').addClass('fa fa-fw fa-asterisk'), shopName || lang.popup_settingAddress_title_new]);
+            } else {
+                $title.append([$('<i/>').addClass('fa fa-fw fa-pencil'), shopName || lang.popup_settingAddress_title_edit]);
+            }
+            this.$dialog.setTitle($title);
         },
         render: function () {
-            // debugger;
             var that = this,
-                data = Utils.getHBSTemplateData(this),
-                tmpAddressFieldsName = null,
-                tmpModelData = null;
-            this.options.isNew = this.collection.isEmpty();
-            this.$title.html(_getTitle(this.options.isNew));
-
-            data.extras.contactFields = [];
-            data.extras.addressFields = {};
-            data.extras.openHoursFields = {};
-            data.extras.information = {};
-            this.collection.each(function (model) {
-                tmpAddressFieldsName = model.getAddressFieldName();
-                tmpModelData = model.toJSON();
-                tmpModelData._viewUID = model.getAddressUID();
-                tmpModelData._viewFieldName = tmpAddressFieldsName;
-                console.log(tmpAddressFieldsName);
-                if (/ShopName|^Address/.test(tmpAddressFieldsName)) {
-                    data.extras.addressFields[tmpAddressFieldsName] = tmpModelData;
-                } else if (/.*OpenHours.*/.test(tmpAddressFieldsName)) {
-                    data.extras.openHoursFields[tmpAddressFieldsName] = tmpModelData;
-                } else if (/Shipping|Payment|Warranty/.test(tmpAddressFieldsName)) {
-                    data.extras.information[tmpAddressFieldsName] = tmpModelData;
-                } else {
-                    data.extras.contactFields.push(tmpModelData);
-                }
-            });
-            this.$el.html(tpl(data));
+                tplData = Utils.getHBSTemplateData(this);
+            tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
+            this.$el.html(tpl(tplData));
+            // set up open hours editables
             this.$('#openhours .ediatble').editable(_.defaults({
                 emptytext: '00:00 - 00:00',
                 mode: 'inline'
             }, this.options.editableOptions));
-            this.$('.button-label.custom-type').editable(this.options.editableOptions)
-                .on('save', function (event, params) {
-                    var $formGroup = $(event.target).closest('.contact-item'),
-                        $control = $formGroup.find('.form-control'),
-                        $menuCustomItem = $formGroup.find('.custom-contact-type');
-                    $menuCustomItem.text(params.newValue);
-                    $control.data('label', params.newValue).attr('data-label', params.newValue);
-                });
+            // set up wyswig
             dfdXEditWysi.done(function () {
                 that.$('.wysihtml5').editable(_.defaults({
                     mode: 'inline',
                     emptytext: 'введіть текст'
                 }, that.options.editableOptions));
             });
-            if (!this.$dialog.isOpened()) {
+            if (!this.$dialog.isOpened()) { 
                 this.$dialog.open();
             }
-        },
-        addFormGroup: function (event) {
-            event.preventDefault();
-            var $tpl = this.$('.hidden .contact-template').clone();
-            $tpl.removeClass('.contact-template');
-            var puid = (new Date()).getTime();
-            $tpl.find('.contact-types a.contact-type').each(function () {
-                var type = $(this).data('type') + '_contact' + puid;
-                $(this).data('type', type).attr('data-type', type);
-            });
-            $tpl.find('.setting').each(function () {
-                var property = $(this).data('property') + '_contact' + puid;
-                $(this).data('property', property).attr('data-property', property);
-            });
-            this.$('.fields').append($tpl);
-        },
-        removeFormGroup: function (event) {
-            event.preventDefault();
-            var $formGroup = $(event.target).closest('.contact-item');
-            var $control = $formGroup.find('.form-control');
-            $control.data('remove', 1).attr('data-remove', 1);
-            $formGroup.addClass('hidden').hide();
-        },
-        selectFormGroup: function (event) {
-            event.preventDefault();
-
-            var $menuItem = $(event.target);
-            var $formGroup = $menuItem.closest('.contact-item');
-            var $control = $formGroup.find('.form-control');
-            var $buttonLabel = $formGroup.find('.button-label');
-            var type = $menuItem.data("type");
-            var concept = $menuItem.text();
-            var isCustom = type.toLowerCase() === 'custom';
-
-            $control.data('property', type).attr('data-property', type);
-            $control.data('label', concept).attr('data-label', concept);
-            $buttonLabel.text(concept);
-
-            $buttonLabel.toggleClass('custom-type', isCustom);
-            if (isCustom) {
-                $buttonLabel.editable(this.options.editableOptions)
-                    .on('save', function (e, params) {
-                        $menuItem.text(params.newValue);
-                        $control.data('label', params.newValue).attr('data-label', params.newValue);
-                    });
-            } else {
-                $buttonLabel.editable('destroy');
-            }
+            this.updateTitle();
+            return this;
         }
     });
 
