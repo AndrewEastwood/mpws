@@ -8,7 +8,7 @@ define("plugin/shop/site/js/router", [
     'plugin/shop/site/js/model/order',
     'plugin/shop/site/js/view/siteMenu',
     'plugin/shop/site/js/view/siteWidgets',
-    'plugin/shop/common/js/collection/settings'
+    'plugin/shop/common/js/model/setting'
 ], function (Sandbox, $, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
 
     var order = new SiteOrder({

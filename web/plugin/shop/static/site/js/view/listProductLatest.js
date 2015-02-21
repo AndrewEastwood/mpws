@@ -24,14 +24,14 @@ define("plugin/shop/site/js/view/listProductLatest", [
             var formatTitle = "",
                 formatKeywords = "",
                 formatDescription = "";
-            if (APP.instances.shop.settings.HomePageTitle.Value) {
-                formatTitle = APP.instances.shop.settings.HomePageTitle.Value;
+            if (APP.instances.shop.settings.SEO.HomePageTitle) {
+                formatTitle = APP.instances.shop.settings.SEO.HomePageTitle;
             }
-            if (APP.instances.shop.settings.HomePageKeywords.Value) {
-                formatKeywords = APP.instances.shop.settings.HomePageKeywords.Value;
+            if (APP.instances.shop.settings.SEO.HomePageKeywords) {
+                formatKeywords = APP.instances.shop.settings.SEO.HomePageKeywords;
             }
-            if (APP.instances.shop.settings.HomePageDescription.Value) {
-                formatDescription = APP.instances.shop.settings.HomePageDescription.Value;
+            if (APP.instances.shop.settings.SEO.HomePageDescription) {
+                formatDescription = APP.instances.shop.settings.SEO.HomePageDescription;
             }
 
             var catalogFirst10ProductNames = [], catalogFirst10OriginNames = [], catalogFirst10ProductModels = [], catalogFirst10CategoryNames = [];

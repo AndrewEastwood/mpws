@@ -4,6 +4,8 @@ define('plugin/shop/common/js/model/setting', [
     'default/js/lib/moment/moment'
 ], function (Backbone, _, moment) {
 
+    var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
     return Backbone.Model.extend({
         idAttribute: 'ID',
         url: function () {
@@ -31,6 +33,36 @@ define('plugin/shop/common/js/model/setting', [
         },
         isCurrency: function () {
             return this.sType === 'EXCHANGERATES';
+        },
+        parse: function (data) {
+            if (this.isAddress() || data.ADDRESS) {
+                debugger
+                var addrData = data.ADDRESS || data;
+                _(addrData).each(function (addrItem) {
+                    addrItem.OpenHoursToday = addrItem['Hours' + moment().locale('en').format('dddd')];
+                    addrItem.OpenHoursMap = [];
+                    _(days).each(function (dayName) {
+                        addrItem.OpenHoursMap.push({
+                            day: moment(dayName, 'ddd', 'en').locale('uk').format('dddd'),
+                            dayShort: moment(dayName, 'ddd', 'en').locale('uk').format('ddd'),
+                            hours: addrItem['Hours' + dayName],
+                            isToday: moment().locale('en').format('dddd') === dayName
+                        });
+                    });
+                });
+            }
+
+            if (!this.getType() || data.EXCHANAGERATESDISPLAY) {
+                var currencyList = {};
+                data.CUSTOM = {currencyList: currencyList};
+                _(data.EXCHANAGERATESDISPLAY).each(function (exRateItem) {
+                    currencyList[exRateItem.CurrencyName] = exRateItem;
+                    currencyList[exRateItem.CurrencyName].fromBaseToThis = data.EXCHANAGERATES.availableConversions[exRateItem.CurrencyName];
+                    currencyList[exRateItem.CurrencyName].fromThisToBase = data.EXCHANAGERATES.availableMutipliers[exRateItem.CurrencyName];
+
+                });
+            }
+            return data;
         },
         toSettings: function () {
             var settings = this.toJSON();
@@ -101,18 +133,6 @@ define('plugin/shop/common/js/model/setting', [
             // if (settings.ShowSiteCurrencySelector) {
             //     settings.ShowSiteCurrencySelector = settings.ShowSiteCurrencySelector._isActive;
             // }
-            var settings = this.toJSON(),
-                currencyList = {};
-            settings.CUSTOM = {currencyList: currencyList};
-            _(settings.EXCHANAGERATESDISPLAY).each(function (exRateItem) {
-                currencyList[exRateItem.CurrencyName] = exRateItem;
-                currencyList[exRateItem.CurrencyName].fromBaseToThis = settings.EXCHANAGERATES.availableConversions[exRateItem.CurrencyName];
-                currencyList[exRateItem.CurrencyName].fromThisToBase = settings.EXCHANAGERATES.availableMutipliers[exRateItem.CurrencyName];
-
-            });
-            _(settings.ADDRESS).each(function (addrItem) {
-                addrItem.OpenHoursToday = addrItem['Hours' + moment().locale('en').format('dddd')];
-            });
             return settings;
         }
     });

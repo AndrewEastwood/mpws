@@ -21,46 +21,29 @@ define("plugin/shop/site/js/view/widgetAddress", [
         },
         initialize: function() {
             this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'ADDRESS');
-            this.collection.setCustomQueryField('Status', 'REMOVED:!=');
-            this.listenTo(this.collection, 'reset', this.render);
+            this.collection.setType('ADDRESS');
+            // this.collection.setCustomQueryField('Type', 'ADDRESS');
+            // this.collection.setCustomQueryField('Status', 'REMOVED:!=');
+            this.listenTo(this.collection, 'sync', this.render);
         },
         render: function () {
-            var data = Utils.getHBSTemplateData(this);
-            this.settings = this.collection.toSettings();
-            var userAddr = Cache.get('userAddr') || null;
-            var activeAddress = null;
-            var firstAddressUID = null;
-            var addresses = _(settings.addresses).map(function (val) {
-                if (_.isNull(userAddr)) {
-                    userAddr = val.uid;
-                    Cache.set('userAddr', userAddr);
-                }
-                if (_.isNull(firstAddressUID)) {
-                    firstAddressUID = val.uid;
-                }
-                val.isActive = val.uid == userAddr;
-                if (val.isActive) {
-                    activeAddress = val;
-                }
-                return val;
-            });
+            var data = Utils.getHBSTemplateData(this),
+                userAddrID = Cache.get('userAddrID') || null,
+                activeAddress = this.collection.get(userAddrID);
             if (activeAddress === null) {
-                Cache.set('userAddr', firstAddressUID);
-                activeAddress = settings.addresses[firstAddressUID];
-                activeAddress.isActive = true;
+                Cache.set('userAddrID', firstAddressUID);
+                activeAddress = this.collection.at(0);
             }
-            this.$el.toggleClass('hidden', addresses.length === 0);
-            // debugger;
-            if (addresses.length) {
-                data.extras = {
-                    activeAddress: activeAddress,
-                    addresses: addresses,
-                    addressCount: addresses.length
-                };
-                APP.instances.shop.settings._activeAddress = activeAddress;
-                this.$el.html(this.template(data));
-            }
+            activeAddress = activeAddress.toJSON() || {};
+            debugger;
+            activeAddress.isActive = true;
+            this.$el.toggleClass('hidden', this.collection.length === 0);
+            data.extras = {
+                activeAddress: activeAddress,
+                addressCount: this.collection.length
+            };
+            APP.instances.shop.settings._activeAddress = activeAddress;
+            this.$el.html(this.template(data));
             return this;
         },
         changeUserAddress: function (event) {
@@ -68,9 +51,12 @@ define("plugin/shop/site/js/view/widgetAddress", [
             this.$('.address-item').addClass('hidden');
             this.$('#' + addressUID).removeClass('hidden');
             Cache.set('userAddr', addressUID);
-            if (this.settings.addresses[addressUID]) {
-                APP.instances.shop.settings._activeAddress = this.settings.addresses[addressUID];
-                this.$('.address-switcher .shoptitle').text(this.settings.addresses[addressUID].ShopName.Value);
+            var addr = this.collection.get(addressUID);
+            debugger
+            if (addr) {
+                addr = addr.toJSON();
+                APP.instances.shop.settings._activeAddress = addr;
+                this.$('.address-switcher .shoptitle').text(addr.ShopName);
             }
         }
     });

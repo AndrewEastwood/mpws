@@ -1,43 +1,39 @@
 {{#gt extras.addressCount 1}}
 <div class="btn-group address-switcher">
     <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <span class="shoptitle">{{extras.activeAddress.ShopName.Value}}</span>
+        <span class="shoptitle">{{extras.activeAddress.ShopName}}</span>
         <span class="caret"></span>
     </span>
     <ul class="dropdown-menu" role="menu">
-        {{#each extras.addresses}}
-        <li class="address-option" data-ref="{{uid}}"><a href="javascript://">{{ShopName.Value}}</a></li>
+        {{#each data}}
+        <li class="address-option" data-ref="{{ID}}"><a href="javascript://">{{ShopName}}</a></li>
         {{/each}}
     </ul>
 </div>
 {{/gt}}
-{{#each extras.addresses}}
+{{#each data}}
 <div itemscope itemtype="http://schema.org/Organization">
-    <div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}">
+    <div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{ID}}">
         {{#is ../extras.addressCount 1}}
-        <b itemprop="name">{{ShopName.Value}}</b>
+        <b itemprop="name">{{ShopName}}</b>
         <link itemprop="url" content="{{../../app.location.protocol}}//{{../../app.location.host}}" />
         {{/is}}
-        {{#ifAny AddressLine1.Value AddressLine2.Value AddressLine3.Value}}
+        {{#ifAny AddressLine1 AddressLine2 AddressLine3}}
         <div class="block addresses" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-        {{#if AddressLine1.Value}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1.Value}}</span>{{/if}}
-        {{#if AddressLine2.Value}}<span class="addressLine addressLine2" itemprop="addressLocality">{{AddressLine2.Value}}</span>{{/if}}
-        {{#if AddressLine3.Value}}<span class="addressLine addressLine3" itemprop="addressRegion">{{AddressLine3.Value}}</span>{{/if}}
+        {{#if AddressLine1}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1}}</span>{{/if}}
+        {{#if AddressLine2}}<span class="addressLine addressLine2" itemprop="addressLocality">{{AddressLine2}}</span>{{/if}}
+        {{#if AddressLine3}}<span class="addressLine addressLine3" itemprop="addressRegion">{{AddressLine3}}</span>{{/if}}
         </div>
         {{/ifAny}}
         <div class="block openHours btn-group">
             <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                Сьогодні: {{OpenHoursToday.hours}}
+                Сьогодні: {{OpenHoursToday}}
                 <span class="caret"></span>
             </span>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Mon.dayShort}}:</span> {{OpenHoursDaysMap.Mon.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Tue.dayShort}}:</span> {{OpenHoursDaysMap.Tue.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Wed.dayShort}}:</span> {{OpenHoursDaysMap.Wed.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Thu.dayShort}}:</span> {{OpenHoursDaysMap.Thu.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Fri.dayShort}}:</span> {{OpenHoursDaysMap.Fri.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Sat.dayShort}}:</span> {{OpenHoursDaysMap.Sat.hours}}</a></li>
-                <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Sun.dayShort}}:</span> {{OpenHoursDaysMap.Sun.hours}}</a></li>
+            {{#each OpenHoursMap}}
+                <li{{#if isActive}}class="active"{{/if}}><a href="javascript://"><span class="dayname">{{dayShort}}:</span> {{hours}}</a></li>
+            {{/each}}
             </ul>
         </div>
     </div>
