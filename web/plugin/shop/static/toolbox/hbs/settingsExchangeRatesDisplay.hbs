@@ -3,16 +3,17 @@
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body">
-    <div class="list-group-misc">
-        <a href="javascript://" class="list-group-item db-currency-type" data-id="{{extras.modelDBPriceCurrency.ID}}">
+    <div class="js-loading"></div>
+    <div class="list-group-misc hidden">
+        <a href="javascript://" class="list-group-item db-currency-type">
             <span>Всі ціни в базі подані в:</span>
             <span class="currency-list currency-list-db-default"></span>
         </a>
-        <a href="javascript://" class="list-group-item default-site-currency-type" data-id="{{extras.renderSiteDefaultCurrency.ID}}">
+        <a href="javascript://" class="list-group-item default-site-currency-type">
             <span>Основна валюта сайту:</span>
             <span class="currency-list currency-list-site-default"></span>
         </a>
-        <a href="javascript://" class="list-group-item show-currency-switcher" data-id="{{extras.modelShowSiteCurrencySwitcher.ID}}">
+        <a href="javascript://" class="list-group-item show-currency-switcher">
             <span>Показувати вибір валюти:</span>
             <input type="checkbox" class="switcher switcher-show-currency-switcher">
         </a>
@@ -22,9 +23,10 @@
     <div class="list-group">
     {{#each data}}
         <a href="javascript://" class="list-group-item currency-display" data-id="{{ID}}">
-            <span class="name">{{Label}}</span>,
-            <span class="alias">знак <strong class="editable">{{Sign}}</strong></span>
-            <span class="format">та відображати у форматі <strong class="editable">{{Format}}</strong></span>
+            <span class="name-prefix">Валюту</span>
+            <strong class="name">{{CurrencyName}}</strong>
+            <span class="format">відображати у форматі</span>
+            <strong class="editable js-editable-format" data-type="text">{{Format}}</strong>
         </a>
     {{/each}}
     </div>
@@ -35,9 +37,10 @@
 </div>
 <!-- /.panel-body -->
 <a href="javascript://" class="list-group-item currency-display is-new currency-display-template hidden">
-    <span class="name"></span>,
-    <span class="alias">знак <strong class="editable"></strong></span>
-    <span class="format">та відображати у форматі <strong class="editable">{{Format}}</strong></span>
+    <span class="name-prefix">Валюту</span>
+    <strong class="name"></strong>
+    <span class="format">відображати у форматі</span>
+    <strong class="editable js-editable-format" data-type="text">0.00</strong>
 </a>
 <div class="panel-footer">
     <button type="button" class="btn btn-success btn-xs save-currency-display">Зберегти</button>

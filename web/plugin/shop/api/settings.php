@@ -72,6 +72,11 @@ class settings {
     }
     public function getSettingsExchangeRates () {}
     public function getSettingsExchangeRatesDisplay () {
+        global $app;
+        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->EXCHANAGERATESDISPLAY)) ?: array();
+        foreach ($items as &$value)
+            $value = $this->__adjustSettingItem($this->SETTING_TYPE->EXCHANAGERATESDISPLAY, $value);
+        return $items;
     }
     public function getSettingsMisc () {
         global $app;
@@ -122,6 +127,11 @@ class settings {
         $settings[$this->SETTING_TYPE->SEO] = $this->getSettingsSeo();
         $settings[$this->SETTING_TYPE->WEBSITE] = $this->getSettingsWebsite();
         $settings[$this->SETTING_TYPE->FORMORDER] = $this->getSettingsFormOrder();
+        $settings[$this->SETTING_TYPE->EXCHANAGERATESDISPLAY] = $this->getSettingsExchangeRatesDisplay();
+        $settings[$this->SETTING_TYPE->EXCHANAGERATES] = array(
+            'availableConversions' => API::getAPI('shop:exchangerates')->getAvailableConversionOptions(),
+            'availableMutipliers' => API::getAPI('shop:exchangerates')->getActiveRateMultipliers()
+       );
         return $settings;
     }
 
@@ -186,8 +196,8 @@ class settings {
             // case 'OPENHOURS':
             //     break;
             case 'EXCHANAGERATESDISPLAY':
-                $setting["CurrencyID"] = intval($setting["CurrencyID"]);
-                $setting["ShowSignBeforeValue"] = intval($setting["ShowSignBeforeValue"]) === 1;
+                // $setting["CurrencyID"] = intval($setting["CurrencyID"]);
+                // $setting["ShowSignBeforeValue"] = intval($setting["ShowSignBeforeValue"]) === 1;
                 break;
             default:
                 break;
@@ -288,7 +298,7 @@ class settings {
                         'HoursWednesday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursThursday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursFriday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'HoursSturday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'HoursSaturday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'HoursSunday' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'InfoPayment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'InfoShipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
@@ -359,6 +369,13 @@ class settings {
                 //     break;
                 case 'WEBSITE':
                     // $dataRules = $this->getSettingsWebsite();
+                    break;
+                case 'EXCHANAGERATESDISPLAY':
+                    $dataRules = array(
+                        'CurrencyName' => array('string'),
+                        'Format' => array('string')
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'FORMORDER':
                     $dataRules = array(
@@ -557,6 +574,9 @@ class settings {
                     break;
                 case 'MISC':
                     $resp = $this->getSettingsMisc();
+                    break;
+                case 'EXCHANAGERATESDISPLAY':
+                    $resp = $this->getSettingsExchangeRatesDisplay();
                     break;
                 // case 'PHONES':
                 //     if (isset($req->get['address']) && is_numeric($req->get['address']))

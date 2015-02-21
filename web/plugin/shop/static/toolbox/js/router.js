@@ -5,7 +5,7 @@ define("plugin/shop/toolbox/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/shop/common/js/collection/settings',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/handlebarsHelpers'
 ], function (require, Sandbox, $, _, Backbone, Cache, SiteSettings) {
 
@@ -300,12 +300,12 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewExchangeRates.collection.fetch({
                     reset: true
                 });
-                pluginSettings.viewExchangeRatesDisplay.modelDBPriceCurrency.fetch();
-                pluginSettings.viewExchangeRatesDisplay.modelSiteDefaultCurrency.fetch();
-                pluginSettings.viewExchangeRatesDisplay.modelShowSiteCurrencySwitcher.fetch();
-                pluginSettings.viewExchangeRatesDisplay.collection.fetch({
-                    reset: true
-                });
+                // pluginSettings.viewExchangeRatesDisplay.modelDBPriceCurrency.fetch();
+                // pluginSettings.viewExchangeRatesDisplay.modelSiteDefaultCurrency.fetch();
+                // pluginSettings.viewExchangeRatesDisplay.modelShowSiteCurrencySwitcher.fetch();
+                // pluginSettings.viewExchangeRatesDisplay.collection.fetch({
+                //     reset: true
+                // });
                 pluginSettings.viewWidgetPrivatBankExchageRates.model.fetch();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',

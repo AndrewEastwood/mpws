@@ -784,7 +784,7 @@ CREATE TABLE `shop_settingsAddress` (
   `HoursWednesday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursThursday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursFriday` varchar(50) COLLATE utf8_bin NOT NULL,
-  `HoursSturday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `HoursSaturday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursSunday` varchar(50) COLLATE utf8_bin NOT NULL,
   `InfoPayment` text COLLATE utf8_bin NOT NULL,
   `InfoShipping` text COLLATE utf8_bin NOT NULL,
@@ -829,14 +829,11 @@ DROP TABLE IF EXISTS `shop_settingsExchangeRatesDisplay`;
 CREATE TABLE `shop_settingsExchangeRatesDisplay` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `CurrencyID` int(11) NOT NULL,
-  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Sign` varchar(10) COLLATE utf8_bin NOT NULL,
-  `ShowSignBeforeValue` tinyint(1) NOT NULL,
+  `CurrencyName` varchar(50) COLLATE utf8_bin NOT NULL,
   `Format` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1107,4 +1104,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-21  2:52:17
+-- Dump completed on 2015-02-21 23:09:32

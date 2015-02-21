@@ -853,13 +853,10 @@ class dbquery {
     public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
         'ADDRESS' => 'shop_settingsAddress',
         'ALERTS' => 'shop_settingsAlerts',
-        // 'EXCHANAGERATES' => 'shop_settingsExchangeRates',
+        'EXCHANAGERATES' => '',
         'EXCHANAGERATESDISPLAY' => 'shop_settingsExchangeRatesDisplay',
         'FORMORDER' => 'shop_settingsFormOrder',
-        // 'INFO' => 'shop_settingsInfo',
         'MISC' => 'shop_settingsMisc',
-        // 'OPENHOURS' => 'shop_settingsOpenHours',
-        // 'PHONES' => 'shop_settingsPhones',
         'PRODUCT' => 'shop_settingsProduct',
         'SEO' => 'shop_settingsSeo',
         'WEBSITE' => 'shop_settingsWebsite'

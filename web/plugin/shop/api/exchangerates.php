@@ -203,11 +203,11 @@ class exchangerates {
 
     public function getDefaultDBPriceCurrency () {
         $currencyName = null;
-        $prop = API::getAPI('shop:settings')->findByName('ExchangeRates', 'DBPriceCurrencyType');
-        if ($prop === null) {
+        $prop = API::getAPI('shop:settings')->getSettingsMisc();
+        if ($prop === null || empty($prop) || empty($prop['DBPriceCurrencyType'])) {
             throw new Exception('#[ShopExRt0003] NeedToDefineDBPriceCurrencyType');
         }
-        $currencyName = $prop['Value'];
+        $currencyName = $prop['DBPriceCurrencyType'];
         $rate = $this->getExchangeRateFrom_ByCurrencyName($currencyName);
         if ($rate === null) {
             throw new Exception("#[ShopExRt0004] DefaultCurrencyNameIsMissingInDB_" . $currencyName, 1);

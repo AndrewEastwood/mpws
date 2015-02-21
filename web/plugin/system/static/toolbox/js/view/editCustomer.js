@@ -84,7 +84,7 @@ define("plugin/system/toolbox/js/view/editCustomer", [
             // debugger
             // this.$el = $dialog.getModalContent().get(0);
             this.$el.html($dialog.getModalContent());
-            // this.$('.js-plugins').html(tplFBAnim());
+            this.$('.js-plugins').html(tplFBAnim());
 
             // get available plugins and check activated for this customer
             var pluginsUrl = APP.getApiLink({
