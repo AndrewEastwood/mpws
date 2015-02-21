@@ -71,7 +71,8 @@ class settings {
         return $item;
     }
     public function getSettingsExchangeRates () {}
-    public function getSettingsExchangeRatesDisplay () {}
+    public function getSettingsExchangeRatesDisplay () {
+    }
     public function getSettingsMisc () {
         global $app;
         $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->MISC));
@@ -116,7 +117,7 @@ class settings {
         $settings[$this->SETTING_TYPE->ADDRESS] = $this->getSettingsAddresses();
         $settings[$this->SETTING_TYPE->ALERTS] = $this->getSettingsAlerts();
         // $settings[$this->SETTING_TYPE->INFO] = $this->getSettingsAddressInfo();
-        // $settings[$this->SETTING_TYPE->MISC] = $this->getSettingsMisc();
+        $settings[$this->SETTING_TYPE->MISC] = $this->getSettingsMisc();
         $settings[$this->SETTING_TYPE->PRODUCT] = $this->getSettingsProduct();
         $settings[$this->SETTING_TYPE->SEO] = $this->getSettingsSeo();
         $settings[$this->SETTING_TYPE->WEBSITE] = $this->getSettingsWebsite();
@@ -153,6 +154,9 @@ class settings {
             case 'ADDRESS':
                 $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
                 break;
+            case 'MISC':
+                $setting['ShowSiteCurrencySelector'] = intval($setting['ShowSiteCurrencySelector']) === 1;
+                break;
             case 'WEBSITE':
                 break;
             case 'FORMORDER':
@@ -181,6 +185,10 @@ class settings {
             //     break;
             // case 'OPENHOURS':
             //     break;
+            case 'EXCHANAGERATESDISPLAY':
+                $setting["CurrencyID"] = intval($setting["CurrencyID"]);
+                $setting["ShowSignBeforeValue"] = intval($setting["ShowSignBeforeValue"]) === 1;
+                break;
             default:
                 break;
         }
@@ -290,6 +298,14 @@ class settings {
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     // var_dump($validatedDataObj['values']);
                     // $dataRules = $this->getSettingsAddresses();
+                    break;
+                case 'MISC':
+                    $dataRules = array(
+                        'DBPriceCurrencyType' => array('string'),
+                        'SiteDefaultPriceCurrencyType' => array('string'),
+                        'ShowSiteCurrencySelector' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                    );
+                    $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 // case 'PHONES':
                 //     $dataRules = array(
@@ -538,6 +554,9 @@ class settings {
                     break;
                 case 'PRODUCT':
                     $resp = $this->getSettingsProduct();
+                    break;
+                case 'MISC':
+                    $resp = $this->getSettingsMisc();
                     break;
                 // case 'PHONES':
                 //     if (isset($req->get['address']) && is_numeric($req->get['address']))
