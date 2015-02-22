@@ -27,37 +27,47 @@ define("plugin/shop/site/js/view/widgetAddress", [
             this.listenTo(this.collection, 'sync', this.render);
         },
         render: function () {
-            var data = Utils.getHBSTemplateData(this),
+            if (this.collection.isEmpty()) {
+                return this;
+            }
+            var tplData = null,
                 userAddrID = Cache.get('userAddrID') || null,
                 activeAddress = this.collection.get(userAddrID);
+            this.collection.each(function (model) {
+                model.set('isActive', false)
+            });
+            // get first address when we don;t have user's choice
             if (activeAddress === null) {
                 Cache.set('userAddrID', firstAddressUID);
                 activeAddress = this.collection.at(0);
             }
+            activeAddress.set('isActive', true);
             activeAddress = activeAddress.toJSON() || {};
-            debugger;
-            activeAddress.isActive = true;
-            this.$el.toggleClass('hidden', this.collection.length === 0);
-            data.extras = {
+            tplData = Utils.getHBSTemplateData(this);
+            tplData.extras = {
                 activeAddress: activeAddress,
                 addressCount: this.collection.length
             };
+            this.$el.toggleClass('hidden', this.collection.length === 0);
+            this.$el.html(this.template(tplData));
+            // set active address
             APP.instances.shop.settings._activeAddress = activeAddress;
-            this.$el.html(this.template(data));
             return this;
         },
         changeUserAddress: function (event) {
-            var addressUID = $(event.target).parents('li').data('ref');
-            this.$('.address-item').addClass('hidden');
-            this.$('#' + addressUID).removeClass('hidden');
-            Cache.set('userAddr', addressUID);
-            var addr = this.collection.get(addressUID);
-            debugger
-            if (addr) {
-                addr = addr.toJSON();
-                APP.instances.shop.settings._activeAddress = addr;
-                this.$('.address-switcher .shoptitle').text(addr.ShopName);
-            }
+            // debugger
+            Cache.set('userAddrID', $(event.target).parents('li').data('ref'));
+            this.render();
+            // var addressUID = $(event.target).parents('li').data('ref'),
+            //     activeAddress = this.collection.get(addressUID);
+            // this.$('.address-item').addClass('hidden');
+            // this.$('#' + addressUID).removeClass('hidden');
+            // Cache.set('userAddrID', addressUID);
+            // if (activeAddress) {
+            //     activeAddress = activeAddress.toJSON();
+            //     APP.instances.shop.settings._activeAddress = activeAddress;
+            //     this.$('.address-switcher .shoptitle').text(activeAddress.ShopName);
+            // }
         }
     });
 

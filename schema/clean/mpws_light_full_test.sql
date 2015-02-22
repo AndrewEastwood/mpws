@@ -1091,7 +1091,7 @@ CREATE TABLE `shop_settingsAddress` (
 
 LOCK TABLES `shop_settingsAddress` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
-INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(3,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(4,1,'demo 1','Ukraine','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE');
+INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','Городоцька 123','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(3,1,'demo 2','Ukraine','','Сихівська 1','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(4,1,'demo 3','Ukraine','','Мазепи 12','','','https://www.google.com.ua/maps/place/%D0%9C%D0%B0%D0%B3%D0%BD%D0%B0%D1%82/@49.8712013,24.0385437,17z/data=!4m2!3m1!1s0x0000000000000000:0x543c149bd33c094e?hl=uk','https://www.facebook.com/rozetka.ua','https://twitter.com/rozetka_news','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE');
 /*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1501,4 +1501,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-22  1:27:34
+-- Dump completed on 2015-02-22 13:54:50

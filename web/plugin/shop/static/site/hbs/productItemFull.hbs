@@ -20,7 +20,7 @@
                     <div class="productBadge {{data.Status}}">
                        <div class="ribbon-wrapper">
                             <div class="ribbon">
-                                {{mpwsGetValueByKey lang data.Status "product_badge_"}}
+                                {{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}
                             </div>
                         </div>
                     </div>
@@ -147,11 +147,11 @@
                 <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
             </li>
 
-            {{#if instances.shop.settings.addressCount }}
-            {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowWarrantyInfo._isActive instances.shop.settings.ShowContacts._isActive }}
+            {{#if instances.shop.settings.ADDRESS.length }}
+            {{#ifAny instances.shop.settings.PRODUCT.ShowDeliveryInfo instances.shop.settings.PRODUCT.ShowPaymentInfo instances.shop.settings.PRODUCT.ShowOpenHours instances.shop.settings.PRODUCT.ShowDeliveryInfo instances.shop.settings.PRODUCT.ShowWarrantyInfo instances.shop.settings.PRODUCT.ShowContacts }}
             <li class="list-group-item list-group-item-service-info">
 
-                {{#if instances.shop.settings.ShowDeliveryInfo._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowDeliveryInfo}}
                 <span class="product-info product-info-delivery">
                     <a href="javascript://" class="link dashed open-popup-shipping">
                         <i class="fa fa-truck fa-fw"></i> Доставка
@@ -159,7 +159,7 @@
                 </span>
                 {{/if}}
 
-                {{#if instances.shop.settings.ShowPaymentInfo._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowPaymentInfo}}
                 <span class="product-info product-info-payments">
                     <a href="javascript://" class="link dashed  open-popup-payments">
                         <i class="fa fa-btc fa-fw"></i> Оплата товару
@@ -167,7 +167,7 @@
                 </span>
                 {{/if}}
 
-                {{#if instances.shop.settings.ShowOpenHours._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowOpenHours}}
                 <span class="product-info product-info-openhours">
                     <a href="javascript://" class="link dashed open-popup-openhours">
                         <i class="fa fa-clock-o fa-fw"></i>Графік роботи
@@ -175,7 +175,7 @@
                 </span>
                 {{/if}}
 
-                {{#if instances.shop.settings.ShowContacts._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowContacts}}
                 <span class="product-info product-info-contacts">
                     <a href="javascript://" class="link dashed open-popup-phones">
                         <i class="fa fa-phone-square fa-fw"></i> Телефони
@@ -183,7 +183,7 @@
                 </span>
                 {{/if}}
 
-                {{#if instances.shop.settings.ShowWarrantyInfo._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowWarrantyInfo}}
                 <span class="product-info product-info-warranty">
                     <a href="javascript://" class="link dashed open-popup-warranty">
                         <i class="fa fa-shield fa-fw"></i> Гарантії
@@ -194,7 +194,7 @@
             {{/ifAny}}
             {{/if}}
 
-            {{#if instances.shop.settings.ShowSocialSharing._isActive}}
+            {{#if instances.shop.settings.PRODUCT.ShowSocialSharing}}
             <li class="list-group-item list-group-item-service-info">
                 <div id="fb-root"></div>
                 <script>(function(d, s, id) {
@@ -317,7 +317,7 @@
                                     <div class="productBadge {{Status}}">
                                        <div class="ribbon-wrapper">
                                             <div class="ribbon">
-                                                {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
+                                                {{mpwsGetValueByKey ../../lang key=Status prefix="product_badge_"}}
                                             </div>
                                         </div>
                                     </div>

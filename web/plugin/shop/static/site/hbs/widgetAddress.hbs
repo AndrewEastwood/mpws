@@ -1,7 +1,9 @@
 {{#gt extras.addressCount 1}}
 <div class="btn-group address-switcher">
     <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <span class="shoptitle">{{extras.activeAddress.ShopName}}</span>
+        <span class="shoptitle">
+            {{extras.activeAddress.ShopName}}
+        </span>
         <span class="caret"></span>
     </span>
     <ul class="dropdown-menu" role="menu">
@@ -18,6 +20,9 @@
         <b itemprop="name">{{ShopName}}</b>
         <link itemprop="url" content="{{../../app.location.protocol}}//{{../../app.location.host}}" />
         {{/is}}
+        {{#if MapUrl}}
+            <a href="{{MapUrl}}" target="_blank"><i class="fa fa-map-marker fa-fw"></i></a>
+        {{/if}}
         {{#ifAny AddressLine1 AddressLine2 AddressLine3}}
         <div class="block addresses" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
         {{#if AddressLine1}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1}}</span>{{/if}}
@@ -32,10 +37,26 @@
             </span>
             <ul class="dropdown-menu" role="menu">
             {{#each OpenHoursMap}}
-                <li{{#if isActive}}class="active"{{/if}}><a href="javascript://"><span class="dayname">{{dayShort}}:</span> {{hours}}</a></li>
+                <li{{#if isToday}} class="active"{{/if}}><a href="javascript://"><span class="dayname">{{dayShort}}:</span> {{hours}}</a></li>
             {{/each}}
             </ul>
         </div>
+        {{#ifAny SocialFacebook SocialTwitter SocialLinkedIn SocialGooglePlus}}
+        <div class="block social">
+        {{#if SocialFacebook}}
+            <a href="{{SocialFacebook}}" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
+        {{/if}}
+        {{#if SocialTwitter}}
+            <a href="{{SocialTwitter}}" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+        {{/if}}
+        {{#if SocialLinkedIn}}
+            <a href="{{SocialLinkedIn}}" target="_blank"><i class="fa fa-fw fa-linkedin"></i></a>
+        {{/if}}
+        {{#if SocialGooglePlus}}
+            <a href="{{SocialGooglePlus}}" target="_blank"><i class="fa fa fa-fw-google-plus"></i></a>
+        {{/if}}
+        </div>
+        {{/ifAny}}
     </div>
     {{#if Contacts}}
     <div class="button-phones btn-group">

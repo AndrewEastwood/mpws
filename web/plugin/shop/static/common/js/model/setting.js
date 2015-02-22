@@ -1,7 +1,8 @@
 define('plugin/shop/common/js/model/setting', [
     'default/js/lib/backbone',
     'default/js/lib/underscore',
-    'default/js/lib/moment/moment'
+    'default/js/lib/moment/moment',
+    'default/js/lib/moment/locale/uk'
 ], function (Backbone, _, moment) {
 
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -12,32 +13,29 @@ define('plugin/shop/common/js/model/setting', [
             return APP.getApiLink({
                 source: 'shop',
                 fn: 'settings',
-                type: this.sType || null
+                type: this.getType() || null
             });
         },
-        initialize: function () {
-            // debugger
-            if (this.collection) {
-                this.setType(this.collection.getType());
-            }
-        },
         getType: function () {
-            return this.sType;
+            var type = null;
+            if (this.collection) {
+                type = this.collection.getType();
+            }
+            return type || this.sType;
         },
         setType: function (type) {
             this.sType = type;
             return this;
         },
         isAddress: function () {
-            return this.sType === 'ADDRESS';
+            return this.getType() === 'ADDRESS';
         },
         isCurrency: function () {
-            return this.sType === 'EXCHANGERATES';
+            return this.getType() === 'EXCHANGERATES';
         },
         parse: function (data) {
             if (this.isAddress() || data.ADDRESS) {
-                debugger
-                var addrData = data.ADDRESS || data;
+                var addrData = data.ADDRESS || [data];
                 _(addrData).each(function (addrItem) {
                     addrItem.OpenHoursToday = addrItem['Hours' + moment().locale('en').format('dddd')];
                     addrItem.OpenHoursMap = [];
@@ -52,7 +50,7 @@ define('plugin/shop/common/js/model/setting', [
                 });
             }
 
-            if (!this.getType() || data.EXCHANAGERATESDISPLAY) {
+            if (data.EXCHANAGERATESDISPLAY) {
                 var currencyList = {};
                 data.CUSTOM = {currencyList: currencyList};
                 _(data.EXCHANAGERATESDISPLAY).each(function (exRateItem) {

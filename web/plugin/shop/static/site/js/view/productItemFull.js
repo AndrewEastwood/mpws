@@ -59,14 +59,14 @@ define("plugin/shop/site/js/view/productItemFull", [
             var formatTitle = "",
                 formatKeywords = "",
                 formatDescription = "";
-            if (APP.instances.shop.settings.ProductPageTitle.Value) {
-                formatTitle = APP.instances.shop.settings.ProductPageTitle.Value;
+            if (APP.instances.shop.settings.SEO.ProductPageTitle) {
+                formatTitle = APP.instances.shop.settings.SEO.ProductPageTitle;
             }
-            if (APP.instances.shop.settings.ProductKeywords.Value) {
-                formatKeywords = APP.instances.shop.settings.ProductKeywords.Value;
+            if (APP.instances.shop.settings.SEO.ProductKeywords) {
+                formatKeywords = APP.instances.shop.settings.SEO.ProductKeywords;
             }
-            if (APP.instances.shop.settings.ProductDescription.Value) {
-                formatDescription = APP.instances.shop.settings.ProductDescription.Value;
+            if (APP.instances.shop.settings.SEO.ProductDescription) {
+                formatDescription = APP.instances.shop.settings.SEO.ProductDescription;
             }
 
             var searchValues = ['\\[ProductName\\]', '\\[CategoryName\\]', '\\[OriginName\\]', '\\[ProductModel\\]', '\\[ProductDisplayTitle\\]'];
@@ -89,7 +89,7 @@ define("plugin/shop/site/js/view/productItemFull", [
                 cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Shipping.Value
+                message: APP.instances.shop.settings._activeAddress.InfoShipping
             });
         },
         openPopupPayments: function (event) {
@@ -98,7 +98,7 @@ define("plugin/shop/site/js/view/productItemFull", [
                 cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Payment.Value
+                message: APP.instances.shop.settings._activeAddress.InfoPayment
             });
         },
         openPopupOpenHours: function (event) {
@@ -108,10 +108,9 @@ define("plugin/shop/site/js/view/productItemFull", [
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: function () {
-                    var $openHoursList = $('<ul>').addClass('list-group'),
-                        today = APP.instances.shop.settings._activeAddress.OpenHoursToday;
-                    _(APP.instances.shop.settings._activeAddress.OpenHoursDaysMap).each(function (item) {
-                        $openHoursList.append($('<li>').addClass('list-group-item ' + (today.day === item.day ? 'active' : '')).append([
+                    var $openHoursList = $('<ul>').addClass('list-group');
+                    _(APP.instances.shop.settings._activeAddress.OpenHoursMap).each(function (item) {
+                        $openHoursList.append($('<li>').addClass('list-group-item ' + (item.isToday ? 'active' : '')).append([
                             $('<span>').addClass('badge').text(item.hours),
                             item.day
                         ]));
@@ -144,7 +143,7 @@ define("plugin/shop/site/js/view/productItemFull", [
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Warranty.Value
+                message: APP.instances.shop.settings._activeAddress.InfoWarranty
             });
         }
     });

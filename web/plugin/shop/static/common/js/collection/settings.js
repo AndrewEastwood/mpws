@@ -1,8 +1,7 @@
 define('plugin/shop/common/js/collection/settings', [
     'default/js/lib/backbone',
     'default/js/lib/underscore',
-    'plugin/shop/common/js/model/setting',
-    'default/js/lib/moment/locale/uk'
+    'plugin/shop/common/js/model/setting'
 ], function (Backbone, _, ModelSetting) {
 
     return Backbone.Collection.extend({
@@ -11,13 +10,14 @@ define('plugin/shop/common/js/collection/settings', [
             return APP.getApiLink({
                 source: 'shop',
                 fn: 'settings',
-                type: this.sType || null
+                type: this.getType() || null
             });
         },
         getType: function () {
             return this.sType;
         },
         setType: function (type) {
+            // debugger
             this.sType = type;
             return this;
         }
