@@ -925,6 +925,12 @@ class dbquery {
         }
         return $config;
     }
+    public static function shopGetSettingsAddressActive () {
+        global $app;
+        $config = self::shopGetSettingByType('ADDRESS');
+        $config["condition"]["Status"] =  $app->getDB()->createCondition('ACTIVE');
+        return $config;
+    }
     public static function shopGetSettingsAddressPhones ($addressID) {
         global $app;
         $config = self::shopGetSettingByType('PHONES');

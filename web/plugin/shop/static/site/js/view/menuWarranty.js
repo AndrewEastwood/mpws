@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/menuWarranty", [
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Warranty.Value
+                message: APP.instances.shop.settings._activeAddress.InfoWarranty
             });
         }
     });

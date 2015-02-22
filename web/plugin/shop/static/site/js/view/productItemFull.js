@@ -127,9 +127,9 @@ define("plugin/shop/site/js/view/productItemFull", [
                 title: $(event.target).html().trim(),
                 message: function () {
                     var $contactsList = $('<ul>').addClass('list-group');
-                    _(APP.instances.shop.settings._activeAddress.Contacts).each(function (item) {
-                        $contactsList.append($('<li>').addClass('list-group-item ' + item.type).append([
-                            $('<span>').addClass('badge').text(item.contact),
+                    _(APP.instances.shop.settings._activeAddress.PhonesMap).each(function (item) {
+                        $contactsList.append($('<li>').addClass('list-group-item').append([
+                            $('<span>').addClass('badge').text(item.value),
                             item.label
                         ]));
                     });

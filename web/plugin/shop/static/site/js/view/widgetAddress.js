@@ -36,10 +36,11 @@ define("plugin/shop/site/js/view/widgetAddress", [
             this.collection.each(function (model) {
                 model.set('isActive', false)
             });
+            // debugger
             // get first address when we don;t have user's choice
-            if (activeAddress === null) {
-                Cache.set('userAddrID', firstAddressUID);
+            if (!activeAddress) {
                 activeAddress = this.collection.at(0);
+                Cache.set('userAddrID', activeAddress.id);
             }
             activeAddress.set('isActive', true);
             activeAddress = activeAddress.toJSON() || {};

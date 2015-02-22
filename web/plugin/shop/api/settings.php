@@ -34,7 +34,13 @@ class settings {
     }
     public function getSettingsAddresses () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ADDRESS));
+        $config = null;
+        if ($app->isToolbox()) {
+            $config = dbquery::shopGetSettingByType($this->SETTING_TYPE->ADDRESS);
+        } else {
+            $config = dbquery::shopGetSettingsAddressActive();
+        }
+        $items = $app->getDB()->query($config) ?: array();
         foreach ($items as &$value) {
             $value = $this->__adjustSettingItem($this->SETTING_TYPE->ADDRESS, $value);
         }

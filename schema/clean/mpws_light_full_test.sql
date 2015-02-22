@@ -1091,7 +1091,7 @@ CREATE TABLE `shop_settingsAddress` (
 
 LOCK TABLES `shop_settingsAddress` WRITE;
 /*!40000 ALTER TABLE `shop_settingsAddress` DISABLE KEYS */;
-INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','Городоцька 123','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(3,1,'demo 2','Ukraine','','Сихівська 1','','','','','','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE'),(4,1,'demo 3','Ukraine','','Мазепи 12','','','https://www.google.com.ua/maps/place/%D0%9C%D0%B0%D0%B3%D0%BD%D0%B0%D1%82/@49.8712013,24.0385437,17z/data=!4m2!3m1!1s0x0000000000000000:0x543c149bd33c094e?hl=uk','https://www.facebook.com/rozetka.ua','https://twitter.com/rozetka_news','','','','','','','','','','','','','','','','','','','','','','','','ACTIVE');
+INSERT INTO `shop_settingsAddress` VALUES (1,1,'demo 1','Ukraine','','Городоцька 123','','','','','','','','','','','','','','','','','','','','','','','','','','','','','DISABLED'),(3,1,'demo 2','Ukraine','','Сихівська 1','','','','','','','','0-800-4545-6868','київстар','121212-121212','лайф','093-0000000','','','','','','','','','','','','','00:00 - 00:00','ОПЛАТА &nbsp;for demo 2','ДОСТАВКА&nbsp;&nbsp;for demo 2','ГАРАНТІЇ &nbsp;for demo 2','ACTIVE'),(4,1,'demo 3','Ukraine','','Мазепи 12','','','https://www.google.com.ua/maps/place/%D0%9C%D0%B0%D0%B3%D0%BD%D0%B0%D1%82/@49.8712013,24.0385437,17z/data=!4m2!3m1!1s0x0000000000000000:0x543c149bd33c094e?hl=uk','https://www.facebook.com/rozetka.ua','https://twitter.com/rozetka_news','','','0-800-4545-6868','','','','','','','','','','','','','','','','','01:00 - 10:00','PAYMENT&nbsp;&nbsp;for demo 3','SHIPPING for demo 3','WARRANTY&nbsp;for demo 3','ACTIVE');
 /*!40000 ALTER TABLE `shop_settingsAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1382,7 +1382,7 @@ CREATE TABLE `shop_settingsSeo` (
 
 LOCK TABLES `shop_settingsSeo` WRITE;
 /*!40000 ALTER TABLE `shop_settingsSeo` DISABLE KEYS */;
-INSERT INTO `shop_settingsSeo` VALUES (3,1,'testgdfgxfdgvgfdgfdggdfgdf [ProductName] [ProductName] [ProductName]','jghjghj [CatalogFirst5ProductModels]','this is the main page. you can buy  [CatalogFirst10ProductNames]','',' [CatalogFirst5ProductNames] [CategoryName] [CatalogFirst5OriginNames] [CatalogFirst5ProductModels]','MAIN PAGE','','','');
+INSERT INTO `shop_settingsSeo` VALUES (3,1,'testgdfgxfdgvgfdgfdggdfgdf [ProductName] [ProductName] [ProductName]','jghjghj [CatalogFirst5ProductModels]','this is the main page. you can buy  [CatalogFirst10ProductNames]','',' [CatalogFirst5ProductNames] [CategoryName] [CatalogFirst5OriginNames] [CatalogFirst5ProductModels]','MAIN PAGE',' [ProductName] [CategoryName] [OriginName] [ProductModel]','','');
 /*!40000 ALTER TABLE `shop_settingsSeo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1501,4 +1501,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-22 13:54:50
+-- Dump completed on 2015-02-22 20:24:22

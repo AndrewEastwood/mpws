@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/menuPayment", [
                 cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Payment.Value
+                message: APP.instances.shop.settings._activeAddress.InfoPayment
             });
         }
     });

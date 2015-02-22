@@ -39,6 +39,8 @@ define('plugin/shop/common/js/model/setting', [
                 _(addrData).each(function (addrItem) {
                     addrItem.OpenHoursToday = addrItem['Hours' + moment().locale('en').format('dddd')];
                     addrItem.OpenHoursMap = [];
+                    addrItem.PhonesMap = [];
+                    addrItem.ActivePhones = 0;
                     _(days).each(function (dayName) {
                         addrItem.OpenHoursMap.push({
                             day: moment(dayName, 'ddd', 'en').locale('uk').format('dddd'),
@@ -47,6 +49,15 @@ define('plugin/shop/common/js/model/setting', [
                             isToday: moment().locale('en').format('dddd') === dayName
                         });
                     });
+                    for (var i = 1; i <= 5; i++) {
+                        if (addrItem['Phone' + i + 'Label'] && addrItem['Phone' + i + 'Value']) {
+                            addrItem.ActivePhones++;
+                            addrItem.PhonesMap.push({
+                                label: addrItem['Phone' + i + 'Label'],
+                                value: addrItem['Phone' + i + 'Value']
+                            });
+                        }
+                    }
                 });
             }
 

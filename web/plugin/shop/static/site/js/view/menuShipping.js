@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/menuShipping", [
                 cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.Shipping.Value
+                message: APP.instances.shop.settings._activeAddress.InfoShipping
             });
         }
     });

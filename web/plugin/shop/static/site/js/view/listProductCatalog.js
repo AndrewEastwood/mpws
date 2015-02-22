@@ -93,14 +93,14 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var formatTitle = "",
                 formatKeywords = "",
                 formatDescription = "";
-            if (APP.instances.shop.settings.CategoryPageTitle.Value) {
-                formatTitle = APP.instances.shop.settings.CategoryPageTitle.Value;
+            if (APP.instances.shop.settings.SEO.CategoryPageTitle) {
+                formatTitle = APP.instances.shop.settings.SEO.CategoryPageTitle;
             }
-            if (APP.instances.shop.settings.CategoryKeywords.Value) {
-                formatKeywords = APP.instances.shop.settings.CategoryKeywords.Value;
+            if (APP.instances.shop.settings.SEO.CategoryKeywords) {
+                formatKeywords = APP.instances.shop.settings.SEO.CategoryKeywords;
             }
-            if (APP.instances.shop.settings.CategoryDescription.Value) {
-                formatDescription = APP.instances.shop.settings.CategoryDescription.Value;
+            if (APP.instances.shop.settings.SEO.CategoryDescription) {
+                formatDescription = APP.instances.shop.settings.SEO.CategoryDescription;
             }
 
             var categoryFirst5Products = [];
