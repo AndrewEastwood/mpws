@@ -4,8 +4,9 @@
 define("default/js/lib/handlebarsHelpers", [
     'default/js/lib/handlebars',
     'default/js/lib/underscore',
+    'default/js/lib/sprintf',
     'default/js/lib/extend.string'
-], function (Handlebars, _) {
+], function (Handlebars, _, sprintf) {
     // The module to be exported
     var helpers = {
         contains: function (str, pattern, options) {
@@ -490,23 +491,12 @@ define("default/js/lib/handlebarsHelpers", [
         return out;
     }
     helpers.currency = function (amount, options) {
-        // if (typeof (amount) === 'string') {
-        //     amount = options.contexts[0].get(amount);
-        // }
-        // var rounded = Math.round(amount * 100);
-        // var dec = rounded % 100;
-        // var whole = Math.round(rounded / 100 - dec / 100);
-        // var decStr = '' + dec;
-        // // return /*'$' + */
-        // var value = whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
-        var value = parseFloat(amount, 10).toFixed(2);
-        if (options.hash.display && options.hash.currency && options.hash.display[options.hash.currency]) {
-            var display = options.hash.display[options.hash.currency];
-            if (display.showBeforeValue) {
-                value = display.text + value;
-            } else {
-                value = value + display.text;
-            }
+        // using formatting from sprintf: https://github.com/jakobwesthoff/sprintf.js
+        var curr = options.hash.currency || null,
+            displayFmt = _(options.hash.display).findWhere({CurrencyName: options.hash.currency}) || null,
+            value = parseFloat(amount, 10).toFixed(2);
+        if (displayFmt && displayFmt.Format) {
+            value = sprintf(displayFmt.Format, value);
         }
         return value;
     }
@@ -565,33 +555,10 @@ define("default/js/lib/handlebarsHelpers", [
             return opt.inverse(this);
         }
     }
-    // helpers.invoke = function () {
-    //     var fnToInvoke = [].slice.call(arguments, 0, 1);
-    //     var params = [].slice.call(arguments, 1);
-    //     if (!Handlebars.dfd) {
-    //         Handlebars.dfd = {};
-    //     }
-    //     Handlebars.dfd[fnToInvoke] = params;
-    //     if (Handlebars.partials[fnToInvoke]) {
-    //         Handlebars.partials[fnToInvoke].apply(null, params);
-    //     }
-    //     //     Handlebars.dfd[fnToInvoke].resolve.apply(null, params);
-    //     // } else {
-    //     //     Handlebars.dfd[fnToInvoke] = new $.Deferred();
-    //     // }
-    // }
-
 
     // Export helpers
     for (var helper in helpers)
         Handlebars.registerHelper(helper, helpers[helper]);
-
-    // Handlebars.registerDynamicHelper = function (key, fn) {
-    //     Handlebars.registerHelper(key, fn);
-    //     if (Handlebars.dfd[key]) {
-
-    //     }
-    // }
 
 
     return helpers;

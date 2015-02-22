@@ -72,11 +72,11 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                     // debugger
                     if (val instanceof Array) {
                         var activeCurr = APP.instances.shop.settings._user.activeCurrency;
-                        var rate = APP.instances.shop.settings.currencyList[activeCurr];
+                        var rate = APP.instances.shop.settings.EXCHANAGERATESDISPLAY[activeCurr];
                         var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
                         var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
-                        var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.currencyList, currency: activeCurr}}));
-                        var $rightEdgeTooltip = $('<span>').addClass('right').text(Handlebars.helpers.currency(rightEdge, {hash:{display:APP.instances.shop.settings.currencyList, currency: activeCurr}}));
+                        var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.EXCHANAGERATESDISPLAY, currency: activeCurr}}));
+                        var $rightEdgeTooltip = $('<span>').addClass('right').text(Handlebars.helpers.currency(rightEdge, {hash:{display:APP.instances.shop.settings.EXCHANAGERATESDISPLAY, currency: activeCurr}}));
                         var tooltip = [$leftEdgeTooltip, $rightEdgeTooltip];
                         return tooltip;
                     }

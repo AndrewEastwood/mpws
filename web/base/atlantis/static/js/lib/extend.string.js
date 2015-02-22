@@ -3,9 +3,9 @@ define("default/js/lib/extend.string", function () {
     String.prototype.capitalize = function() {
         return this.charAt(0).toUpperCase() + this.slice(1);
     }
-    String.prototype.asCssClass = function() {
-        return "." + this;
-    }
+    // String.prototype.asCssClass = function() {
+    //     return "." + this;
+    // }
     String.prototype.startWith = function(str) {
         var _rez = this.match(new RegExp('^' + str));
         return !!(_rez && _rez.length);
@@ -14,9 +14,9 @@ define("default/js/lib/extend.string", function () {
         var _rez = this.match(new RegExp(str + '$'));
         return !!(_rez && _rez.length);
     }
-    String.prototype.asCssID = function() {
-        return "#" + this;
-    }
+    // String.prototype.asCssID = function() {
+    //     return "#" + this;
+    // }
     String.prototype.ucWords = function() {
         return this.replace(/\w\S*/g, function (txt) { return txt.capitalize(); });
     }
@@ -46,8 +46,8 @@ define("default/js/lib/extend.string", function () {
         }
         return hash;
     }
-    String.prototype.jqElExistsAsID = function() {
-        return $(this.asCssID()).length > 0;
-    }
+    // String.prototype.jqElExistsAsID = function() {
+    //     return $(this.asCssID()).length > 0;
+    // }
 
 });

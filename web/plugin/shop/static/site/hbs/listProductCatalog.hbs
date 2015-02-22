@@ -89,12 +89,12 @@
                     <div class="subtitle row">
                         <span class="shop-filter-price shop-filter-price-start">
                         {{#each filter.info.priceEdgesAppliedConverted.min}}
-                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                         {{/each}}
                         </span>
                         <span class="shop-filter-price shop-filter-price-end">
                         {{#each filter.info.priceEdgesAppliedConverted.max}}
-                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                         {{/each}}
                         </span>
                     </div>

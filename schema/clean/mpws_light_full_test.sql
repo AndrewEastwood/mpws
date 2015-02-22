@@ -1140,9 +1140,10 @@ CREATE TABLE `shop_settingsExchangeRatesDisplay` (
   `CustomerID` int(11) NOT NULL,
   `CurrencyName` varchar(50) COLLATE utf8_bin NOT NULL,
   `Format` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1151,7 +1152,7 @@ CREATE TABLE `shop_settingsExchangeRatesDisplay` (
 
 LOCK TABLES `shop_settingsExchangeRatesDisplay` WRITE;
 /*!40000 ALTER TABLE `shop_settingsExchangeRatesDisplay` DISABLE KEYS */;
-INSERT INTO `shop_settingsExchangeRatesDisplay` VALUES (3,1,'UAH','.00грн'),(4,1,'USD','$.00');
+INSERT INTO `shop_settingsExchangeRatesDisplay` VALUES (3,1,'','%.2fгрн.','грн.'),(4,1,'','$%.2f','$'),(5,1,'UAH','UAH','UAH'),(6,1,'USD','USD','USD');
 /*!40000 ALTER TABLE `shop_settingsExchangeRatesDisplay` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1247,7 +1248,7 @@ CREATE TABLE `shop_settingsMisc` (
 
 LOCK TABLES `shop_settingsMisc` WRITE;
 /*!40000 ALTER TABLE `shop_settingsMisc` DISABLE KEYS */;
-INSERT INTO `shop_settingsMisc` VALUES (1,1,'USD','UAH',0);
+INSERT INTO `shop_settingsMisc` VALUES (1,1,'USD','UAH',1);
 /*!40000 ALTER TABLE `shop_settingsMisc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1501,4 +1502,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-22 20:24:22
+-- Dump completed on 2015-02-22 23:37:03

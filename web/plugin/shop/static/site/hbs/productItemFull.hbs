@@ -27,11 +27,7 @@
                     <a href="{{app.location.homepage}}{{data.Images.[0].normal}}" class="link" data-lightbox="shop-product-image-main">
                         <div class="image productimage noimage image_{{data.ID}}">
                             {{#if data.Images.[0].sm}}
-                            <div id="facebookG">
-                                <div id="blockG_1" class="facebook_blockG"></div>
-                                <div id="blockG_2" class="facebook_blockG"></div>
-                                <div id="blockG_3" class="facebook_blockG"></div>
-                            </div>
+                            {{>default/hbs/animationFacebook}}
                             {{/if}}
                         </div>
                         {{#if data.Images.[0].sm}}
@@ -126,7 +122,7 @@
                     {{#each data._prices.others}}
                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="{{@key}}" />
-                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                         </span>
                     {{/each}}
                     {{#if data._promoIsApplied }}
@@ -323,11 +319,7 @@
                                     </div>
                                     <div class="image productimage noimage image_{{ID}}">
                                         {{#if Images.[0].xs}}
-                                        <div id="facebookG">
-                                            <div id="blockG_1" class="facebook_blockG"></div>
-                                            <div id="blockG_2" class="facebook_blockG"></div>
-                                            <div id="blockG_3" class="facebook_blockG"></div>
-                                        </div>
+                                        {{>default/hbs/animationFacebook}}
                                         {{/if}}
                                     </div>
                                     {{#if Images.[0].xs}}
@@ -349,7 +341,7 @@
                                 <div class="carousel-caption price">
                                     Всього за:
                                     {{#each _prices.others}}
-                                        <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                        <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                     {{/each}}
                                     {{#if _promoIsApplied }}
                                         <span class="label label-success">(Знижка {{promo.Discount}}%)</span>

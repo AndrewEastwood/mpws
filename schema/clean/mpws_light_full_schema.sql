@@ -831,9 +831,10 @@ CREATE TABLE `shop_settingsExchangeRatesDisplay` (
   `CustomerID` int(11) NOT NULL,
   `CurrencyName` varchar(50) COLLATE utf8_bin NOT NULL,
   `Format` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Label` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1104,4 +1105,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-22 20:24:22
+-- Dump completed on 2015-02-22 23:37:02

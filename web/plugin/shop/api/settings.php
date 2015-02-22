@@ -379,7 +379,8 @@ class settings {
                 case 'EXCHANAGERATESDISPLAY':
                     $dataRules = array(
                         'CurrencyName' => array('string'),
-                        'Format' => array('string')
+                        'Format' => array('string'),
+                        'Label' => array('string')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;

@@ -25,8 +25,10 @@
         <a href="javascript://" class="list-group-item currency-display" data-id="{{ID}}">
             <span class="name-prefix">Валюту</span>
             <strong class="name">{{CurrencyName}}</strong>
-            <span class="format">відображати у форматі</span>
+            <span>відображати у форматі</span>
             <strong class="editable js-editable-format" data-type="text">{{Format}}</strong>
+            <span>коротка назва: </span>
+            <strong class="editable js-editable-label" data-type="text">{{Label}}</strong>
         </a>
     {{/each}}
     </div>
@@ -39,8 +41,10 @@
 <a href="javascript://" class="list-group-item currency-display is-new currency-display-template hidden">
     <span class="name-prefix">Валюту</span>
     <strong class="name"></strong>
-    <span class="format">відображати у форматі</span>
+    <span>відображати у форматі</span>
     <strong class="editable js-editable-format" data-type="text">0.00</strong>
+    <span>коротка назва: </span>
+    <strong class="editable js-editable-label" data-type="text"></strong>
 </a>
 <div class="panel-footer">
     <button type="button" class="btn btn-success btn-xs save-currency-display">Зберегти</button>

@@ -11,7 +11,6 @@ var APP = {
             'default/js/lib/backbone',
             'default/js/lib/cache',
             'default/js/lib/auth',
-            'default/js/lib/contentInjection',
             'default/js/plugin/has',
             // this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
@@ -146,7 +145,7 @@ require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/undersc
     // }
 })
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */ ) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, CssInjection /* plugins goes here */ ) {
     // simple extend function
     // from: http://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
     Object.deepExtend = function (destination, source) {
@@ -166,6 +165,46 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         return _.isEmpty(this.attributes);
     }
 
+    var contentInjection = function (cnt, options) {
+
+        if (!options || !options.name)
+            return;
+
+        if (!cnt || !cnt.length)
+            return;
+
+        // debugger;
+        if (options.keepExisted) {
+            // get element id that we want to replace
+            var _elID = options.el.attr('id');
+            // find existed elements
+            var _items = cnt.find('#' + _elID);
+            // do nothing when element exists
+            if (_items.length > 0)
+                return;
+        }
+
+        // debugger;
+        if (options.replace) {
+            // get element id that we want to replace
+            var _elID = options.el.attr('id');
+            if (_elID) {
+                // find existed elements
+                var _items = cnt.find('#' + _elID);
+                // if there are some we do replace
+                if (_items.length > 0)
+                    _items.replaceWith(options.el);
+                else // or just append as new one into container
+                    cnt.append(options.el);
+            }
+        } else if (options.append)
+            cnt.append(options.el);
+        else if (options.prepend)
+            cnt.prepend(options.el);
+        else
+            cnt.html(options.el);
+    }
+
     var renderFn = function (options) {
         // debugger;
         if (!options || !options.name)
@@ -177,7 +216,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
                 throw "Render Error: Unable to resolve element by name: " + options.name;
             }
         } else
-            contentInjection.injectContent($el, options);
+            contentInjection($el, options);
         // $el.each(function(){
         // });
     }

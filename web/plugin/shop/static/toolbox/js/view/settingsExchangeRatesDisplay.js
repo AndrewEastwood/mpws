@@ -15,6 +15,11 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
     'default/js/lib/bootstrap-switch'
 ], function (Backbone, CollectionSettings, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, tplFBAnim, lang) {
 
+    function notifySystemWithNewCurrencyFormatsFn (completed) {
+        if (completed)
+            Backbone.trigger('changed:plugin-shop-currency');
+    }
+
     return Backbone.View.extend({
         className: 'panel panel-info',
         lang: lang,
@@ -34,7 +39,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
             };
             this.options.editableOptions = {
                 mode: 'popup',
-                emptytext: '0.00',
+                emptytext: 'ПУСТО',
                 savenochange: true,
                 unsavedclass: ''
             };
@@ -46,7 +51,6 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
             this.listenTo(this.modelSettingMisc, 'sync', this.renderMiscControls);
             this.dfdRenderComplete = new $.Deferred();
             _.bindAll(this, 'refreshUserCurrencyList', 'saveCurrencyDisplay', 'renderMiscControls');
-            this.modelSettingMisc.fetch();
             this.collection.fetch({
                 reset: true
             });
@@ -56,68 +60,73 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                 tplData = Utils.getHBSTemplateData(this);
             this.$el.html(tpl(tplData));
             this.$('.list-group .js-editable-format').editable(this.options.editableOptions);
+            this.$('.list-group .js-editable-label').editable(this.options.editableOptions);
             // this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             // show loading anim for misc settings
+            // if (this.dfdRenderComplete.state() === "pending")
+            //     this.dfdRenderComplete.resolve();
             this.$('.js-loading').html(tplFBAnim());
-            this.dfdRenderComplete.resolve();
+            this.modelSettingMisc.fetch();
             return this;
         },
         renderMiscControls: function () {
             var that = this;
-            this.dfdRenderComplete.done(function () {
-                that.initializeCurrencyList().done(function (currencyList) {
-                    var dbPriceCurrencyType = that.modelSettingMisc.get('DBPriceCurrencyType'),
-                        siteDefaultPriceCurrencyType = that.modelSettingMisc.get('SiteDefaultPriceCurrencyType');
-                    that.$('.js-loading').empty();
-                    that.$('.list-group-misc').removeClass('hidden');
-                    that.$('.switcher:visible').bootstrapSwitch(that.options.switchOptions);
-                    that.$('.currency-list-db-default').select2({
-                        width: 150,
-                        placeholder: 'Виберіть валюту',
-                        data: _(currencyList).map(function (item) {
-                            return {
-                                id: item,
-                                text: item
-                            }
-                        }),
-                        initSelection: function (e, callback) {
-                            if (dbPriceCurrencyType) {
-                                callback({
-                                    id: dbPriceCurrencyType,
-                                    text: dbPriceCurrencyType
-                                });
-                            } else {
-                                callback();
-                            }
+            that.initializeCurrencyList().done(function (currencyList) {
+                // debugger
+                var dbPriceCurrencyType = that.modelSettingMisc.get('DBPriceCurrencyType'),
+                    siteDefaultPriceCurrencyType = that.modelSettingMisc.get('SiteDefaultPriceCurrencyType');
+                that.$('.js-loading').empty();
+                that.$('.list-group-misc').removeClass('hidden');
+                that.$('.switcher:visible').bootstrapSwitch(that.options.switchOptions);
+                that.$('.currency-list-db-default').select2({
+                    width: 150,
+                    placeholder: 'Виберіть валюту',
+                    data: _(currencyList).map(function (item) {
+                        return {
+                            id: item,
+                            text: item
                         }
-                    });
-                    that.$('.currency-list-site-default').select2({
-                        width: 150,
-                        placeholder: 'Виберіть валюту',
-                        data: _(currencyList).map(function (item) {
-                            return {
-                                id: item,
-                                text: item
-                            }
-                        }),
-                        initSelection: function (e, callback) {
-                            if (siteDefaultPriceCurrencyType) {
-                                callback({
-                                    id: siteDefaultPriceCurrencyType,
-                                    text: siteDefaultPriceCurrencyType
-                                });
-                            } else {
-                                callback();
-                            }
+                    }),
+                    initSelection: function (e, callback) {
+                        if (dbPriceCurrencyType) {
+                            callback({
+                                id: dbPriceCurrencyType,
+                                text: dbPriceCurrencyType
+                            });
+                        } else {
+                            callback();
                         }
-                    });
-                    if (dbPriceCurrencyType) {
-                        that.$('.currency-list-db-default').select2('val', dbPriceCurrencyType);
-                    }
-                    if (siteDefaultPriceCurrencyType) {
-                        that.$('.currency-list-site-default').select2('val', siteDefaultPriceCurrencyType);
                     }
                 });
+                that.$('.currency-list-site-default').select2({
+                    width: 150,
+                    placeholder: 'Виберіть валюту',
+                    data: _(currencyList).map(function (item) {
+                        return {
+                            id: item,
+                            text: item
+                        }
+                    }),
+                    initSelection: function (e, callback) {
+                        if (siteDefaultPriceCurrencyType) {
+                            callback({
+                                id: siteDefaultPriceCurrencyType,
+                                text: siteDefaultPriceCurrencyType
+                            });
+                        } else {
+                            callback();
+                        }
+                    }
+                });
+                if (dbPriceCurrencyType) {
+                    that.$('.currency-list-db-default').select2('val', dbPriceCurrencyType);
+                }
+                if (siteDefaultPriceCurrencyType) {
+                    that.$('.currency-list-site-default').select2('val', siteDefaultPriceCurrencyType);
+                }
+                // debugger
+                that.$('.switcher-show-currency-switcher').bootstrapSwitch('state', that.modelSettingMisc.get('ShowSiteCurrencySelector'), true);
+                
             });
         },
         initializeCurrencyList: function () {
@@ -148,14 +157,13 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                 that.$('.list-group .list-group-item').each(function () {
                     var id = $(this).data('id'),
                         model = that.collection.get(id);
-                    if (id) {
-                        modelsToRemove[model.get('Property')] = model;
+                    if (model) {
+                        modelsToRemove[model.get('CurrencyName')] = model;
                     }
                 });
                 that.$('.list-group').empty();
                 if (userCurrencyItems) {
                     _(userCurrencyItems).each(function (currencyName) {
-                        // debugger;
                         var $newAgenctTpl = that.$('.currency-display-template').clone();
                         // set id for any existent models
                         if (modelsToRemove[currencyName]) {
@@ -163,10 +171,12 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                             $newAgenctTpl.removeClass('is-new');
                             $newAgenctTpl.find('.name').text(modelsToRemove[currencyName].get('CurrencyName'));
                             $newAgenctTpl.find('.js-editable-format').text(modelsToRemove[currencyName].get('Format'));
+                            $newAgenctTpl.find('.js-editable-label').text(modelsToRemove[currencyName].get('Label'));
                             delete modelsToRemove[currencyName];
                         } else {
                             $newAgenctTpl.find('.name').text(currencyName);
                             $newAgenctTpl.find('.js-editable-format').text(currencyName);
+                            $newAgenctTpl.find('.js-editable-label').text(currencyName);
                         }
                         $newAgenctTpl.find('.js-editable-format').editable(that.options.editableOptions.rate);
                         $newAgenctTpl.removeClass('hidden currency-display-template');
@@ -187,16 +197,18 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
         },
         saveCurrencyDisplay: function (event) {
             var that = this;
+            var formatsCount = 1 + this.$('.list-group .list-group-item').length;
             // debugger
             // save misc settings related to currency display
             this.modelSettingMisc.save({
                 DBPriceCurrencyType: that.$('.currency-list-db-default').select2('val'),
                 SiteDefaultPriceCurrencyType: that.$('.currency-list-site-default').select2('val'),
                 ShowSiteCurrencySelector: that.$('.switcher-show-currency-switcher').is(':checked')
-            }).then(this.renderMiscControls, function () {
+            }).then(function () {
+                notifySystemWithNewCurrencyFormatsFn(--formatsCount <= 0);
+            }, function () {
                 BSAlerts.danger(lang.settings_error_save);
                 that.modelSettingMisc.set(that.modelSettingMisc.previousAttributes());
-                that.renderMiscControls();
             });
             // save currency formats
             this.$('.list-group .list-group-item').each(function () {
@@ -208,10 +220,11 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                     // update
                     model.save({
                         CurrencyName: $item.find('.name').text(),
-                        Format: $item.find('.js-editable-format').text()
+                        Format: $item.find('.js-editable-format').text(),
+                        Label: $item.find('.js-editable-label').text(),
                     }, {
                         success: function (model, resp) {
-                            Backbone.trigger('changed:plugin-shop-currency');
+                            notifySystemWithNewCurrencyFormatsFn(--formatsCount <= 0);
                             BSAlerts.success(lang.settings_message_success);
                         }
                     });
@@ -219,11 +232,12 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                     // create
                     that.collection.create({
                         CurrencyName: $item.find('.name').text(),
-                        Format: $item.find('.js-editable-format').text()
+                        Format: $item.find('.js-editable-format').text(),
+                        Label: $item.find('.js-editable-label').text()
                     }, {
                         success: function (model, resp) {
+                            notifySystemWithNewCurrencyFormatsFn(--formatsCount <= 0);
                             if (_.isEmpty(resp.errors)) {
-                                Backbone.trigger('changed:plugin-shop-currency');
                                 BSAlerts.success(lang.settings_message_success);
                                 $item.attr('data-id', model.id).data('id', model.id);
                                 $item.removeClass('is-new');

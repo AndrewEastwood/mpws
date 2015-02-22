@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/siteWidgets", [
 
         // show exchange rates selector
         // debugger;
-        if (APP.instances.shop.settings.ShowSiteCurrencySelector) {
+        if (APP.instances.shop.settings.MISC.ShowSiteCurrencySelector) {
             var rates = new ExchangeRates();
             rates.render();
             renderItems.push({

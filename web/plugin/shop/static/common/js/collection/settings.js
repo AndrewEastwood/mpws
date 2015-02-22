@@ -17,7 +17,6 @@ define('plugin/shop/common/js/collection/settings', [
             return this.sType;
         },
         setType: function (type) {
-            // debugger
             this.sType = type;
             return this;
         }

@@ -23,11 +23,7 @@
                 <a href="/#!/shop/product/{{ExternalKey}}" class="link" title="{{_origin.Name}} - {{Name}}">
                     <div class="image productimage noimage image_{{ID}}">
                         {{#if Images.[0].sm}}
-                        <div id="facebookG">
-                            <div id="blockG_1" class="facebook_blockG"></div>
-                            <div id="blockG_2" class="facebook_blockG"></div>
-                            <div id="blockG_3" class="facebook_blockG"></div>
-                        </div>
+                        {{>default/hbs/animationFacebook}}
                         {{/if}}
                     </div>
                     {{#if Images.[0].sm}}

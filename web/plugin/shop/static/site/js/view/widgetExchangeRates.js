@@ -18,9 +18,11 @@ define("plugin/shop/site/js/view/widgetExchangeRates", [
             'click .currency': 'changeCurrency'
         },
         render: function () {
-            var data = Utils.getHBSTemplateData(this);
+            var data = Utils.getHBSTemplateData(this),
+                currencyName = WidgetExchangeRates.getActiveCurrencyName(
+                    APP.instances.shop.settings.MISC.SiteDefaultPriceCurrencyType,
+                    APP.instances.shop.settings.MISC.ShowSiteCurrencySelector);
             this.$el.html(this.template(data));
-            var currencyName = WidgetExchangeRates.getActiveCurrencyName(APP.instances.shop.settings.SiteDefaultPriceCurrencyType.Value, APP.instances.shop.settings.ShowSiteCurrencySelector);
             if (currencyName) {
                 this.$('.active-currency').text(this.$('.dropdown-menu .' + currencyName).text());
             }

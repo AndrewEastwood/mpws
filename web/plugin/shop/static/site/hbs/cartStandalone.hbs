@@ -57,11 +57,7 @@
                                     <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                                         <div class="image productimage noimage image_{{ID}}">
                                             {{#if Images.[0].xs}}
-                                            <div id="facebookG">
-                                                <div id="blockG_1" class="facebook_blockG"></div>
-                                                <div id="blockG_2" class="facebook_blockG"></div>
-                                                <div id="blockG_3" class="facebook_blockG"></div>
-                                            </div>
+                                            {{>default/hbs/animationFacebook}}
                                             {{/if}}
                                         </div>
                                         {{#if Images.[0].xs}}
@@ -81,7 +77,7 @@
                                     <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                                 </span>
                                 {{#each _prices.others}}
-                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                 {{/each}}
                                 {{#if _promoIsApplied}}
                                 <span class="label label-success">- {{_promo.Discount}}%</span>
@@ -90,7 +86,7 @@
                                 <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{_orderQuantity}}">
                                 <span class="label label-default">=</span>
                                 {{#each _totalSummary._totals}}
-                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                 {{/each}}
                             </div>
                         </div>
@@ -116,7 +112,7 @@
                         <div class="shopCartTotal">
                             <span class="value-prefix">До оплати:</span>
                             {{#each data.totalSummary._totals}}
-                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                             {{/each}}
                         </div>
                     </div>
@@ -332,11 +328,7 @@
                                     <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                                         <div class="image productimage noimage image_{{ID}}">
                                             {{#if Images.[0].xs}}
-                                            <div id="facebookG">
-                                                <div id="blockG_1" class="facebook_blockG"></div>
-                                                <div id="blockG_2" class="facebook_blockG"></div>
-                                                <div id="blockG_3" class="facebook_blockG"></div>
-                                            </div>
+                                            {{>default/hbs/animationFacebook}}
                                             {{/if}}
                                         </div>
                                         {{#if Images.[0].xs}}
@@ -356,7 +348,7 @@
                                     <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                                 </span>
                                 {{#each _prices.others}}
-                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                 {{/each}}
                                 {{#if _promoIsApplied}}
                                 <span class="label label-success">- {{_promo.Discount}}%</span>
@@ -365,7 +357,7 @@
                                 <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
                                 <span class="label label-default">=</span>
                                 {{#each _totalSummary._totals}}
-                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                 {{/each}}
                             </div>
                         </div>
@@ -383,7 +375,7 @@
                         <div class="shopCartTotal">
                             <span class="value-prefix">До оплати:</span>
                             {{#each data.totalSummary._totals}}
-                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                             {{/each}}
                         </div>
                     </div>
