@@ -80,8 +80,14 @@ class settings {
     public function getSettingsExchangeRatesDisplay () {
         global $app;
         $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->EXCHANAGERATESDISPLAY)) ?: array();
-        foreach ($items as &$value)
+        foreach ($items as &$value) {
+            if (empty($value['CurrencyName'])) {
+                $rez = $this->removeSetting($this->SETTING_TYPE->EXCHANAGERATESDISPLAY, $value['ID']);
+                unset($value);
+                continue;
+            }
             $value = $this->__adjustSettingItem($this->SETTING_TYPE->EXCHANAGERATESDISPLAY, $value);
+        }
         return $items;
     }
     public function getSettingsMisc () {

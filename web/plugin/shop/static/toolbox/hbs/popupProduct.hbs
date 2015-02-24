@@ -9,11 +9,11 @@
         {{#each data.errors}}
             <li>
                 <strong>
-                    {{mpwsGetValueByKey ../lang @key "popup_product_error_atField_"}}
+                    {{mpwsGetValueByKey ../lang key=@key prefix="popup_product_error_atField_"}}
                 </strong>
                 <ul>
                 {{#each this}}
-                    <li>{{mpwsGetValueByKey ../../lang this "popup_product_error_"}}</li>
+                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="popup_product_error_"}}</li>
                 {{/each}}
                 </ul>
             </li>

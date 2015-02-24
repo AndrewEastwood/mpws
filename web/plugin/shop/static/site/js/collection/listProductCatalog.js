@@ -49,6 +49,9 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
         },
         resetFilter: function () {
             this.filter.filterOptionsApplied = this.createFilter(true);
+            _(this.filter.filterOptionsApplied).each(function (v, filterKey) {
+                Cache.set(filterKey, null);
+            });
             return this;
         },
         generateFilterStorageKey: function (filterKey) {

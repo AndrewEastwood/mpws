@@ -9,7 +9,7 @@
             <ol class="errors">
                 {{#each data.errors}}
                 {{#each this}}
-                <li>{{mpwsGetValueByKey ../../lang.editors.customer.errors this ""}}</li>
+                <li>{{mpwsGetValueByKey ../../lang.editors.customer.errors key=this prefix=""}}</li>
                 {{/each}}
                 {{/each}}
             </ol>

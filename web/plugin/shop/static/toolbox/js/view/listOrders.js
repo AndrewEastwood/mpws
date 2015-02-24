@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
+    "default/js/utils/priceFormatter",
     /* collection */
     "plugin/shop/toolbox/js/collection/listOrders",
     /* template */
@@ -13,7 +14,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, Backgrid, priceFmt, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
         // we show following statuses only
@@ -72,17 +73,8 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             editable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var totalSummary = model.get('totalSummary')
-                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-                    if (_currencyDisplay) {
-                        if (_currencyDisplay.showBeforeValue) {
-                            return _currencyDisplay.text + totalSummary._total;
-                        } else {
-                            return totalSummary._total + _currencyDisplay.text;
-                        }
-                    } else {
-                        return totalSummary._total;
-                    }
+                    var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType;
+                    return priceFmt(model.get('totalSummary')._total, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
                 }
             }
         };

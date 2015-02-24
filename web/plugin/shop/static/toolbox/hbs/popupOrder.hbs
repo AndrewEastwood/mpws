@@ -52,10 +52,10 @@
                         <span class="editable">
                             <select class="form-control hide" id="order-status-control-ID">
                                 {{#each data._statuses}}
-                                <option value="{{this}}">{{mpwsGetValueByKey ../lang this "order_status_" }}</option>
+                                <option value="{{this}}">{{mpwsGetValueByKey ../lang key=this prefix="order_status_" }}</option>
                                 {{/each}}
                             </select>
-                            <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
+                            <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang key=data.order.Status prefix="order_status_" }}</a>
                         </span>
                     </li>
                     {{#if instances.shop.settings.ShowComment._isActive}}

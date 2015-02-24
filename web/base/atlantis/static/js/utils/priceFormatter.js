@@ -1,11 +1,9 @@
-define("plugin/shop/common/js/lib/utils", [
-    'cmn_jquery',
-    'default/js/lib/underscore'
-], function ($, _) {
+define("default/js/utils/priceFormatter", [
+    'default/js/lib/underscore',
+    'default/js/lib/sprintf'
+], function (_, sprintf) {
 
-    function Utils () {};
-
-    Utils.priceFormatter = function (value, currency, display) {
+    return function (amount, currency, display) {
         // using formatting from sprintf: https://github.com/jakobwesthoff/sprintf.js
         var curr = currency || null,
             displayFmt = _(display).findWhere({CurrencyName: currency}) || null,
@@ -15,7 +13,5 @@ define("plugin/shop/common/js/lib/utils", [
         }
         return value;
     }
-
-    return Utils;
 
 });

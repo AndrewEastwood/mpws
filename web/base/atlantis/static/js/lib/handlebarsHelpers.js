@@ -4,9 +4,9 @@
 define("default/js/lib/handlebarsHelpers", [
     'default/js/lib/handlebars',
     'default/js/lib/underscore',
-    'default/js/lib/sprintf',
+    'default/js/utils/priceFormatter',
     'default/js/lib/extend.string'
-], function (Handlebars, _, sprintf) {
+], function (Handlebars, _, priceFmt) {
     // The module to be exported
     var helpers = {
         contains: function (str, pattern, options) {
@@ -491,14 +491,10 @@ define("default/js/lib/handlebarsHelpers", [
         return out;
     }
     helpers.currency = function (amount, options) {
-        // using formatting from sprintf: https://github.com/jakobwesthoff/sprintf.js
-        var curr = options.hash.currency || null,
-            displayFmt = _(options.hash.display).findWhere({CurrencyName: options.hash.currency}) || null,
-            value = parseFloat(amount, 10).toFixed(2);
-        if (displayFmt && displayFmt.Format) {
-            value = sprintf(displayFmt.Format, value);
+        if (!options.hash || !options.hash.display || !options.hash.currency) {
+            throw "Either display or currency is not provided";
         }
-        return value;
+        return priceFmt(amount, options.hash.currency, options.hash.display);
     }
     helpers.selectValueByCurrency = function (listWithAmounts, options) {
         if (options.hash.currency && listWithAmounts[options.hash.currency]) {

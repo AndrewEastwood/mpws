@@ -23,10 +23,15 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_InputChecked',
+            'click .shop-component-catalog-filtering.subcategories a.list-group-item': 'resetFilter',
             // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_InputChecked',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
             "slideStop input.slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter'
+        },
+        resetFilter: function () {
+            this.collection.resetFilter();
+            return true;
         },
         initialize: function (options) {
             _.bindAll(this, 'render', 'switchCurrency');
@@ -72,7 +77,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                     // debugger
                     if (val instanceof Array) {
                         var activeCurr = APP.instances.shop.settings._user.activeCurrency;
-                        var rate = APP.instances.shop.settings.EXCHANAGERATESDISPLAY[activeCurr];
+                        var rate = APP.instances.shop.settings.CUSTOM.currencyList[activeCurr];
                         var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
                         var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
                         var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.EXCHANAGERATESDISPLAY, currency: activeCurr}}));

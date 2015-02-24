@@ -160,7 +160,7 @@
                             <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}" for="{{ID}}">
                                 <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
-                                    {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
+                                    {{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}
                                 </label>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>
@@ -168,7 +168,7 @@
                             <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
                                 <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
-                                    {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
+                                    {{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}
                                 </label>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>

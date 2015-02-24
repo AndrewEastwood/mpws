@@ -10,11 +10,11 @@
             {{#each data.errors}}
                 <li>
                     <strong>
-                        {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
+                        {{mpwsGetValueByKey ../lang key=@key prefix="profile_page_edit_error_atField_"}}
                     </strong>
                     <ul>
                     {{#each this}}
-                        <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
+                        <li>{{mpwsGetValueByKey ../../lang key=this prefix="profile_page_edit_error_"}}</li>
                     {{/each}}
                     </ul>
                 </li>

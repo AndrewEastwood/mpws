@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
+    "default/js/utils/priceFormatter",
     /* collection */
     "plugin/shop/toolbox/js/collection/listProducts",
     /* template */
@@ -14,7 +15,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
+], function (Sandbox, Backbone, Utils, Backgrid, priceFmt, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -182,16 +183,18 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             formatter: {
                 fromRaw: function (value, model) {
                     var _prices = model.get('_prices'),
-                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-                    if (_currencyDisplay) {
-                        if (_currencyDisplay.showBeforeValue) {
-                            return _currencyDisplay.text + _prices.price;
-                        } else {
-                            return _prices.price + _currencyDisplay.text;
-                        }
-                    } else {
-                        return _prices.price;
-                    }
+                        _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType;
+                    return priceFmt(_prices.price, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
+
+                    // if (_currencyDisplay) {
+                    //     if (_currencyDisplay.showBeforeValue) {
+                    //         return _currencyDisplay.text + _prices.price;
+                    //     } else {
+                    //         return _prices.price + _currencyDisplay.text;
+                    //     }
+                    // } else {
+                    //     return _prices.price;
+                    // }
                 },
                 toRaw: function (value) {
                     var matches = value.replace( /^\D+/g, '').match(/^([0-9\.]+)/)
