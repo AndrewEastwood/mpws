@@ -2,12 +2,13 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/collection/statsProductsPopular',
     'plugin/shop/toolbox/js/view/listProducts',
+    'default/js/utils/priceFormatter',
     'default/js/lib/utils',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/statsProductsPopular',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Backbone, CollectionProductsPopular, ViewListProducts, Utils, tpl, lang) {
+], function (Backbone, CollectionProductsPopular, ViewListProducts, priceFmt, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -36,16 +37,8 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
                         editable: false,
                         formatter: {
                             fromRaw: function (value) {
-                                var _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-                                if (_currencyDisplay) {
-                                    if (_currencyDisplay.showBeforeValue) {
-                                        return _currencyDisplay.text + value;
-                                    } else {
-                                        return value + _currencyDisplay.text;
-                                    }
-                                } else {
-                                    return value;
-                                }
+                                var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType;
+                                return priceFmt(value, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
                             }
                         }
                     };
