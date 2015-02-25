@@ -4,38 +4,38 @@
 </a>
 <ul class="dropdown-menu" role="menu" id="menu_system">
     <li>
-        <a href="/">
+        <a href="{{bb_link instances.root.urls.index}}">
             <i class="fa fa-dashboard fa-fw"></i> {{lang.menu.dashboard}}
         </a>
     </li>
 <!-- /.nav-second-level -->
     {{#if data.Permissions.CanMaintain}}
     <li class="menu-system-customers">
-        <a href="{{bb_link instances.system.urls.customerList asRoot=true}}">
+        <a href="{{bb_link instances.system.urls.customerList}}">
             <i class="fa fa-fw fa-sitemap"></i> {{lang.menu.customers}}
         </a>
     </li>
     <li class="menu-system-migrations">
-        <a href="{{bb_link instances.system.urls.migrations asRoot=true}}">
+        <a href="{{bb_link instances.system.urls.migrations}}">
             <i class="fa fa-fw fa-database"></i> {{lang.menu.migrations}}
         </a>
     </li>
     <li class="menu-system-users">
-        <a href="{{bb_link instances.system.urls.users asRoot=true}}">
+        <a href="{{bb_link instances.system.urls.users}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>
     {{else}}
     {{#if data.Permissions.CanAdmin}}
     <li class="menu-system-customers">
-        <a href="{{bb_link instances.system.urls.customerEdit id="1" asRoot=true}}">
+        <a href="{{bb_link instances.system.urls.customerEdit id="1"}}">
             <i class="fa fa-fw fa-pencil"></i> {{lang.menu.customerEdit}}
         </a>
     </li>
     {{/if}}
     {{#or data.Permissions.CanAdmin data.Permissions.AddUsers}}
     <li class="menu-system-users">
-        <a href="{{bb_link instances.system.urls.users asRoot=true}}">
+        <a href="{{bb_link instances.system.urls.users}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>

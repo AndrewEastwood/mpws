@@ -327,18 +327,25 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             Cache.saveInLocalStorage("location", fragment);
     });
 
+    var routes = {
+        "": "start",
+        "!/": "index",
+        "!/signin": "signin",
+        "!/signout": "signout"
+    };
+
     var Router = Backbone.Router.extend({
-        routes: {
-            "": "index",
-            "!/": "index",
-            "!/signin": "signin",
-            "!/signout": "signout"
-        },
-        index: function () {
-            // debugger;
+        routes: routes,
+
+        urls: _(routes).invert(),
+
+        start: function () {
             if (location.pathname !== '/') {
                 window.location.href = '/';
             }
+            Sandbox.eventNotify('global:page:index', '');
+        },
+        index: function () {
             Sandbox.eventNotify('global:page:index', '');
         },
         signin: function () {
@@ -353,7 +360,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         }
     });
 
-    var defaultRouter = new Router();
+    APP.instances.root = new Router();
     var $dfd = $.Deferred();
     var pluginList = APP.getPluginRoutersToDownload();
     var pluginNames = _(pluginList).map(function (pluginListItem) {
