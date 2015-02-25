@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
 ], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-yellow shop-settings-alerts",
+        className: "panel panel-default shop-settings-alerts",
         template: tpl,
         lang: lang,
         events: {

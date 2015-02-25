@@ -492,7 +492,8 @@ define("default/js/lib/handlebarsHelpers", [
     }
     helpers.currency = function (amount, options) {
         if (!options.hash || !options.hash.display || !options.hash.currency) {
-            throw "Either display or currency is not provided";
+            console.warn("Either display or currency is not provided");
+            return amount;
         }
         return priceFmt(amount, options.hash.currency, options.hash.display);
     }

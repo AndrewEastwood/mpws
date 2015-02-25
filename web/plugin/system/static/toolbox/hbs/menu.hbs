@@ -1,37 +1,40 @@
-<a href="/">
-    <i class="fa fa-dashboard fa-fw"></i> {{lang.menu.dashboard}}
-</a>
-<a href="javascript://" data-toggle="collapse" data-target="#menu_system">
+<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <i class="fa fa-gears fa-fw"></i> {{lang.menu.title}}
     <i class="fa fa-fw fa-caret-down"></i>
 </a>
-<ul class="collapse" id="menu_system">
+<ul class="dropdown-menu" role="menu" id="menu_system">
+    <li>
+        <a href="/">
+            <i class="fa fa-dashboard fa-fw"></i> {{lang.menu.dashboard}}
+        </a>
+    </li>
+<!-- /.nav-second-level -->
     {{#if data.Permissions.CanMaintain}}
-    <li rel="menu" class="menu-system-customers">
+    <li class="menu-system-customers">
         <a href="{{bb_link instances.system.urls.customerList asRoot=true}}">
             <i class="fa fa-fw fa-sitemap"></i> {{lang.menu.customers}}
         </a>
     </li>
-    <li rel="menu" class="menu-system-migrations">
+    <li class="menu-system-migrations">
         <a href="{{bb_link instances.system.urls.migrations asRoot=true}}">
             <i class="fa fa-fw fa-database"></i> {{lang.menu.migrations}}
         </a>
     </li>
-    <li rel="menu" class="menu-system-users">
+    <li class="menu-system-users">
         <a href="{{bb_link instances.system.urls.users asRoot=true}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>
     {{else}}
     {{#if data.Permissions.CanAdmin}}
-    <li rel="menu" class="menu-system-customers">
+    <li class="menu-system-customers">
         <a href="{{bb_link instances.system.urls.customerEdit id="1" asRoot=true}}">
             <i class="fa fa-fw fa-pencil"></i> {{lang.menu.customerEdit}}
         </a>
     </li>
     {{/if}}
     {{#or data.Permissions.CanAdmin data.Permissions.AddUsers}}
-    <li rel="menu" class="menu-system-users">
+    <li class="menu-system-users">
         <a href="{{bb_link instances.system.urls.users asRoot=true}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
@@ -39,4 +42,3 @@
     {{/or}}
     {{/if}}
 </ul>
-<!-- /.nav-second-level -->

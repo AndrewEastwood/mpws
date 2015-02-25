@@ -13,7 +13,7 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
 ], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-green shop-settings-website-form-order",
+        className: "panel panel-default shop-settings-website-form-order",
         template: tpl,
         lang: lang,
         events: {

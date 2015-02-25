@@ -54,6 +54,21 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             });
             return this;
         },
+        isFilterApplied: function (filter) {
+            // debugger
+            if (!filter) {
+                return false;
+            }
+            var isApplied = false;
+            isApplied = isApplied || filter.filterOptionsApplied.filter_commonPriceMax != filter.filterOptionsAvailable.filter_commonPriceMax;
+            isApplied = isApplied || filter.filterOptionsApplied.filter_commonPriceMin != filter.filterOptionsAvailable.filter_commonPriceMin;
+            isApplied = isApplied || !_.isEmpty(filter.filterOptionsApplied.filter_viewSortBy);
+            isApplied = isApplied || !_.isEmpty(filter.filterOptionsApplied.filter_commonFeatures);
+            isApplied = isApplied || !_.isEmpty(filter.filterOptionsApplied.filter_commonStatus);
+            isApplied = isApplied || !_.isEmpty(filter.filterOptionsApplied.filter_categoryBrands);
+            // debugger
+            return isApplied;
+        },
         generateFilterStorageKey: function (filterKey) {
             return filterKey;
             // return Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
@@ -148,7 +163,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             }
             // debugger;
             this.pagintaion = pagintaion;
-
+            this.filter.active = this.isFilterApplied(this.filter);
             // debugger;
             return productItems;
         }

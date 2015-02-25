@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
 ], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-green shop-settings-product-view",
+        className: "panel panel-default shop-settings-product-view",
         template: tpl,
         lang: lang,
         events: {

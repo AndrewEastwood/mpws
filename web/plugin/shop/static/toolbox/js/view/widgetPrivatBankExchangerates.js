@@ -9,7 +9,7 @@ define("plugin/shop/toolbox/js/view/widgetPrivatBankExchangerates", [
 ], function (Backbone, ModelWidgetPrivatBankExchangeRate, Utils, tpl, lang) {
 
     return Backbone.View.extend({
-        className: 'panel panel-green',
+        className: 'panel panel-default',
         lang: lang,
         template: tpl,
         initialize: function () {

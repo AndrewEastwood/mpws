@@ -21,7 +21,15 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             // set options
             // ini sub-views
             // debugger;
-            this.viewProductsList = new ViewListProducts(options);
+            var productListOptions = _.extend({}, options, {
+                adjustColumns: function (columns) {
+                    return _(columns).omit(
+                       'columnID', 'columnDateUpdated', 'columnDateCreated',
+                       'columnSKU', 'columnModel');
+                }
+            });
+
+            this.viewProductsList = new ViewListProducts(productListOptions);
             this.viewOriginsList = new ViewListOrigins(options);
             this.viewCatergoriesTree = new ViewCategoriesTree(options);
 

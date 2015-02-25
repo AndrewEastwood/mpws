@@ -1,37 +1,36 @@
-<a href="javascript://" data-toggle="collapse" data-target="#menu_shop">
+<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <i class="fa fa-shopping-cart fa-fw"></i> {{lang.pluginMenuTitle}}
     <i class="fa fa-fw fa-caret-down"></i>
 </a>
-<ul class="collapse" id="menu_shop">
-    <li rel="menu" class="menu-shop-products">
+<ul class="dropdown-menu" role="menu" id="menu_system">
+    <li class="menu-shop-products">
         <a href="{{bb_link instances.shop.urls.contentList asRoot=true}}">
             <i class="fa fa-fw fa-shopping-cart"></i> {{lang.pluginMenu_Products}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-orders">
+    <li class="menu-shop-orders">
         <a href="{{bb_link instances.shop.urls.ordersList asRoot=true}}">
             <i class="fa fa-fw fa-usd"></i> {{lang.pluginMenu_Orders}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-settings">
+    <li class="menu-shop-settings">
         <a href="{{bb_link instances.shop.urls.shopSettings asRoot=true}}">
             <i class="fa fa-fw fa-cog"></i> {{lang.pluginMenu_Settings}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-promo">
+    <li class="menu-shop-promo">
         <a href="{{bb_link instances.shop.urls.promo asRoot=true}}">
             <i class="fa fa-fw fa-gift"></i> {{lang.pluginMenu_Promo}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-feeds">
+    <li class="menu-shop-feeds">
         <a href="{{bb_link instances.shop.urls.feeds asRoot=true}}">
             <i class="fa fa-fw fa-retweet"></i> {{lang.pluginMenu_Feeds}}
         </a>
     </li>
-    <li rel="menu" class="menu-shop-reports hidden">
+    <li class="menu-shop-reports hidden">
         <a href="{{bb_link instances.shop.urls.reports asRoot=true}}">
             <i class="fa fa-fw fa-signal"></i> {{lang.pluginMenu_Reports}}
         </a>
     </li>
 </ul>
-<!-- /.nav-second-level -->

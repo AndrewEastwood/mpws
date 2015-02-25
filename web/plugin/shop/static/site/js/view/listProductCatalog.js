@@ -54,6 +54,10 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var data = Utils.getHBSTemplateData(this);
             data.filter = this.collection.filter;
             data.pagination = this.collection.pagintaion;
+            // unset current category in categories
+            data.filter.filterOptionsAvailable.filter_categorySubCategories = _(data.filter.filterOptionsAvailable.filter_categorySubCategories).omit(this.collection.filter.info.category.ExternalKey);
+            // data.filter.active = this.collection.isFilterApplied();
+
             this.$el.html(this.template(data));
 
             this.collection.each(function(model){

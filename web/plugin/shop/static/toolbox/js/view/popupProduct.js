@@ -6,6 +6,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/cache',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
+    "default/js/utils/priceFormatter",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupProduct',
     /* lang */
@@ -22,7 +23,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/jquery.fileupload/jquery.fileupload-image',
     'default/js/lib/typeahead.jquery',
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -224,19 +225,27 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             }
 
             // configure price display
+            var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType,
+                fmt = priceFmt(0, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY),
+                precision = fmt.match(/\.(0+)/),
+                items = fmt.split('0.00');
+                // debugger
             var _options = {
                 thousands: ' ',
                 decimal: '.',
-                precision: 2
+                precision: precision && precision.length === 2 ? precision[1].length : 2,
+                prefix: items && items[0] || '',
+                suffix: items && items.length > 1 && items[2] || ''
             };
-            var _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-            if (_currencyDisplay) {
-                if (_currencyDisplay.showBeforeValue) {
-                    _options.prefix = _currencyDisplay.text
-                } else {
-                    _options.suffix = _currencyDisplay.text;
-                }
-            }
+            // debugger
+            // var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType;
+            // if (_currencyDisplay) {
+            //     if (_currencyDisplay.showBeforeValue) {
+            //         _options.prefix = _currencyDisplay.text
+            //     } else {
+            //         _options.suffix = _currencyDisplay.text;
+            //     }
+            // }
 
             this.$('#price').maskMoney(_options);
             this.$('#price').maskMoney('mask');

@@ -1,4 +1,4 @@
-define("plugin/shop/toolbox/js/view/popupOrder", [
+define("plugin/shop/toolbox/js/view/editOrder", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/model/order',
@@ -6,13 +6,13 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupOrder',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/editOrder',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitleByStatus(status) {
+    function _getTitleByStatus (status) {
         switch (status) {
         case 'NEW':
             {
@@ -45,57 +45,69 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
         }
     }
 
-    var PopupOrder = Backbone.View.extend({
+    var EditOrder = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'plugin-shop-order',
+        className: 'bootstrap-dialog type-primary size-normal plugin-shop-order',
         initialize: function () {
             this.model = new ModelOrder();
             this.listenTo(this.model, 'change', this.render);
-            this.$title = $('<span/>');
-            this.$dialog = new BootstrapDialog({
+            // this.$title = $('<span/>');
+        },
+        render: function () {
+            var self = this;
+            var tplData = Utils.getHBSTemplateData(this);
+            tplData.data.isToolbox = tplData.isToolbox;
+            tplData.data.urls = tplData.instances.shop.urls;
+
+            var $dialog = new BootstrapDialog({
                 closable: false,
-                title: this.$title,
-                message: this.$el,
-                cssClass: 'popup-plugin-shop-order',
+                draggable: false,
+                title: _getTitleByStatus(self.model.get('Status')),
+                message: $(tpl(tplData)),
                 buttons: [{
                     label: "Надіслати фактуру",
                     cssClass: 'hidden',
                     action: function (dialog) {
-                        dialog.close();
+                        // dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.ordersList, true);
                     }
                 }, {
                     label: "Друкувати фактуру",
                     cssClass: 'hidden',
                     action: function (dialog) {
-                        dialog.close();
+                        // dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.ordersList, true);
                     }
                 }, {
                     label: "Надіслати код-відстеження",
                     cssClass: 'hidden',
                     action: function (dialog) {
-                        dialog.close();
+                        // dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.ordersList, true);
                     }
                 }, {
                     label: lang.popup_order_button_Close,
                     cssClass: 'btn-warning',
                     action: function (dialog) {
-                        dialog.close();
+                        // dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.ordersList, true);
                     }
                 }]
             });
-        },
-        render: function () {
-            var self = this;
 
-            this.$title.html(_getTitleByStatus(self.model.get('Status')));
+            $dialog.realize();
+            $dialog.updateTitle();
+            $dialog.updateMessage();
+            $dialog.updateClosable();
+
 
             // debugger;
-            var tplData = Utils.getHBSTemplateData(this);
-            tplData.data.isToolbox = tplData.isToolbox;
-            tplData.data.urls = tplData.instances.shop.urls;
-            console.log(tplData);
-            this.$el.html(tpl(tplData));
+            // console.log(tplData);
+            // this.$el.html();
+
+
+            this.$el.html($dialog.getModalContent());
 
             var orderID = this.model.id;
             // if (!dialogIsShown)
@@ -149,11 +161,12 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
             $controlOrderInternalComment.on('keyup', lazyLayout);
             this.$('.helper').tooltip();
 
-            if (!this.$dialog.isOpened())
-                this.$dialog.open();
+            return this;
+            // if (!this.$dialog.isOpened())
+            //     this.$dialog.open();
         }
     });
 
-    return PopupOrder;
+    return EditOrder;
 
 });

@@ -6,9 +6,11 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
+            {{#if filter.active}}
             <div class="shop-component-catalog-filtering">
                 <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
             </div>
+            {{/if}}
 
             {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categorySubCategories }}
             <div class="shop-component-catalog-filtering subcategories">
@@ -24,12 +26,12 @@
                         {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                             {{#if ProductCount }}
                             <a class="list-group-item" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}" rel="category" title="{{Name}}">
-                                {{Name}}
+                                <span class="category-name">{{Name}}</span>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                             </a>
                             {{else}}
                             <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
-                                {{Name}}
+                                <span class="category-name">{{Name}}</span>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                             </a>
                             {{/if}}

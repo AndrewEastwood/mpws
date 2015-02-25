@@ -1,3 +1,11 @@
+/*
+ *  jquery-maskmoney - v3.0.2
+ *  jQuery plugin to mask data entry in the input text in the form of money (currency)
+ *  https://github.com/plentz/jquery-maskmoney
+ *
+ *  Made by Diego Plentz
+ *  Under MIT License (https://raw.github.com/plentz/jquery-maskmoney/master/LICENSE)
+ */
 (function ($) {
     "use strict";
     if (!$.browser) {
@@ -9,7 +17,7 @@
     }
 
     var methods = {
-        destroy: function () {
+        destroy : function () {
             $(this).unbind(".maskMoney");
 
             if ($.browser.msie) {
@@ -18,7 +26,7 @@
             return this;
         },
 
-        mask: function (value) {
+        mask : function (value) {
             return this.each(function () {
                 var $this = $(this),
                     decimalSize;
@@ -32,17 +40,17 @@
             });
         },
 
-        unmasked: function () {
+        unmasked : function () {
             return this.map(function () {
                 var value = ($(this).val() || "0"),
                     isNegative = value.indexOf("-") !== -1,
                     decimalPart;
                 // get the last position of the array that is a number(coercion makes "" to be evaluated as false)
                 $(value.split(/\D/).reverse()).each(function (index, element) {
-                    if (element) {
+                    if(element) {
                         decimalPart = element;
                         return false;
-                    }
+                   }
                 });
                 value = value.replace(/\D/g, "");
                 value = value.replace(new RegExp(decimalPart + "$"), "." + decimalPart);
@@ -53,7 +61,7 @@
             });
         },
 
-        init: function (settings) {
+        init : function (settings) {
             settings = $.extend({
                 prefix: "",
                 suffix: "",
@@ -237,11 +245,11 @@
                         if (key === 45) {
                             $input.val(changeSign());
                             return false;
-                            // +(plus) key
+                        // +(plus) key
                         } else if (key === 43) {
                             $input.val($input.val().replace("-", ""));
                             return false;
-                            // enter key or tab key
+                        // enter key or tab key
                         } else if (key === 13 || key === 9) {
                             return true;
                         } else if ($.browser.mozilla && (key === 37 || key === 39) && e.charCode === 0) {
@@ -301,7 +309,7 @@
                                     startPos = value.length - lastNumber - 1;
                                     endPos = startPos + 1;
                                 }
-                                //delete
+                            //delete
                             } else {
                                 endPos += 1;
                             }
@@ -331,7 +339,7 @@
                 }
 
                 function cutPasteEvent() {
-                    setTimeout(function () {
+                    setTimeout(function() {
                         mask();
                     }, 0);
                 }
@@ -392,10 +400,10 @@
     $.fn.maskMoney = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === "object" || !method) {
+        } else if (typeof method === "object" || ! method) {
             return methods.init.apply(this, arguments);
         } else {
-            $.error("Method " + method + " does not exist on jQuery.maskMoney");
+            $.error("Method " +  method + " does not exist on jQuery.maskMoney");
         }
     };
 })(window.jQuery || window.Zepto);

@@ -21,7 +21,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
     }
 
     return Backbone.View.extend({
-        className: 'panel panel-info',
+        className: 'panel panel-default',
         lang: lang,
         template: tpl,
         events: {

@@ -1,7 +1,9 @@
-<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    <i class="fa fa-fw fa-user"></i>Вітаємо <b>{{data.FullName}}</b> <i class="fa fa-caret-down"></i>
+<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <i class="fa fa-fw fa-user"></i>
+    Вітаємо <b>{{data.FullName}}</b>
+    <i class="fa fa-caret-down"></i>
 </a>
-<ul class="dropdown-menu dropdown-user">
+<ul class="dropdown-menu dropdown-user" role="menu">
     <li>
         <a href="{{bb_link instances.system.urls.userEdit id=data.ID asRoot=true}}">
             <i class="fa fa-fw fa-gear"></i> Налаштування

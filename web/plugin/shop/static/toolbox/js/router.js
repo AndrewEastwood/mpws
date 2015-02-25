@@ -140,13 +140,18 @@ define("plugin/shop/toolbox/js/router", [
         orderEmailTracking: function (orderID) {},
         orderEmailReceipt: function (orderID) {},
         orderEdit: function (orderID) {
-            require(['plugin/shop/toolbox/js/view/popupOrder'], function (ViewPopupOrder) {
-                var popupOrder = new ViewPopupOrder();
-                popupOrder.model.set('ID', orderID);
-                popupOrder.model.fetch();
-                popupOrder.$dialog.onHide(function () {
-                    Backbone.history.history.back();
+            require(['plugin/shop/toolbox/js/view/editOrder'], function (ViewEditOrder) {
+                var editOrder = new ViewEditOrder();
+                editOrder.model.set('ID', orderID);
+                editOrder.model.fetch();
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editOrder.$el
                 });
+                // editOrder.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         ordersList: function () {

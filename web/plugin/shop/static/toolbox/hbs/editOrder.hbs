@@ -154,12 +154,12 @@
     </div>
     
 
-    {{!-- products --}}    
+    {{!-- products --}}
     <div class="tab-pane fade in" id="products">
-        <div class="alert alert-info">
+        <div class="alert alert-danger">
             Оформлено у валюті по курсу
             <strong>{{data.CustomerCurrencyRate}} {{data.CustomerCurrencyName}}</strong>
-            за <strong>1 {{instances.shop.settings.DBPriceCurrencyType.Value}}</strong>
+            за <strong>1 {{instances.shop.settings.MISC.DBPriceCurrencyType}}</strong>
         </div>
         {{#if data.info.hasPromo }}
             {{#unless data.info.allProductsWithPromo }}
@@ -169,9 +169,9 @@
             {{/unless}}
         {{/if}}
         <div class="shop-widget-productlist">
-        {{#each data.items }}
-            <div class="wrapper">
-                <div class="product-row">
+            <table class="table table-strpped">
+            {{#each data.items }}
+                <tr>
                     {{#if ../data.info.hasPromo}}
                         {{#unless ../../data.info.allProductsWithPromo}}
                             {{#if ../../IsPromo }}
@@ -181,39 +181,43 @@
                             {{/if}}
                         {{/unless}}
                     {{/if}}
-                    <span class="label label-info">#{{ID}}</span>
-                    <span class="product-name">
-                        <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">
-                            {{_origin.Name}} - {{Name}}
-                        </a>
-                    </span>
+                    <td>
+                        <span class="label label-info">#{{ID}}</span>
+                    </td>
+                    <td>
+                        <span class="product-name">
+                            <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">
+                                {{_origin.Name}} - {{Name}}
+                            </a>
+                        </span>
+                    </td>
+                    <td>
                     {{#each _prices.others}}
-                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">
-                            {{#withItem ../../instances.shop.settings.EXCHANAGERATESDISPLAY key=@key}}
-                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                                <strong class="value">{{currency ../this}}</strong>
-                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                            {{/withItem}}
-                        </span>
+                        <strong itemprop="price" content="{{this}}" class="product-price moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                     {{/each}}
-                    {{#if _promoIsApplied}}
-                    <span class="label label-success">- {{_promo.Discount}}%</span>
-                    {{/if}}
-                    <span class="label label-default">x</span>
-                    <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
-                    <span class="label label-default">=</span>
-                    {{#each _totalSummary._customer_totals}}
-                        <span class="product-total moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">
-                            {{#withItem ../../instances.shop.settings.EXCHANAGERATESDISPLAY key=@key}}
-                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                                <strong class="value">{{currency ../this}}</strong>
-                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                            {{/withItem}}
-                        </span>
-                    {{/each}}
-                </div>
-            </div>
-        {{/each}}
+                    </td>
+                    <td>
+                        {{#if _promoIsApplied}}
+                        <span class="label label-success">- {{_promo.Discount}}%</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        x
+                    </td>
+                    <td>
+                        <strong>{{_orderQuantity}}</strong>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td>
+                        {{#each _totalSummary._customer_totals}}
+                            <strong itemprop="price" content="{{this}}" class="product-total moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                        {{/each}}
+                    </td>
+                </tr>
+            {{/each}}
+            </table>
         </div>
     </div>
 
@@ -229,19 +233,19 @@
             {{!-- {{#unless data.rates.dbCurrencyIsChanged}} --}}
             <li class="list-group-item">
                 Основна валюта магазину
-                <strong>{{instances.shop.settings.DBPriceCurrencyType.Value}}</strong>
+                <strong>{{instances.shop.settings.MISC.DBPriceCurrencyType}}</strong>
             </li>
             <li class="list-group-item">
                 Покупець обрав валюту
                 <strong>{{data.CustomerCurrencyName}}</strong>
-                {{#isnt data.CustomerCurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+                {{#isnt data.CustomerCurrencyName instances.shop.settings.MISC.DBPriceCurrencyType}}
                 де курс до основної (<strong>{{data.rates.orderBaseCurrencyName}}</strong>) валюти в момент купівлі був
                 <strong>
                     {{currency data.CustomerCurrencyRate currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}
                 </strong>
                 {{/isnt}}
             </li>
-            {{#isnt data.CustomerCurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+            {{#isnt data.CustomerCurrencyName instances.shop.settings.MISC.DBPriceCurrencyType}}
             <li class="list-group-item">
                 Поточний курс валюти <strong>
                 {{currency data.rates.actual currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong> за <strong>
@@ -262,15 +266,21 @@
             {{!-- {{/unless}} --}}
             <li class="list-group-item">
                 Сума грошей, яку покупець має заплатити
-                <strong>
-                {{selectValueByCurrency data.totalSummary._customer_totals currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{#each data.totalSummary._customer_totals}}
+                    <strong class="{{#isnt ../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
             </li>
             {{!-- {{#unless data.rates.dbCurrencyIsChanged}} --}}
             {{#isnt data.rates.ourBenefit 0}}
             <li class="list-group-item">
                 Вартість цього замовлення на поточний момент
-                <strong>
-                {{selectValueByCurrency data.totalSummary._totals currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{#each data.totalSummary._totals}}
+                    <strong class="{{#isnt ../../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
             </li>
             <li class="list-group-item">
                 {{#gt data.rates.ourBenefit 0}}
@@ -281,8 +291,11 @@
                     Сума грошей, які ми втрачаємо
                 {{/gt}}
                 становить
-                <strong>
-                {{selectValueByCurrency data.totalSummary._diff_totals currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{#each data.totalSummary._diff_totals}}
+                    <strong class="{{#isnt ../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
             </li>
             {{/isnt}}
             {{!-- {{/unless}} --}}
@@ -329,12 +342,9 @@
     <div class="shopCartTotal">
         <span class="value-prefix">До оплати:</span>
         {{#each data.totalSummary._customer_totals}}
-            <span class="value moneyValue {{@key}}{{#isnt ../data.CustomerCurrencyName @key}} hidden{{/isnt}}">
-                {{#withItem ../instances.shop.settings.EXCHANAGERATESDISPLAY key=@key}}
-                    {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                    <strong class="value">{{currency ../this}}</strong>
-                    {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                {{/withItem}}
+            <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <meta itemprop="priceCurrency" content="{{@key}}" />
+                <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
             </span>
         {{/each}}
     </div>

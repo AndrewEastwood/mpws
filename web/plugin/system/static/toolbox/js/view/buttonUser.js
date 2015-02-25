@@ -8,7 +8,7 @@ define("plugin/system/toolbox/js/view/buttonUser", [
     'default/js/plugin/i18n!plugin/system/toolbox/nls/translation'
 ], function (Sandbox, Backbone, Auth, Utils, tpl, lang) {
 
-    var SignIn = Backbone.View.extend({
+    var ButtonUser = Backbone.View.extend({
         tagName: 'li',
         className: 'dropdown plugin-system-user-button',
         template: tpl,
@@ -24,6 +24,6 @@ define("plugin/system/toolbox/js/view/buttonUser", [
         }
     });
 
-    return SignIn;
+    return ButtonUser;
 
 });

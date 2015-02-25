@@ -13,7 +13,7 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
 ], function (Sandbox, Cache, _, Backbone, Utils, ViewListProducts, tpl, lang) {
 
     var ManagerContent_Products = ViewListProducts.extend({
-        className: 'panel panel-default shop_managerProducts',
+        className: 'panel panel-default plugin-shop-manager-products',
         template: tpl,
         lang: lang,
         events: {

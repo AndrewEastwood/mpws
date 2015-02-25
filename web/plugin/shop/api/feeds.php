@@ -259,7 +259,7 @@ class feeds {
             foreach ($imagesUrls as $imgUrl) {
                 $urlInfo = parse_url($imgUrl);
                 $pInfo = pathinfo($urlInfo['path']);
-                if ($urlInfo['host'] !== $customer['Settings']['Host']) {
+                if ($urlInfo['host'] !== $customer['HostName']) {
                     // $imagesToDownload[] = $imgUrl;
                     // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
                     //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
@@ -418,7 +418,7 @@ class feeds {
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = $customer['Settings']['Protocol'] . '://' . $customer['Settings']['Host'] . $value['normal'];
+                    $images[] = $customer['Protocol'] . '://' . $customer['HostName'] . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {

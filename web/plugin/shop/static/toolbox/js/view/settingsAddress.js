@@ -13,7 +13,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
 ], function (Backbone, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-green shop-settings-addresses",
+        className: "panel panel-default shop-settings-addresses",
         template: tpl,
         lang: lang,
         events: {

@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
 ], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-green shop-settings-seo",
+        className: "panel panel-default shop-settings-seo",
         template: tpl,
         lang: lang,
         events: {

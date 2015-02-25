@@ -1,25 +1,3 @@
-// requirejs.config({
-//     //Remember: only use shim config for non-AMD scripts,
-//     //scripts that do not already call define(). The shim
-//     //config will not work correctly if used on AMD scripts,
-//     //in particular, the exports and init config will not
-//     //be triggered, and the deps config will be confusing
-//     //for those cases.
-//     shim: {
-//         'customer/js/lib/sb-admin-2': {
-//             //These script dependencies should be loaded before loading
-//             //customer/js/lib/sb-admin-2.js
-//             deps: ['cmn_jquery'],
-//             //module value.
-//             exports: 'customer/js/lib/sb-admin-2'
-//         },
-//         'customer/js/lib/metisMenu': {
-//             deps: ['cmn_jquery'],
-//             exports: 'customer/js/lib/metisMenu'
-//         }
-//     }
-// });
-
 define("customer/js/router", [
     'default/js/lib/sandbox',
     'cmn_jquery',
@@ -27,9 +5,7 @@ define("customer/js/router", [
     'default/js/lib/auth',
     'default/js/lib/cache',
     'default/js/plugin/hbs!default/hbs/animationFacebook',
-    'default/js/lib/bootstrap',
-    // 'customer/js/lib/sb-admin-2',
-    // 'customer/js/lib/metisMenu'
+    'default/js/lib/bootstrap'
 ], function (Sandbox, $, _, Auth, Cache, tplFBAnim) {
 
     APP.dfd.customerReady = new $.Deferred();
@@ -57,7 +33,7 @@ define("customer/js/router", [
             $menuItem = $('<li>').attr({
                 name: 'MenuForPlugin_' + pluginName,
                 id: 'menu-' + pluginName + '-ID',
-                "class": 'menu-' + pluginName,
+                "class": 'dropdown menu-' + pluginName,
                 rel: 'menu'
             });
             menus.push($menuItem);
@@ -118,7 +94,7 @@ define("customer/js/router", [
     // return CustomerClass;
     $('head title').text(APP.config.TITLE);
     $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.TITLE);
-    $('#side-menu').empty().append(renderMenuPlaceholdersFn());
+    $('#navbar [name="TopMenuLeft"]').empty().append(renderMenuPlaceholdersFn());
 
     // Auth.getStatus();
 
