@@ -180,6 +180,7 @@ class settings {
                 $setting['ShowSiteCurrencySelector'] = intval($setting['ShowSiteCurrencySelector']) === 1;
                 break;
             case 'WEBSITE':
+                $setting['DeliveryAllowSelfPickup'] = intval($setting['DeliveryAllowSelfPickup']) === 1;
                 break;
             case 'FORMORDER':
                 $setting["ShowName"] = intval($setting["ShowName"]) === 1;
