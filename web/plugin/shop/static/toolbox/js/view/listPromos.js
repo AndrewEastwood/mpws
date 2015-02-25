@@ -113,6 +113,7 @@ define("plugin/shop/toolbox/js/view/listPromos", [
         events: {
             'click .expire-promo': 'expirePromo'
         },
+        className: 'list list-promos',
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionOrders();

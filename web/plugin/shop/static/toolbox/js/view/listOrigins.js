@@ -93,6 +93,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     }
 
     var ListOrders = Backbone.View.extend({
+        className: 'list list-origins',
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionOrigins();

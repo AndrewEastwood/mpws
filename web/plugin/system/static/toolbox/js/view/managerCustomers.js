@@ -13,7 +13,7 @@ define('plugin/system/toolbox/js/view/managerCustomers', [
     var ManagerCustomers = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'system-manager-customers',
+        className: 'plugin-system-customers',
         events: {
             'click a.js-customer-remove': 'customerRemove',
             'click a.js-customer-restore': 'customerRestore'

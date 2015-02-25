@@ -59,7 +59,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_order_title: "Замовлення #",
         popup_order_section_boughts: "Список придбаних товарів:",
         popup_order_control_status: "Виберіть статус замовлення",
-        popup_order_button_Close: "Закрити",
+        popup_order_button_Close: "Назад",
         // Category tree
         pluginMenu_Categories_Tree_Title: "Категорії",
         // Category popup
@@ -71,7 +71,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_category_section_details_filed_parentCategory: "Вкласти в категорію:",
         popup_category_section_props_field_name: "Назва:",
         popup_category_section_props_field_defaultValue: "Початкове значення:",
-        popup_category_button_Close: "Закрити",
+        popup_category_button_Close: "Назад",
         popup_category_button_Save: "Зберегти",
         // Origin list
         pluginMenu_Origins_Grid_Title: "Виробники",
@@ -88,7 +88,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_origin_section_details_filed_Name: "Назва:",
         popup_origin_section_details_filed_Description: "Опис:",
         popup_origin_section_details_filed_HomePage: "Сайт виробника:",
-        popup_origin_button_Close: "Закрити",
+        popup_origin_button_Close: "Назад",
         popup_origin_button_Save: "Зберегти",
         // popup_origin_button_Update: "Обновити",
         popup_product_title_new: "Створення товару",
@@ -118,7 +118,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_product_error_PriceIsEmpty: 'Порожня ціна',
         popup_product_error_atField_Features: 'Помилка в полі Властивості',
         popup_product_error_FeaturesIsEmpty: 'Не вибрано жодної властивості товару',
-        popup_product_button_Close: "Закрити",
+        popup_product_button_Close: "Назад",
         popup_product_button_Save: "Зберегти",
         // Product list
         pluginMenu_Products_Grid_Title: "Товари",

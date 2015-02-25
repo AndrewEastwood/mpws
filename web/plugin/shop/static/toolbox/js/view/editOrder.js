@@ -52,10 +52,9 @@ define("plugin/shop/toolbox/js/view/editOrder", [
         initialize: function () {
             this.model = new ModelOrder();
             this.listenTo(this.model, 'change', this.render);
-            // this.$title = $('<span/>');
         },
         render: function () {
-            var self = this;
+            var that = this;
             var tplData = Utils.getHBSTemplateData(this);
             tplData.data.isToolbox = tplData.isToolbox;
             tplData.data.urls = tplData.instances.shop.urls;
@@ -63,7 +62,7 @@ define("plugin/shop/toolbox/js/view/editOrder", [
             var $dialog = new BootstrapDialog({
                 closable: false,
                 draggable: false,
-                title: _getTitleByStatus(self.model.get('Status')),
+                title: _getTitleByStatus(that.model.get('Status')),
                 message: $(tpl(tplData)),
                 buttons: [{
                     label: "Надіслати фактуру",
@@ -101,12 +100,6 @@ define("plugin/shop/toolbox/js/view/editOrder", [
             $dialog.updateMessage();
             $dialog.updateClosable();
 
-
-            // debugger;
-            // console.log(tplData);
-            // this.$el.html();
-
-
             this.$el.html($dialog.getModalContent());
 
             var orderID = this.model.id;
@@ -128,7 +121,7 @@ define("plugin/shop/toolbox/js/view/editOrder", [
                 source: $.makeArray(source),
             });
             $controlOrderStatus.on('save', function (event, editData) {
-                self.model.save({
+                that.model.save({
                     Status: editData.newValue
                 }, {
                     patch: true,
@@ -144,7 +137,7 @@ define("plugin/shop/toolbox/js/view/editOrder", [
             });
             var $controlOrderInternalComment = this.$('#shop-order-internalComment-ID');
             var lazyLayout = _.debounce(function () {
-                self.model.save({
+                that.model.save({
                     InternalComment: $controlOrderInternalComment.val()
                 }, {
                     patch: true,
@@ -162,8 +155,6 @@ define("plugin/shop/toolbox/js/view/editOrder", [
             this.$('.helper').tooltip();
 
             return this;
-            // if (!this.$dialog.isOpened())
-            //     this.$dialog.open();
         }
     });
 

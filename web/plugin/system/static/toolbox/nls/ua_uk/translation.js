@@ -63,7 +63,7 @@ define("plugin/system/toolbox/nls/ua_uk/translation", [
                 labelLocale: 'Локалізація',
                 labelProtocol: 'Протокол',
                 buttonSave: 'Зберегти',
-                buttonClose: 'Скасувати',
+                buttonClose: 'Назад',
                 messageSuccess: 'Сайт оновлено успішно',
                 messageError: 'Помилка збереження/оновлення',
                 plugins: {

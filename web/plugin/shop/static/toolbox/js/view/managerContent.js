@@ -16,7 +16,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'shop-managerContent',
+        className: 'plugin-shop-content',
         initialize: function (options) {
             // set options
             // ini sub-views
@@ -58,7 +58,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
         saveLayout: function () {
             // console.log('saving layout manager content');
             Cache.set("shopManagerContentLayoutRD", {
-                activeFilterTabID: this.$('.shop-managerContent-filters li.active a').attr('href').substr(1)
+                activeFilterTabID: this.$('.plugin-shop-content-filters li.active a').attr('href').substr(1)
             });
         },
         restoreLayout: function () {

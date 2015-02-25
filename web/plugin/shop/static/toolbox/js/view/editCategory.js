@@ -1,4 +1,4 @@
-define("plugin/shop/toolbox/js/view/popupCategory", [
+define("plugin/shop/toolbox/js/view/editCategory", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/model/category',
@@ -6,7 +6,7 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupCategory',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/editCategory',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/select2/select2',
@@ -27,58 +27,60 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
         }
     }
 
-    var PopupCategory = Backbone.View.extend({
+    var EditCategory = Backbone.View.extend({
         template: tpl,
         lang: lang,
+        className: 'bootstrap-dialog type-primary size-normal plugin-shop-category',
         events: {
             'click .del-image': 'removeImage',
             'click .restore-image': 'restoreImage'
         },
         initialize: function () {
-            var self = this;
             this.model = new ModelCategory();
-            this.listenTo(this.model, 'change', this.render);
-            this.$title = $('<span/>');
-            this.$dialog = new BootstrapDialog({
+            this.listenTo(this.model, 'sync', this.render);
+        },
+        render: function () {
+            var that = this;
+            var $dialog = new BootstrapDialog({
                 closable: false,
-                title: this.$title,
-                message: this.$el,
-                cssClass: 'shop-popup-category',
+                draggable: false,
+                title: _getTitle(this.model.isNew()),
+                message: $(tpl(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.popup_category_button_Close,
                     cssClass: 'btn-default btn-link',
                     action: function (dialog) {
-                        dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.contentList, true);
                     }
                 }, {
                     label: lang.popup_category_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        self.model.save({
-                            Name: self.$('#name').val(),
-                            Description: self.$('#description').val(),
-                            file1: self.$('#file1').val(),
-                            ParentID: parseInt(self.$('#parent').val(), 10)
+                        that.model.save({
+                            Name: that.$('#name').val(),
+                            Description: that.$('#description').val(),
+                            file1: that.$('#file1').val(),
+                            ParentID: parseInt(that.$('#parent').val(), 10)
                         }, {
                             patch: true,
                             success: function (model, response) {
                                 if (!response || !response.success) {
-                                    self.render();
+                                    that.render();
                                 } else {
-                                    dialog.close();
+                                    Backbone.history.navigate(APP.instances.shop.urls.contentList, true);
                                 }
                             }
                         });
                     }
                 }]
             });
-        },
-        render: function () {
-            var that = this;
-            this.$title.html(_getTitle(this.model.isNew()));
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            if (!this.$dialog.isOpened())
-                this.$dialog.open();
+
+            $dialog.realize();
+            $dialog.updateTitle();
+            $dialog.updateMessage();
+            $dialog.updateClosable();
+
+            this.$el.html($dialog.getModalContent());
 
             var categoriesUrl = APP.getApiLink({
                 source: 'shop',
@@ -102,6 +104,7 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             });
 
             this.setupFileUploadItem(this.$('.temp-upload-image'));
+            return this;
         },
         restoreImage: function (event) {
             var $btn = $(event.target).parents('.upload-wrapper'),
@@ -110,7 +113,7 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             this.refreshUploadButton(event.target);
         },
         removeImage: function (event) {
-            var self = this,
+            var that = this,
                 $btn = $(event.target).parents('.upload-wrapper'),
                 $prevTemp = $btn.find('.preview-image'),
                 $fileName = $btn.find('.file-name'),
@@ -123,11 +126,11 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
                     $prevTemp.empty();
                     $prevTemp.data('delete-url', null);
                     $fileName.val($fileName.data('original'));
-                    self.refreshUploadButton(event.target);
+                    that.refreshUploadButton(event.target);
                 });
             } else {
                 $fileName.val('');
-                self.refreshUploadButton(event.target);
+                that.refreshUploadButton(event.target);
             }
         },
         refreshUploadButton: function (el) {
@@ -159,9 +162,9 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             return $btn;
         },
         setupFileUploadItem: function ($items) {
-            var self = this;
+            var that = this;
             $items.each(function () {
-                self.refreshUploadButton($(this));
+                that.refreshUploadButton($(this));
             });
             $items.fileupload({
                 url: APP.getUploadUrl(),
@@ -180,12 +183,12 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
                 previewMaxHeight: 75,
                 previewCrop: true
             }).on('fileuploadadd', function (e, data) {
-                self.refreshUploadButton($(this));
+                that.refreshUploadButton($(this));
             }).on('fileuploadprogressall', function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                self.$('#progress .progress-bar').css('width', progress + '%');
+                that.$('#progress .progress-bar').css('width', progress + '%');
             }).on('fileuploadprocessalways', function (e, data) {
-                var $btn = self.refreshUploadButton($(this)),
+                var $btn = that.refreshUploadButton($(this)),
                     $prevTemp = $btn.find('.preview-image'),
                     $fileName = $btn.find('.file-name'),
                     index = data.index,
@@ -203,7 +206,7 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
                     $fileName = $btn.find('.file-name'),
                     $prevTemp = $btn.find('.preview-image'),
                     progress = parseInt(data.loaded / data.total * 100, 10);
-                self.$('#progress .progress-bar').css('width', '0%');
+                that.$('#progress .progress-bar').css('width', '0%');
                 $.each(data.result.files, function (index, file) {
                     if (file.url) {
                         $prevTemp.data('delete-url', file.deleteUrl);
@@ -215,11 +218,11 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
                         $fileName.val($fileName.data('original'));
                     }
                 });
-                self.refreshUploadButton($(this));
+                that.refreshUploadButton($(this));
             });
         }
     });
 
-    return PopupCategory;
+    return EditCategory;
 
 });

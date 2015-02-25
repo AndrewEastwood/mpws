@@ -12,7 +12,7 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
     var ManagerPromos = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'shop-toolbox-promos',
+        className: 'plugin-shop-promos',
         events: {
             'click #show_expired': 'showExpired'
         },

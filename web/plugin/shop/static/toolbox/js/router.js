@@ -88,25 +88,35 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         productCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
-                var popupProduct = new ViewPopupProduct();
-                popupProduct.render();
-                popupProduct.$dialog.onHide(function () {
-                    Backbone.history.history.back();
+            require(['plugin/shop/toolbox/js/view/editProduct'], function (ViewEditProduct) {
+                var editProduct = new ViewEditProduct();
+                editProduct.render();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editProduct.$el
                 });
+                // editProduct.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         productEdit: function (productID) {
-            require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
-                var popupProduct = new ViewPopupProduct();
-                popupProduct.model.fetch({
-                    data: {
-                        id: productID
-                    }
+            require(['plugin/shop/toolbox/js/view/editProduct'], function (ViewEditProduct) {
+                var editProduct = new ViewEditProduct();
+                editProduct.model.set('ID', productID);
+                editProduct.model.fetch();
+                // editProduct.model.fetch({
+                //     data: {
+                //         id: productID
+                //     }
+                // });
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editProduct.$el
                 });
-                popupProduct.$dialog.onHide(function () {
-                    Backbone.history.history.back();
-                });
+                // editProduct.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         contentList: function () {
@@ -177,44 +187,57 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         categoryEdit: function (categoryID) {
-            require(['plugin/shop/toolbox/js/view/popupCategory'], function (ViewPopupCategory) {
-                var popupCategory = new ViewPopupCategory();
-                popupCategory.model.fetch({
-                    data: {
-                        id: categoryID
-                    }
+            require(['plugin/shop/toolbox/js/view/editCategory'], function (ViewEditCategory) {
+                var editCategory = new ViewEditCategory();
+                editCategory.model.set('ID', categoryID);
+                editCategory.model.fetch();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editCategory.$el
                 });
-                popupCategory.$dialog.onHide(function () {
-                    Backbone.history.history.back();
-                });
+                // editCategory.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         categoryCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupCategory'], function (ViewPopupCategory) {
-                var popupCategory = new ViewPopupCategory();
-                popupCategory.model.fetch();
-                popupCategory.$dialog.onHide(function () {
-                    Backbone.history.history.back();
+            require(['plugin/shop/toolbox/js/view/editCategory'], function (ViewEditCategory) {
+                var editCategory = new ViewEditCategory();
+                editCategory.model.fetch();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editCategory.$el
                 });
+                // editCategory.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         originEdit: function (originID) {
-            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (ViewPopupOrigin) {
-                var popupOrigin = new ViewPopupOrigin();
-                popupOrigin.model.set('ID', originID);
-                popupOrigin.model.fetch();
-                popupOrigin.$dialog.onHide(function () {
-                    Backbone.history.history.back();
+            require(['plugin/shop/toolbox/js/view/editOrigin'], function (ViewEditOrigin) {
+                var editOrigin = new ViewEditOrigin();
+                editOrigin.model.set('ID', originID);
+                editOrigin.model.fetch();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editOrigin.$el
                 });
+                // editOrigin.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
         originCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (ViewPopupOrigin) {
-                var popupOrigin = new ViewPopupOrigin();
-                popupOrigin.model.fetch();
-                popupOrigin.$dialog.onHide(function () {
-                    Backbone.history.history.back();
+            require(['plugin/shop/toolbox/js/view/editOrigin'], function (ViewEditOrigin) {
+                var editOrigin = new ViewEditOrigin();
+                editOrigin.model.fetch();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: editOrigin.$el
                 });
+                // editOrigin.$dialog.onHide(function () {
+                //     Backbone.history.history.back();
+                // });
             });
         },
 

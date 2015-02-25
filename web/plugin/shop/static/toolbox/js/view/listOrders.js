@@ -181,6 +181,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     }
 
     var ListOrders = Backbone.View.extend({
+        className: 'list list-orders',
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionOrders();

@@ -267,7 +267,7 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
     }
 }
 
-.shop-toolbox-orders {
+.plugin-shop-orders {
     .tab-pane {
         padding-top: 15px;
     }
@@ -287,8 +287,17 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
             width: 400px;
         }
     }
+    .tab-content {overflow: auto;}
 }
-.shop-managerContent {
+.plugin-shop-order {
+    .shop-widget-productlist {
+        overflow: auto;
+        table {
+            min-width: 500px;
+        }
+    }
+}
+.plugin-shop-content {
     .tab-pane {
         padding-top: 15px;
     }
@@ -334,6 +343,9 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
     .products {
         overflow: auto;
     }
+}
+.plugin-shop-promos {
+    .promo-list {overflow: auto;}
 }
 .shop_filterPanelOrigins {
     .filter-list-origins {
@@ -392,7 +404,7 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
         }
     }
 }
-.shop-popup-product {
+.plugin-shop-product {
     .modal-dialog {
         width: 50%;
     }
@@ -558,9 +570,8 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
             display: table-cell;
         }
     }
-
 }
-.shop-popup-category {
+.plugin-shop-category {
     .bootstrap-dialog-message {
         #progress {
             position: absolute;
@@ -898,3 +909,14 @@ input[type="radio"], input[type="checkbox"] {
     overflow: visible;
 }
 
+
+
+.plugin-system-customers {
+    .tab-content {
+        overflow: auto;
+    }
+}
+
+.dashboard {
+    .list {overflow: auto;}
+}

@@ -328,7 +328,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     });
 
     var routes = {
-        "": "start",
+        "": "index",
         "!/": "index",
         "!/signin": "signin",
         "!/signout": "signout"
@@ -339,13 +339,10 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
         urls: _(routes).invert(),
 
-        start: function () {
+        index: function () {
             if (location.pathname !== '/') {
                 window.location.href = '/';
             }
-            Sandbox.eventNotify('global:page:index', '');
-        },
-        index: function () {
             Sandbox.eventNotify('global:page:index', '');
         },
         signin: function () {
@@ -360,7 +357,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         }
     });
 
-    APP.instances.root = new Router();
+    var root = new Router();
     var $dfd = $.Deferred();
     var pluginList = APP.getPluginRoutersToDownload();
     var pluginNames = _(pluginList).map(function (pluginListItem) {
@@ -371,12 +368,13 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // start HTML5 History push
         // console.log('LOADER COMPLETE');
         // debugger;
-        Backbone.history.start();
+        APP.instances.root = root;
+        Backbone.history.start({hashChange: true});
         // notify all that loader completed its tasks
         Sandbox.eventNotify('global:loader:complete');
         Backbone.trigger('global:loader:complete');
         // return Site;
-        $(window).trigger('hashchange');
+        // $(window).trigger('hashchange');
         // get auth status
         // Auth.getStatus();
         // set completion state
@@ -394,6 +392,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
             var _loadedPlugins = _.omit(APP.instances, 'CustomerRouter');
             // console.log('totalPluginCount: ' + totalPluginCount);
+            // debugger
             if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
                 // console.log('!!!!!!!!!!!! ALL PLUGINS READY !!!!!!!');
                 $dfd.resolve();

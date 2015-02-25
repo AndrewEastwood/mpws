@@ -157,6 +157,7 @@ define("plugin/system/toolbox/js/view/listCustomers", [
     }
 
     var ListCustomers = Backbone.View.extend({
+        className: 'list list-customers',
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionCustomers();

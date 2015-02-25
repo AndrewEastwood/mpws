@@ -13,7 +13,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'shop-toolbox-orders',
+        className: 'plugin-shop-orders',
         events: {
             'itemAdded .search': 'search',
             'itemRemoved .search': 'search'
@@ -52,7 +52,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
                 this.viewOrdersList.render();
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 // show sub-view
-                this.$('.tab-pane').html(this.viewOrdersList.$el);
+                this.$('.orders').html(this.viewOrdersList.$el);
                 this.$('.search').tagsinput();
             }
             // var currentStatus = this.viewOrdersList.collection.getCustomQueryField("Status") || 'all';
