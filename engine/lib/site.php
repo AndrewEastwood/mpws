@@ -29,7 +29,6 @@ class site {
         $websiteCustomer = $app->customerName();
 
         // system config
-        $version = $app->getAppName();
         $layout = $app->getSettings('layout');
         $layoutBody = $app->getSettings('layoutBody');
 
@@ -48,8 +47,8 @@ class site {
         $Title = $customer['Title'];
         // <<< get from db according to display customer
 
-        $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layout, $app->isDebug());
-        $layoutBodyCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layoutBody, $app->isDebug());
+        $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $layout, $app->isDebug());
+        $layoutBodyCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $layoutBody, $app->isDebug());
 
         // var_dump($layoutCustomer);
         // var_dump($layoutBodyCustomer);
@@ -72,23 +71,14 @@ class site {
             DEBUG: " . ($app->isDebug() ? 'true' : 'false') . ",
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
-            MPWS_VERSION: '" . $version . "',
-            MPWS_CUSTOMER: '" . $displayCustomer . "',
-            PATH_STATIC_BASE: '" . $staticPath . "',
+            CUSTOMER: '" . $displayCustomer . "',
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
             URL_PUBLIC_LOGO: '" . $logoUrl . "',
             TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "',
-            URL_API: '" . $urls['api'] . "',
-            URL_UPLOAD: '" . $urls['upload'] . "',
             AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
-            USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . ",
-            URL_STATIC_CUSTOMER: '" . $staticPathCustomer . "',
-            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $websiteCustomer) . "',
-            URL_STATIC_PLUGIN: '" . Path::createPath('plugin') . "',
-            URL_STATIC_DEFAULT: '" . Path::createPath('base', $version) . "',
-            ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
+            USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . "
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
 
@@ -99,7 +89,6 @@ class site {
         $html = str_replace("{{BODY}}", $layoutBodyContent, $html);
         $html = str_replace("{{LANG}}", $lang, $html);
         $html = str_replace("{{SYSTEMJS}}", $initialJS, $html);
-        $html = str_replace("{{MPWS_VERSION}}", $version, $html);
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
         $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
         $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);

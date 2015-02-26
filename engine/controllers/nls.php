@@ -14,9 +14,9 @@
     $langFileName = Request::pickFromGET('lang');
 
     if ($app->isDebug())
-        $langFilePath = Path::createPathWithRoot('web', 'customer', $customer, 'static', 'nls', $langFileName);
+        $langFilePath = Path::createPathWithRoot('web', 'customer', $customer, 'nls', $langFileName);
     else
-        $langFilePath = Path::createPathWithRoot('web', 'build', 'customer', $customer, 'static', 'nls', $langFileName);
+        $langFilePath = Path::createPathWithRoot('web', 'build', 'customer', $customer, l'nls', $langFileName);
 
     if (file_exists($langFilePath))
         echo file_get_contents($langFilePath);

@@ -1,12 +1,12 @@
-define("customer/js/view/breadcrumb", [
+define([
     'jquery',
-    'default/js/lib/underscore',
-    'default/js/lib/backbone',
-    'default/js/lib/utils',
+    'underscore',
+    'backbone',
+    'utils',
     /* template */
-    'default/js/plugin/hbs!customer/hbs/breadcrumb',
+    'hbs!customer/hbs/breadcrumb',
     /* ui components */
-    'default/js/lib/bootstrap'
+    'bootstrap'
 ], function ($, _, Backbone, Utils, tpl) {
 
     var Breadcrumb = Backbone.View.extend({

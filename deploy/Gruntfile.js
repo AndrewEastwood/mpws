@@ -4,19 +4,22 @@ module.exports = function (grunt) {
 
     // Configurable paths for the application
     var webPath = '../web/',
-        distPath = '../web/build/',
-        staticPathCustomers = '../web/customers/**/static/',
-        staticPathPlugins = '../web/plugin/**/static/',
+        distPath = '../build/',
+        staticPathBase = '../web/base/',
+        staticPathCustomers = '../web/customers/',
+        staticPathPlugins = '../web/plugin/',
         paths = {
             'web': webPath,
             'dist': distPath,
-            'baseLess': webPath + 'base/atlantis/static/less/',
-            'customerCss': staticPathCustomers + 'css/',
-            'customerJs': staticPathCustomers + 'js/',
-            'customerLess': staticPathCustomers + 'less/',
-            'pluginJsSite': staticPathPlugins + 'site/js/',
-            'pluginJsToolbox': staticPathPlugins + 'toolbox/js/',
-            'pluginJsCommon': staticPathPlugins + 'common/js/'
+            'base': staticPathBase,
+            'customers': staticPathCustomers,
+            'plugins': staticPathPlugins,
+            // 'customerCss': staticPathCustomers + 'css/',
+            // 'customerJs': staticPathCustomers + 'js/',
+            // 'customerLess': staticPathCustomers + 'less/',
+            // 'pluginJsSite': staticPathPlugins + 'site/js/',
+            // 'pluginJsToolbox': staticPathPlugins + 'toolbox/js/',
+            // 'pluginJsCommon': staticPathPlugins + 'common/js/'
         };
 
     // Load grunt tasks automatically
@@ -34,12 +37,12 @@ module.exports = function (grunt) {
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             js: {
-                files: ['<%= paths.customerJs %>{,*/}*.js'],
+                files: ['<%= paths.customers %>{,*/}**/*.js', '<%= paths.plugins %>{,*/}**/*.js'],
                 tasks: ['newer:jshint:all']
             },
             less: {
-                files: ['<%= paths.assets %>less/{,*/}*.less'],
-                tasks: ['less:all']
+                files: ['<%= paths.customers %>/{,*/}/less/*.less'],
+                tasks: ['newer:less:all']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -50,25 +53,20 @@ module.exports = function (grunt) {
         less: {
             all: {
                 options: {
-                    paths: ['<%= paths.customerLess %>', '<%= paths.baseLess %>']
-                    //sourceMap: true,
-                    //sourceMapURL: 'main.css.map',
-                    //sourceMapRootpath: '../../'
+                    paths: ['<%= paths.base %>less/']
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= paths.web %>',
-                    dest: '<%= paths.dist %>',
-                    src: '**/*'
+                    cwd: '<%= paths.customers %>',
+                    dest: '<%= paths.customers %>',
+                    src: '{,*/}less/*.less',
                     rename  : function (dest, src) {
-                      var folder    = src.substring(0, src.lastIndexOf('/'));
-                      var filename  = src.substring(src.lastIndexOf('/'), src.length);
-
-                      filename  = filename.substring(0, filename.lastIndexOf('.'));
-
-                      return dest + folder + filename + '.min.js';
+                        var customerName    = src.substring(0, src.indexOf('/'));
+                        var filename  = src.substring(src.lastIndexOf('/') + 1, src.length);
+                        filename  = filename.substring(0, filename.lastIndexOf('.'));
+                        // grunt.log.writeln('[' + customerName + '] creating css: ' + dest + customerName + '/css/' + filename + '.css');
+                        return dest + customerName + '/css/' + filename + '.css';
                     }
-                    '<%= paths.customerCss %>theme.css': '<%= paths.customerLess %>theme.less'
                 }]
             }
         },
@@ -82,10 +80,8 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     'Gruntfile.js',
-                    '<%= paths.customerJs %>{,*/}*.js',
-                    '<%= paths.pluginJsCommon %>{,*/}*.js',
-                    '<%= paths.pluginJsToolbox %>{,*/}*.js',
-                    '<%= paths.pluginJsSite %>{,*/}*.js',
+                    '<%= paths.customers %>{,*/}**/*.js',
+                    '<%= paths.plugins %>{,*/}**/*.js'
                 ]
             }
         },
@@ -106,20 +102,25 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: paths.customerJs,
-                    mainConfigFile: paths.app +'loader.js',
-                    name: 'app',
-                    out: paths.customerJs + 'js/router.min.js',
-                    include: ['loader.js'],
+                    baseUrl: paths.web,
+                    // appDir: paths.web,
+                    mainConfigFile: paths.base + 'js/loader.js',
+                    dir: paths.dist,
+                    // name: 'app',
                     findNestedDependencies: true,
-                    optimizeAllPluginResources: false,
-                    optimize: 'uglify2',
+                    optimizeAllPluginResources: true,
+                    optimize: 'none',
                     uglify2: {
                         output: {
                             'quote_keys': true
                         }
                     },
-                    keepBuildDir: true
+                    keepBuildDir: false,
+                    modules: [
+                        {
+                            name: 'customers/pb.com.ua/js/router'
+                        }
+                    ]
                 }
             }
         }
@@ -127,8 +128,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         // 'jshint:all',
-        'less:all',
-        'copy:dist'
+        'less:all'
     ]);
 
     grunt.registerTask('deploy', 'Deployment', function () {

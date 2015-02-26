@@ -34,7 +34,7 @@ class path {
         return 'customers';
     }
     public static function getDirNamePlugin () {
-        return 'plugin';
+        return 'plugins';
     }
     public static function getDirNameApi () {
         return 'api';
@@ -165,13 +165,13 @@ class path {
         return false;
     }
 
-    public static function getWebStaticTemplateFilePath ($displayCustomer, $version, $templateName, $isDebug) {
+    public static function getWebStaticTemplateFilePath ($displayCustomer, $templateName, $isDebug) {
         // if ($isDebug) {
         //     $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'hbs', $templateName);
         //     $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'hbs', $templateName);
         // } else {
             $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'hbs', $templateName);
-            $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'hbs', $templateName);
+            $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), 'hbs', $templateName);
         // }
         // var_dump($templateCustomer);
         // var_dump($templateDefault);

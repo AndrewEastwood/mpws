@@ -1,0 +1,569 @@
+<div class="col-md-12 fuelux">
+    {{#if data.info.productCount }}
+        <div class="wizard" data-initialize="wizard">
+            <ul class="steps">
+                <li {{#unless data.success }}class="active"{{/unless}} data-step="1"><span class="badge badge-info">1</span>Оформлення<span class="chevron"></span></li>
+                <li data-step="2"><span class="badge">2</span>Перегляд<span class="chevron"></span></li>
+                <li {{#if data.success }}class="active"{{/if}} data-step="3"><span class="badge">3</span>Підтвердження<span class="chevron"></span></li>
+            </ul>
+            <div class="step-content">
+                {{#unless data.success }}
+                <div class="step-pane active sample-pane" data-step="1">
+                    <h4><i class="icon-shopping-cart"></i>{{lang.shopping_cart_form_title}}</h4>
+
+                    {{#mpwsIsNotEmpty data.errors }}
+                    <div id="msg" class="alert alert-danger">
+                        {{lang.shopping_cart_error_title}}
+                        <ol class="errors">
+                        {{#each data.errors}}
+                            {{#each this}}
+                                <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
+                            {{/each}}
+                        {{/each}}
+                        </ol>
+                    </div>
+                    {{/mpwsIsNotEmpty}}
+
+                    <div class="well">
+                        <a href="javascript://" data-action="plugin:shop:order:clear" data-id="*">
+                            <i class="fa fa-trash-o"></i> {{lang.shopping_cart_link_removeAll}}
+                        </a>
+                    </div>
+
+                    {{#if data.info.hasPromo }}
+                        {{#unless data.info.allProductsWithPromo }}
+                        <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+                            <i class="fa fa-exclamation-circle fa-fw"></i>Не на всі товари діє знижка <strong>{{data.promo.Discount}}<span class="percentType">%</span></strong>
+                        </div>
+                        {{/unless}}
+                    {{/if}}
+                    <div class="shop-widget-productlist">
+                    {{#each data.items }}
+                        <div class="wrapper">
+                            <div class="product-row">
+                                {{#if ../data.info.hasPromo}}
+                                    {{#unless ../../data.info.allProductsWithPromo}}
+                                        {{#if ../../IsPromo }}
+                                            <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                                        {{else}}
+                                            <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                                        {{/if}}
+                                    {{/unless}}
+                                {{/if}}
+                                <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                                <div class="shop-product-image shop-product-image-main">
+                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                                        <div class="image productimage noimage image_{{ID}}">
+                                            {{#if Images.[0].xs}}
+                                            {{>base/hbs/animationFacebook}}
+                                            {{/if}}
+                                        </div>
+                                        {{#if Images.[0].xs}}
+                                        <script>
+                                        (function() {
+                                            require(["base/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                                img.title = "{{Name}}";
+                                                img.className = "image img-responsive";
+                                                $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                            }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                                        })();
+                                        </script>
+                                        {{/if}}
+                                    </a>
+                                </div>
+                                <span class="product-name">
+                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                                </span>
+                                {{#each _prices.others}}
+                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                                {{#if _promoIsApplied}}
+                                <span class="label label-success">- {{_promo.Discount}}%</span>
+                                {{/if}}
+                                <span class="label label-default">x</span>
+                                <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{_orderQuantity}}">
+                                <span class="label label-default">=</span>
+                                {{#each _totalSummary._totals}}
+                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/each}}
+                    </div>
+
+                    <div class="well cartInfo">
+                        {{#if data.info.hasPromo }}
+                        <div class="shopCartDiscount">
+                            <span class="value-prefix">Знижка:</span>
+                            <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+                            <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+                        </div>
+                        {{else }}
+                        <div class="shopPropmoCode">
+                            <form class="form-inline" role="form">
+                                <i class="fa fa-tag"></i> Для отримання знижки введіть промо-код:
+                                <input type="text" class="form-control" id="shop-order-promo-ID" placeholder="XXXXX-XXXXX-XXXXX">
+                                <button type="button" class="btn btn-default btn-promo-submit">Застосувати</button>
+                            </form>
+                        </div>
+                        {{/if}}
+                        <div class="shopCartTotal">
+                            <span class="value-prefix">До оплати:</span>
+                            {{#each data.totalSummary._totals}}
+                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div class="well order">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- Address and Shipping details form -->
+                                <div class="form form-small">
+                                    <!-- Register form (not working)-->
+                                    <form class="form-horizontal form-order-create">
+                                        {{#if data.account.ID }}
+                                            <input type="hidden" name="shopCartAccountValidationString" value="{{data.account.ValidationString}}">
+                                            <input type="hidden" name="shopCartAccountFirstName" value="{{data.account.FirstName}}">
+                                            <input type="hidden" name="shopCartAccountLastName" value="{{data.account.LastName}}">
+                                            <input type="hidden" name="shopCartAccountEMail" value="{{data.account.EMail}}">
+                                            <input type="hidden" name="shopCartAccountPhone" value="{{data.account.Phone}}">
+                                            <div class="form-group required">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.FirstName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group required">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_lastName}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.LastName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group required">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_email}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.EMail}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group required">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_phone}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.Phone}}</span>
+                                                </div>
+                                            </div>
+                                            <!-- account addresses -->
+                                            <div class="form-group form-group-accountAddress">
+                                                <h4>{{lang.profile_page_overview_section_addresses_title}}</h4>
+                                                <label class="control-label col-md-3" for="name1">{{lang.shopping_cart_field_profile_address}}</label>
+                                                <div class="col-md-6">
+                                                    <select name="shopCartAccountAddressID" class="form-control" id="account-addresses-ID">
+                                                        <option value="">{{lang.shopping_cart_field_profile_address_option_none}}</option>
+                                                        {{#each data.account.Addresses }}
+                                                        <option value="{{ID}}" data-address="{{Address}}" data-pobox="{{POBox}}" data-country="{{Country}}" data-city="{{City}}">
+                                                            {{#if Country }}
+                                                                {{Country}},
+                                                            {{/if}}
+                                                            {{#if City }}
+                                                                {{City}},
+                                                            {{/if}}
+                                                            {{#if Address }}
+                                                                {{Address}}
+                                                            {{/if}}
+                                                            {{#if POBox }}
+                                                                ({{POBox}})
+                                                            {{/if}}
+                                                        </option>
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowName}}
+                                            <!-- Name -->
+                                            <div class="form-group required form-group-firstName">
+                                                <label class="control-label col-md-3" for="shopping-cart-name-ID">{{lang.shopping_cart_field_firstName}}</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="shopCartUserName" class="form-control" id="shopping-cart-name-ID">
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowEMail}}
+                                            <!-- Email -->
+                                            <div class="form-group required form-group-email">
+                                                <label class="control-label col-md-3" for="shopping-cart-email-ID">{{lang.shopping_cart_field_email}}</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="shopCartUserEmail" class="form-control" id="shopping-cart-email-ID">
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowPhone}}
+                                            <!-- Phone -->
+                                            <div class="form-group required form-group-phone">
+                                                <label class="control-label col-md-3" for="shopping-cart-phone-ID">{{lang.shopping_cart_field_phone}}</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="shopCartUserPhone" class="form-control" id="shopping-cart-phone-ID">
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowAddress}}
+                                        <!-- Address -->
+                                        <div class="form-group required form-group-address">
+                                            <label class="control-label col-md-3" for="shopping-cart-address-ID">{{lang.shopping_cart_field_address}}</label>
+                                            <div class="col-md-6">
+                                                <textarea name="shopCartUserAddress" class="form-control" id="shopping-cart-address-ID"></textarea>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowPOBox}}
+                                        <!-- POBox -->
+                                        <div class="form-group required form-group-pobox">
+                                            <label class="control-label col-md-3" for="shopping-cart-pobox-ID">{{lang.shopping_cart_field_pobox}}</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserPOBox" class="form-control" id="shopping-cart-pobox-ID"/>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowCountry}}
+                                        <!-- Country -->
+                                        <div class="form-group required form-group-country">
+                                            <label class="control-label col-md-3" for="shopping-cart-country-ID">{{lang.shopping_cart_field_country}}</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserCountry" class="form-control" id="shopping-cart-country-ID">
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowCity}}
+                                        <!-- City -->
+                                        <div class="form-group required form-group-city">
+                                            <label class="control-label col-md-3" for="shopping-cart-city-ID">{{lang.shopping_cart_field_city}}</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserCity" class="form-control" id="shopping-cart-city-ID">
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowDeliveryAganet}}
+                                        <!-- Delivery method -->
+                                        <div class="form-group form-group-logistic">
+                                            <label class="control-label col-md-3" for="shopping-cart-logistic-ID">{{lang.shopping_cart_field_logistic}}</label>
+                                            <div class="col-md-6">
+                                                <select name="shopCartLogistic" class="form-control" id="shopping-cart-logistic-ID">
+                                                    {{#if instances.shop.settings.WEBSITE.DeliveryAllowSelfPickup}}
+                                                    <option value="">Самовивіз</option>
+                                                    {{/if}}
+                                                    {{#each data.info.deliveries}}
+                                                    <option value="{{ID}}">{{Name}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Warehouse -->
+                                        <div class="form-group required form-group-warehouse hide">
+                                            <label class="control-label col-md-3" for="shopping-cart-warehouse-ID">{{lang.shopping_cart_field_warehouse}}</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartWarehouse" class="form-control" id="shopping-cart-warehouse-ID">
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowComment}}
+                                        <!-- Comment -->
+                                        <div class="form-group form-group-comment">
+                                            <label class="control-label col-md-3" for="shopping-cart-comment-ID">{{lang.shopping_cart_field_comment}}</label>
+                                            <div class="col-md-6">
+                                                <textarea name="shopCartComment" class="form-control" id="shopping-cart-comment-ID"></textarea>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order wizard buttons -->
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="javascript://" class="btn btn-success button-order-preview pull-right">Перегляд <span class="fa fa-chevron-right"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-pane sample-pane wizard-page-preview" data-step="2">
+                    <h4>Перегляд замовлення</h4>
+
+                    {{#if data.info.hasPromo }}
+                        {{#unless data.info.allProductsWithPromo }}
+                        <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+                            <i class="fa fa-exclamation-circle fa-fw"></i>Не на всі товари діє знижка <strong>{{data.promo.Discount}}<span class="percentType">%</span></strong>
+                        </div>
+                        {{/unless}}
+                    {{/if}}
+                    <div class="shop-widget-productlist">
+                    {{#each data.items }}
+                        <div class="wrapper">
+                            <div class="product-row">
+                                {{#if ../data.info.hasPromo}}
+                                    {{#unless ../../data.info.allProductsWithPromo}}
+                                        {{#if ../../IsPromo }}
+                                            <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                                        {{else}}
+                                            <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                                        {{/if}}
+                                    {{/unless}}
+                                {{/if}}
+                                <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                                <div class="shop-product-image shop-product-image-main">
+                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                                        <div class="image productimage noimage image_{{ID}}">
+                                            {{#if Images.[0].xs}}
+                                            {{>base/hbs/animationFacebook}}
+                                            {{/if}}
+                                        </div>
+                                        {{#if Images.[0].xs}}
+                                        <script>
+                                        (function() {
+                                            require(["base/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                                img.title = "{{Name}}";
+                                                img.className = "image img-responsive";
+                                                $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                            }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                                        })();
+                                        </script>
+                                        {{/if}}
+                                    </a>
+                                </div>
+                                <span class="product-name">
+                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                                </span>
+                                {{#each _prices.others}}
+                                    <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                                {{#if _promoIsApplied}}
+                                <span class="label label-success">- {{_promo.Discount}}%</span>
+                                {{/if}}
+                                <span class="label label-default">x</span>
+                                <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
+                                <span class="label label-default">=</span>
+                                {{#each _totalSummary._totals}}
+                                    <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/each}}
+                    </div>
+
+                    <div class="well cartInfo">
+                        {{#if data.info.hasPromo }}
+                        <div class="shopCartDiscount">
+                            <span class="value-prefix">Знижка:</span>
+                            <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+                            <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+                        </div>
+                        {{/if}}
+                        <div class="shopCartTotal">
+                            <span class="value-prefix">До оплати:</span>
+                            {{#each data.totalSummary._totals}}
+                                <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div class="well preview">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form form-small">
+                                    <form class="form-horizontal form-order-preview">
+                                        {{#if data.account.ID }}
+                                            <input type="hidden" name="shopCartProfileID" value="{{data.account.ID}}">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.FirstName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_lastName}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.LastName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_email}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.EMail}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_phone}}</label>
+                                                <div class="col-md-6">
+                                                    <span class="form-control">{{data.account.Phone}}</span>
+                                                </div>
+                                            </div>
+                                            <!-- account addresses -->
+                                            <div class="form-group form-group-accountAddress">
+                                                <h4>{{lang.profile_page_overview_section_addresses_title}}</h4>
+                                                <label class="control-label col-md-3" for="name1">{{lang.shopping_cart_field_profile_address}}</label>
+                                                <div class="col-md-6">
+                                                    <span name="shopCartProfileAddressID" class="form-control"></span>
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowName}}
+                                            <!-- Name -->
+                                            <div class="form-group form-group-firstName">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
+                                                <div class="col-md-6">
+                                                    <span name="shopCartUserName" class="form-control"></span>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowEMail}}
+                                            <!-- Email -->
+                                            <div class="form-group form-group-email">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_email}}</label>
+                                                <div class="col-md-6">
+                                                    <span name="shopCartUserEmail" class="form-control"></span>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            {{#if instances.shop.settings.FORMORDER.ShowPhone}}
+                                            <!-- Phone -->
+                                            <div class="form-group form-group-phone">
+                                                <label class="control-label col-md-3">{{lang.shopping_cart_field_phone}}</label>
+                                                <div class="col-md-6">
+                                                    <span name="shopCartUserPhone" class="form-control"></span>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowAddress}}
+                                        <!-- Address -->
+                                        <div class="form-group form-group-address">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_address}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartUserAddress" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowPOBox}}
+                                        <!-- POBox -->
+                                        <div class="form-group form-group-pobox">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_pobox}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartUserPOBox" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowCountry}}
+                                        <!-- Country -->
+                                        <div class="form-group form-group-country">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_country}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartUserCountry" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowCity}}
+                                        <!-- Country -->
+                                        <div class="form-group form-group-city">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_city}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartUserCity" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowDeliveryAganet}}
+                                        <!-- Delivery method -->
+                                        <div class="form-group form-group-logistic">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_logistic}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartLogistic" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        <!-- Warehouse -->
+                                        <div class="form-group form-group-warehouse hide">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_warehouse}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartWarehouse" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if instances.shop.settings.FORMORDER.ShowComment}}
+                                        <!-- Comment -->
+                                        <div class="form-group form-group-comment">
+                                            <label class="control-label col-md-3">{{lang.shopping_cart_field_comment}}</label>
+                                            <div class="col-md-6">
+                                                <span name="shopCartComment" class="form-control"></span>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order wizard buttons -->
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="javascript://" class="btn btn-success button-order-back">Назад</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="javascript://" class="btn btn-success button-order-save pull-right">Оформити <span class="fa fa-check"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="step-pane active sample-pane" data-step="3">
+                    <h4>Дякуємо за Ваше замовлення!</h4>
+                    <div class="panel panel-success">
+                        <!-- List group -->
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                Наш менеджер зателефонує Вам найближчим часом, якщо у нас виникнуть додаткові запимтання щодо Вашого замовлення.
+                            </div>
+                            <div class="list-group-item">
+                                Код замовлення: <span class="label label-info">{{data.Hash}}</span>
+                                <sub class="text-danger">Збережіть будьласка собі цей код. У разі виникнення запитань необхідно буде цей код нам повідомити.</sub>
+                            </div>
+                            <div class="list-group-item hidden">
+                                Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання: <a href="{{app.location.origin}}/#shop/tracking/{{data.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.Hash}}</a>
+                            </div>
+                            <div class="list-group-item hidden">
+                                Також Ви можете переглянути всі Ваші замовлення в особистому кабінеті.
+                            </div>
+                            <div class="list-group-item">
+                                Якщо у Вас виникли будь-які запитання то неодмінно подзвоніть нам.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/unless}}
+            </div>
+        </div>
+    {{else}}
+        <div class="alert alert-warning">Ваш кошик порожній</div>
+    {{/if}}
+</div>

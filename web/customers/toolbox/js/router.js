@@ -1,11 +1,11 @@
-define("customer/js/router", [
-    'default/js/lib/sandbox',
+define([
+    'sandbox',
     'jquery',
-    'default/js/lib/underscore',
-    'default/js/lib/auth',
-    'default/js/lib/cache',
-    'default/js/plugin/hbs!default/hbs/animationFacebook',
-    'default/js/lib/bootstrap'
+    'underscore',
+    'auth',
+    'cache',
+    'hbs!base/hbs/animationFacebook',
+    'bootstrap'
 ], function (Sandbox, $, _, Auth, Cache, tplFBAnim) {
 
     APP.dfd.customerReady = new $.Deferred();

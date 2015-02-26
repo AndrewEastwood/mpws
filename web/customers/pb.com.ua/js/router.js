@@ -1,9 +1,8 @@
-define("customer/js/router", [
-    'default/js/lib/sandbox',
+define([
+    'sandbox',
     'jquery',
-    'default/js/lib/underscore',
-    'customer/js/view/breadcrumb',
-    'default/js/plugin/css!customer/css/theme.css'
+    'underscore',
+    'customer/js/view/breadcrumb'
 ], function (Sandbox, $, _, Breadcrumb) {
 
     var _customerOptions = {};
