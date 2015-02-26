@@ -1,1 +1,0 @@
-define("plugin/dashboard/site/js/router", {});
