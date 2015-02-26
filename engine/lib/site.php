@@ -51,7 +51,10 @@ class site {
         $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layout, $app->isDebug());
         $layoutBodyCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layoutBody, $app->isDebug());
 
-        // var_dump($displayCustomer);
+        // var_dump($layoutCustomer);
+        // var_dump($layoutBodyCustomer);
+        // var_dump($app->isDebug());
+        // var_dump($layoutBodyCustomer);
         // var_dump($version);
         // var_dump($layoutCustomer, 'layoutCustomer');
         // var_dump($layoutDefault, 'layoutDefault');
@@ -66,8 +69,7 @@ class site {
         $initialJS = "{
             LOCALE: '" . $locale . "',
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
-            ISDEV: " . ($app->isDebug() ? 'true' : 'false') . ",
-            ENV: '" . $app->getEnvironment() . "',
+            DEBUG: " . ($app->isDebug() ? 'true' : 'false') . ",
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             MPWS_VERSION: '" . $version . "',
@@ -100,6 +102,7 @@ class site {
         $html = str_replace("{{MPWS_VERSION}}", $version, $html);
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
         $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
+        $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);
 
         return $html;
     }

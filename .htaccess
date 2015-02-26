@@ -15,7 +15,7 @@ RewriteRule ^(.*)$ /engine/controllers/snapshot.php?$1 [QSA,L]
 
 # STATIC:
 RewriteRule ^static/customers/(.*)/nls/(.*) /engine/controllers/nls.php?customer=$1&lang=$2 [L]
-RewriteRule ^static/(customers|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
+RewriteRule ^static/(.*) /web/$1 [L]
 
 # API
 #RewriteRule ^api\.js?(.*) /engine/controllers/api.php?$1 [QSA,L]

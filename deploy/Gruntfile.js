@@ -1,151 +1,138 @@
-module.exports = function(grunt) {
+'use strict';
 
-    var version = grunt.option('ver') || 'atlantis';
-    var customer = grunt.option('app') || '**';
-    // var mode = grunt.option('mode') || 'all';
-    // var allModes = ['site', 'toolbox'];
+module.exports = function (grunt) {
 
-    if (!customer)
-        throw "Empty customer name";
+    // Configurable paths for the application
+    var webPath = '../web/',
+        distPath = '../web/build/',
+        staticPathCustomers = '../web/customers/**/static/',
+        staticPathPlugins = '../web/plugin/**/static/',
+        paths = {
+            'web': webPath,
+            'dist': distPath,
+            'baseLess': webPath + 'base/atlantis/static/less/',
+            'customerCss': staticPathCustomers + 'css/',
+            'customerJs': staticPathCustomers + 'js/',
+            'customerLess': staticPathCustomers + 'less/',
+            'pluginJsSite': staticPathPlugins + 'site/js/',
+            'pluginJsToolbox': staticPathPlugins + 'toolbox/js/',
+            'pluginJsCommon': staticPathPlugins + 'common/js/'
+        };
 
-    function _getBuildConfig () {
+    // Load grunt tasks automatically
+    require('load-grunt-tasks')(grunt);
 
-        var _baseConfigLess = {};
-        var _baseConfigWatch = {};
+    // Time how long tasks take. Can help when optimizing build times
+    require('time-grunt')(grunt);
 
-        var _getPaths = function () {
-            var _dirAppBuild = 'build/';
-            var _dirAppJs = 'static/js';
-            var _dirAppHbs = 'static/hbs';
-            var _dirAppLess = 'static/less';
-            var _dirAppCss = 'static/css';
-            // var _dirCommonLess = 'static/common/less';
+    // Define the configuration for all the tasks
+    grunt.initConfig({
 
-            var _dirDefaultLess = 'static/less';
+        // Project settings
+        paths: paths,
 
-            var _srcLessCustomerDir = '../web/customers/';
-            var _srcLessCustomer = customer + '/' + _dirAppLess + '/';
-            // var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
-            var _srcLessDefault = '../web/base/' + version + '/' + _dirDefaultLess;
+        // Watches files for changes and runs tasks based on the changed files
+        watch: {
+            js: {
+                files: ['<%= paths.customerJs %>{,*/}*.js'],
+                tasks: ['newer:jshint:all']
+            },
+            less: {
+                files: ['<%= paths.assets %>less/{,*/}*.less'],
+                tasks: ['less:all']
+            },
+            gruntfile: {
+                files: ['Gruntfile.js']
+            }
+        },
 
-            var _devLessCustomer = '../web/customers/' + customer + '/' + _dirAppCss + '/';
-            var _buildLessCustomer = '../web/customers/' + customer + '/' + _dirAppBuild + '/' + _dirAppLess + '/';
+        // Compiles LESS to CSS
+        less: {
+            all: {
+                options: {
+                    paths: ['<%= paths.customerLess %>', '<%= paths.baseLess %>']
+                    //sourceMap: true,
+                    //sourceMapURL: 'main.css.map',
+                    //sourceMapRootpath: '../../'
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= paths.web %>',
+                    dest: '<%= paths.dist %>',
+                    src: '**/*'
+                    rename  : function (dest, src) {
+                      var folder    = src.substring(0, src.lastIndexOf('/'));
+                      var filename  = src.substring(src.lastIndexOf('/'), src.length);
 
-            return {
-                dirAppBuild : _dirAppBuild,
-                dirAppJs : _dirAppJs,
-                dirAppHbs : _dirAppHbs,
-                dirAppLess : _dirAppLess,
-                dirAppCss : _dirAppCss,
-                // dirCommonLess : _dirCommonLess,
-                dirDefaultLess : _dirDefaultLess,
-                srcLessCustomer : _srcLessCustomer,
-                srcLessCustomerDir : _srcLessCustomerDir,
-                // srcLessCustomerCommon : _srcLessCustomerCommon,
-                srcLessDefault : _srcLessDefault,
-                devLessCustomer : _devLessCustomer,
-                buildLessCustomer : _buildLessCustomer
+                      filename  = filename.substring(0, filename.lastIndexOf('.'));
+
+                      return dest + folder + filename + '.min.js';
+                    }
+                    '<%= paths.customerCss %>theme.css': '<%= paths.customerLess %>theme.less'
+                }]
+            }
+        },
+
+        // Checks JS for common mistakes and style guide
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-stylish')
+            },
+            all: {
+                src: [
+                    'Gruntfile.js',
+                    '<%= paths.customerJs %>{,*/}*.js',
+                    '<%= paths.pluginJsCommon %>{,*/}*.js',
+                    '<%= paths.pluginJsToolbox %>{,*/}*.js',
+                    '<%= paths.pluginJsSite %>{,*/}*.js',
+                ]
+            }
+        },
+
+        // Copies remaining files to places other tasks can use
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= paths.web %>',
+                    dest: '<%= paths.dist %>',
+                    src: '**/*'
+                }]
+            }
+        },
+
+        // Concats and uglifies all JS files that are under control of RequireJS
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: paths.customerJs,
+                    mainConfigFile: paths.app +'loader.js',
+                    name: 'app',
+                    out: paths.customerJs + 'js/router.min.js',
+                    include: ['loader.js'],
+                    findNestedDependencies: true,
+                    optimizeAllPluginResources: false,
+                    optimize: 'uglify2',
+                    uglify2: {
+                        output: {
+                            'quote_keys': true
+                        }
+                    },
+                    keepBuildDir: true
+                }
             }
         }
+    });
 
-        var _getConfigLess = function () {
+    grunt.registerTask('default', [
+        // 'jshint:all',
+        'less:all',
+        'copy:dist'
+    ]);
 
-            var _paths = _getPaths();
-
-            _baseConfigLess['development'] = {
-                options: {
-                    paths: [
-                        _paths.srcLessCustomerDir,
-                        _paths.srcLessDefault
-                    ]
-                },
-                files: [
-                    // target name
-                    {
-                        // no need for files, the config below should work
-                        expand: true,
-                        cwd: _paths.srcLessCustomerDir + _paths.srcLessCustomer,
-                        src: [ "**/*", "*.less"],
-                        dest: _paths.devLessCustomer,
-                        ext: '.css'
-                    }
-                ]
-            };
-
-            // unless we have production ready we keep this commented
-            // _baseConfigLess['production'] = {
-            //     options: {
-            //         paths: [
-            //             _paths.srcLessCustomerDir,
-            //             _paths.srcLessDefault
-            //         ],
-            //         cleancss: true
-            //     },
-            //     files: [
-            //         // target name
-            //         {
-            //             // no need for files, the config below should work
-            //             expand: true,
-            //             cwd: _paths.srcLessCustomerDir,
-            //             src: [_paths.srcLessCustomer + "**/*", _paths.srcLessCustomer + "*.less"],
-            //             dest: _paths.buildLessCustomer,
-            //             ext: '.css'
-            //         }
-            //     ]
-            // };
-
-        }
-
-        var _getConfigWatch = function () {
-            var _paths = _getPaths();
-
-            _baseConfigWatch['less'] = {
-                // Which files to watch (all .less files recursively in the less directory)
-                files: [
-                    _paths.srcLessCustomerDir + _paths.srcLessCustomer + '*.less',
-                    _paths.srcLessCustomerDir + _paths.srcLessCustomer + '**/*.less',
-                    _paths.srcLessDefault + '*.less',
-                    _paths.srcLessDefault + '**/*.less'
-                ],
-                tasks: ['less:development'],
-                options: {
-                    nospawn: true
-                }
-            };
-        }
-
-        var _getInBundle = function () {
-            _getConfigLess();
-            _getConfigWatch();
-        }
-
-        // if (mode === 'all')
-        //     for (var key in allModes) {
-        //         _getInBundle(allModes[key])
-        //     }
-        // else
-        _getInBundle();
-
-        return {
-            less: _baseConfigLess,
-            watch: _baseConfigWatch
-        }
-    }
-
-    grunt.initConfig(_getBuildConfig());
-
-    // grunt.initConfig({
-    // });
-
-    // grunt.loadNpmTasks('grunt-contrib-uglify');
-    // grunt.loadNpmTasks('grunt-contrib-jshint');
-    // grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    // grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-less');
-
-    grunt.registerTask('style_watch', ['less:development*', 'watch']);
-
-    // grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
-
-};;
+    grunt.registerTask('deploy', 'Deployment', function () {
+        grunt.log.writeln('Running production build...');
+        grunt.task.run([/*'jshint', */'requirejs', 'less', 'copy:dist']);
+    });
+};

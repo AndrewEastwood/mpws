@@ -166,13 +166,15 @@ class path {
     }
 
     public static function getWebStaticTemplateFilePath ($displayCustomer, $version, $templateName, $isDebug) {
-        if ($isDebug) {
-            $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'static', 'hbs', $templateName);
-            $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'static', 'hbs', $templateName);
-        } else {
-            $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'static', 'hbs', $templateName);
-            $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'static', 'hbs', $templateName);
-        }
+        // if ($isDebug) {
+        //     $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'hbs', $templateName);
+        //     $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'hbs', $templateName);
+        // } else {
+            $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'hbs', $templateName);
+            $templateDefault = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameDefault(), $version, 'hbs', $templateName);
+        // }
+        // var_dump($templateCustomer);
+        // var_dump($templateDefault);
         // return available template file path
         if (file_exists($templateCustomer))
             return $templateCustomer;
