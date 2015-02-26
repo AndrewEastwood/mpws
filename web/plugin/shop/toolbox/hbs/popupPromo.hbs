@@ -1,0 +1,47 @@
+<div class="panel">
+    <div class="form-horizontal">
+        {{#if data._isActive}}
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-triangle"></i> Неможна редагувати знижку діючої промо-акції
+        </div>
+        {{/if}}
+        {{#if data.Code}}
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="textinput">{{lang.popup_promo_filed_Code}}</label>
+            <div class="col-md-9">
+                <span class="promo-code">{{data.Code}}</span>
+            </div>
+        </div>
+        {{/if}}
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="textinput">{{lang.popup_promo_filed_DateStart}}</label>
+            <div class="col-md-9">
+                <span id="datestart" class="date" data-type="combodate" data-title="{{lang.popup_promo_filed_DateStart}}">{{data.DateStart}}</span>
+            </div>
+        </div>
+        <!-- Text input -->
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="textarea">{{lang.popup_promo_filed_DateExpire}}</label>
+            <div class="col-md-9">
+                <span id="dateexpire" class="date" data-type="combodate" data-title="{{lang.popup_promo_filed_DateExpire}}">{{data.DateExpire}}</span>
+            </div>
+        </div>
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="textinput">{{lang.popup_promo_filed_Discount}}</label>
+            <div class="col-md-9">
+                {{#if data._isFuture}}
+                <input id="discount" type="text" class="form-control input-md" value="{{data.Discount}}">
+                {{else}}
+                    {{#if data.ID}}
+                    <input id="discount" type="text" class="form-control input-md disabled" value="{{data.Discount}}" disabled>
+                    {{else}}
+                    <input id="discount" type="text" class="form-control input-md" value="{{data.Discount}}">
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

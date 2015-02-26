@@ -1,0 +1,120 @@
+{{#if data.orders }}
+    
+<div class="panel-group" id="accordion">
+    {{#each data.orders }}
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapse_{{order.ID}}">
+
+
+                {{#if_eq order.Status "SHOP_CLOSED" }}
+                <span class="shop-orderstatus label label-default">
+                {{else}}
+                    {{#if_eq order.Status "NEW" }}
+                    <span class="shop-orderstatus label label-success">
+                    {{else}}
+                    <span class="shop-orderstatus label label-warning">
+                    {{/if_eq}}
+                {{/if_eq}}
+                    {{mpwsGetValueByKey ../../lang key=order.Status status="order_status_" }}
+                </span>
+
+                <span>
+                    <span>Замовлення # {{order.ID}} на суму:</span>
+                    <span class="value label label-success">
+                        {{info.total}}<span class="moneyType">грн.</span>
+                    </span>
+                </span>
+
+            </a>
+        </h4>
+    </div>
+    <div id="collapse_{{order.ID}}" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="prefix">Дата створення:</span>
+                <span class="label label-success">{{order.DateCreated}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="prefix">Дата останнього оновлення:</span>
+                <span class="label label-success">{{order.DateUpdated}}</span>
+            </li>
+            {{#if order.Shipping }}
+            <li class="list-group-item">
+                <span class="prefix">Перевізник:</span>
+                <span class="label label-success">
+                    {{#if_eq order.Shipping "self" }}
+                        Самовивіз
+                    {{else}}
+                        {{order.Shipping}}
+                    {{/if_eq}}
+                </span>
+            </li>
+            {{/if}}
+            {{#and order.Shipping Warehouse }}
+            <li class="list-group-item">
+                <span class="prefix">Номер складу:</span>
+                <span class="label label-success">{{order.Warehouse}}</span>
+            </li>
+            {{/and}}
+            {{#if order.Comment }}
+            <li class="list-group-item">
+                <span class="prefix">Ваш коментар:</span>
+                <span class="label label-success">{{order.Comment}}</span>
+            </li>
+            {{/if}}
+            <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
+            <li class="list-group-item"><a href="{{app.location.origin}}/#!/shop/tracking/{{Hash}}">{{app.location.origin}}/#shop/tracking/{{order.Hash}}</a></li>
+        </ul>
+
+        <div class="shop-widget-productlist">
+        {{#each boughts }}
+            <div class="wrapper">
+                <div class="shop-product-image shop-product-image-main">
+                    <a href="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{OriginName}} - {{Name}}">
+                        <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
+                    </a>
+                </div>
+                <div class="product-row">
+                    <span class="product-name"><a href="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+                    <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
+                    <span class="label label-default">x</span>
+                    <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
+                    <span class="label label-default">=</span>
+                    <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+
+
+        <div class="well cartInfo">
+            <div class="shopCartSubTotal">
+                <span class="value-prefix">Сума:</span>
+                <span class="value">{{info._orderSubTotal}}<span class="moneyType">грн.</span></span>
+            </div>
+            <div class="shopCartTotal">
+                <span class="value-prefix">До оплати:</span>
+                <span class="value label label-success">{{info.total}}<span class="moneyType">грн.</span></span>
+            </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+    {{/each}}
+</div>
+
+
+{{else}}
+
+    <div class="alert alert-danger">У вас немає замовлень</div>
+{{/if}}

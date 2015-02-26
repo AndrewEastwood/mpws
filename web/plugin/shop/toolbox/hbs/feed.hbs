@@ -1,0 +1,63 @@
+{{#if_eq data.type 'uploaded'}}
+{{#if data.running}}
+<div class="feed-item progress progress-striped active">
+    <div class="progress-bar" style="width: 100%;">
+        <a class="feed-item {{data.status}}" href="javascript://" title="{{data.name}}" data-id="{{data.ID}}">
+            <span class="sr-only"></span>
+            <span class="time label label-warning pull-left">{{data.fromNowHumanized}}</span>
+            <span class="name">{{data.name}}</span>
+            <i class="btn fa fa-times pull-right text-warning cancel-import"></i>
+        </a>
+    </div>
+</div>
+{{else}}
+{{#if data.complete}}
+<div class="feed-item {{data.status}}">
+    <div class="panel-heading" role="tab" id="heading{{data.ID}}">
+        <a data-toggle="collapse" data-parent="#uploaded-feeds" data-id="{{data.ID}}" href="#{{data.ID}}" aria-expanded="true" aria-controls="{{data.ID}}">
+            <i class="fa fa-check-circle fa-fw pull-left text-success"></i>
+            <span class="time label label-success pull-left">{{data.fromNowHumanized}}</span>
+            <span class="name">{{data.name}}</span>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
+        </a>
+    </div>
+    <div id="{{data.ID}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{data.ID}}">
+        <div class="panel-body feed-results"><pre>{{data.results}}</pre></div>
+    </div>
+</div>
+{{/if}}
+{{#if data.scheduled}}
+<div class="feed-item {{data.status}}">
+    <div class="panel-heading" id="{{data.ID}}">
+        <a class="feed-item {{data.status}}" href="javascript://" title="{{data.name}}" data-id="{{data.ID}}">
+            <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
+            <span class="time label label-default pull-left">{{data.fromNowHumanized}}</span>
+            <span class="name">{{data.name}}</span>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
+            <i class="fa fa-spinner fa-spin fa-fw pull-right text-info"></i>
+        </a>
+    </div>
+</div>
+{{/if}}
+{{#or data.new data.canceled}}
+<div class="feed-item {{data.status}}">
+    <div class="panel-heading" id="{{data.ID}}">
+        <a class="feed-item {{data.status}}" href="javascript://" title="{{data.name}}" data-id="{{data.ID}}">
+            <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
+            <span class="time label label-warning pull-left">{{data.fromNowHumanized}}</span>
+            <span class="name">{{data.name}}</span>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
+            <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
+        </a>
+    </div>
+</div>
+{{/or}}
+{{/if}}
+{{/if_eq}}
+{{#if_eq data.type 'generated'}}
+<a class="feed-item" href="{{data.link}}" target="_blank" title="{{data.name}}" data-id="{{data.ID}}">
+    <span class="time label label-default pull-left">{{data.fromNowHumanized}}</span>
+    <span class="name">{{data.name}}</span>
+    <i class="fa fa-download pull-right text-info"></i>
+</a>
+{{/if_eq}}

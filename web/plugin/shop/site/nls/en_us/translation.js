@@ -1,0 +1,13 @@
+define("plugin/shop/site/nls/en_us/translation", [
+    // here we will call default lang pkgs to override them
+    'default/js/lib/underscore',
+    'website/nls/en_us/plugin_shop'
+], function (_, CustomerPluginShop) {
+    return _.extend({}, {
+        order_status_NEW: 'New',
+        order_status_ACTIVE: 'In Progress',
+        order_status_LOGISTIC_DELIVERING: 'Shipped',
+        order_status_LOGISTIC_DELIVERED: 'Delivered',
+        order_status_SHOP_CLOSED: 'Completed',
+    }, CustomerPluginShop);
+});

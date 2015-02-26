@@ -1,0 +1,51 @@
+<div class="panel-heading">
+    <i class="fa fa-refresh fa-fw refresh-userlist-currencies text-info" title="Обновити список валют"></i> Відображення валют
+</div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+    <div class="js-loading"></div>
+    <div class="list-group-misc hidden">
+        <a href="javascript://" class="list-group-item db-currency-type">
+            <span>Всі ціни в базі подані в:</span>
+            <span class="currency-list currency-list-db-default"></span>
+        </a>
+        <a href="javascript://" class="list-group-item default-site-currency-type">
+            <span>Основна валюта сайту:</span>
+            <span class="currency-list currency-list-site-default"></span>
+        </a>
+        <a href="javascript://" class="list-group-item show-currency-switcher">
+            <span>Показувати вибір валюти:</span>
+            <input type="checkbox" class="switcher switcher-show-currency-switcher">
+        </a>
+    </div>
+    <hr>
+    {{#if data}}
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item currency-display" data-id="{{ID}}">
+            <span class="name-prefix">Валюту</span>
+            <strong class="name">{{CurrencyName}}</strong>
+            <span>відображати у форматі</span>
+            <strong class="editable js-editable-format" data-type="text">{{Format}}</strong>
+            <span>коротка назва: </span>
+            <strong class="editable js-editable-label" data-type="text">{{Label}}</strong>
+        </a>
+    {{/each}}
+    </div>
+    {{else}}
+    <div class="label label-default label-no-data">Немає даних</div>
+    <div class="list-group hidden"></div>
+    {{/if}}
+</div>
+<!-- /.panel-body -->
+<a href="javascript://" class="list-group-item currency-display is-new currency-display-template hidden">
+    <span class="name-prefix">Валюту</span>
+    <strong class="name"></strong>
+    <span>відображати у форматі</span>
+    <strong class="editable js-editable-format" data-type="text">0.00</strong>
+    <span>коротка назва: </span>
+    <strong class="editable js-editable-label" data-type="text"></strong>
+</a>
+<div class="panel-footer">
+    <button type="button" class="btn btn-success btn-xs save-currency-display">Зберегти</button>
+</div>

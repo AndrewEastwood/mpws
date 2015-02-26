@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="robots" content="index,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-control" content="private">
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="{{URL_STATIC_CUSTOMER}}/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{{URL_STATIC_CUSTOMER}}/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{{URL_STATIC_CUSTOMER}}/css/theme.css">
+</head>
+<body class="MPWSPage" name="Page">
+
+    {{BODY}}
+
+    <div class="static-content-wrapper render-hidden" title="page basic javascript container">
+        <script type="text/javascript" id="system">
+            var MPWS = {{SYSTEMJS}};
+        </script>
+        <script type="text/javascript" data-main="{{PATH_STATIC}}base/{{MPWS_VERSION}}/js/loader.js" src="{{PATH_STATIC}}base/{{MPWS_VERSION}}/js/lib/require.js"></script>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<div class="well">
+    <h3>{{lang.profile_page_edit_title}}</h3>
+    {{#if data.success }}
+        <div id="msg" class="alert alert-success">{{lang.profile_page_edit_message_saveSuccess}}</div>
+    {{else}}
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.profile_page_edit_error_commonError}}
+            <ul class="errors">
+            {{#each data.errors}}
+                <li>
+                    <strong>
+                        {{mpwsGetValueByKey ../lang key=@key prefix="profile_page_edit_error_atField_"}}
+                    </strong>
+                    <ul>
+                    {{#each this}}
+                        <li>{{mpwsGetValueByKey ../../lang key=this prefix="profile_page_edit_error_"}}</li>
+                    {{/each}}
+                    </ul>
+                </li>
+            {{/each}}
+            </ul>
+        </div>
+        {{/mpwsIsNotEmpty}}
+    {{/if}}
+    <table id="user" class="table table-bordered table-striped">
+        <tbody> 
+            <tr>
+                <td width="20%">{{lang.profile_page_edit_field_firstName}}</td>
+                <td><a href="#" id="firstname" class="myeditable editable editable-click" data-type="text" data-name="FirstName" data-original-title="{{lang.profile_page_edit_field_firstName_placeholder}}">{{data.FirstName}}</a></td>
+            </tr>
+            <tr>
+                <td>{{lang.profile_page_edit_field_lastName}}</td>
+                <td><a href="#" class="myeditable editable editable-click" data-type="text" data-name="LastName" data-original-title="{{lang.profile_page_edit_field_lastName_placeholder}}">{{data.LastName}}</a></td>
+            </tr>
+            <tr>
+                <td>{{lang.profile_page_edit_field_phone}}</td>
+                <td><a href="#" class="myeditable editable editable-click myeditable_phone" data-type="tel" data-name="Phone" data-original-title="{{lang.profile_page_edit_field_phone_placeholder}}">{{data.Phone}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <button id="save-btn" class="btn btn-primary" style="display: inline-block;">{{lang.profile_page_edit_button_save}}</button>
+    </div>
+</div>

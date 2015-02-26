@@ -1,0 +1,79 @@
+<table class="table table-bordered table-striped account-profile-address-entry">
+{{#if data.success }}
+    <tr>
+        <td colspan="2">
+            <div id="msg" class="alert alert-success">{{lang.profile_page_editAddress_saveSuccess}}</div>
+        </td>
+    </tr>
+{{else}}
+    {{#mpwsIsNotEmpty data.errors }}
+    <tr>
+        <td colspan="2">
+            <div id="msg" class="alert alert-danger">
+                {{lang.profile_page_editAddress_error_commonError}}
+                <ul class="errors">
+                {{#each data.errors}}
+                    <li>
+                        <strong>
+                            {{mpwsGetValueByKey ../lang key=@key prefix="profile_page_edit_error_atField_"}}
+                        </strong>
+                        <ul>
+                        {{#each this}}
+                            <li>{{mpwsGetValueByKey ../../lang key=this prefix="profile_page_edit_error_"}}</li>
+                        {{/each}}
+                        </ul>
+                    </li>
+                {{/each}}
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {{/mpwsIsNotEmpty}}
+{{/if}}
+    <tr>
+        <td>
+            <a href="javascript://" class="account-address-remove" data-id="{{data.ID}}">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </td>
+        <td>
+            <table class="table">
+                <tr>
+                    <td width="20%">{{lang.profile_page_addresses_Address}}</td>
+                    <td>
+                        <a href="#" id="account-address-ID" class="editable editable-click", data-type="text" data-name="Address">
+                            {{data.Address}}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{lang.profile_page_addresses_POBox}}</td>
+                    <td>
+                        <a href="#" id="account-pobox-ID" class="editable editable-click", data-type="text" data-name="POBox">
+                            {{data.POBox}}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{lang.profile_page_addresses_Country}}</td>
+                    <td>
+                        <a href="#" id="account-country-ID" class="editable editable-click", data-type="text" data-name="Country">
+                            {{data.Country}}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{lang.profile_page_addresses_City}}</td>
+                    <td>
+                        <a href="#" id="account-city-ID" class="editable editable-click", data-type="text" data-name="City">
+                            {{data.City}}
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <div>
+                <button id="save-btn" class="btn btn-primary" data-id="{{data.ID}}">{{lang.profile_page_addresses_button_saveAddress}}</button>
+            </div>
+        </td>
+    </tr>
+</table>
