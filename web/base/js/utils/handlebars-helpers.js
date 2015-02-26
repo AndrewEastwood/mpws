@@ -5,7 +5,7 @@ define([
     'handlebars',
     'underscore',
     'formatter-price',
-    'base/js/lib/extend.string'
+    'string'
 ], function (Handlebars, _, priceFmt) {
     // The module to be exported
     var helpers = {

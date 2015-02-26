@@ -1,6 +1,6 @@
 define([
     "underscore",
-    "base/js/lib/extend.string"
+    "string"
 ], function(_) {
 
     var _events = {};
