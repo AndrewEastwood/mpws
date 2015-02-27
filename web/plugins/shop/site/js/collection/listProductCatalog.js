@@ -1,11 +1,10 @@
 define([
     'underscore',
     'backbone',
-    'cache',
+    'cachejs',
     'plugins/shop/site/js/model/product',
-    'plugins/shop/common/js/lib/utils',
     'jquery.cookie',
-], function (_, Backbone, Cache, ModelProduct, ShopUtils) {
+], function (_, Backbone, Cache, ModelProduct) {
 
     var ListProductCatalog = Backbone.Collection.extend({
         model: ModelProduct,

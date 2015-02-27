@@ -3,13 +3,13 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/category',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/editCategory',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/select2/select2',
+    'select2',
     'base/js/lib/jquery.fileupload/jquery.fileupload',
     'base/js/lib/jquery.fileupload/vendor/canvas-to-blob',
     'base/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',

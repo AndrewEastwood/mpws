@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'base/js/lib/handlebars',
+    'handlebars',
     'hbs!plugins/shop/site/hbs/productItemShort',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'

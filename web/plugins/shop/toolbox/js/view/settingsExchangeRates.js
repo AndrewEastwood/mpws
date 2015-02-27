@@ -2,15 +2,15 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/collection/listExchangeRates',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/settingsExchangeRates',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/select2/select2',
-    'base/js/lib/bootstrap-editable',
-    'base/js/lib/bootstrap-switch'
+    'select2',
+    'bootstrap-editable',
+    'bootstrap-switch'
 ], function (Backbone, CollectionExchangeRates, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({

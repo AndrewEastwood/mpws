@@ -1,11 +1,12 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/product',
-    'backbone-paginator',
-    'cache'
-], function (_, ModelProduct, PageableCollection, Cache) {
+    'cachejs',
+    'backbone-pageable'
+], function (Backbone, _, ModelProduct, Cache) {
 
-    var ListProducts = PageableCollection.extend({
+    var ListProducts = Backbone.PageableCollection.extend({
 
         model: ModelProduct,
 

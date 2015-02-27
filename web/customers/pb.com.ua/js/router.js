@@ -2,7 +2,7 @@ define([
     'sandbox',
     'jquery',
     'underscore',
-    'customer/js/view/breadcrumb'
+    'customers/pb.com.ua/js/view/breadcrumb'
 ], function (Sandbox, $, _, Breadcrumb) {
 
     var _customerOptions = {};

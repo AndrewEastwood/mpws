@@ -6,7 +6,7 @@ define([
     'hbs!plugins/system/common/hbs/partials/userAddress',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
-    'base/js/lib/bootstrap-editable'
+    'bootstrap-editable'
 ], function (Backbone, ModelUserAddress, Utils, BSAlert, tpl, lang) {
 
     var UserAddress = Backbone.View.extend({

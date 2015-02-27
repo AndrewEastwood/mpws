@@ -2,7 +2,7 @@ define([
     'jquery',
     'backbone',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'hbs!plugins/system/site/hbs/userPassword',
     /* lang */
     'i18n!plugins/system/site/nls/translation'

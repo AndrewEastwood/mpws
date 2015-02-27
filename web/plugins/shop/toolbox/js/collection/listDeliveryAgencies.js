@@ -1,10 +1,11 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/deliveryAgency',
-    'backbone-paginator'
-], function (_, ModelDeliveryAgency, PageableCollection) {
+    'backbone-pageable'
+], function (Backbone, _, ModelDeliveryAgency) {
 
-    var ListDeliveryAgencies = PageableCollection.extend({
+    var ListDeliveryAgencies = Backbone.PageableCollection.extend({
 
         model: ModelDeliveryAgency,
 

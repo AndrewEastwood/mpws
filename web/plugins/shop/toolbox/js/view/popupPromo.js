@@ -3,13 +3,13 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/promo',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/popupPromo',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-editable',
+    'bootstrap-editable',
     'moment'
 ], function (Sandbox, Backbone, ModelPromo, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 

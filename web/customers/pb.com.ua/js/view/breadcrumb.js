@@ -4,7 +4,7 @@ define([
     'backbone',
     'utils',
     /* template */
-    'hbs!customer/hbs/breadcrumb',
+    'hbs!customers/pb.com.ua/hbs/breadcrumb',
     /* ui components */
     'bootstrap'
 ], function ($, _, Backbone, Utils, tpl) {

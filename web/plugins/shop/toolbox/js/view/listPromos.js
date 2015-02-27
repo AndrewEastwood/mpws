@@ -3,7 +3,7 @@ define([
     'backbone',
     'utils',
     "backgrid",
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     /* collection */
     "plugins/shop/toolbox/js/collection/listPromos",
     /* template */

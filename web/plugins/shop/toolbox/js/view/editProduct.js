@@ -3,15 +3,15 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/product',
     'utils',
-    'cache',
-    'base/js/lib/bootstrap-dialog',
+    'cachejs',
+    'bootstrap-dialog',
     'bootstrap-alert',
     "formatter-price",
     /* template */
     'hbs!plugins/shop/toolbox/hbs/editProduct',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/select2/select2',
+    'select2',
     'base/js/lib/jquery.maskMoney',
     'bootstrap-tagsinput',
     'base/js/lib/jquery.fileupload/jquery.fileupload',
@@ -21,8 +21,8 @@ define([
     'base/js/lib/jquery.fileupload/jquery.iframe-transport',
     'base/js/lib/jquery.fileupload/jquery.fileupload-validate',
     'base/js/lib/jquery.fileupload/jquery.fileupload-image',
-    'base/js/lib/typeahead.jquery',
-    'base/js/lib/bootstrap-editable'
+    'typeahead',
+    'bootstrap-editable'
 ], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, tpl, lang) {
 
     function _getTitle (isEdit) {

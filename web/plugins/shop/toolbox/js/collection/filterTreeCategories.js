@@ -4,7 +4,7 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/category',
     'utils',
-    'cache'
+    'cachejs'
 ], function ($, _, Backbone, ModelCategory, Utils, Cache) {
 
     var CategoriesTree = Backbone.Collection.extend({

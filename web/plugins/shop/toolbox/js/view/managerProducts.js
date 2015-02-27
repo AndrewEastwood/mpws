@@ -1,7 +1,7 @@
 // this is a part of managerContent so it's better to move all into manager
 define([
     'sandbox',
-    'cache',
+    'cachejs',
     'underscore',
     'backbone',
     'utils',

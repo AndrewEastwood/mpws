@@ -3,7 +3,7 @@ define([
     'jquery',
     'underscore',
     'auth',
-    'cache',
+    'cachejs',
     'hbs!base/hbs/animationFacebook',
     'bootstrap'
 ], function (Sandbox, $, _, Auth, Cache, tplFBAnim) {

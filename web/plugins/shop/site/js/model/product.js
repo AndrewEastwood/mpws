@@ -1,8 +1,7 @@
 define([
     'backbone',
-    'underscore',
-    'plugins/shop/common/js/lib/utils'
-], function (Backbone, _, ShopUtils) {
+    'underscore'
+], function (Backbone, _) {
     // debugger;
     return Backbone.Model.extend({
         idAttribute: "ID",

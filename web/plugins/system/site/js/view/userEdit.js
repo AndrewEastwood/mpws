@@ -6,8 +6,8 @@ define([
     'hbs!plugins/system/site/hbs/userEdit',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
-    'base/js/lib/bootstrap-editable',
-    'base/js/lib/jquery.maskedinput'
+    'bootstrap-editable',
+    'jquery.maskedinput'
 ], function (Sandbox, $, Backbone, Utils, tpl, lang) {
 
     var AccountEdit = Backbone.View.extend({

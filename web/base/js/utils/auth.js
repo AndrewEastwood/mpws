@@ -3,7 +3,7 @@ define([
     "jquery",
     "underscore",
     'backbone',
-    "cache"
+    "cachejs"
 ], function (Sandbox, $, _, Backbone, Cache) {
 
     var authKey = APP.config.AUTHKEY;

@@ -1,7 +1,7 @@
 define([
     'backbone',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'hbs!plugins/shop/site/hbs/menuShipping'
 ], function (Backbone, Utils, BootstrapDialog, tpl) {
 

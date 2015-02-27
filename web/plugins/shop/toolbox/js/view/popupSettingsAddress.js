@@ -3,14 +3,14 @@ define([
     'backbone',
     'plugins/shop/common/js/model/setting',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/popupSettingsAddress',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/components/bootstrap3-editable',
-    'base/js/components/x-bootstrap-wysihtml5'
+    'bootstrap-editable',
+    // 'base/js/components/x-bootstrap-wysihtml5'
 ], function (Sandbox, Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
 
     var PopupSettingsAddress = Backbone.View.extend({

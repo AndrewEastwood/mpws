@@ -33,10 +33,12 @@
         'underscore',
         'backbone',
         'auth',
-        'base/js/lib/url',
-        'cache',
+        'jsurl',
+        'cachejs',
         'handlebars-helpers',
-        'base/js/lib/moment/locale/uk'
+        // localizations
+        'vendors/moment/locale/uk',
+        'vendors/select2/select2_locale_uk'
     ];
 
     // simple extend function

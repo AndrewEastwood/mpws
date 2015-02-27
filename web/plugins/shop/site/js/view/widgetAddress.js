@@ -2,7 +2,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     /* collection */
     'plugins/shop/common/js/collection/settings',
     /* template */

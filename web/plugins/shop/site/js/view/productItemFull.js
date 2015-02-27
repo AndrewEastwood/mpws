@@ -5,13 +5,13 @@ define([
     'plugins/shop/site/js/view/productItemShort',
     'plugins/shop/site/js/model/product',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'hbs!plugins/shop/site/hbs/productItemFull',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     /* enhanced ui */
     'bootstrap-magnify',
-    'base/js/lib/lightbox',
+    'lightbox',
     'base/js/lib/jquery.sparkline'
 ], function (Sandbox, Backbone, _, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
 

@@ -3,14 +3,14 @@ define([
     'plugins/shop/toolbox/js/collection/listDeliveryAgencies',
     'plugins/shop/common/js/model/setting',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/settingsDeliveryAgencies',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-editable',
-    'base/js/lib/bootstrap-switch'
+    'bootstrap-editable',
+    'bootstrap-switch'
 ], function (Backbone, CollectionDeliveryAgencies, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({

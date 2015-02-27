@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     'plugins/shop/toolbox/js/view/settingsAlerts',
     'plugins/shop/toolbox/js/view/settingsDeliveryAgencies',
     'plugins/shop/toolbox/js/view/settingsWebsiteFormOrder',
@@ -17,9 +17,9 @@ define([
     'hbs!plugins/shop/toolbox/hbs/settings',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/components/bootstrap3-editable',
-    'base/js/lib/jquery.maskedinput',
-    'base/js/lib/bootstrap-switch'
+    'bootstrap-editable',
+    'jquery.maskedinput',
+    'bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,
     ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress,
     ViewSettingsProduct, ViewSettingsSEO, ViewExchangeRates, ViewExchangeRatesDisplay, ViewWidgetPrivatBankExchageRates, tpl, lang) {

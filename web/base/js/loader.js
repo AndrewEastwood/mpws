@@ -17,40 +17,40 @@ require.config({
         'sandbox': 'base/js/utils/sandbox',
         'utils': 'base/js/utils/utils',
         // vendors
-        'backbone': 'base/js/vendors/backbone/backbone',
-        'backbone-pageable': 'base/js/vendors/backbone-pageable/lib/backbone-pageable',
-        'backgrid': 'base/js/vendors/backgrid/lib/backgrid',
-        'backgrid-filter': 'base/js/vendors/backgrid-filter/backgrid-filter',
-        'backgrid-htmlcell': 'base/js/vendors/backgrid-htmlcell/backgrid-htmlcell',
-        'backgrid-paginator': 'base/js/vendors/backgrid-paginator/backgrid-paginator',
-        'backgrid-select-all': 'base/js/vendors/backgrid-select-all/backgrid-select-all',
-        'backgrid-select2-cell': 'base/js/vendors/backgrid-select2-cell/backgrid-select2-cell',
-        'bootstrap': 'base/js/vendors/bootstrap/dist/js/bootstrap',
-        'bootstrap-select': 'base/js/vendors/bootstrap-select/dist/js/bootstrap-select',
-        'bootstrap-switch': 'base/js/vendors/bootstrap-switch/dist/js/bootstrap-switch',
-        'bootstrap-tagsinput': 'base/js/vendors/bootstrap-tagsinput/dist/js/bootstrap-tagsinput',
-        'bootstrap-dialog': 'base/js/vendors/bootstrap3-dialog/dist/js/bootstrap-dialog',
-        'cachejs': 'base/js/vendors/cachejs/cache',
-        'handlebars': 'base/js/vendors/handlebars/handlebars',
-        'jquery': 'base/js/vendors/jquery/jquery',
-        'jquery.bridget': 'base/js/vendors/jquery-bridget/jquery.bridget',
-        'jquery.browser': 'base/js/vendors/jquery.browser/dist/jquery.browser',
-        'jquery.cookie': 'base/js/vendors/jquery.cookie/jquery.cookie',
-        'jquery.maskedinput': 'base/js/vendors/jquery.maskedinput/dist/jquery.maskedinput',
-        'jquery.steps': 'base/js/vendors/jquery.steps/build/jquery.steps',
-        'jstree': 'base/js/vendors/jstree/dist/jstree',
-        'jsurl': 'base/js/vendors/jsurl/url',
-        'lightbox': 'base/js/vendors/lightbox/js/lightbox',
-        'moment': 'base/js/vendors/moment/moment',
-        'requirejs': 'base/js/vendors/requirejs/require',
-        'bootstrap-slider': 'base/js/vendors/seiyria-bootstrap-slider/js/bootstrap-slider',
-        'select2': 'base/js/vendors/select2/js/select2',
-        'bootstrap-datetimepicker': 'base/js/vendors/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker',
-        'spin': 'base/js/vendors/spin.js/spin',
-        'spinjs': 'base/js/vendors/spin.js/jquery.spin',
-        'typehead': 'base/js/vendors/typehead.js/dist/typehead.jquery',
-        'underscore': 'base/js/lib/underscore',
-        'x-editable': 'base/js/vendors/x-editable/dist/bootstrap3-editable/js/bootstrap-editable',
+        'backbone': 'vendors/backbone/backbone',
+        'backbone-pageable': 'vendors/backbone-pageable/lib/backbone-pageable',
+        'backgrid': 'vendors/backgrid/lib/backgrid',
+        'backgrid-filter': 'vendors/backgrid-filter/backgrid-filter',
+        'backgrid-htmlcell': 'vendors/backgrid-htmlcell/backgrid-htmlcell',
+        'backgrid-paginator': 'vendors/backgrid-paginator/backgrid-paginator',
+        'backgrid-select-all': 'vendors/backgrid-select-all/backgrid-select-all',
+        'backgrid-select2-cell': 'vendors/backgrid-select2-cell/backgrid-select2-cell',
+        'bootstrap': 'vendors/bootstrap/dist/js/bootstrap',
+        'bootstrap-select': 'vendors/bootstrap-select/dist/js/bootstrap-select',
+        'bootstrap-switch': 'vendors/bootstrap-switch/dist/js/bootstrap-switch',
+        'bootstrap-tagsinput': 'vendors/bootstrap-tagsinput/dist/bootstrap-tagsinput',
+        'bootstrap-dialog': 'vendors/bootstrap3-dialog/dist/js/bootstrap-dialog',
+        'bootstrap-slider': 'vendors/seiyria-bootstrap-slider/js/bootstrap-slider',
+        'bootstrap-datetimepicker': 'vendors/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker',
+        'bootstrap-editable': 'vendors/x-editable/dist/bootstrap3-editable/js/bootstrap-editable',
+        'cachejs': 'vendors/cachejs/cache',
+        'handlebars': 'vendors/handlebars/handlebars',
+        'jquery': 'vendors/jquery/jquery',
+        'jquery.bridget': 'vendors/jquery-bridget/jquery.bridget',
+        'jquery.browser': 'vendors/jquery.browser/dist/jquery.browser',
+        'jquery.cookie': 'vendors/jquery.cookie/jquery.cookie',
+        'jquery.maskedinput': 'vendors/jquery.maskedinput/dist/jquery.maskedinput',
+        'jquery.steps': 'vendors/jquery.steps/build/jquery.steps',
+        'jstree': 'vendors/jstree/dist/jstree',
+        'jsurl': 'vendors/jsurl/url',
+        'lightbox': 'vendors/lightbox/js/lightbox',
+        'moment': 'vendors/moment/moment',
+        'requirejs': 'vendors/requirejs/require',
+        'select2': 'vendors/select2/select2',
+        'spinjs': 'vendors/spin.js/jquery.spin',
+        'spin': 'vendors/spin.js/spin',
+        'typehead': 'vendors/typehead.js/dist/typehead.jquery',
+        'underscore': 'vendors/underscore/underscore',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
@@ -61,6 +61,25 @@ require.config({
         'css': 'base/js/plugin/css'
     },
     shim: {
+        'backgrid': {
+            exports: 'Backgrid',
+            deps: ['underscore', 'backbone']
+        },
+        'backgrid-filter': {
+            deps: ['backbone', 'backgrid']
+        },
+        'backgrid-htmlcell': {
+            deps: ['backgrid']
+        },
+        'backgrid-paginator': {
+            deps: ['backgrid', 'underscore', 'backbone-pageable', 'backbone']
+        },
+        'backgrid-select-all': {
+            deps: ['backgrid', 'backbone']
+        },
+        'backgrid-select2-cell': {
+            deps: ['backgrid', 'backbone', 'select2']
+        },
         'bootstrap': {
             deps: ['jquery']
         },
@@ -75,6 +94,9 @@ require.config({
         },
         'select2': {
             deps: ['jquery']
+        },
+        'vendors/select2/select2_locale_uk': {
+            deps: ['jquery', 'select2']
         },
         'jquery.bridget': {
             deps: ['jquery']

@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'cache',
+    'cachejs',
     'plugins/shop/common/js/model/setting'
 ], function (require, Sandbox, $, _, Backbone, Cache, SiteSettings) {
 

@@ -2,7 +2,7 @@ define([
     'sandbox',
     'backbone',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'plugins/shop/toolbox/js/view/feed',
     /* collection */
     "plugins/shop/toolbox/js/collection/feeds",

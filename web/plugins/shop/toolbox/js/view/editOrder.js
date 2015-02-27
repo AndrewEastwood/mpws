@@ -3,13 +3,13 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/order',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/editOrder',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-editable'
+    'bootstrap-editable'
 ], function (Sandbox, Backbone, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitleByStatus (status) {

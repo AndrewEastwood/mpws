@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'plugins/shop/toolbox/js/model/origin',
-    'cache'
+    'cachejs'
 ], function ($, _, Backbone, ModelOrigin, Cache) {
 
     var OriginsFilter = Backbone.Collection.extend({

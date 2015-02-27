@@ -1,10 +1,11 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/order',
-    'backbone-paginator'
-], function (_, ModelOrder, PageableCollection) {
+    'backbone-pageable'
+], function (Backbone, _, ModelOrder) {
 
-    var ListOrders = PageableCollection.extend({
+    var ListOrders = Backbone.PageableCollection.extend({
 
         model: ModelOrder,
 

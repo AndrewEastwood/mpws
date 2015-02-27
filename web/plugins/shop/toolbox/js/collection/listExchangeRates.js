@@ -1,10 +1,11 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/exchangeRate',
-    'backbone-paginator'
-], function (_, ModelExchangeRate, PageableCollection) {
+    'backbone-pageable'
+], function (Backbone, _, ModelExchangeRate) {
 
-    var ListExchangeRates = PageableCollection.extend({
+    var ListExchangeRates = Backbone.PageableCollection.extend({
 
         model: ModelExchangeRate,
 

@@ -1,11 +1,12 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/promo',
-    'backbone-paginator',
-    'cache'
-], function (_, ModelOrigin, PageableCollection, Cache) {
+    'cachejs',
+    'backbone-pageable'
+], function (Backbone, _, ModelOrigin, Cache) {
 
-    var ListPromos = PageableCollection.extend({
+    var ListPromos = Backbone.PageableCollection.extend({
 
         model: ModelOrigin,
 

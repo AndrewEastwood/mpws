@@ -1,10 +1,11 @@
 define([
+    'backbone',
     'underscore',
     'plugins/shop/toolbox/js/model/origin',
-    'backbone-paginator'
-], function (_, ModelOrigin, PageableCollection) {
+    'backbone-pageable'
+], function (Backbone, _, ModelOrigin) {
 
-    var ListOrigins = PageableCollection.extend({
+    var ListOrigins = Backbone.PageableCollection.extend({
 
         model: ModelOrigin,
 

@@ -2,15 +2,15 @@ define([
     'sandbox',
     'backbone',
     'utils',
-    'cache',
-    'base/js/lib/bootstrap-dialog',
+    'cachejs',
+    'bootstrap-dialog',
     'plugins/shop/toolbox/js/collection/filterTreeCategories',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/filterTreeCategories',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
-    'base/js/lib/jstree'
+    'jstree'
 ], function (Sandbox, Backbone, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',

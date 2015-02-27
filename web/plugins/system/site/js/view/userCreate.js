@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     /* model */
     'plugins/system/common/js/model/user',
     /* template */

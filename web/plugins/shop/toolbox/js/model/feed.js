@@ -1,7 +1,6 @@
 define([
     'backbone',
-    'moment',
-    'base/js/lib/moment/locale/uk'
+    'moment'
 ], function (Backbone, moment) {
 
     var Feed = Backbone.Model.extend({

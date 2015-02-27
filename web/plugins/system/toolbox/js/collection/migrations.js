@@ -1,11 +1,12 @@
 define([
+    'backbone',
     'underscore',
     'plugins/system/toolbox/js/model/customer',
-    'backbone-paginator',
-    'cache'
-], function (_, ModelCustomer, PageableCollection, Cache) {
+    'cachejs',
+    'backbone-pageable',
+], function (Backbone, _, ModelCustomer, Cache) {
 
-    var ListCustomers = PageableCollection.extend({
+    var ListCustomers = Backbone.PageableCollection.extend({
 
         model: ModelCustomer,
 

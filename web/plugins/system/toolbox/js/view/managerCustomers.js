@@ -2,7 +2,7 @@ define([
     'backbone',
     'utils',
     'plugins/system/toolbox/js/view/listCustomers',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/system/toolbox/hbs/managerCustomers',

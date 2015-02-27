@@ -2,7 +2,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     /* template */
     'hbs!plugins/shop/site/hbs/widgetExchangeRates',
     /* lang */

@@ -3,7 +3,7 @@ define([
     'backbone',
     'auth',
     'utils',
-    'hbs!plugins/system/site/hbs/menuAccount',
+    'hbs!plugins/system/site/hbs/menuUser',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
 ], function (Sandbox, Backbone, Auth, Utils, tpl, lang) {

@@ -11,7 +11,7 @@ define([
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
-    "base/js/lib/spin",
+    "spin",
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"

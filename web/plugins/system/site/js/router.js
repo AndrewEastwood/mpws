@@ -4,7 +4,7 @@ define([
     'plugins/system/site/js/view/menu',
     'auth',
     'plugins/system/common/js/model/user',
-    'cache'
+    'cachejs'
 ], function (Sandbox, Backbone, SiteMenu, Auth, User, Cache, $, _) {
 
     return false;

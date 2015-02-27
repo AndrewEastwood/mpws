@@ -2,17 +2,17 @@ define([
     'sandbox',
     'underscore',
     'backbone',
-    'base/js/lib/handlebars',
+    'handlebars',
     'utils',
     'plugins/shop/site/js/collection/listProductCatalog',
     'plugins/shop/site/js/view/productItemShort',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'hbs!plugins/shop/site/hbs/listProductCatalog',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'bootstrap',
     'bootstrap-select',
-    'base/js/lib/bootstrap-slider',
+    'bootstrap-slider',
     'jquery.cookie'
 ], function (Sandbox, _, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 

@@ -5,7 +5,7 @@ define([
     'backbone',
     'plugins/system/common/js/model/user',
     'auth',
-    'cache',
+    'cachejs',
 ], function (Sandbox, $, _, Backbone, User, Auth, Cache) {
 
     // this is the user instance

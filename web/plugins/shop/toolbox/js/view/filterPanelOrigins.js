@@ -3,8 +3,8 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
-    'base/js/lib/bootstrap-dialog',
+    'cachejs',
+    'bootstrap-dialog',
     'plugins/shop/toolbox/js/collection/filterPanelOrigins',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/filterPanelOrigins',

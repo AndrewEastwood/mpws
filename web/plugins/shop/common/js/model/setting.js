@@ -1,8 +1,7 @@
 define([
     'backbone',
     'underscore',
-    'moment',
-    'base/js/lib/moment/locale/uk'
+    'moment'
 ], function (Backbone, _, moment) {
 
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'cache'
+    'cachejs'
 ], function (AccountAddress, Sandbox, $, _, Backbone, Cache) {
 
     var User = Backbone.Model.extend({

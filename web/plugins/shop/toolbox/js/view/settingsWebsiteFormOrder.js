@@ -2,14 +2,14 @@ define([
     'backbone',
     'plugins/shop/common/js/model/setting',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/settingsWebsiteFormOrder',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-switch',
-    'base/js/lib/bootstrap-editable'
+    'bootstrap-switch',
+    'bootstrap-editable'
 ], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({

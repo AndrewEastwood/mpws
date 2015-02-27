@@ -3,16 +3,16 @@ define([
     'plugins/shop/common/js/collection/settings',
     'plugins/shop/common/js/model/setting',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/settingsExchangeRatesDisplay',
     'hbs!base/hbs/animationFacebook',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/select2/select2',
-    'base/js/lib/bootstrap-editable',
-    'base/js/lib/bootstrap-switch'
+    'select2',
+    'bootstrap-editable',
+    'bootstrap-switch'
 ], function (Backbone, CollectionSettings, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, tplFBAnim, lang) {
 
     function notifySystemWithNewCurrencyFormatsFn (completed) {

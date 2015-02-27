@@ -53,13 +53,13 @@ module.exports = function (grunt) {
         less: {
             all: {
                 options: {
-                    paths: ['<%= paths.base %>less/']
+                    paths: ['<%= paths.web %>']
                 },
                 files: [{
                     expand: true,
                     cwd: '<%= paths.customers %>',
                     dest: '<%= paths.customers %>',
-                    src: '{,*/}less/*.less',
+                    src: '{,*/}less/theme.less',
                     rename  : function (dest, src) {
                         var customerName    = src.substring(0, src.indexOf('/'));
                         var filename  = src.substring(src.lastIndexOf('/') + 1, src.length);

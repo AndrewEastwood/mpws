@@ -2,7 +2,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     // 'plugins/shop/site/js/collection/listProductCart',
     'hbs!plugins/shop/site/hbs/cartEmbedded',
     /* lang */

@@ -3,13 +3,13 @@ define([
     'plugins/shop/common/js/collection/settings',
     'plugins/shop/toolbox/js/view/popupSettingsAddress',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/settingsAddress',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-switch'
+    'bootstrap-switch'
 ], function (Backbone, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({

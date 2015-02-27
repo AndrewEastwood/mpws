@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     'plugins/shop/toolbox/js/view/managerProducts',
     'plugins/shop/toolbox/js/view/filterPanelOrigins',
     'plugins/shop/toolbox/js/view/filterTreeCategories',

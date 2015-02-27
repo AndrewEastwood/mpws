@@ -3,7 +3,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'cache',
+    'cachejs',
     'auth',
     'plugins/shop/site/js/model/order',
     'plugins/shop/site/js/view/siteMenu',

@@ -3,13 +3,13 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/origin',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/shop/toolbox/hbs/editOrigin',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/bootstrap-editable'
+    'bootstrap-editable'
 ], function (Sandbox, Backbone, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle (isNew) {

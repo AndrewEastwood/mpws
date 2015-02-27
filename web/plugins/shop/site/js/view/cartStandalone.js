@@ -3,20 +3,20 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'cache',
+    'cachejs',
     'hbs!plugins/shop/site/hbs/cartStandalone',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie',
-    "base/js/lib/select2/select2",
-    "base/js/lib/fuelux/wizard",
+    "select2",
+    "jquery.steps",
     "base/js/lib/bootstrapvalidator/bootstrapValidator",
     "base/js/lib/bootstrapvalidator/validator/emailAddress",
     "base/js/lib/bootstrapvalidator/validator/phone",
     "base/js/lib/bootstrapvalidator/validator/regexp",
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength",
-    'base/js/lib/jquery.maskedinput'
+    'jquery.maskedinput'
 ], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
     var CartStandalone = Backbone.View.extend({

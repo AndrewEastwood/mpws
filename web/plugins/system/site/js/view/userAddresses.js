@@ -8,7 +8,7 @@ define([
     'hbs!plugins/system/site/hbs/userAddresses',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
-    'base/js/lib/bootstrap-editable'
+    'bootstrap-editable'
 ], function (Sandbox, $, _, Backbone, Utils, ViewUserAddress, tpl, lang) {
 
     var UserAddresses = Backbone.View.extend({

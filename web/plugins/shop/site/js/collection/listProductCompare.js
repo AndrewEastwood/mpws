@@ -3,11 +3,10 @@ define([
     'underscore',
     'backbone',
     'plugins/shop/site/js/model/product',
-    'plugins/shop/common/js/lib/utils',
     'bootstrap-alert',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
-], function (Sandbox, _, Backbone, ModelProduct, ShopUtils, BSAlert, lang) {
+], function (Sandbox, _, Backbone, ModelProduct, BSAlert, lang) {
 
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,

@@ -4,7 +4,7 @@ define([
     'backbone',
     'plugins/shop/toolbox/js/model/feed',
     'utils',
-    'cache'
+    'cachejs'
 ], function ($, _, Backbone, ModelFeed, Utils, Cache) {
 
     var Feeds = Backbone.Collection.extend({

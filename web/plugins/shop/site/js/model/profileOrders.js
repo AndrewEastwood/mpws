@@ -1,7 +1,6 @@
 define([
-    'base/js/model/mModel',
-    'plugins/shop/common/js/lib/utils'
-], function (MModel, ShopUtils) {
+    'base/js/model/mModel'
+], function (MModel) {
 
     var Model = MModel.getNew();
     var TrackingSystem = Model.extend({

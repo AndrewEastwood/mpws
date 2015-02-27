@@ -3,7 +3,7 @@ define([
     'backbone',
     'plugins/system/toolbox/js/model/customer',
     'utils',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
     'hbs!plugins/system/toolbox/hbs/editCustomer',
@@ -11,8 +11,8 @@ define([
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     'image-upload',
-    'base/js/lib/select2/select2',
-    'base/js/lib/bootstrap-editable'
+    'select2',
+    'bootstrap-editable'
 ], function (Sandbox, Backbone, ModelCustomer, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {

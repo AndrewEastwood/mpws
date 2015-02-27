@@ -2,12 +2,11 @@ define([
     'sandbox',
     'backbone',
     'underscore',
-    'plugins/shop/common/js/lib/utils',
     'bootstrap-alert',
-    'base/js/lib/bootstrap-dialog',
+    'bootstrap-dialog',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
-], function (Sandbox, Backbone, _, ShopUtils, BSAlert, BootstrapDialog, lang) {
+], function (Sandbox, Backbone, _, BSAlert, BootstrapDialog, lang) {
 
     // debugger;
     var model = Backbone.Model.extend({
