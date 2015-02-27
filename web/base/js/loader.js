@@ -33,6 +33,7 @@ require.config({
         'bootstrap-slider': 'vendors/seiyria-bootstrap-slider/js/bootstrap-slider',
         'bootstrap-datetimepicker': 'vendors/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker',
         'bootstrap-editable': 'vendors/x-editable/dist/bootstrap3-editable/js/bootstrap-editable',
+        'bootstrap-magnify': 'vendors/bootstrap-magnify/js/bootstrap-magnify',
         'cachejs': 'vendors/cachejs/cache',
         'handlebars': 'vendors/handlebars/handlebars',
         'jquery': 'vendors/jquery/jquery',

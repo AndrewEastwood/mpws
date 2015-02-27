@@ -47,6 +47,7 @@
     "jquery.maskedinput": "~1.4.1",
     "backgrid-htmlcell": "~0.0.2",
     "spin.js": "~2.0.2",
-    "fontawesome": "~4.3.0"
+    "fontawesome": "~4.3.0",
+    "bootstrap-magnify": "~0.3.0"
   }
 }
