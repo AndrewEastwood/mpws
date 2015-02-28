@@ -41,6 +41,7 @@ require.config({
         'jquery.browser': 'vendors/jquery.browser/dist/jquery.browser',
         'jquery.cookie': 'vendors/jquery.cookie/jquery.cookie',
         'jquery.maskedinput': 'vendors/jquery.maskedinput/dist/jquery.maskedinput',
+        'jquery.maskmoney': 'vendors/jquery-maskmoney/dist/jquery.maskMoney',
         'jquery.steps': 'vendors/jquery.steps/build/jquery.steps',
         'jstree': 'vendors/jstree/dist/jstree',
         'jsurl': 'vendors/jsurl/url',
@@ -55,11 +56,26 @@ require.config({
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
-        'bootstrap-magnify': 'base/js/lib/bootstrap-magnify',
         // plugins
         'hbs': 'base/js/plugin/hbs',
         'i18n': 'base/js/plugin/i18n',
-        'css': 'base/js/plugin/css'
+        'css': 'base/js/plugin/css',
+        // jquery-file-upload
+        'jquery.fileupload': 'vendors/blueimp-file-upload/js/jquery.fileupload',
+        'jquery.fileupload-ui': 'vendors/blueimp-file-upload/js/jquery.fileupload-ui',
+        'jquery.fileupload-image': 'vendors/blueimp-file-upload/js/jquery.fileupload-image',
+        'jquery.fileupload-validate': 'vendors/blueimp-file-upload/js/jquery.fileupload-validate',
+        'jquery.fileupload-video': 'vendors/blueimp-file-upload/js/jquery.fileupload-video',
+        'jquery.fileupload-audio': 'vendors/blueimp-file-upload/js/jquery.fileupload-audio',
+        'jquery.fileupload-process': 'vendors/blueimp-file-upload/js/jquery.fileupload-process',
+        'jquery.ui.widget': 'vendors/blueimp-file-upload/js/vendor/jquery.ui.widget',
+        'jquery.iframe-transport': 'vendors/blueimp-file-upload/js/jquery.iframe-transport',
+        'load-image': 'vendors/blueimp-load-image/js/load-image',
+        'load-image-meta': 'vendors/blueimp-load-image/js/load-image-meta',
+        'load-image-exif': 'vendors/blueimp-load-image/js/load-image-exif',
+        'load-image-ios': 'vendors/blueimp-load-image/js/load-image-ios',
+        'canvas-to-blob': 'vendors/blueimp-canvas-to-blob/js/canvas-to-blob',
+        'tmpl': 'vendors/blueimp-tmpl/js/tmpl'
     },
     shim: {
         'backgrid': {
@@ -107,6 +123,20 @@ require.config({
         },
         'jquery.maskedinput': {
             deps: ['jquery']
+        },
+        'jquery.maskmoney': {
+            deps: ['jquery']
+        },
+        'jquery.fileupload': {
+            deps: [
+                'jquery',
+                'canvas-to-blob',
+                'load-image',
+                'jquery.ui.widget',
+                'jquery.iframe-transport',
+                'jquery.fileupload-validate',
+                'jquery.fileupload-image'
+            ]
         },
         'jsurl': {
             exports: 'Url',

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'backbone',
     'plugins/shop/toolbox/js/model/product',
     'utils',
@@ -7,23 +6,17 @@ define([
     'bootstrap-dialog',
     'bootstrap-alert',
     "formatter-price",
+    "image-upload",
     /* template */
     'hbs!plugins/shop/toolbox/hbs/editProduct',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'select2',
-    'base/js/lib/jquery.maskMoney',
+    // 'typeahead',
+    'jquery.maskmoney',
     'bootstrap-tagsinput',
-    'base/js/lib/jquery.fileupload/jquery.fileupload',
-    'base/js/lib/jquery.fileupload/vendor/canvas-to-blob',
-    'base/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',
-    'base/js/lib/jquery.fileupload/vendor/jquery.ui.widget',
-    'base/js/lib/jquery.fileupload/jquery.iframe-transport',
-    'base/js/lib/jquery.fileupload/jquery.fileupload-validate',
-    'base/js/lib/jquery.fileupload/jquery.fileupload-image',
-    'typeahead',
     'bootstrap-editable'
-], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, tpl, lang) {
+], function (Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -281,7 +274,15 @@ define([
             });
             // too much govna at this point
 
-            this.setupFileUploadItem(this.$('.temp-upload-image'));
+            // setup logo upload
+            var logoUpload = new WgtImageUpload({
+                el: this.$el,
+                selector: '.temp-upload-image'
+            });
+            logoUpload.render();
+
+
+            // this.setupFileUploadItem(this.$('.temp-upload-image'));
 
             return this;
         },
@@ -356,121 +357,6 @@ define([
                     $menuItem.text(params.newValue);
                     $control.attr('name', params.newValue);
                 });
-        },
-        restoreImage: function (event) {
-            var $btn = $(event.target).parents('.upload-wrapper'),
-                $fileName = $btn.find('.file-name');
-            $fileName.val($fileName.data('original'));
-            this.refreshUploadButton(event.target);
-        },
-        removeImage: function (event) {
-            var that = this,
-                $btn = $(event.target).parents('.upload-wrapper'),
-                $prevTemp = $btn.find('.preview-image'),
-                $fileName = $btn.find('.file-name'),
-                delUrlForTempImage = $prevTemp.data('delete-url');
-            if (delUrlForTempImage) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: delUrlForTempImage
-                }).always(function () {
-                    $prevTemp.empty();
-                    $prevTemp.data('delete-url', null);
-                    $fileName.val($fileName.data('original'));
-                    that.refreshUploadButton(event.target);
-                });
-            } else {
-                $fileName.val('');
-                that.refreshUploadButton(event.target);
-            }
-        },
-        refreshUploadButton: function (el) {
-            var $btn = $(el).parents('.upload-wrapper'),
-                $delBtn = $btn.find('.del-image'),
-                $restoreBtn = $btn.find('.restore-image'),
-                $prevTemp = $btn.find('.preview-image'),
-                $prevImage = $btn.find('.uploaded-image'),
-                $fileName = $btn.find('.file-name'),
-                $uploadFile = $btn.find('.temp-upload-image');
-            $btn.removeClass('none restore original temp preview error');
-            // show restore button
-            if ($fileName.val() === '' && $fileName.data('original')) {
-                $btn.addClass('restore');
-            }
-            if ($prevTemp.data('delete-url') && $fileName.val() && $fileName.val() !== $fileName.data('original')) {
-                $btn.addClass('temp');
-            }
-            if ($fileName.val() && $fileName.val() === $fileName.data('original')) {
-                $btn.addClass('original');
-            }
-            if ($uploadFile.val() !== '') {
-                $btn.addClass('changed');
-            }
-            if (!$prevTemp.data('delete-url') && $uploadFile.val() === '' && $fileName.val() === '' && !$fileName.data('original')) {
-                $btn.addClass('none');
-            }
-
-            return $btn;
-        },
-        setupFileUploadItem: function ($items) {
-            var that = this;
-            $items.each(function () {
-                that.refreshUploadButton($(this));
-            });
-            $items.fileupload({
-                url: APP.getUploadUrl(),
-                dataType: 'json',
-                autoUpload: true,
-                limitMultiFileUploads: 1,
-                maxNumberOfFiles: 2,
-                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                maxFileSize: 5000000, // 5 MB
-                // Enable image resizing, except for Android and Opera,
-                // which actually support image resizing, but fail to
-                // send Blob objects via XHR requests:
-                disableImageResize: /Android(?!.*Chrome)|Opera/
-                    .test(window.navigator.userAgent),
-                previewMaxWidth: 75,
-                previewMaxHeight: 75,
-                previewCrop: true
-            }).on('fileuploadadd', function (e, data) {
-                that.refreshUploadButton($(this));
-            }).on('fileuploadprogressall', function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                that.$('#progress .progress-bar').css('width', progress + '%');
-            }).on('fileuploadprocessalways', function (e, data) {
-                var $btn = that.refreshUploadButton($(this)),
-                    $prevTemp = $btn.find('.preview-image'),
-                    $fileName = $btn.find('.file-name'),
-                    index = data.index,
-                    file = data.files[index];
-                if (file.preview) {
-                    $prevTemp.html(file.preview);
-                } else {
-                    $btn.addClass('error');
-                    $prevTemp.empty();
-                    $prevTemp.data('delete-url', null);
-                    $fileName.val($fileName.data('original'));
-                }
-            }).on('fileuploaddone', function (e, data) {
-                var $btn = $(this).parents('.upload-wrapper'),
-                    $fileName = $btn.find('.file-name'),
-                    $prevTemp = $btn.find('.preview-image'),
-                    progress = parseInt(data.loaded / data.total * 100, 10);
-                that.$('#progress .progress-bar').css('width', '0%');
-                $.each(data.result.files, function (index, file) {
-                    if (file.url) {
-                        $prevTemp.data('delete-url', file.deleteUrl);
-                        // set new uploaded file name and delete url
-                        $fileName.val(file.name);
-                    } else {
-                        $prevTemp.empty();
-                        $prevTemp.data('delete-url', null);
-                        $fileName.val($fileName.data('original'));
-                    }
-                });
-                that.refreshUploadButton($(this));
-            });
         }
     });
 

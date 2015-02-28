@@ -48,6 +48,7 @@
     "backgrid-htmlcell": "~0.0.2",
     "spin.js": "~2.0.2",
     "fontawesome": "~4.3.0",
-    "bootstrap-magnify": "~0.3.0"
+    "bootstrap-magnify": "~0.3.0",
+    "jquery-maskmoney": "~3.0.2"
   }
 }

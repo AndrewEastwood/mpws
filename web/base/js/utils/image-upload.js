@@ -1,15 +1,10 @@
 define([
     'jquery',
     'backbone',
-    'jquery.fileupload/jquery.fileupload',
-    'jquery.fileupload/vendor/canvas-to-blob',
-    'jquery.fileupload/vendor/JavaScript-Load-Image/load-image',
-    'jquery.fileupload/vendor/jquery.ui.widget',
-    'jquery.fileupload/jquery.iframe-transport',
-    'jquery.fileupload/jquery.fileupload-validate',
-    'jquery.fileupload/jquery.fileupload-image'
+    'jquery.fileupload'
 ], function ($, Backbone){
     'use strict';
+    debugger
     var Widget = Backbone.View.extend({
         events: {
             'click .del-image': 'removeImage',
