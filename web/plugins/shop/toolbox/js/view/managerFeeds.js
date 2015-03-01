@@ -43,10 +43,7 @@ define([
                 }
             });
             this.$('#fileFeed').fileupload({
-                url: APP.getUploadUrl({
-                    source: 'shop',
-                    fn: 'feeds'
-                }),
+                url: APP.getUploadUrl(),
                 dataType: 'json',
                 autoUpload: true,
                 limitMultiFileUploads: 1,
@@ -59,7 +56,17 @@ define([
                 self.$('#progress .progress-bar').css('width', progress + '%');
             }).on('fileuploadprocessalways', function (e, data) {
             }).on('fileuploaddone', function (e, data) {
-                that.collection.fetch({reset: true});
+                var response = data.response();
+                if (response && response.result && response.result.files && response.result.files.length) {
+                    that.collection.create({
+                        name: response.result.files[0].name
+                    }, {
+                        wait: true,
+                        success: function () {
+                            that.collection.fetch({reset: true});
+                        }
+                    });
+                }
             });
             return this;
         },

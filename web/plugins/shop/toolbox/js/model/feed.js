@@ -27,11 +27,6 @@ define([
         importUploadedProductFeed: function (ajaxOptions) {
             var that = this;
             if (this.isUploaded()) {
-                // APP.triggerBackgroundTask('importProductFeed', this.get('name')).done(function (rez) {
-                //     if (rez) {
-                        
-                //     }
-                // });
                 this.save({
                     schedule: true
                 }, ajaxOptions);
@@ -40,11 +35,6 @@ define([
         cancelActiveImportProductFeed: function (ajaxOptions) {
             var that = this;
             if (this.isUploaded()) {
-                // APP.triggerBackgroundTask('importProductFeed', this.get('name')).done(function (rez) {
-                //     if (rez) {
-                        
-                //     }
-                // });
                 this.save({
                     cancel: true
                 }, ajaxOptions);

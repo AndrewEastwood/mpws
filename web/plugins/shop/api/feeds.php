@@ -48,6 +48,36 @@ class feeds {
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*\.xls');
     }
 
+    private function __adjustFeedItem ($feedFilePath) {
+        $pInfo = pathinfo($feedFilePath);
+        $ftime = filectime($feedFilePath);
+        $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
+        // $isActive = in_array($pInfo['filename'], $runningFeedNames);
+        // $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
+        // $isAdded = in_array($pInfo['filename'], $newFeedNames);
+        // $isCanceled = in_array($pInfo['filename'], $canceledFeedNames);
+        $isScheduled = $task['Scheduled'];
+        $isRunning = $task['IsRunning'];
+        $isCompleted = $task['Complete'];
+        $isCanceled = $task['ManualCancel'];
+        return array(
+            'ID' => md5($pInfo['filename']),
+            'type' => 'uploaded',
+            'time' => $ftime,
+            'timeFormatted' => date('Y-m-d H:i:s', $ftime),
+            'name' => $pInfo['filename'],
+            'new' => !$isScheduled && !$isRunning && !$isCompleted && !$isCanceled,
+            'scheduled' => $task['Scheduled'],
+            'running' => $task['IsRunning'],
+            'complete' => $task['Complete'],
+            'canceled' => $task['ManualCancel'],
+            'results' => $task['Result'],
+            // 'canBeScheduled' => !$task['scheduled'],
+            'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
+            'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+        );
+    }
+
     public function getFeeds () {
         global $app;
         $attempts = 20;
@@ -113,33 +143,7 @@ class feeds {
             //     }
             // var_dump($runningFeedNames);
             foreach ($listFeedsUploaded as $value) {
-                $pInfo = pathinfo($value);
-                $ftime = filectime($value);
-                $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
-                // $isActive = in_array($pInfo['filename'], $runningFeedNames);
-                // $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
-                // $isAdded = in_array($pInfo['filename'], $newFeedNames);
-                // $isCanceled = in_array($pInfo['filename'], $canceledFeedNames);
-                $isScheduled = $task['Scheduled'];
-                $isRunning = $task['IsRunning'];
-                $isCompleted = $task['Complete'];
-                $isCanceled = $task['ManualCancel'];
-                $feeds[] = array(
-                    'ID' => md5($pInfo['filename']),
-                    'type' => 'uploaded',
-                    'time' => $ftime,
-                    'timeFormatted' => date('Y-m-d H:i:s', $ftime),
-                    'name' => $pInfo['filename'],
-                    'new' => !$isScheduled && !$isRunning && !$isCompleted && !$isCanceled,
-                    'scheduled' => $task['Scheduled'],
-                    'running' => $task['IsRunning'],
-                    'complete' => $task['Complete'],
-                    'canceled' => $task['ManualCancel'],
-                    'results' => $task['Result'],
-                    // 'canBeScheduled' => !$task['scheduled'],
-                    'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
-                    'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
-                );
+                $feeds[] = $this->__adjustFeedItem($value);
             }
         }
             // $feeds['active'] = $activeTasks;
@@ -246,7 +250,7 @@ class feeds {
             // $imagesToDownload = array();
             $urls = $app->getSettings('urls');
             $options = array(
-                'script_url' =>  $urls->upload,
+                'script_url' =>  $urls['upload'],
                 'download_via_php' => true,
                 'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
                 'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
@@ -257,20 +261,26 @@ class feeds {
             );
             $upload_handler = new JqUploadLib($options, false);
             foreach ($imagesUrls as $imgUrl) {
+                if (empty($imgUrl)) {
+                    continue;
+                }
                 $urlInfo = parse_url($imgUrl);
                 $pInfo = pathinfo($urlInfo['path']);
-                if ($urlInfo['host'] !== $customer['HostName']) {
-                    // $imagesToDownload[] = $imgUrl;
-                    // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
-                    //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
-                    set_time_limit(120);
-                    echo '# ... importing image ' . $imgUrl . PHP_EOL;
-                    $res = $upload_handler->importFromUrl($imgUrl, false);
-                    foreach ($res['web'] as $impageUploadInfo) {
-                        $images[] = $impageUploadInfo->name;
+                // var_dump($urlInfo['host'], $customer['HostName']);
+                if (!empty($urlInfo['host'])) {
+                    if ($urlInfo['host'] !== $customer['HostName']) {
+                        // $imagesToDownload[] = $imgUrl;
+                        // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
+                        //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
+                        set_time_limit(120);
+                        echo '# ... importing image ' . $imgUrl . PHP_EOL;
+                        $res = $upload_handler->importFromUrl($imgUrl, false);
+                        foreach ($res['web'] as $impageUploadInfo) {
+                            $images[] = $impageUploadInfo->name;
+                        }
+                    } else {
+                        $images[] = $pInfo['basename'];
                     }
-                } else {
-                    $images[] = $pInfo['basename'];
                 }
                 // currently we support only 5 images
                 if (count($images) >= 5) {
@@ -489,19 +499,23 @@ class feeds {
     }
 
     public function get (&$resp, $req) {
-        $resp = $this->getFeeds();
+        if (isset($req->get['generate'])) {
+            $resp = $this->generateProductFeed();
+        } else {
+            $resp = $this->getFeeds();
+        }
     }
 
     public function post (&$resp, $req) {
-        if (isset($req->get['generate'])) {
-            $resp = $this->generateProductFeed();
-        } elseif (isset($resp['files'])) {
-            // var_dump($resp['files']);
-            foreach ($resp['files'] as $tempFileItem) {
-                $res = Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
+        if (isset($req->data['name'])) {
+            // var_dump($req->data['name']);
+            // foreach ($resp['files'] as $tempFileItem) {
+                $res = Path::moveTemporaryFile($req->data['name'], $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
                 API::getAPI('system:tasks')->addTask('shop', 'importProductFeed', $res['basename']);
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
-            }
+                // var_dump($res);
+                $resp = $this->__adjustFeedItem(Path::rootPath() . $this->getFeedsUploadDir() . $res['filename']);
+            // }
         }
     }
     public function patch (&$resp, $req) {

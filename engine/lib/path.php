@@ -134,6 +134,7 @@ class path {
         $tmpFilePath = self::rootPath() . self::getUploadTemporaryDirectory() . $tmpFileName;
         // var_dump($tmpFilePath);
         if (file_exists($tmpFilePath)) {
+            // var_dump('FILE OK: MOVING TO NEXT STEP');
             $info = array();
             $targetDirFullPath = self::rootPath() . self::getUploadDirectory($innerUploadTargetDir);
             if (!file_exists($targetDirFullPath)) {
@@ -152,6 +153,7 @@ class path {
             $info['filename'] = $_fileName;
             $info['uploadDir'] = $innerUploadTargetDir;
             $info['uploadPath'] = $innerUploadTargetDir . $_fileName;
+            // var_dump($info);
             return $info;
         }
         return false;

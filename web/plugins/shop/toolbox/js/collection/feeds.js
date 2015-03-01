@@ -23,7 +23,7 @@ define([
                     fn: 'feeds',
                     generate: true
                 });
-            Backbone.$.post(jobUrl, function () {
+            Backbone.$.get(jobUrl, function () {
                 that.fetch({reset: true});
             });
         },
