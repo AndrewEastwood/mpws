@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="{{URL_STATIC_CUSTOMER}}/favicon.ico" type="image/x-icon">
     <link rel="icon" href="{{URL_STATIC_CUSTOMER}}/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="{{URL_STATIC_CUSTOMER}}/css/theme.css">
+    <link rel="stylesheet" href="{{URL_STATIC_CUSTOMER}}/css/theme.css?bust={{BUILD}}">
 </head>
 <body class="MPWSPage" name="Page">
 
@@ -21,7 +21,7 @@
         <script type="text/javascript" id="system">
             var MPWS = {{SYSTEMJS}};
         </script>
-        <script type="text/javascript" data-main="{{PATH_STATIC}}base/js/loader.js" src="{{PATH_STATIC}}vendors/requirejs/require.js"></script>
+        <script type="text/javascript" data-main="{{PATH_STATIC}}base/js/loader.js?bust={{BUILD}}" src="{{PATH_STATIC}}vendors/requirejs/require.js"></script>
     </div>
 
 </body>

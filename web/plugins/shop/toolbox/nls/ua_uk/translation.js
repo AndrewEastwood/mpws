@@ -227,5 +227,10 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
             ShowPriceChart: 'показувати статистику цін',
             ShowWarrantyInfo: 'показувати інформацію про гарантії'
         }
+    },
+    managerContent: {
+        products: {
+            nodata: 'Немає товарів'
+        }
     }
 });

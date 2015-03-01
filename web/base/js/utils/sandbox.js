@@ -5,7 +5,7 @@ define([
 
     var _events = {};
 
-    window.sandbox = _events;
+    // window.sandbox = _events;
 
     // Sandbox
     var _Sandbox = {

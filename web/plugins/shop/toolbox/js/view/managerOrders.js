@@ -48,7 +48,7 @@ define([
             // TODO:
             // add expired and todays orders
             if (this.$el.is(':empty')) {
-                this.viewOrdersList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
+                this.viewOrdersList.grid.emptyText = $('<h4>').text(lang.pluginMenu_Orders_Grid_noData_ByStatus);
                 this.viewOrdersList.render();
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 // show sub-view

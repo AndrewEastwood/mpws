@@ -11,7 +11,7 @@ define([
     APP.dfd.customerReady = new $.Deferred();
 
     if (!APP.hasPlugin('system')) {
-        throw "System plugin is unavailable";
+        throw 'System plugin is unavailable';
     }
 
     var _ifNotAuthorizedNavigateToSignin = function () {
@@ -21,7 +21,7 @@ define([
                 Backbone.history.fragment = false;
                 window.location.href = '/#!/signin';
                 // Backbone.history.navigate('signin', true);
-                window.location.reload();
+                // window.location.reload();
             }
         }
     }
@@ -33,7 +33,7 @@ define([
             $menuItem = $('<li>').attr({
                 name: 'MenuForPlugin_' + pluginName,
                 id: 'menu-' + pluginName + '-ID',
-                "class": 'dropdown menu-' + pluginName,
+                'class': 'dropdown menu-' + pluginName,
                 rel: 'menu'
             });
             menus.push($menuItem);
@@ -48,7 +48,7 @@ define([
             $blockItem = $('<div>').attr({
                 name: 'DashboardForPlugin_' + pluginName,
                 id: 'dashboard-container-' + pluginName + '-ID',
-                "class": 'well dashboard-container dashboard-container-' + pluginName,
+                'class': 'well dashboard-container dashboard-container-' + pluginName,
                 rel: 'menu'
             });
             $blockItem.html(tplFBAnim());
@@ -57,27 +57,38 @@ define([
         return blocks;
     }
 
-    Sandbox.eventSubscribe('global:page:signout', function () {
-        _ifNotAuthorizedNavigateToSignin();
-    });
-
-    Sandbox.eventSubscribe('global:page:signin', function () {
-        if (Auth.getUserID()) {
-            Backbone.history.navigate("", true);
-        }
-    });
-
-    // Sandbox.eventSubscribe('global:route', function () {
+    // Auth.on('signout:ok', function () {
+    //     // debugger
     //     _ifNotAuthorizedNavigateToSignin();
     // });
 
-    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
+    // // when user opens signin page and it's already signed in we redirect 
+    // // user to home page
+    // Auth.on('signin:ok', function () {
+    //     // debugger
+    //     Backbone.history.navigate(Cache.getFromLocalStorage('location') || '', true);
+    // });
+
+    Auth.on('registered', function () {
+        // debugger
+        Backbone.history.navigate(Cache.getFromLocalStorage('location') || '', true);
     });
 
-    Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+    Auth.on('guest', function () {
+        // debugger
         _ifNotAuthorizedNavigateToSignin();
     });
+
+    // verify user with every route
+    Sandbox.eventSubscribe('global:route', function () {
+        _ifNotAuthorizedNavigateToSignin();
+    });
+
+    // Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+    // });
+
+    // Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+    // });
 
     Sandbox.eventSubscribe('global:page:index', function () {
         // debugger
@@ -93,7 +104,8 @@ define([
 
     // return CustomerClass;
     $('head title').text(APP.config.TITLE);
-    $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.TITLE);
+    $('a.navbar-brand').attr('href', '/').html(APP.config.TITLE);
+    $('a.mpjs-opensite').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_HOMEPAGE);
     $('#navbar [name="TopMenuLeft"]').empty().append(renderMenuPlaceholdersFn());
 
     // Auth.getStatus();

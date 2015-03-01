@@ -17,7 +17,7 @@ define([
     //     debugger
     // });
 
-    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+    Auth.on('registered', function () {
         var authUserID = Auth.getUserID();
         if (authUserID) {
             user.set('ID', authUserID);
@@ -47,7 +47,7 @@ define([
         });
     });
 
-    Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
+    Auth.on('guest', function () {
         user.clear();
         if (menuView) {
             menuView.remove();

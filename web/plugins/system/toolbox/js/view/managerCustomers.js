@@ -38,7 +38,7 @@ define([
             // add expired and todays orders
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                this.viewCustomerList.grid.emptyText = lang.managers.customers.noData;
+                this.viewCustomerList.grid.emptyText = $('<h4>').text(lang.managers.customers.noData);
                 this.viewCustomerList.render();
                 // show sub-view
                 this.$('.customer-list').html(this.viewCustomerList.$el);

@@ -5,21 +5,29 @@ define([
     'underscore',
     'backbone',
     'cachejs',
+    'auth',
     'plugins/shop/common/js/model/setting'
-], function (require, Sandbox, $, _, Backbone, Cache, SiteSettings) {
+], function (require, Sandbox, $, _, Backbone, Cache, Auth, SiteSettings) {
 
+    var menuView = null;
     var settings = new SiteSettings();
     var $dfdSettings = settings.fetch();
 
-    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+    Auth.on('registered', function () {
         require(['plugins/shop/toolbox/js/view/menu'], function (ViewMenu) {
-            var menu = new ViewMenu();
-            menu.render();
+            menuView = new ViewMenu();
+            menuView.render();
             Sandbox.eventNotify('global:content:render', {
                 name: 'MenuForPlugin_shop',
-                el: menu.$el
+                el: menuView.$el
             });
         });
+    });
+
+    Auth.on('guest', function () {
+        if (menuView) {
+            menuView.remove();
+        }
     });
 
     Backbone.on('changed:plugin-shop-currency', function () {

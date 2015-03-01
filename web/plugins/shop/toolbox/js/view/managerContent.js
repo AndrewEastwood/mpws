@@ -77,6 +77,7 @@ define([
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.viewProductsList.grid.emptyText = $('<h4>').text(lang.managerContent.products.nodata);
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewOriginsList.$el);

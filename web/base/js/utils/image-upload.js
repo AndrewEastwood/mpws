@@ -1,10 +1,12 @@
 define([
     'jquery',
     'backbone',
-    'jquery.fileupload'
+    'jquery.fileupload',
+    'jquery.fileupload-image',
+    'jquery.fileupload-validate'
 ], function ($, Backbone){
     'use strict';
-    debugger
+    // debugger
     var Widget = Backbone.View.extend({
         events: {
             'click .del-image': 'removeImage',

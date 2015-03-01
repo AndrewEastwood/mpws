@@ -282,19 +282,23 @@ define([
             var self = this;
             setTimeout(function () {
                 console.log('adding spinner');
+                self.$('.mpwsDataSpinner').remove();
                 self.$el.append(spinner.el);
             }, 0);
         },
         stopLoadingAnim: function () {
-            this.$('.mpwsDataSpinner').remove();
+            setTimeout(function () {
+                this.$('.mpwsDataSpinner').remove();
+            }, 200);
         },
         render: function () {
             console.log('listOrders: render');
-            // debugger;
+            debugger;
             this.$el.off().empty();
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);
                 this.$el.append(this.paginator.render().$el);
+                this.startLoadingAnim();
             } else {
                 this.$el.html(this.grid.emptyText);
             }

@@ -10,10 +10,7 @@ define([
     'hbs!plugins/shop/toolbox/hbs/managerFeeds',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'base/js/lib/jquery.fileupload/vendor/jquery.ui.widget',
-    'base/js/lib/jquery.fileupload/jquery.iframe-transport',
-    'base/js/lib/jquery.fileupload/jquery.fileupload-validate',
-    'base/js/lib/jquery.fileupload/jquery.fileupload',
+    'image-upload',
 ], function (Sandbox, Backbone, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({

@@ -130,12 +130,9 @@ require.config({
         'jquery.fileupload': {
             deps: [
                 'jquery',
-                'canvas-to-blob',
                 'load-image',
-                'jquery.ui.widget',
-                'jquery.iframe-transport',
-                'jquery.fileupload-validate',
-                'jquery.fileupload-image'
+                'canvas-to-blob',
+                'jquery.iframe-transport'
             ]
         },
         'jsurl': {
@@ -151,9 +148,7 @@ require.config({
     },
     waitSeconds: 30,
     deps: ['base/js/app'],
-    urlArgs: "mpws_bust=" + (function () {
-        var config = this && this.MPWS || {},
-            bust = new Date().getTime();
-        return config.DEBUG && config.BUILD || bust;
+    urlArgs: "bust=" + (function () {
+        return this && this.MPWS && this.MPWS.BUILD || Date.now();
     })()
 });

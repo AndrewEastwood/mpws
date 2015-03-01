@@ -126,8 +126,8 @@ class categories {
                     $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir('sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
                     $validatedValues['Image'] = $uploadInfo['filename'];
                 }
@@ -332,7 +332,7 @@ class categories {
         // $this->_getOrSetCachedState('changed:category', true);
     }
 
-    public function patch (&$resp, $req) {
+    public function put (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;

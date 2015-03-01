@@ -44,7 +44,7 @@ define([
             // add expired and todays orders
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                this.viewPromosList.grid.emptyText = lang.listPromos_Promo_Grid_noData;
+                this.viewPromosList.grid.emptyText = $('<h4>').text(lang.listPromos_Promo_Grid_noData);
                 this.viewPromosList.render();
                 // show sub-view
                 this.$('.promo-list').html(this.viewPromosList.$el);

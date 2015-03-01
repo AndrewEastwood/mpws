@@ -22,10 +22,16 @@ define([
     // });
 
     Auth.on('registered', function () {
+        var authUserID = Auth.getUserID();
+        if (authUserID) {
+            user.set('ID', authUserID);
+            user.fetch();
+        }
         _navigateToUserIfAuthorizedFn();
     });
 
     Auth.on('guest', function () {
+        user.clear();
         _navigateToHomeIfNotAuthorizedFn();
     });
 
@@ -48,19 +54,6 @@ define([
         }
         return false;
     }
-
-    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        var authUserID = Auth.getUserID();
-        if (authUserID) {
-            user.set('ID', authUserID);
-            user.fetch();
-        }
-    });
-
-    Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
-        user.clear();
-        _navigateToHomeIfNotAuthorizedFn();
-    });
 
     var Router = Backbone.Router.extend({
         routes: {

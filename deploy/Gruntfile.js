@@ -42,7 +42,7 @@ module.exports = function (grunt) {
             },
             less: {
                 files: ['<%= paths.customers %>/{,*/}/less/*.less'],
-                tasks: ['newer:less:all']
+                tasks: ['newer:less:theme']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -51,7 +51,7 @@ module.exports = function (grunt) {
 
         // Compiles LESS to CSS
         less: {
-            all: {
+            theme: {
                 options: {
                     paths: ['<%= paths.web %>']
                 },

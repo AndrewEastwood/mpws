@@ -56,6 +56,14 @@
     };
 
     require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache) {
+
+        // APP.commonElements = $('div[name^="Common"]:not(:has(*))');
+        Backbone.Model.prototype.isEmpty = function () {
+            return _.isEmpty(this.attributes);
+        }
+        _.extend(APP, Backbone.Events);
+        APP.Sandbox = Sandbox;
+
         APP.getApiLink = function (extraOptions /* or args */) {
             var _url = new JSUrl('/api/');
             if (typeof extraOptions === "object" && extraOptions.source && extraOptions.fn) {
@@ -82,10 +90,6 @@
                     _url.query[k] = !!v ? v : "";
                 });
             return _url.toString();
-        }
-        // APP.commonElements = $('div[name^="Common"]:not(:has(*))');
-        Backbone.Model.prototype.isEmpty = function () {
-            return _.isEmpty(this.attributes);
         }
         var contentInjection = function (cnt, options) {
 
@@ -141,14 +145,29 @@
                 contentInjection($el, options);
         }
 
-        $(document).ajaxComplete(function (event, jqXHR) {
+        var updatePageBodyClassNameFn = function () {
+            // set page name
+            // debugger
+            var fragment = Backbone.history.getFragment();
+            var _hashTags = fragment && fragment.replace(/#!\/|#|!\//g, '').split('/');
+            $('body').attr('class', "MPWSPage");
+            if (_hashTags && _hashTags[0]) {
+                $('body').addClass("Page" + _hashTags[0].ucWords());
+            }
+        }
+
+        $(document).ajaxComplete(function (event, jqXHR, ajaxOptions) {
+            // debugger
             var response = jqXHR.responseText;
             try {
                 response = JSON.parse(jqXHR.responseText);
             } catch (exception) {
                 console.log(exception);
             }
-            Sandbox.eventNotify("global:ajax:responce", response);
+            Sandbox.eventNotify("global:ajax:response", {
+                response: response,
+                isAuthRequest: new RegExp('^' + APP.getAuthLink()).test(ajaxOptions.url)
+            });
         });
 
         APP.Cache = Cache;
@@ -189,17 +208,10 @@
         });
 
         $(window).on('hashchange', function () {
-            // set page name
-            var fragment = Backbone.history.getFragment();
-            var _hashTags = fragment.replace(/#!\/|#|!\//g, '').split('/');
-            $('body').attr('class', "MPWSPage");
-            if (_hashTags && _hashTags[0]) {
-                $('body').addClass("Page" + _hashTags[0].ucWords());
-            }
-
+            updatePageBodyClassNameFn();
             // notify all subscribers that we have changed our route
+            var fragment = Backbone.history.getFragment();
             Sandbox.eventNotify('global:route', fragment);
-
             // save location
             if (fragment !== "!/signout" && fragment !== "!/signin") {
                 Cache.saveInLocalStorage("location", fragment);
@@ -246,6 +258,7 @@
             // notify all that loader completed its tasks
             Sandbox.eventNotify('global:loader:complete');
             Backbone.trigger('global:loader:complete');
+            updatePageBodyClassNameFn();
         });
 
         var addPliginInstanceFn = function (pluginClass, key, preInitFn, totalPluginCount) {

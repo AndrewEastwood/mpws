@@ -7,7 +7,7 @@
             <ol class="errors">
             {{#each data.errors}}
                 {{#each this}}
-                    <li>{{mpwsGetValueByKey ../../lang this "shopping_cart_error_"}}</li>
+                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
                 {{/each}}
             {{/each}}
             </ol>

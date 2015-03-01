@@ -10,6 +10,7 @@ define([
 
     var Auth = _.extend({
         verifyStatus: function () {
+            // debugger
             var user = Auth.getUserID();
             Backbone.trigger('auth:info', user);
             if (Auth.user === user) {
@@ -20,11 +21,11 @@ define([
             if (Auth.user) {
                 // Backbone.trigger('auth:registered', user);
                 this.trigger('registered');
-                Sandbox.eventNotify("global:auth:status:active");
+                // Sandbox.eventNotify("global:auth:status:active");
             } else {
                 // Backbone.trigger('auth:guest', user);
                 this.trigger('guest');
-                Sandbox.eventNotify("global:auth:status:inactive");
+                // Sandbox.eventNotify("global:auth:status:inactive");
             }
         },
         getUserID: function () {
@@ -40,6 +41,7 @@ define([
             });
         },
         signin: function (email, password, remember, callback) {
+            var that = this;
             var query = {
                 fn: 'signin'
             };
@@ -48,11 +50,13 @@ define([
                 password: password,
                 remember: remember,
             }, function (response) {
+                that.trigger('signin:ok');
                 if (_.isFunction(callback))
                     callback(Auth.getUserID(), response);
             });
         },
         signout: function (callback) {
+            var that = this;
             var query = {
                 fn: 'signout'
             };
@@ -60,6 +64,7 @@ define([
                 url: APP.getAuthLink(query),
                 type: 'DELETE',
                 success: function (response) {
+                    that.trigger('signout:ok');
                     if (_.isFunction(callback))
                         callback(Auth.getUserID(), response);
                 }
@@ -67,8 +72,10 @@ define([
         }
     }, Backbone.Events);
 
-    Sandbox.eventSubscribe("global:ajax:responce", function () {
+    Sandbox.eventSubscribe("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();
+        // if (!data.isAuthRequest) {
+        // }
     });
 
     return Auth;

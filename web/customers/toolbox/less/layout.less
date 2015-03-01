@@ -5,7 +5,18 @@
 @buttonColorHover: darken(@mainColor, 10%);
 
 .custom-text-left {
-   text-align: left !important; 
+   text-align: left !important;
+}
+
+.mpjs-opensite {
+    font-size: 0.8em;
+    display: block;
+    clear: both;
+    color: #ddd;
+    margin-top: -10px;
+    &:hover {
+        color: #fff
+    }
 }
 
 .bootstrap-dialog-title * {
@@ -134,17 +145,14 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
     text-decoration: none;
 }
 .PageSignin {
-    // background-color: #292525;
-    .navbar-fixed-top {
+    .navbar {
         display: none;
     }
-    #wrapper {
-        margin: 0px;
-        padding: 0px;
-    }
-    #page-wrapper {
-        background-color: #333;
-    }
+}
+.navbar-brand {
+    padding-bottom: 0;
+    line-height: 20px;
+    height: 32px;
 }
 .title-powered {
     color: #fff;

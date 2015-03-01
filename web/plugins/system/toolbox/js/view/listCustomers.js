@@ -6,6 +6,7 @@ define([
     "plugins/system/toolbox/js/collection/listCustomers",
     /* template */
     'hbs!plugins/system/toolbox/hbs/buttonMenuCustomerListItem',
+    'hbs!base/hbs/animationFacebook',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     /* extensions */
@@ -13,8 +14,9 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, tplFBAnim, lang, Spinner) {
 
+    // var $anim = $(tplFBAnim()).addClass('mp-tableloader');
     var opts = {
         lines: 9, // The number of lines to draw
         length: 5, // The length of each line
@@ -30,7 +32,7 @@ define([
         hwaccel: false, // Whether to use hardware acceleration
         className: 'mpwsDataSpinner', // The CSS class to assign to the spinner
         zIndex: 2e9, // The z-index (defaults to 2000000000)
-        top: '10%', // Top position relative to parent
+        top: '15%', // Top position relative to parent
         left: '50%' // Left position relative to parent
     };
 
@@ -179,13 +181,21 @@ define([
         },
         startLoadingAnim: function () {
             var self = this;
+            // debugger
             setTimeout(function () {
                 console.log('adding spinner');
+                self.$('.mpwsDataSpinner').remove();
                 self.$el.append(spinner.el);
+                // self.$el.append($anim);
+                // $anim.removeClass('hidden');
             }, 0);
         },
         stopLoadingAnim: function () {
-            this.$('.mpwsDataSpinner').remove();
+            // debugger
+            setTimeout(function () {
+                this.$('.mpwsDataSpinner').remove();
+                // $anim.addClass('hidden');
+            }, 200);
         },
         render: function () {
             console.log('listCustomers: render');
@@ -194,12 +204,13 @@ define([
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);
                 this.$el.append(this.paginator.render().$el);
+                // this.$el.append($anim);
+                this.startLoadingAnim();
             } else {
                 this.$el.html(this.grid.emptyText);
             }
             return this;
         }
     });
-
     return ListCustomers;
 });

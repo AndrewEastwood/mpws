@@ -58,6 +58,7 @@ class site {
         // var_dump($layoutCustomer, 'layoutCustomer');
         // var_dump($layoutDefault, 'layoutDefault');
 
+        $build = $app->getBuildVersion();
         $urls = $app->getSettings('urls');
         $staticPath = $urls['static'];
         $staticPathCustomer = $staticPath . Path::createPath(Path::getDirNameCustomer(), $displayCustomer);
@@ -67,7 +68,7 @@ class site {
         }
         $initialJS = "{
             LOCALE: '" . $locale . "',
-            BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
+            BUILD: " . $build . ",
             DEBUG: " . ($app->isDebug() ? 'true' : 'false') . ",
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
@@ -92,6 +93,7 @@ class site {
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
         $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
         $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);
+        $html = str_replace("{{BUILD}}", $build, $html);
 
         return $html;
     }
