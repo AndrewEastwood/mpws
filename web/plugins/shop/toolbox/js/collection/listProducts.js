@@ -10,14 +10,7 @@ define([
 
         model: ModelProduct,
 
-        url: function () {
-            var url = APP.getApiLink({
-                source: 'shop',
-                fn: 'products'
-            });
-
-            return url;
-        },
+        url: APP.getApiLink('shop', 'products'),
 
         // Initial pagination states
         state: {

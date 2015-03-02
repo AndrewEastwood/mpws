@@ -49,6 +49,18 @@ define([
                 });
             }, 200), this);
 
+            this.viewOriginsList.on('originTree:changed:origin', _.debounce(function (activeOrigins) {
+                if (activeOrigins.length) {
+                    this.viewProductsList.collection.setCustomQueryField("OriginID", activeOrigins.join(',') + ':IN');
+                } else {
+                    // skip filter by origins
+                    this.viewProductsList.collection.setCustomQueryField("OriginID", void(0));
+                }
+                this.viewProductsList.collection.fetch({
+                    reset: true
+                });
+            }, 200), this);
+
             _.bindAll(this, 'saveLayout');
 
             Sandbox.eventSubscribe('global:route', $.proxy(function () {

@@ -22,7 +22,8 @@ define([
             'click .remove': 'removeOrigin',
             'click .restore': 'restoreOrigin',
             'click .dropdown-toggle': 'dropDownFixPosition',
-            'click .add-product': 'addProduct'
+            'click .add-product': 'addProduct',
+            'change input:checkbox.shop-filter-origin': 'toggleProductFilter'
         },
         showRemoved: function (event) {
             this.collection.fetchWithRemoved($(event.target).is(':checked'), {
@@ -33,24 +34,40 @@ define([
             this.collection = new CollectionOriginsFilter();
             this.listenTo(this.collection, 'reset', this.render);
 
-            _.bindAll(this, 'saveLayout');
+            _.bindAll(this, 'saveLayout', 'toggleProductFilter');
 
             Sandbox.eventSubscribe('global:route', $.proxy(function () {
                 clearInterval(this.interval_saveLayout);
             }, this));
+
+        },
+        toggleProductFilter: function () {
+            // debugger
+            var selectedIDs = this.$('.shop-filter-origin:checked').map(function(){return parseInt($(this).attr('id'), 10);}).toArray();
+            Cache.set('shopFilterOrdersLayoutRD', {
+                selectedOriginsIDs: selectedIDs
+            }, true);
+            this.trigger('originTree:changed:origin', selectedIDs);
         },
         saveLayout: function () {
             // console.log('saving layout filter origins');
             Cache.set("shopFilterOrdersLayoutRD", {
                 scrollTopFilterOrigins: this.$('.filter-list-origins').scrollTop()
-            });
+            }, true);
         },
         restoreLayout: function () {
             var layoutConfig = Cache.get("shopFilterOrdersLayoutRD");
             layoutConfig = _.defaults({}, layoutConfig || {}, {
-                scrollTopFilterOrigins: 0
+                scrollTopFilterOrigins: 0,
+                selectedOriginsIDs: []
             });
             this.$('.filter-list-origins').scrollTop(layoutConfig.scrollTopFilterOrigins);
+            _(layoutConfig.selectedOriginsIDs).each(function (selectedID) {
+                var $cbEl = this.$('.shop-filter-origin[id="' + selectedID + '"]');
+                if ($cbEl.length === 1) {
+                    $cbEl.prop('checked', true);
+                }
+            });
             this.interval_saveLayout = setInterval(this.saveLayout, 800);
         },
         removeOrigin: function (event) {

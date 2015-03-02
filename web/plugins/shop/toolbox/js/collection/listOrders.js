@@ -9,10 +9,7 @@ define([
 
         model: ModelOrder,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'orders'
-        }),
+        url: APP.getApiLink('shop', 'orders'),
 
         // Initial pagination states
         state: {

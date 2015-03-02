@@ -9,10 +9,7 @@ define([
 
         model: ModelOrigin,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'origins'
-        }),
+        url: APP.getApiLink('shop', 'origins'),
 
         // Initial pagination states
         state: {
@@ -20,17 +17,32 @@ define([
             order: 1
         },
 
+        initialize: function () {
+            this.extras = {};
+            // You can remap the query parameters from `state` keys from
+            // the default to those your server supports
+            this.queryParams = Cache.get('shopOriginsListRD') || {
+                totalPages: null,
+                totalRecords: null
+            };
+            this.queryParams.pageSize = "limit";
+            this.queryParams.sortKey = "sort";
+        },
+
+
+
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
-        queryParams: {
-            totalPages: null,
-            totalRecords: null,
-            pageSize: "limit",
-            sortKey: "sort"
-        },
+        // queryParams: {
+        //     totalPages: null,
+        //     totalRecords: null,
+        //     pageSize: "limit",
+        //     sortKey: "sort"
+        // },
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            Cache.set('shopOriginsListRD', this.queryParams);
             return this;
         },
 
@@ -40,6 +52,7 @@ define([
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            Cache.set('shopOriginsListRD', this.queryParams);
             return this;
         },
 
