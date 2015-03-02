@@ -181,6 +181,19 @@ class customers {
 
                 $validatedValues = $validatedDataObj['values'];
 
+                // set logo
+                if (!empty($validatedValues['Logo'])) {
+                    $newFileName = uniqid(time());
+                    $fileName = $validatedValues['Logo'];
+                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
+                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                    $normalImagePath = $fileName;
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                    $validatedValues['Logo'] = $uploadInfo['filename'];
+                }
+
                 // adjust plugins
                 $pList = array('system');
                 if (isset($validatedValues['Plugins']) && !empty($validatedValues['Plugins'])) {
@@ -243,6 +256,7 @@ class customers {
 
                 $validatedValues = $validatedDataObj['values'];
 
+                // update logo
                 if (isset($reqData['Logo'])) {
                     $customer = $this->getCustomerByID($CustomerID);
 
@@ -343,6 +357,15 @@ class customers {
         }
     }
 
+    public function post (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        $resp = $this->createCustomer($req->data);
+        // $this->_getOrSetCachedState('changed:product', true);
+    }
+
     public function patch (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
@@ -391,14 +414,6 @@ class customers {
         }
     }
 
-    public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->createProduct($req->data);
-        // $this->_getOrSetCachedState('changed:product', true);
-    }
 */
 }
 

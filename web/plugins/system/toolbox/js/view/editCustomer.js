@@ -33,7 +33,6 @@ define([
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            // debugger
             var that = this;
             var $dialog = new BootstrapDialog({
                 closable: false,

@@ -58,7 +58,7 @@ define([
 
     var routes = {
         "!/system/customers": "customerList",
-        "!/system/customer/:status": "customerListByStatus",
+        "!/system/customers/:status": "customerListByStatus",
         "!/system/customer/edit/:id": "customerEdit",
         "!/system/customer/new": "customerCreate",
         "!/system/migrations": "migrations",
@@ -163,10 +163,9 @@ define([
 
         customerCreate: function () {
             require(['plugins/system/toolbox/js/view/editCustomer'], function (ViewEditCustomer) {
-                // debugger;
                 // create new view
                 var viewEditCustomer = new ViewEditCustomer();
-                viewEditCustomer.model.fetch({reset: true});
+                viewEditCustomer.render();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewEditCustomer.$el
