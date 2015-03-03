@@ -54,9 +54,7 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
-                    var dnd = $('<span class="dndrow"><i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i></span>');
-                    return [dnd, btn];
+                    return tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
                 }
             }
         };
@@ -82,7 +80,6 @@ define([
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Name", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             silent: true,
                             success: function () {
                                 model.collection.fetch({
@@ -95,28 +92,27 @@ define([
             })
         };
 
-        var columnStatus = {
-            name: "Status",
-            label: lang.lists.customers.columnStatus,
-            cell: Backgrid.SelectCell.extend({
-                // It's possible to render an option group or use a
-                // function to provide option values too.
-                optionValues: orderStatusValues,
-                initialize: function (options) {
-                    Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Status", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        };
+        // var columnStatus = {
+        //     name: "Status",
+        //     label: lang.lists.customers.columnStatus,
+        //     cell: Backgrid.SelectCell.extend({
+        //         // It's possible to render an option group or use a
+        //         // function to provide option values too.
+        //         optionValues: orderStatusValues,
+        //         initialize: function (options) {
+        //             Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+        //             this.listenTo(this.model, "change:Status", function (model) {
+        //                 model.save(model.changed, {
+        //                     success: function () {
+        //                         model.collection.fetch({
+        //                             reset: true
+        //                         });
+        //                     }
+        //                 });
+        //             });
+        //         }
+        //     })
+        // };
 
         var columnLang = {
             name: "Lang",
@@ -152,7 +148,7 @@ define([
             columnName: columnName,
             columnLang: columnLang,
             columnLocale: columnLocale,
-            columnStatus: columnStatus,
+            // columnStatus: columnStatus,
             columnDateUpdated: columnDateUpdated,
             columnDateCreated: columnDateCreated
         });

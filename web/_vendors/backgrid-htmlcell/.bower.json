@@ -1,0 +1,15 @@
+{
+  "name": "backgrid-htmlcell",
+  "license": "MIT",
+  "version": "0.0.2",
+  "homepage": "https://github.com/AndrewEastwood/backgrid-htmlcell",
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.2",
+    "commit": "775f5a93c9194a6f3780f25f27a5cf1f694b514a"
+  },
+  "_source": "git://github.com/AndrewEastwood/backgrid-htmlcell.git",
+  "_target": "~0.0.2",
+  "_originalSource": "backgrid-htmlcell"
+}

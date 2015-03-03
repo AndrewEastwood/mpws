@@ -3,6 +3,7 @@ namespace engine\lib;
 
 use \engine\lib\request as Request;
 use \engine\lib\response as Response;
+use \engine\lib\route as Route;
 use \engine\lib\utils as Utils;
 
 class api {
@@ -42,6 +43,8 @@ class api {
         // invoke api request method
         $_REQ = Request::getRequestData();
         if (isset($api)) {
+            // $r = new Route($method, xxx)
+            // $api->route(Response::$_RESPONSE, $_REQ);
             $api->$method(Response::$_RESPONSE, $_REQ);
         } else {
             header("HTTP/1.0 404 Not Found");

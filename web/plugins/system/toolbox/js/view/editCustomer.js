@@ -26,7 +26,7 @@ define([
     var EditCustomer = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'plugin-system-edit-customer',
+        className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-customer',
         initialize: function () {
             var self = this;
             this.model = new ModelCustomer();
@@ -54,14 +54,13 @@ define([
                             HomePage: that.$('.js-homepage').val(),
                             Title: that.$('.js-title').val(),
                             AdminTitle: that.$('.js-admintitle').val(),
-                            Logo: that.$('.js-logo').val(),
+                            file1: that.$('.js-file1').val(),
                             Lang: that.$('.js-lang').val(),
                             Locale: that.$('.js-locale').val(),
                             Protocol: that.$('.js-protocol').val(),
                             Plugins: that.getSelectedPlugins().join(',')
                         }, {
                             wait: true,
-                            patch: true,
                             success: function (model, response) {
                                 // debugger;
                                 if (response && response.success) {
@@ -86,10 +85,7 @@ define([
             this.$('.js-plugins').html(tplFBAnim());
 
             // get available plugins and check activated for this customer
-            var pluginsUrl = APP.getApiLink({
-                source: 'system',
-                fn: 'plugins'
-            });
+            var pluginsUrl = APP.getApiLink('system', 'plugins');
             $.get(pluginsUrl, function (data) {
                 that.$('.js-plugins').empty();
                 var customerPlugins = that.model.get('Plugins');

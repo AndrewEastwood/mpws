@@ -1,0 +1,14 @@
+{
+  "name": "bootstrap-magnify",
+  "homepage": "https://github.com/marcaube/bootstrap-magnify",
+  "version": "0.3.0",
+  "_release": "0.3.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.0",
+    "commit": "f1e50d5b8d81ebc5ac0d25013e137c42661224c3"
+  },
+  "_source": "git://github.com/marcaube/bootstrap-magnify.git",
+  "_target": "~0.3.0",
+  "_originalSource": "bootstrap-magnify"
+}

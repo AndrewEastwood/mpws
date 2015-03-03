@@ -47,9 +47,10 @@ define([
         },
         customerRestore: function (event) {
             var that = this;
-            BootstrapDialog.confirm("Do you want to remove customer?", function (rez) {
+            BootstrapDialog.confirm("Do you want to restore customer?", function (rez) {
                 if (rez) {
-                    var $item = $(event.target);
+                    // debugger
+                    var $item = $(event.target).parents('.js-customer-restore');
                     var id = parseInt($item.data('id'), 10);
                     var model = that.collection.get(id);
                     if (model && model.save) {
@@ -74,7 +75,7 @@ define([
             var that = this;
             BootstrapDialog.confirm("Do you want to remove customer?", function (rez) {
                 if (rez) {
-                    var $item = $(event.target);
+                    var $item = $(event.target).parents('.js-customer-remove');
                     var id = parseInt($item.data('id'), 10);
                     var model = that.collection.get(id);
                     if (model && model.destroy) {

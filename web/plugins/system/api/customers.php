@@ -169,7 +169,7 @@ class customers {
             'HomePage' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'localhost'),
             'Title' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'Happy Site :)'),
             'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'MPWS Admin'),
-            'Logo' => array('string', 'skipIfEmpty'),
+            'file1' => array('string', 'skipIfEmpty'),
             'Lang' => array('string', 'skipIfUnset', 'max' => 50, 'defaultValueIfUnset' => 'en'),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'en_us'),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'http'),
@@ -193,6 +193,7 @@ class customers {
                     $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
                     $validatedValues['Logo'] = $uploadInfo['filename'];
                 }
+                unset($validatedValues['file1']);
 
                 // adjust plugins
                 $pList = array('system');
@@ -240,11 +241,12 @@ class customers {
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'HostName' => array('string', 'notEmpty', 'max' => 100),
+            'HostName' => array('string', 'skipIfUnset', 'max' => 100),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 200),
             'Title' => array('string', 'skipIfUnset', 'max' => 200),
             'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200),
-            'Logo' => array('string', 'skipIfUnset'),
+            'Status' => array('string', 'skipIfEmpty'),
+            'file1' => array('string', 'skipIfUnset'),
             'Lang' => array('string', 'skipIfUnset', 'max' => 50),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
@@ -257,11 +259,16 @@ class customers {
                 $validatedValues = $validatedDataObj['values'];
 
                 // update logo
-                if (isset($reqData['Logo'])) {
+                if (isset($reqData['file1'])) {
                     $customer = $this->getCustomerByID($CustomerID);
 
                     $currentFileName = empty($customer['Logo']) ? "" : $customer['Logo']['name'];
-                    $newFileName = isset($validatedValues['Logo']) ? $validatedValues['Logo'] : null;
+                    $newFileName = null;
+
+                    if (!empty($validatedValues['file1'])) {
+                        $newFileName = $validatedValues['file1'];
+                        unset($validatedValues['file1']);
+                    }
 
                     if ($newFileName !== $currentFileName) {
                         if (empty($newFileName) && !empty($currentFileName)) {
@@ -294,8 +301,8 @@ class customers {
                             $pList[] = $value;
                         }
                     }
+                    $validatedValues['Plugins'] = implode(',', $pList);
                 }
-                $validatedValues['Plugins'] = implode(',', $pList);
 
                 $app->getDB()->beginTransaction();
 
@@ -345,12 +352,13 @@ class customers {
     }
 
     public function get (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            if (is_numeric($req->get['id'])) {
-                $CustomerID = intval($req->get['id']);
+        // var_dump($req);
+        if (!empty($req->get['params'])) {
+            if (is_numeric($req->get['params'])) {
+                $CustomerID = intval($req->get['params']);
                 $resp = $this->getCustomerByID($CustomerID);
             } else {
-                $resp = $this->getCustomerByName($req->get['id']);
+                $resp = $this->getCustomerByName($req->get['params']);
             }
         } else {
             $resp = $this->getCustomers_List($req->get);
@@ -366,17 +374,38 @@ class customers {
         // $this->_getOrSetCachedState('changed:product', true);
     }
 
+    public function put (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['params'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            if (is_numeric($req->get['params'])) {
+                $CustomerID = intval($req->get['params']);
+                $resp = $this->updateCustomer($CustomerID, $req->data);
+            } else {
+                $resp['error'] = 'WrongParameter_id';
+            }
+            // $this->_getOrSetCachedState('changed:product', true);
+        }
+    }
+
     public function patch (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CustomerID = intval($req->get['id']);
-            $resp = $this->updateCustomer($CustomerID, $req->data);
-            // $this->_getOrSetCachedState('changed:product', true);
+            if (is_numeric($req->get['params'])) {
+                $CustomerID = intval($req->get['params']);
+                $resp = $this->updateCustomer($CustomerID, $req->data);
+            } else {
+                $resp['error'] = 'WrongParameter_id';
+            }
         }
     }
 
@@ -385,11 +414,15 @@ class customers {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CustomerID = intval($req->get['id']);
-            $resp = $this->archiveCustomer($CustomerID);
+            if (is_numeric($req->get['params'])) {
+                $CustomerID = intval($req->get['params']);
+                $resp = $this->archiveCustomer($CustomerID);
+            } else {
+                $resp['error'] = 'WrongParameter_id';
+            }
         }
     }
 

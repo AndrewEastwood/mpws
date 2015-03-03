@@ -19,10 +19,8 @@
     "backbone": "~1.1.2",
     "backgrid": "~0.3.5",
     "bootstrap": "~3.3.2",
-    "underscore": "~1.8.2",
     "x-editable": "~1.5.1",
     "moment": "~2.9.0",
-    "cachejs": "~0.0.1",
     "lightbox": "~2.7.1",
     "blueimp-file-upload": "~9.9.3",
     "select2": "~3.5.2",
@@ -49,6 +47,9 @@
     "spin.js": "~2.0.2",
     "fontawesome": "~4.3.0",
     "bootstrap-magnify": "~0.3.0",
-    "jquery-maskmoney": "~3.0.2"
+    "jquery-maskmoney": "~3.0.2",
+    "jquery": "1.10.2",
+    "cachejs": "~0.1.1",
+    "underscore": "~1.8.2"
   }
 }
