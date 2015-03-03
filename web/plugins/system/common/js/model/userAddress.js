@@ -14,12 +14,12 @@ define([
                 _params.id = this.id;
             return APP.getApiLink(_params);
         },
-        initialize: function () {
-            Sandbox.eventSubscribe('global:route', $.proxy(function () {
-                this.unset('errors', {silent: true});
-                this.unset('success', {silent: true});
-            }, this));
-        }
+        // initialize: function () {
+        //     Sandbox.eventSubscribe('global:route', $.proxy(function () {
+        //         this.unset('errors', {silent: true});
+        //         this.unset('success', {silent: true});
+        //     }, this));
+        // }
     });
     return UserAddress;
 

@@ -22,7 +22,7 @@ define([
             this.extras = {};
             // You can remap the query parameters from `state` keys from
             // the default to those your server supports
-            this.queryParams = Cache.get('systemCustomersListRD') || {
+            this.queryParams = Cache.get('systemUsersListRD') || {
                 totalPages: null,
                 totalRecords: null
             };
@@ -32,7 +32,7 @@ define([
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
-            Cache.set('systemCustomersListRD', this.queryParams);
+            Cache.set('systemUsersListRD', this.queryParams);
             return this;
         },
 
@@ -42,7 +42,7 @@ define([
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
-            Cache.set('systemCustomersListRD', this.queryParams);
+            Cache.set('systemUsersListRD', this.queryParams);
             return this;
         },
 

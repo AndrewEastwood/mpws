@@ -66,8 +66,10 @@ class database {
     public function commit () {
         if (!$this->isTransactionsAllowed())
             return false;
-        $this->getDBLink()->commit();
-        $this->transactionIsActive = false;
+        if ($this->transactionIsActive) {
+            $this->getDBLink()->commit();
+            $this->transactionIsActive = false;
+        }
     }
 
     public function rollback () {

@@ -374,6 +374,81 @@ class dbquery {
         return $config;
     }
 
+    public static function getUserList (array $options = array()) {
+        global $app;
+        $config = self::getUser();
+        $config['condition'] = array();
+        $config["fields"] = array("ID");
+        $config['limit'] = 64;
+        $config['group'] = 'mpws_users.ID';
+        unset($config['options']);
+
+        if (!empty($options['_pSearch'])) {
+            if (is_string($options['_pSearch'])) {
+                $config['condition']["mpws_users.FirstName"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+            } elseif (is_array($options['_pSearch'])) {
+                foreach ($options['_pSearch'] as $value) {
+                    $chunks = explode('=', $value);
+                    // var_dump($chunks);
+                    if (count($chunks) === 2) {
+                        $keyToSearch = strtolower($chunks[0]);
+                        $valToSearch = $chunks[1];
+                        $conditionField = '';
+                        $conditionOp = '=';
+                        switch ($keyToSearch) {
+                            case 'id':
+                                $conditionField = "mpws_users.ID";
+                                $valToSearch = intval($valToSearch);
+                                break;
+                            case 'n':
+                                $conditionField = "mpws_users.FirstName";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                            case 'ln':
+                                $conditionField = "mpws_users.LastName";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                            case 'email':
+                                $conditionField = "mpws_users.EMail";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                            case 'p':
+                                $conditionField = "mpws_users.Phone";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                            // case 'd':
+                            //     $conditionField = "mpws_users.Description";
+                            //     $valToSearch = '%' . $valToSearch . '%';
+                            //     $conditionOp = 'like';
+                            //     break;
+                        }
+                        // var_dump($conditionField);
+                        // var_dump($valToSearch);
+                        // var_dump($conditionOp);
+                        if (!empty($conditionField)) {
+                            $config['condition'][$conditionField] = $app->getDB()->createCondition($valToSearch, $conditionOp);
+                        }
+                    }
+                    // $config['condition']["mpws_users.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["mpws_users.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["mpws_users.Description"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["mpws_users.SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                }
+            }
+        }
+
+        // var_dump($config['condition']);
+        return $config;
+    }
+
     public static function getUserByCredentials ($login, $password) {
         global $app;
         $config = self::getUser();

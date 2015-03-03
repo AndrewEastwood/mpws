@@ -16,10 +16,10 @@ class stats {
 
         $sources['overview'] = function ($req) use ($self) {
             return array(
-                'overview_users' => API::getAPI('system:user')->getStats_UsersOverview(),
-                'users_intensity_last_month_active' => API::getAPI('system:user')->getStats_UsersIntensityLastMonth('ACTIVE'),
-                'users_intensity_last_month_temp' => API::getAPI('system:user')->getStats_UsersIntensityLastMonth('TEMP'),
-                'users_intensity_last_month_removed' => API::getAPI('system:user')->getStats_UsersIntensityLastMonth('REMOVED')
+                'overview_users' => API::getAPI('system:users')->getStats_UsersOverview(),
+                'users_intensity_last_month_active' => API::getAPI('system:users')->getStats_UsersIntensityLastMonth('ACTIVE'),
+                'users_intensity_last_month_temp' => API::getAPI('system:users')->getStats_UsersIntensityLastMonth('TEMP'),
+                'users_intensity_last_month_removed' => API::getAPI('system:users')->getStats_UsersIntensityLastMonth('REMOVED')
             );
         };
         $type = false;

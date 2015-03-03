@@ -22,7 +22,8 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             noData: 'Нема даних'
         },
         users: {
-            title: 'Користувачі'
+            title: 'Користувачі',
+            noData: 'Нема даних'
         }
     },
     lists: {
@@ -33,13 +34,32 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             columnLang: 'Мова',
             columnLocale: 'Локалізація',
             columnDateCreated: 'Дата Створення',
-            columnDateUpdated: 'Дата Оновлення',
+            columnDateUpdated: 'Дата Оновлення'
+        },
+        users: {
+            columnID: '#',
+            columnIsOnline: 'Онлайн',
+            columnFullName: 'Імя',
+            columnEMail: 'Мейл',
+            columnPhone: 'Тел.',
+            columnValidationString: 'Код',
+            columnStatus: 'Стату',
+            columnDateLastAccess: 'Ост.Доступ',
+            columnDateCreated: 'Дата Створення',
+            columnDateUpdated: 'Дата Оновлення'
         }
     },
     customer: {
         statuses: {
             ACTIVE: 'Активний',
             REMOVED: 'Видалений'
+        }
+    },
+    user: {
+        statuses: {
+            ACTIVE: 'Активний',
+            REMOVED: 'Видалений',
+            TEMP: 'Тимчасовий'
         }
     },
     editors: {

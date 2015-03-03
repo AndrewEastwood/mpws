@@ -172,7 +172,7 @@ class orders {
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
-        $apiAccountUser = API::getAPI('system:user');
+        $apiAccountUser = API::getAPI('system:users');
         $apiAccountAddr = API::getAPI('system:address');
         $formSettings = API::getAPI('shop:settings')->getSettingsFormOrder();
 
@@ -504,7 +504,7 @@ class orders {
                 if (isset($order['UserAddressesID']))
                     $order['address'] = API::getAPI('system:address')->getAddressByID($order['UserAddressesID']);
                 if (isset($order['UserID']))
-                    $order['user'] = API::getAPI('system:user')->getUserByID($order['UserID']);
+                    $order['user'] = API::getAPI('system:users')->getUserByID($order['UserID']);
                 unset($order['UserID']);
                 unset($order['UserAddressesID']);
             }

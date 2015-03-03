@@ -58,11 +58,12 @@ define([
 
     var routes = {
         "!/system/customers": "customerList",
-        "!/system/customers/:status": "customerListByStatus",
+        "!/system/customers/:status": "customersListByStatus",
         "!/system/customer/edit/:id": "customerEdit",
         "!/system/customer/new": "customerCreate",
         "!/system/migrations": "migrations",
         "!/system/users": "users",
+        "!/system/users/:status": "usersListByStatus",
         "!/system/user/new": "userCreate",
         "!/system/user/edit/:id": "userEdit"
     };
@@ -174,14 +175,28 @@ define([
         },
 
         users: function () {
-            require(['plugins/system/toolbox/js/view/listUsers'], function (Dashboard) {
-                // debugger;
-                // create new view
-                var dashboard = new Dashboard();
-                dashboard.model.fetch();
+            require(['plugins/system/toolbox/js/view/managerUsers'], function (ViewManagerUsers) {
+                var viewManagerUsers = new ViewManagerUsers();
+                viewManagerUsers.collection.fetch({reset: true});
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: dashboard.$el
+                    el: viewManagerUsers.$el
+                });
+            });
+        },
+
+        usersListByStatus: function (status) {
+            require(['plugins/system/toolbox/js/view/managerUsers'], function (ViewManagerUsers) {
+                // debugger;
+                // create new view
+                var options = status ? {
+                    status: status
+                } : {};
+                var viewManagerUsers = new ViewManagerUsers(options);
+                viewManagerUsers.collection.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewManagerUsers.$el
                 });
             });
         }

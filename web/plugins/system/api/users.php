@@ -5,7 +5,7 @@ use \engine\lib\api as API;
 use \engine\lib\secure as Secure;
 use \engine\lib\validate as Validate;
 
-class user {
+class users {
 
     public function getEmptyUserName () {
         return 'No Name';
@@ -26,6 +26,8 @@ class user {
         // $user['PermissionID'] = intval($user['PermissionID']);
         $user['IsOnline'] = intval($user['IsOnline']) === 1;
         $user['IsTemp'] = $user['Status'] === "TEMP";
+        $user['isBlocked'] = $user['Status'] === "REMOVED";
+        $user['isCurrent'] = API::getAPI('system:auth')->getAuthenticatedUserID() === $UserID;
         unset($user['CustomerID']);
         unset($user['Permissions']['ID']);
         unset($user['Permissions']['UserID']);
@@ -58,6 +60,24 @@ class user {
         if (!is_null($user))
             $user = $this->__attachUserDetails($user);
         return $user;
+    }
+
+    public function getUsers_List (array $options = array()) {
+        global $app;
+        $config = dbquery::getUserList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $item) {
+                    $_items[] = $self->getUserByID($item['ID']);
+                }
+                return $_items;
+            }
+        );
+        // $options['useCustomerID'] = false;
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        return $dataList;
     }
 
     public function getActiveUserByCredentials ($login, $password) {
@@ -167,18 +187,19 @@ class user {
         $validatedDataObj = Validate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string'),
+            'Status' => array('skipIfUnset', 'string'),
             'Phone' => array('skipIfUnset', 'isPhone'),
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),
             'ConfirmPassword' => array('skipIfUnset', 'equalTo' => 'Password', 'notEmpty'),
             // permissions
-            'p_CanAdmin' => array('bool', 'notEmpty'),
-            'p_CanCreate' => array('bool', 'notEmpty'),
-            'p_CanEdit' => array('bool', 'notEmpty'),
-            'p_CanView' => array('bool', 'notEmpty'),
-            'p_CanUpload' => array('bool', 'notEmpty'),
-            'p_CanViewReports' => array('bool', 'notEmpty'),
-            'p_CanAddUsers' => array('bool', 'notEmpty'),
-            'p_CanMaintain' => array('bool', 'notEmpty')
+            // 'p_CanAdmin' => array('bool', 'notEmpty'),
+            // 'p_CanCreate' => array('bool', 'notEmpty'),
+            // 'p_CanEdit' => array('bool', 'notEmpty'),
+            // 'p_CanView' => array('bool', 'notEmpty'),
+            // 'p_CanUpload' => array('bool', 'notEmpty'),
+            // 'p_CanViewReports' => array('bool', 'notEmpty'),
+            // 'p_CanAddUsers' => array('bool', 'notEmpty'),
+            // 'p_CanMaintain' => array('bool', 'notEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -199,7 +220,7 @@ class user {
                         $dataUser[$field] = $value;
                 }
 
-                if (count($dataUser)) {
+                if (!empty($dataUser)) {
                     if (isset($dataUser['Password'])) {
                         $dataUser['Password'] = Secure::EncodeUserPassword($validatedValues['Password']);
                         unset($dataUser['ConfirmPassword']);
@@ -208,9 +229,11 @@ class user {
                     $app->getDB()->query($configUpdateUser);
                 }
 
-                $Permission = $this->updateUserPermissions($UserID, $dataPermission);
-                if (!$Permission['success']) {
-                    throw new Exception(implode(';', $Permission['errors']));
+                if (!empty($dataPermission)) {
+                    $Permission = $this->updateUserPermissions($UserID, $dataPermission);
+                    if (!$Permission['success']) {
+                        throw new Exception(implode(';', $Permission['errors']));
+                    }
                 }
 
                 $app->getDB()->commit();
@@ -250,16 +273,40 @@ class user {
         return $result;
     }
 
-    private function _disableUserByID ($UserID) {
+    public function disableUserByID ($UserID) {
         global $app;
-        $app->getDB()->query(dbquery::disableUser($UserID));
-        // disable all related addresses
-        $user = $this->getUserByID($UserID);
-        if ($user['Addresses'])
-            foreach ($user['Addresses'] as $addr) {
-                $this->_disableAddressByID($addr['ID']);
+        $errors = array();
+        $success = false;
+
+        try {
+            $user = $this->getUserByID($UserID);
+            $app->getDB()->beginTransaction();
+
+            $app->getDB()->disableTransactions();
+            // disable all related addresses
+            if ($user['Addresses']) {
+                foreach ($user['Addresses'] as $addr) {
+                    API::getAPI('system:address')->disableAddressByID($addr['ID']);
+                }
             }
-        return glWrap("ok", true);
+            $app->getDB()->enableTransactions();
+
+            $config = dbquery::disableUser($UserID);
+            $app->getDB()->query($config, false);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->enableTransactions();
+            $app->getDB()->rollBack();
+            $errors[] = 'UserDisableError';
+        }
+
+        $result = $this->getUserByID($UserID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
     public function setOffline ($UserID) {
@@ -405,7 +452,7 @@ class user {
         }
         if (!empty($req->get['id'])) {
             $UserID = intval($req->get['id']);
-            $resp = $this->_disableUserByID($UserID);
+            $resp = $this->disableUserByID($UserID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';

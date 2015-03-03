@@ -40,10 +40,10 @@ define([
 
     function getColumns() {
         // TODO: do smth to fetch states from server
-        var statuses = ["ACTIVE", "REMOVED"];
-        var orderStatusValues = _(statuses).map(function (status) {
-            return [lang.customer.statuses[status] || status, status];
-        });
+        // var statuses = ["ACTIVE", "REMOVED"];
+        // var orderStatusValues = _(statuses).map(function (status) {
+        //     return [lang.customer.statuses[status] || status, status];
+        // });
 
         var columnActions = {
             className: "custom-row-context-menu",

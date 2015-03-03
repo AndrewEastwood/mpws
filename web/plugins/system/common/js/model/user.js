@@ -12,7 +12,7 @@ define([
         url: function () {
             var _params =  {
                 source: 'system',
-                fn: 'user'
+                fn: 'users'
             };
             if (!this.isNew())
                 _params.id = this.id;
@@ -20,10 +20,10 @@ define([
         },
         initialize: function () {
             // autoclean errors when user goes wherever else
-            Sandbox.eventSubscribe('global:route', $.proxy(function () {
-                this.unset('errors', {silent: true});
-                this.unset('success', {silent: true});
-            }, this));
+            // Sandbox.eventSubscribe('global:route', $.proxy(function () {
+            //     this.unset('errors', {silent: true});
+            //     this.unset('success', {silent: true});
+            // }, this));
         },
         changePassword: function (password, confirmation) {
             var data = {

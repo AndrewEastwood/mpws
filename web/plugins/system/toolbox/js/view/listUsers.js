@@ -39,10 +39,10 @@ define([
 
     function getColumns() {
         // TODO: do smth to fetch states from server
-        var statuses = ["ACTIVE", "ARCHIVED", "DISCOUNT", "DEFECT", "WAITING", "PREORDER"];
-        var orderStatusValues = _(statuses).map(function (status) {
-            return [lang["product_status_" + status] || status, status];
-        });
+        // var statuses = ["ACTIVE", "REMOVED", "TEMP"];
+        // var orderStatusValues = _(statuses).map(function (status) {
+        //     return [lang["product_status_" + status] || status, status];
+        // });
 
         var columnActions = {
             className: "custom-row-context-menu",
@@ -53,188 +53,82 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
-                    var dnd = $('<span class="dndrow"><i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i></span>');
-                    return [dnd, btn];
+                    return tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
                 }
             }
         };
         var columnID = {
             name: "ID",
-            label: lang.pluginMenu_Products_Grid_Column_ID,
+            label: lang.lists.users.columnID,
             cell: 'html',
             editable: false,
             sortable: false,
             formatter: {
-                fromRaw: function (value, model) {
+                fromRaw: function (value) {
                     var id = $('<span>').addClass('label label-primary').text(value);
                     return id;
                 }
             }
         };
 
-        var columnName = {
-            name: "Name",
-            label: lang.pluginMenu_Products_Grid_Column_Name,
-            cell: Backgrid.StringCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Name", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        };
-
-        var columnModel = {
-            name: "Model",
-            label: lang.pluginMenu_Products_Grid_Column_Model,
-            cell: Backgrid.StringCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Model", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        };
-
-        var columnOriginName = {
-            name: "OriginName",
-            label: lang.pluginMenu_Products_Grid_Column_OriginName,
+        var columnFullName = {
+            name: "FullName",
+            label: lang.lists.users.columnFullName,
             cell: "string",
+            editable: false
+        };
+
+        var columnEMail = {
+            name: "EMail",
+            label: lang.lists.users.columnEMail,
+            cell: "string",
+            editable: false
+        };
+
+        var columnIsOnline = {
+            name: "IsOnline",
+            label: lang.lists.users.columnIsOnline,
+            cell: "html",
             editable: false,
             formatter: {
-                fromRaw: function (value, model) {
-                    return model.get('_origin').Name
+                fromRaw: function (value) {
+                    var id = $('<span>').addClass('fa fa-fw fa-check text-success').toggleClass('fa-times text-danger', !value);
+                    return id;
                 }
             }
         };
 
-        var columnCategoryName = {
-            name: "CategoryName",
-            label: lang.pluginMenu_Products_Grid_Column_CategoryName,
+        var columnPhone = {
+            name: "Phone",
+            label: lang.lists.users.columnPhone,
             cell: "string",
-            editable: false,
-            formatter: {
-                fromRaw: function (value, model) {
-                    return model.get('_category').Name
-                }
-            }
+            editable: false
         };
 
-        var columnSKU = {
-            name: "SKU",
-            label: lang.pluginMenu_Products_Grid_Column_SKU,
-            cell: Backgrid.StringCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:SKU", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
+        var columnValidationString = {
+            name: "ValidationString",
+            label: lang.lists.users.columnValidationString,
+            cell: "string",
+            editable: false
         };
 
-        var columnPrice = {
-            name: "Price",
-            label: lang.pluginMenu_Products_Grid_Column_Price,
-            cell: Backgrid.NumberCell.extend({
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Price", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            silent: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            }),
-            formatter: {
-                fromRaw: function (value, model) {
-                    var _prices = model.get('_prices'),
-                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
-                    if (_currencyDisplay) {
-                        if (_currencyDisplay.showBeforeValue) {
-                            return _currencyDisplay.text + _prices.price;
-                        } else {
-                            return _prices.price + _currencyDisplay.text;
-                        }
-                    } else {
-                        return _prices.price;
-                    }
-                },
-                toRaw: function (value) {
-                    var matches = value.replace( /^\D+/g, '').match(/^([0-9\.]+)/)
-                    if (matches && matches[1])
-                        return parseFloat(matches[0]);
-                    throw "CanParseProductPrise"
-                }
-            }
-        };
-
-        var columnStatus = {
-            name: "Status",
-            label: lang.pluginMenu_Products_Grid_Column_Status,
-            cell: Backgrid.SelectCell.extend({
-                // It's possible to render an option group or use a
-                // function to provide option values too.
-                optionValues: orderStatusValues,
-                initialize: function (options) {
-                    Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Status", function (model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
-                        });
-                    });
-                }
-            })
+        var columnDateLastAccess = {
+            name: "DateLastAccess",
+            label: lang.lists.users.columnDateLastAccess,
+            cell: "string",
+            editable: false
         };
 
         var columnDateUpdated = {
             name: "DateUpdated",
-            label: lang.pluginMenu_Products_Grid_Column_DateUpdated,
+            label: lang.lists.users.columnDateUpdated,
             cell: "string",
             editable: false
         };
 
         var columnDateCreated = {
             name: "DateCreated",
-            label: lang.pluginMenu_Products_Grid_Column_DateCreated,
+            label: lang.lists.users.columnDateCreated,
             cell: "string",
             editable: false
         };
@@ -242,13 +136,12 @@ define([
         return _.extend({}, {
             columnActions: columnActions,
             columnID: columnID,
-            columnName: columnName,
-            columnModel: columnModel,
-            columnOriginName: columnOriginName,
-            columnCategoryName: columnCategoryName,
-            columnSKU: columnSKU,
-            columnPrice: columnPrice,
-            columnStatus: columnStatus,
+            columnFullName: columnFullName,
+            columnEMail: columnEMail,
+            columnIsOnline: columnIsOnline,
+            columnPhone: columnPhone,
+            columnValidationString: columnValidationString,
+            columnDateLastAccess: columnDateLastAccess,
             columnDateUpdated: columnDateUpdated,
             columnDateCreated: columnDateCreated
         });
@@ -277,7 +170,7 @@ define([
         startLoadingAnim: function () {
             var self = this;
             setTimeout(function () {
-                console.log('adding spinner');
+                // console.log('adding spinner');
                 self.$el.append(spinner.el);
             }, 0);
         },
@@ -285,7 +178,7 @@ define([
             this.$('.mpwsDataSpinner').remove();
         },
         render: function () {
-            console.log('listOrders: render');
+            // console.log('listUsers: render');
             // debugger;
             this.$el.off().empty();
             if (this.collection.length) {

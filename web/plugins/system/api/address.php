@@ -49,7 +49,7 @@ class address {
 
                 // TODO: if user is authorized and do not have maximum addresses
                 // we must link new address to the user otherwise create unlinked user
-                $user = API::getAPI('system:user')->getUserByID($UserID);
+                $user = API::getAPI('system:users')->getUserByID($UserID);
                 if (empty($user))
                     throw new Exception("WrongUser", 1);
                 elseif (count($user['Addresses']) >= 3) {
@@ -135,14 +135,31 @@ class address {
         return $result;
     }
 
-    private function _disableAddressByID ($AddressID) {
+    public function disableAddressByID ($AddressID) {
         global $app;
-        $config = dbquery::disableAddress($AddressID);
-        $app->getDB()->query($config);
-        return glWrap("ok", true);
+        $errors = array();
+        $success = false;
+
+        try {
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::disableAddress($AddressID);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = 'AddressDisableError';
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
-    // we disallow getting user address
+    // we don't allow get user address
     public function get () {}
 
     public function patch (&$resp, $req) {
@@ -166,7 +183,7 @@ class address {
     public function delete (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $AddressID = intval($req->get['id']);
-            $resp = $this->_disableAddressByID($AddressID);
+            $resp = $this->disableAddressByID($AddressID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';

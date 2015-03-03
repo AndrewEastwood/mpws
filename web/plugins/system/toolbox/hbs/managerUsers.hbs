@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{bb_link instances.system.urls.userCreate asRoot=true}}">
+                    <i class="fa fa-plus fa-fw"></i>
+                </a>
+                {{lang.managers.users.title}}
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-tabs-plugin-system-users">
+                        <li class="tab-link users-active">
+                            <a href="{{bb_link instances.system.urls.usersListByStatus status="ACTIVE" asRoot=true}}">
+                                <i class="fa fa-check-circle"></i>
+                                {{lang.user.statuses.ACTIVE}}
+                            </a>
+                        </li>
+                        <li class="tab-link users-temp">
+                            <a href="{{bb_link instances.system.urls.usersListByStatus status="TEMP" asRoot=true}}">
+                                <i class="fa fa-clock-o"></i>
+                                {{lang.user.statuses.TEMP}}
+                            </a>
+                        </li>
+                        <li class="tab-link users-removed">
+                            <a href="{{bb_link instances.system.urls.usersListByStatus status="REMOVED" asRoot=true}}">
+                                <i class="fa fa-trash-o"></i>
+                                {{lang.user.statuses.REMOVED}}
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div class="tab-pane active user-list"></div>
+                    </div>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>

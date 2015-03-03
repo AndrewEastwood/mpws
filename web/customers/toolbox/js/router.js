@@ -104,7 +104,7 @@ define([
 
     // return CustomerClass;
     $('head title').text(APP.config.TITLE);
-    $('a.navbar-brand').attr('href', '/').html(APP.config.TITLE);
+    $('a.navbar-brand').attr('href', '/#!/').html(APP.config.TITLE);
     $('a.mpjs-opensite').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_HOMEPAGE);
     $('#navbar [name="TopMenuLeft"]').empty().append(renderMenuPlaceholdersFn());
 
