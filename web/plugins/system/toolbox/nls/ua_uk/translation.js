@@ -79,10 +79,32 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             labelProtocol: 'Протокол',
             buttonSave: 'Зберегти',
             buttonClose: 'Назад',
-            messageSuccess: 'Сайт оновлено успішно',
-            messageError: 'Помилка збереження/оновлення',
+            messageSuccess: 'Успішно',
+            messageError: 'Помилка',
             plugins: {
                 title: 'Додатки'
+            }
+        },
+        user: {
+            titleForNew: 'Створення користувача',
+            titleForExistent: 'Редагування користувача',
+            errors: {
+                title: ''
+            },
+            labelIsOnline: '- on-line індикатор',
+            labelFirstName: 'Імя',
+            labelLastName: '',
+            labelEMail: 'Ел.Адреса',
+            labelPhone: 'Телеофн',
+            labelValidationString: 'Код активації',
+            labelPassword: 'Пароль',
+            labelPasswordVerify: 'Підтвердження',
+            buttonSave: 'Зберегти',
+            buttonClose: 'Назад',
+            messageSuccess: 'Успішно',
+            messageError: 'Помилка',
+            permissions: {
+                title: 'Права доступу'
             }
         }
     }

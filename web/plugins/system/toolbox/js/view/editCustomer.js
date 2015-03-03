@@ -28,7 +28,6 @@ define([
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-customer',
         initialize: function () {
-            var self = this;
             this.model = new ModelCustomer();
             this.listenTo(this.model, 'change', this.render);
         },
@@ -43,7 +42,7 @@ define([
                     cssClass: 'btn-default btn-link',
                     action: function (dialog) {
                         // debugger
-                        Backbone.history.navigate(APP.instances.system.urls.customerList, true);
+                        Backbone.history.navigate(APP.instances.system.urls.customersList, true);
                     }
                 }, {
                     label: lang.editors.customer.buttonSave,

@@ -57,15 +57,15 @@ define([
     Auth.getStatus();
 
     var routes = {
-        "!/system/customers": "customerList",
+        "!/system/customers": "customersList",
         "!/system/customers/:status": "customersListByStatus",
         "!/system/customer/edit/:id": "customerEdit",
         "!/system/customer/new": "customerCreate",
         "!/system/migrations": "migrations",
-        "!/system/users": "users",
+        "!/system/users": "usersList",
         "!/system/users/:status": "usersListByStatus",
-        "!/system/user/new": "userCreate",
-        "!/system/user/edit/:id": "userEdit"
+        "!/system/user/edit/:id": "userEdit",
+        "!/system/user/new": "userCreate"
     };
 
     var Router = Backbone.Router.extend({
@@ -174,7 +174,21 @@ define([
             });
         },
 
-        users: function () {
+        userEdit: function (id) {
+            require(['plugins/system/toolbox/js/view/editUser'], function (ViewEditUser) {
+                // debugger;
+                // create new view
+                var viewEditUser = new ViewEditUser();
+                viewEditUser.model.set('ID', id, {silent: true});
+                viewEditUser.model.fetch({reset: true});
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewEditUser.$el
+                });
+            });
+        },
+
+        usersList: function () {
             require(['plugins/system/toolbox/js/view/managerUsers'], function (ViewManagerUsers) {
                 var viewManagerUsers = new ViewManagerUsers();
                 viewManagerUsers.collection.fetch({reset: true});
