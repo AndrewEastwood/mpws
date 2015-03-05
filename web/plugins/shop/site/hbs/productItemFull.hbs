@@ -33,7 +33,7 @@
                         {{#if data.Images.[0].sm}}
                         <script>
                         (function() {
-                            require(["base/js/plugin/image!{{data.Images.[0].sm}}"], function(img){
+                            require(["image!{{data.Images.[0].sm}}"], function(img){
                                 $('.image_{{data.ID}}').removeClass('noimage').html($(img).attr({
                                     title: "{{data._displayName}}",
                                     alt: "{{data._displayName}}",
@@ -325,7 +325,7 @@
                                     {{#if Images.[0].xs}}
                                     <script>
                                     (function() {
-                                        require(["base/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                        require(["image!{{Images.[0].xs}}"], function(img){
                                             $('.image_{{ID}}').removeClass('noimage').html($(img).attr({
                                                 title: "{{_displayName}}",
                                                 alt: "{{_displayName}}",

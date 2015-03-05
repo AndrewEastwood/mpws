@@ -164,7 +164,7 @@
             } catch (exception) {
                 console.log(exception);
             }
-            Sandbox.eventNotify("global:ajax:response", {
+            APP.Sandbox.eventNotify("global:ajax:response", {
                 response: response,
                 isAuthRequest: new RegExp('^' + APP.getAuthLink()).test(ajaxOptions.url)
             });
@@ -177,26 +177,26 @@
             // debugger;
             var _data = $(this).data() || {};
             _data.event = event;
-            Sandbox.eventNotify($(this).data('action'), _data);
+            APP.Sandbox.eventNotify($(this).data('action'), _data);
         });
 
-        Sandbox.eventSubscribe('global:page:setTitle', function (title) {
+        APP.Sandbox.eventSubscribe('global:page:setTitle', function (title) {
             if (_.isArray(title))
                 $('head title').text(title.join(' - '));
             else if (_.isString(title))
                 $('head title').text(title);
         });
 
-        Sandbox.eventSubscribe('global:page:setKeywords', function (keywords) {
+        APP.Sandbox.eventSubscribe('global:page:setKeywords', function (keywords) {
             $('head meta[name="keywords"]').attr('content', keywords);
         });
 
-        Sandbox.eventSubscribe('global:page:setDescription', function (description) {
+        APP.Sandbox.eventSubscribe('global:page:setDescription', function (description) {
             $('head meta[name="description"]').attr('content', description);
         });
 
         // debugger;
-        Sandbox.eventSubscribe('global:content:render', function (options) {
+        APP.Sandbox.eventSubscribe('global:content:render', function (options) {
             // debugger;
             if (_.isArray(options)) {
                 _(options).each(function (option) {
@@ -211,7 +211,7 @@
             updatePageBodyClassNameFn();
             // notify all subscribers that we have changed our route
             var fragment = Backbone.history.getFragment();
-            Sandbox.eventNotify('global:route', fragment);
+            APP.Sandbox.eventNotify('global:route', fragment);
             // save location
             if (fragment !== "!/signout" && fragment !== "!/signin") {
                 Cache.saveInLocalStorage("location", fragment);
@@ -234,15 +234,15 @@
                 if (location.pathname !== '/') {
                     window.location.href = '/';
                 }
-                Sandbox.eventNotify('global:page:index', '');
+                APP.Sandbox.eventNotify('global:page:index', '');
             },
             signin: function () {
-                Sandbox.eventNotify('global:page:signin', 'signin');
+                APP.Sandbox.eventNotify('global:page:signin', 'signin');
             },
             signout: function () {
                 // debugger;
                 Auth.signout(function () {
-                    Sandbox.eventNotify('global:page:signout', 'signout');
+                    APP.Sandbox.eventNotify('global:page:signout', 'signout');
                 });
             }
         });
@@ -256,7 +256,7 @@
             APP.instances.root = root;
             Backbone.history.start({hashChange: true});
             // notify all that loader completed its tasks
-            Sandbox.eventNotify('global:loader:complete');
+            APP.Sandbox.eventNotify('global:loader:complete');
             Backbone.trigger('global:loader:complete');
             updatePageBodyClassNameFn();
         });

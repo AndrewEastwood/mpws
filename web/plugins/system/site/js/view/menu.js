@@ -1,8 +1,7 @@
 define([
-    'sandbox',
     'plugins/system/site/js/view/menuUser',
     'plugins/system/site/js/view/menuSignUp',
-], function (Sandbox, MenuUser, MenuSignUp) {
+], function (MenuUser, MenuSignUp) {
 
     return function (models) {
         // create SignUp button
@@ -17,9 +16,9 @@ define([
         });
         menuUser.render();
 
-        Sandbox.eventSubscribe('global:loader:complete', function () {
+        APP.Sandbox.eventSubscribe('global:loader:complete', function () {
             // placeholders.common.menu
-            Sandbox.eventNotify('global:content:render', [
+            APP.Sandbox.eventNotify('global:content:render', [
                 {
                     name: 'CommonMenuRight',
                     el: menuSignUp.$el,

@@ -1,13 +1,12 @@
 define([
     'require',
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
     'cachejs',
     'auth',
     'plugins/shop/common/js/model/setting'
-], function (require, Sandbox, $, _, Backbone, Cache, Auth, SiteSettings) {
+], function (require, $, _, Backbone, Cache, Auth, SiteSettings) {
 
     var menuView = null;
     var settings = new SiteSettings();
@@ -17,7 +16,7 @@ define([
         require(['plugins/shop/toolbox/js/view/menu'], function (ViewMenu) {
             menuView = new ViewMenu();
             menuView.render();
-            Sandbox.eventNotify('global:content:render', {
+            APP.Sandbox.eventNotify('global:content:render', {
                 name: 'MenuForPlugin_shop',
                 el: menuView.$el
             });
@@ -77,7 +76,7 @@ define([
             //         self.dashboard();
             //     });
             // }
-            Sandbox.eventSubscribe('global:page:index', function () {
+            APP.Sandbox.eventSubscribe('global:page:index', function () {
                 self.dashboard();
             });
         },
@@ -88,7 +87,7 @@ define([
                 // create new view
                 var dashboard = new ViewDashboard();
                 dashboard.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'DashboardForPlugin_shop',
                     el: dashboard.$el
                 });
@@ -98,7 +97,7 @@ define([
             require(['plugins/shop/toolbox/js/view/editProduct'], function (ViewEditProduct) {
                 var editProduct = new ViewEditProduct();
                 editProduct.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editProduct.$el
                 });
@@ -117,7 +116,7 @@ define([
                 //         id: productID
                 //     }
                 // });
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editProduct.$el
                 });
@@ -130,7 +129,7 @@ define([
             this.contentListByStatus();
         },
         contentListByStatus: function (status) {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
             require(['plugins/shop/toolbox/js/view/managerContent'], function (ManagerContent) {
                 // create new view
                 var options = status ? {
@@ -147,7 +146,7 @@ define([
                     reset: true
                 });
 
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerContent.$el
                 });
@@ -162,7 +161,7 @@ define([
                 editOrder.model.set('ID', orderID);
                 editOrder.model.fetch();
 
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editOrder.$el
                 });
@@ -176,7 +175,7 @@ define([
         },
         ordersListByStatus: function (status) {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             require(['plugins/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 var options = status ? {
                     status: status
@@ -186,7 +185,7 @@ define([
                     reset: true
                 });
 
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerOrders.$el
                 });
@@ -198,7 +197,7 @@ define([
                 var editCategory = new ViewEditCategory();
                 editCategory.model.set('ID', categoryID);
                 editCategory.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editCategory.$el
                 });
@@ -211,7 +210,7 @@ define([
             require(['plugins/shop/toolbox/js/view/editCategory'], function (ViewEditCategory) {
                 var editCategory = new ViewEditCategory();
                 editCategory.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editCategory.$el
                 });
@@ -225,7 +224,7 @@ define([
                 var editOrigin = new ViewEditOrigin();
                 editOrigin.model.set('ID', originID);
                 editOrigin.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editOrigin.$el
                 });
@@ -238,7 +237,7 @@ define([
             require(['plugins/shop/toolbox/js/view/editOrigin'], function (ViewEditOrigin) {
                 var editOrigin = new ViewEditOrigin();
                 editOrigin.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: editOrigin.$el
                 });
@@ -249,18 +248,18 @@ define([
         },
 
         reports: function () {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
         },
 
         feeds: function () {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-feeds');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-feeds');
             require(['plugins/shop/toolbox/js/view/managerFeeds'], function (ManagerFeeds) {
                 var managerFeeds = new ManagerFeeds();
                 managerFeeds.collection.fetch({
                     reset: true
                 });
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerFeeds.$el
                 });
@@ -269,13 +268,13 @@ define([
 
         promo: function () {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
             require(['plugins/shop/toolbox/js/view/managerPromoCodes'], function (ManagerPromoCodes) {
                 var managerPromoCodes = new ManagerPromoCodes();
                 managerPromoCodes.viewPromosList.collection.fetch({
                     reset: true
                 });
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerPromoCodes.$el
                 });
@@ -284,7 +283,7 @@ define([
 
         promoEdit: function (promoID) {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
             require(['plugins/shop/toolbox/js/view/popupPromo'], function (ViewPopupPromo) {
                 var viewPopupPromo = new ViewPopupPromo();
                 viewPopupPromo.model.set('ID', promoID);
@@ -297,7 +296,7 @@ define([
 
         promoCreate: function () {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
             require(['plugins/shop/toolbox/js/view/popupPromo'], function (ViewPopupPromo) {
                 var viewPopupPromo = new ViewPopupPromo();
                 viewPopupPromo.render();
@@ -308,7 +307,7 @@ define([
         },
 
         shopSettings: function () {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-settings');
+            APP.Sandbox.eventNotify('global:menu:set-active', '.menu-shop-settings');
             require(['plugins/shop/toolbox/js/view/settings'], function (Settings) {
                 var pluginSettings = new Settings();
                 // delivery agencies
@@ -342,7 +341,7 @@ define([
                 //     reset: true
                 // });
                 pluginSettings.viewWidgetPrivatBankExchageRates.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: pluginSettings.$el
                 });

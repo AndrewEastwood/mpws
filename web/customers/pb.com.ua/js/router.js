@@ -1,9 +1,8 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
-    'customers/pb.com.ua/js/view/breadcrumb'
-], function (Sandbox, $, _, Breadcrumb) {
+    './view/breadcrumb'
+], function ($, _, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -31,11 +30,11 @@ define([
 
     CustomerClass.prototype.setBreadcrumb = function (options) {
         breadcrumb.render(options);
-        Sandbox.eventNotify('global:content:render', {
+        APP.Sandbox.eventNotify('global:content:render', {
             name: 'CommonBreadcrumbTop',
             el: breadcrumb.$el.clone()
         });
-        Sandbox.eventNotify('global:content:render', {
+        APP.Sandbox.eventNotify('global:content:render', {
             name: 'CommonBreadcrumbBottom',
             el: breadcrumb.$el.clone()
         });

@@ -1,11 +1,10 @@
 define([
-    'sandbox',
     'plugins/shop/site/js/view/cartEmbedded',
     'plugins/shop/site/js/view/orderTrackingButton',
     'plugins/shop/site/js/view/widgetAddress',
     'plugins/shop/site/js/view/widgetExchangeRates',
     'plugins/shop/site/js/view/menuCatalogBar'
-], function (Sandbox, CartEmbedded, OrderTrackingButton, Address, ExchangeRates, CatalogBar) {
+], function (CartEmbedded, OrderTrackingButton, Address, ExchangeRates, CatalogBar) {
 
     var SiteWidgets = function (models) {
 
@@ -57,8 +56,8 @@ define([
             append: true
         });
 
-        Sandbox.eventSubscribe('global:loader:complete', function () {
-            Sandbox.eventNotify('global:content:render', renderItems);
+        APP.Sandbox.eventSubscribe('global:loader:complete', function () {
+            APP.Sandbox.eventNotify('global:content:render', renderItems);
         });
     };
 

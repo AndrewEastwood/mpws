@@ -1,9 +1,8 @@
 define([
-    'sandbox',
     'backbone',
     'plugins/shop/site/js/collection/listProductLatest',
     'plugins/shop/site/js/view/productItemShort'
-], function (Sandbox, Backbone, CollListProductLatest, ProductItemShort) {
+], function (Backbone, CollListProductLatest, ProductItemShort) {
 
     // debugger;
     var ListProductLatest = Backbone.View.extend({
@@ -58,9 +57,9 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            Sandbox.eventNotify('global:page:setTitle', title);
-            Sandbox.eventNotify('global:page:setKeywords', keywords);
-            Sandbox.eventNotify('global:page:setDescription', description);
+            APP.Sandbox.eventNotify('global:page:setTitle', title);
+            APP.Sandbox.eventNotify('global:page:setKeywords', keywords);
+            APP.Sandbox.eventNotify('global:page:setDescription', description);
             // seo end
             return this;
         }

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
@@ -8,7 +7,7 @@ define([
     'hbs!plugins/system/toolbox/hbs/signin',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function (Sandbox, $, _, Backbone, Auth, Utils, tpl, lang) {
+], function ($, _, Backbone, Auth, Utils, tpl, lang) {
 
     var SignIn = Backbone.View.extend({
         tagName: 'form',
@@ -20,7 +19,7 @@ define([
         },
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('global:auth:status:active', function(){
+            APP.Sandbox.eventSubscribe('global:auth:status:active', function(){
                 self.remove();
             });
             _.bindAll(this, 'render');

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
     'utils',
@@ -11,7 +10,7 @@ define([
     'hbs!plugins/shop/toolbox/hbs/managerContent',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
+], function (_, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -63,7 +62,7 @@ define([
 
             _.bindAll(this, 'saveLayout');
 
-            Sandbox.eventSubscribe('global:route', $.proxy(function () {
+            APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
                 clearInterval(this.interval_saveLayout);
             }, this));
         },

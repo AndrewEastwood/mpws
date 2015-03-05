@@ -1,12 +1,11 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
     'plugins/system/common/js/model/user',
     'auth',
     'cachejs',
-], function (Sandbox, $, _, Backbone, User, Auth, Cache) {
+], function ($, _, Backbone, User, Auth, Cache) {
 
     // this is the user instance
     var menuView = null;
@@ -27,7 +26,7 @@ define([
                     model: user
                 });
                 buttonUser.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'TopMenuRight',
                     el: buttonUser.$el
                 });
@@ -40,7 +39,7 @@ define([
                 model: user
             });
             menuView.render();
-            Sandbox.eventNotify('global:content:render', {
+            APP.Sandbox.eventNotify('global:content:render', {
                 name: 'MenuForPlugin_system',
                 el: menuView.$el
             });
@@ -75,10 +74,10 @@ define([
 
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('global:page:index', function () {
+            APP.Sandbox.eventSubscribe('global:page:index', function () {
                 self.dashboard();
             });
-            Sandbox.eventSubscribe('global:page:signin', function () {
+            APP.Sandbox.eventSubscribe('global:page:signin', function () {
                 self.signin();
             });
             // if (APP.dfd.dashboard) {
@@ -96,7 +95,7 @@ define([
                 var signin = new SignIn();
                 signin.render();
                 // debugger;
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: signin.$el
                 });
@@ -112,7 +111,7 @@ define([
                 // create new view
                 var dashboard = new Dashboard();
                 dashboard.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'DashboardForPlugin_system',
                     el: dashboard.$el
                 });
@@ -125,7 +124,7 @@ define([
                 // create new view
                 var viewManagerCustomers = new ViewManagerCustomers();
                 viewManagerCustomers.collection.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewManagerCustomers.$el
                 });
@@ -141,7 +140,7 @@ define([
                 } : {};
                 var viewManagerCustomers = new ViewManagerCustomers(options);
                 viewManagerCustomers.collection.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewManagerCustomers.$el
                 });
@@ -155,7 +154,7 @@ define([
                 var viewEditCustomer = new ViewEditCustomer();
                 viewEditCustomer.model.set('ID', id, {silent: true});
                 viewEditCustomer.model.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewEditCustomer.$el
                 });
@@ -167,7 +166,7 @@ define([
                 // create new view
                 var viewEditCustomer = new ViewEditCustomer();
                 viewEditCustomer.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewEditCustomer.$el
                 });
@@ -181,7 +180,7 @@ define([
                 var viewEditUser = new ViewEditUser();
                 viewEditUser.model.set('ID', id, {silent: true});
                 viewEditUser.model.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewEditUser.$el
                 });
@@ -192,7 +191,7 @@ define([
             require(['plugins/system/toolbox/js/view/managerUsers'], function (ViewManagerUsers) {
                 var viewManagerUsers = new ViewManagerUsers();
                 viewManagerUsers.collection.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewManagerUsers.$el
                 });
@@ -208,7 +207,7 @@ define([
                 } : {};
                 var viewManagerUsers = new ViewManagerUsers(options);
                 viewManagerUsers.collection.fetch({reset: true});
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewManagerUsers.$el
                 });

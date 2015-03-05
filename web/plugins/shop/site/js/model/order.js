@@ -1,12 +1,11 @@
 define([
-    'sandbox',
     'backbone',
     'underscore',
     'bootstrap-alert',
     'bootstrap-dialog',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
-], function (Sandbox, Backbone, _, BSAlert, BootstrapDialog, lang) {
+], function (Backbone, _, BSAlert, BootstrapDialog, lang) {
 
     // debugger;
     var model = Backbone.Model.extend({
@@ -20,10 +19,10 @@ define([
         initialize: function () {
             var self = this;
             _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
-            Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
-            Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
-            Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
-            Sandbox.eventSubscribe('global:route', $.proxy(function () {
+            APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
+            APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
+            APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
+            APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
                 if (self.isSaved.call(self)) {
                     self.clear({silent: true});
                     self.fetch();
@@ -62,7 +61,7 @@ define([
                     } else {
                         BSAlert.warning(lang.list_cart_alert_updated);
                     }
-                    Sandbox.eventNotify('plugin:shop:order:changed', event);
+                    APP.Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });
         },
@@ -108,7 +107,7 @@ define([
                     }
                     else
                         BSAlert.danger(lang.list_cart_alert_promoRemoved);
-                    Sandbox.eventNotify('plugin:shop:order:changed');
+                    APP.Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });
         },
@@ -122,7 +121,7 @@ define([
                     // debugger;
                     self.set(self.parse(response));
                     self.trigger('change');
-                    Sandbox.eventNotify('plugin:shop:order:changed');
+                    APP.Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });
         }

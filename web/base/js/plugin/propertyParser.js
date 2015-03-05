@@ -4,7 +4,7 @@
  * @version 0.1.0 (2011/12/06)
  * MIT license
  */
-define("base/js/plugin/propertyParser", function(){
+define(function(){
 
     var rProps = /([\w-]+)\s*:\s*(?:(\[[^\]]+\])|([^,]+)),?/g, //match "foo:bar" and "lorem:[ipsum,dolor]" capturing name as $1 and val as $2 or $3
         rArr = /^\[([^\]]+)\]$/; //match "[foo,bar]" capturing "foo,bar"

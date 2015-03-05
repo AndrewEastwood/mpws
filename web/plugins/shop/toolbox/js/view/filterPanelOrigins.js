@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
     'utils',
@@ -11,7 +10,7 @@ define([
     'hbs!plugins/shop/toolbox/hbs/buttonMenuOriginListItem',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Sandbox, _, Backbone, Utils, Cache, BootstrapDialog, CollectionOriginsFilter, tpl, tplBtnMenuMainItem, lang) {
+], function (_, Backbone, Utils, Cache, BootstrapDialog, CollectionOriginsFilter, tpl, tplBtnMenuMainItem, lang) {
 
     var FilterPanelOrigins = Backbone.View.extend({
         className: 'panel panel-default shop_filterPanelOrigins',
@@ -36,7 +35,7 @@ define([
 
             _.bindAll(this, 'saveLayout', 'toggleProductFilter');
 
-            Sandbox.eventSubscribe('global:route', $.proxy(function () {
+            APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
                 clearInterval(this.interval_saveLayout);
             }, this));
 

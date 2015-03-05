@@ -133,6 +133,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('deploy', 'Deployment', function () {
         grunt.log.writeln('Running production build...');
-        grunt.task.run([/*'jshint', */'requirejs', 'less', 'copy:dist']);
+        grunt.task.run([/*'jshint', */'requirejs', 'less'/*, 'copy:dist'*/]);
     });
 };

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
@@ -9,7 +8,7 @@ define([
     'plugins/shop/site/js/view/siteMenu',
     'plugins/shop/site/js/view/siteWidgets',
     'plugins/shop/common/js/model/setting'
-], function (Sandbox, $, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
+], function ($, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
 
     var order = new SiteOrder({
         ID: "temp"
@@ -68,17 +67,17 @@ define([
             });
 
 
-            Sandbox.eventSubscribe('global:page:index', function () {
+            APP.Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();
             });
 
-            // Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
+            // APP.Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
             //     self.offers();
             // });
         },
 
         offers: function () {
-            // Sandbox.eventNotify('global:content:render', {
+            // APP.Sandbox.eventNotify('global:content:render', {
             //     name: 'ShopOffers',
             //     el: $('<h1>Offers Goes here</h1>')
             // });
@@ -89,7 +88,7 @@ define([
             require(['plugins/shop/site/js/view/home'], function (PageHome) {
                 var pageHome = new PageHome();
                 pageHome.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: pageHome.el
                 });
@@ -107,7 +106,7 @@ define([
                     reset: true
                 });
 
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: listProductCatalog.el
                 });
@@ -128,7 +127,7 @@ define([
                     reset: true
                 });
 
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: listProductCatalog.el
                 });
@@ -142,7 +141,7 @@ define([
                     productID: productID
                 });
                 viewProductItemFull.model.fetch();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewProductItemFull.el
                 });
@@ -155,7 +154,7 @@ define([
                 // create new view
                 var listProductCompare = new ListProductCompare();
                 listProductCompare.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: listProductCompare.el
                 });
@@ -179,7 +178,7 @@ define([
                     });
                 }
                 // var accountModel = Cache.getObject('account:model');
-                // Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
+                // APP.Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
                 //     // debugger;
                 //     if (accountModel.has('ID'))
                 //         order.set('account', accountModel.toJSON());
@@ -196,7 +195,7 @@ define([
                 });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: cartStandalone.el
                 });
@@ -209,7 +208,7 @@ define([
                 // create new view
                 var listProductWish = new ListProductWish();
                 listProductWish.render();
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: listProductWish.el
                 });
@@ -222,7 +221,7 @@ define([
                 // create new view
                 var trackingStatus = new TrackingStatus();
                 trackingStatus.setOrderHash(orderHash);
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: trackingStatus.el
                 });
@@ -250,7 +249,7 @@ define([
                     profileID: Cache.getObject('AccountProfileID')
                 });
 
-                Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
+                APP.Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
 
                 // return view object to pass it into this function at next invocation
                 // return profileOrders;

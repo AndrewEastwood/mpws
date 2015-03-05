@@ -1,12 +1,11 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
     'plugins/shop/site/js/model/product',
     'bootstrap-alert',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
-], function (Sandbox, _, Backbone, ModelProduct, BSAlert, lang) {
+], function (_, Backbone, ModelProduct, BSAlert, lang) {
 
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,
@@ -19,9 +18,9 @@ define([
         initialize: function () {
             listProductCompare = this;
             _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
-            Sandbox.eventSubscribe('plugin:shop:list_compare:add', this.addNew);
-            Sandbox.eventSubscribe('plugin:shop:list_compare:remove', this.removeProductByID);
-            Sandbox.eventSubscribe('plugin:shop:list_compare:clear', this.removeAll);
+            APP.Sandbox.eventSubscribe('plugin:shop:list_compare:add', this.addNew);
+            APP.Sandbox.eventSubscribe('plugin:shop:list_compare:remove', this.removeProductByID);
+            APP.Sandbox.eventSubscribe('plugin:shop:list_compare:clear', this.removeAll);
         },
         removeProductByID:  function (data) {
             var self = this;
@@ -32,7 +31,7 @@ define([
                         url: this.url({productID: data.id}),
                         success: function (model, resp) {
                             self.reset(resp);
-                            Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
+                            APP.Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
                             BSAlert.warning(lang.list_wish_alert_remove);
                         }
                     });
@@ -51,7 +50,7 @@ define([
                         } else {
                             BSAlert.success(lang.list_compare_alert_add);
                         }
-                        Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
+                        APP.Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
                     }
                 });
             }
@@ -62,7 +61,7 @@ define([
                 url: this.url({productID: "*"}),
                 success: function (resp) {
                     self.reset(resp);
-                    Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
+                    APP.Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
                     BSAlert.danger(lang.list_wish_alert_clear);
                 }
             });

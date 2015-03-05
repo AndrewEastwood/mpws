@@ -1,11 +1,10 @@
 define([
-    'sandbox',
     'backbone',
     'utils',
     'hbs!plugins/shop/toolbox/hbs/menu',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, tpl, lang) {
+], function (Backbone, Utils, tpl, lang) {
 
     var Menu = Backbone.View.extend({
         // tagName: 'li',
@@ -17,7 +16,7 @@ define([
         template: tpl,
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+            APP.Sandbox.eventSubscribe('global:auth:status:inactive', function () {
                 self.off();
                 self.remove();
             });

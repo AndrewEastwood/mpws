@@ -1,11 +1,10 @@
 define([
     'plugins/system/common/js/model/userAddress',
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
     'cachejs'
-], function (AccountAddress, Sandbox, $, _, Backbone, Cache) {
+], function (AccountAddress, $, _, Backbone, Cache) {
 
     var User = Backbone.Model.extend({
         idAttribute: "ID",
@@ -21,7 +20,7 @@ define([
         // },
         // initialize: function () {
             // autoclean errors when user goes wherever else
-            // Sandbox.eventSubscribe('global:route', $.proxy(function () {
+            // APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
             //     this.unset('errors', {silent: true});
             //     this.unset('success', {silent: true});
             // }, this));

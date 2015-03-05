@@ -1,10 +1,9 @@
 define([
-    "sandbox",
     "jquery",
     "underscore",
     'backbone',
     "cachejs"
-], function (Sandbox, $, _, Backbone, Cache) {
+], function ($, _, Backbone, Cache) {
 
     var authKey = APP.config.AUTHKEY;
 
@@ -14,18 +13,18 @@ define([
             var user = Auth.getUserID();
             Backbone.trigger('auth:info', user);
             if (Auth.user === user) {
-                // Sandbox.eventNotify("global:auth:status:unchanged", user);
+                // APP.Sandbox.eventNotify("global:auth:status:unchanged", user);
                 return;
             }
             Auth.user = user;
             if (Auth.user) {
                 // Backbone.trigger('auth:registered', user);
                 this.trigger('registered');
-                // Sandbox.eventNotify("global:auth:status:active");
+                // APP.Sandbox.eventNotify("global:auth:status:active");
             } else {
                 // Backbone.trigger('auth:guest', user);
                 this.trigger('guest');
-                // Sandbox.eventNotify("global:auth:status:inactive");
+                // APP.Sandbox.eventNotify("global:auth:status:inactive");
             }
         },
         getUserID: function () {
@@ -72,7 +71,7 @@ define([
         }
     }, Backbone.Events);
 
-    Sandbox.eventSubscribe("global:ajax:response", function (/*data*/) {
+    APP.Sandbox.eventSubscribe("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();
         // if (!data.isAuthRequest) {
         // }

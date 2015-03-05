@@ -1,12 +1,11 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
     'auth',
     'cachejs',
     'hbs!base/hbs/animationFacebook',
     'bootstrap'
-], function (Sandbox, $, _, Auth, Cache, tplFBAnim) {
+], function ($, _, Auth, Cache, tplFBAnim) {
 
     APP.dfd.customerReady = new $.Deferred();
 
@@ -80,19 +79,19 @@ define([
     });
 
     // verify user with every route
-    Sandbox.eventSubscribe('global:route', function () {
+    APP.Sandbox.eventSubscribe('global:route', function () {
         _ifNotAuthorizedNavigateToSignin();
     });
 
-    // Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+    // APP.Sandbox.eventSubscribe('global:auth:status:active', function (data) {
     // });
 
-    // Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+    // APP.Sandbox.eventSubscribe('global:auth:status:inactive', function () {
     // });
 
-    Sandbox.eventSubscribe('global:page:index', function () {
+    APP.Sandbox.eventSubscribe('global:page:index', function () {
         // debugger
-        Sandbox.eventNotify('global:content:render', {
+        APP.Sandbox.eventNotify('global:content:render', {
             name: 'CommonBodyCenter',
             el: $('<div>').addClass('dashboard').html(renderDashboardPlaceholdersFn())
         });

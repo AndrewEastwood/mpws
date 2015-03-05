@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
     'utils',
@@ -7,7 +6,7 @@ define([
     'hbs!plugins/shop/site/hbs/productItemShort',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (Sandbox, _, Backbone, Utils, Handlebars, tpl, lang) {
+], function (_, Backbone, Utils, Handlebars, tpl, lang) {
 
     // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
     //     return opts.fn(data._origin.Name + ' ' + data.Model);
@@ -19,9 +18,9 @@ define([
         lang: lang,
         initialize: function () {
             _.bindAll(this, 'refresh', 'switchCurrency');
-            Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
-            Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
-            Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
+            APP.Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
+            APP.Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
+            APP.Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);

@@ -7,8 +7,8 @@ define([
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* charts */
-    'base/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
-    'base/js/plugin/goog!visualization,1,packages:[corechart,geochart]'
+    'sasync!//maps.google.com/maps/api/js?sensor=false',
+    'goog!visualization,1,packages:[corechart,geochart]'
 ], function (Backbone, ModelOrdersIntensity, Utils, tpl, lang) {
 
     return Backbone.View.extend({

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'plugins/shop/site/js/view/menuCatalog',
     'plugins/shop/site/js/view/menuCart',
     'plugins/shop/site/js/view/menuWishList',
@@ -8,7 +7,7 @@ define([
     'plugins/shop/site/js/view/menuWarranty',
     'plugins/shop/site/js/view/menuShipping'
     // 'plugins/shop/site/js/view/menuProfileOrders',
-], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare,
+], function (MenuCatalog, MenuCart, MenuWishList, MenuCompare,
     MenuPayment, MenuWarranty, MenuShipping, MenuProfileOrders) {
 
     return function (models) {
@@ -46,14 +45,14 @@ define([
         // var menuProfileOrders = new MenuProfileOrders();
         // menuProfileOrders.render();
 
-        // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
+        // APP.Sandbox.eventSubscribe('view:AccountProfile', function (view) {
         //     view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
         // });
 
         // debugger;
-        Sandbox.eventSubscribe('global:loader:complete', function () {
+        APP.Sandbox.eventSubscribe('global:loader:complete', function () {
             // placeholders.common.menu
-            Sandbox.eventNotify('global:content:render', [
+            APP.Sandbox.eventNotify('global:content:render', [
                 // {
                 //     name: 'CommonMenuLeft',
                 //     el: menuCatalog.$el,

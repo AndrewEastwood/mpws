@@ -1,7 +1,6 @@
 define([
-    'sandbox',
     'backbone',
-], function (Sandbox, Backbone) {
+], function (Backbone) {
 
     var UserAddress = Backbone.Model.extend({
         idAttribute: "ID",
@@ -15,7 +14,7 @@ define([
             return APP.getApiLink(_params);
         },
         // initialize: function () {
-        //     Sandbox.eventSubscribe('global:route', $.proxy(function () {
+        //     APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
         //         this.unset('errors', {silent: true});
         //         this.unset('success', {silent: true});
         //     }, this));

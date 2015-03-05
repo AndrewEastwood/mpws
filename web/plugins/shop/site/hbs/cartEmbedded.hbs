@@ -44,7 +44,7 @@
                             {{#if Images.[0].xs}}
                             <script>
                             (function() {
-                                require(["base/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                require(["image!{{Images.[0].xs}}"], function(img){
                                     img.title = "{{Name}}";
                                     img.className = "image img-responsive";
                                     $('.image_{{ID}}').removeClass('noimage').html($(img).clone());

@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'backbone',
     'underscore',
     'plugins/shop/site/js/view/productItemShort',
@@ -13,7 +12,7 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (Sandbox, Backbone, _, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
+], function (Backbone, _, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
 
     var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',
@@ -76,9 +75,9 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            Sandbox.eventNotify('global:page:setTitle', title);
-            Sandbox.eventNotify('global:page:setKeywords', keywords);
-            Sandbox.eventNotify('global:page:setDescription', description);
+            APP.Sandbox.eventNotify('global:page:setTitle', title);
+            APP.Sandbox.eventNotify('global:page:setKeywords', keywords);
+            APP.Sandbox.eventNotify('global:page:setDescription', description);
             // seo end
 
             return this;

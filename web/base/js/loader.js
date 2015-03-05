@@ -57,9 +57,14 @@ require.config({
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
         // plugins
+        'async': 'base/js/plugin/async',
+        'css': 'base/js/plugin/css',
+        'goog': 'base/js/plugin/goog',
         'hbs': 'base/js/plugin/hbs',
         'i18n': 'base/js/plugin/i18n',
-        'css': 'base/js/plugin/css',
+        'image': 'base/js/plugin/image',
+        'propertyParser': 'base/js/plugin/propertyParser',
+        'text': 'base/js/plugin/text',
         // jquery-file-upload
         'jquery.fileupload': 'vendors/blueimp-file-upload/js/jquery.fileupload',
         'jquery.fileupload-ui': 'vendors/blueimp-file-upload/js/jquery.fileupload-ui',

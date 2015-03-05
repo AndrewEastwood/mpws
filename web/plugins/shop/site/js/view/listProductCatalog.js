@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
     'handlebars',
@@ -14,7 +13,7 @@ define([
     'bootstrap-select',
     'bootstrap-slider',
     'jquery.cookie'
-], function (Sandbox, _, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -135,9 +134,9 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            Sandbox.eventNotify('global:page:setTitle', title);
-            Sandbox.eventNotify('global:page:setKeywords', keywords);
-            Sandbox.eventNotify('global:page:setDescription', description);
+            APP.Sandbox.eventNotify('global:page:setTitle', title);
+            APP.Sandbox.eventNotify('global:page:setKeywords', keywords);
+            APP.Sandbox.eventNotify('global:page:setDescription', description);
             // seo end
 
             return this;

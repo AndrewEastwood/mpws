@@ -1,5 +1,5 @@
 'use strict';
-define("base/js/plugin/css", function (){
+define(function (){
     var css = {
         load: function (name, parentRequire, onLoad, config) {
             if (config.isBuild) {

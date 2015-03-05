@@ -1,11 +1,10 @@
 define([
-    'sandbox',
     'backbone',
     'plugins/system/site/js/view/menu',
     'auth',
     'plugins/system/common/js/model/user',
     'cachejs'
-], function (Sandbox, Backbone, SiteMenu, Auth, User, Cache, $, _) {
+], function (Backbone, SiteMenu, Auth, User, Cache, $, _) {
 
     return false;
     // this is the user instance
@@ -18,7 +17,7 @@ define([
     Cache.setObject('user:model', user);
 
     // user.on('change', function () {
-    //     Sandbox.eventNotify('plugin:user:model:change', user);
+    //     APP.Sandbox.eventNotify('plugin:user:model:change', user);
     // });
 
     Auth.on('registered', function () {
@@ -67,7 +66,7 @@ define([
 
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('plugin:user:profile:show', function(pageContent) {
+            APP.Sandbox.eventSubscribe('plugin:user:profile:show', function(pageContent) {
                 self.showToolbar(pageContent);
             });
         },
@@ -75,14 +74,14 @@ define([
         create: function () {
             if (_navigateToUserIfAuthorizedFn())
                 return;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userCreate'], function (UserCreate) {
                 // create new view
                 var userCreate = new UserCreate({
                     model: user
                 });
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: userCreate.el
                 });
@@ -94,7 +93,7 @@ define([
         summary: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userSummary'], function (UserSummary) {
@@ -109,7 +108,7 @@ define([
         password: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userPassword'], function (UserPassword) {
@@ -125,7 +124,7 @@ define([
         edit: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userEdit'], function (UserEdit) {
@@ -143,7 +142,7 @@ define([
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
             var self = this;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userAddresses'], function (UserAddresses) {
                 // create new view
@@ -160,7 +159,7 @@ define([
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
             var self = this;
-            // Sandbox.eventNotify('global:breadcrumb:show');
+            // APP.Sandbox.eventNotify('global:breadcrumb:show');
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userDelete'], function (UserDelete) {
                 // create new viewl
@@ -180,7 +179,7 @@ define([
                 var viewUserHolder = new ViewUserHolder({
                     model: user
                 });
-                Sandbox.eventNotify('global:content:render', {
+                APP.Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewUserHolder.$el
                 });
