@@ -1,5 +1,4 @@
 define([
-    'sandbox',
     'backbone',
     'plugins/system/common/js/model/user',
     'utils',
@@ -7,14 +6,11 @@ define([
     'bootstrap-alert',
     /* template */
     'hbs!plugins/system/toolbox/hbs/editUser',
-    'hbs!base/hbs/animationFacebook',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
-    'image-upload',
-    'select2',
-    'bootstrap-editable',
+    // 'image-upload',
     'bootstrap-switch'
-], function (Sandbox, Backbone, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
+], function (Backbone, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -29,6 +25,12 @@ define([
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-user',
         initialize: function () {
+            this.options = {};
+            this.options.switchOptions = {
+                size: 'mini',
+                onText: '<i class="fa fa-check fa-fw"></i>',
+                offText: '<i class="fa fa-times fa-fw"></i>'
+            };
             this.model = new ModelUser();
             this.listenTo(this.model, 'change', this.render);
         },
@@ -54,8 +56,16 @@ define([
                             'LastName': that.$('.js-lastname').val(),
                             'Phome': that.$('.js-phone').val(),
                             'EMail': that.$('.js-email').val(),
-                            'Password': that.$('.js-password').val(),
-                            'ConfirmPassword': that.$('.js-passwordverify').val()
+                            // 'Password': that.$('.js-password').val(),
+                            // 'ConfirmPassword': that.$('.js-passwordverify').val(),
+                            'p_CanAdmin': that.$('.js-p_CanAdmin').is(':checked'),
+                            'p_CanCreate': that.$('.js-p_CanCreate').is(':checked'),
+                            'p_CanEdit': that.$('.js-p_CanEdit').is(':checked'),
+                            'p_CanView': that.$('.js-p_CanView').is(':checked'),
+                            'p_CanUpload': that.$('.js-p_CanUpload').is(':checked'),
+                            'p_CanViewReports': that.$('.js-p_CanViewReports').is(':checked'),
+                            'p_CanAddUsers': that.$('.js-p_CanAddUsers').is(':checked'),
+                            'p_CanMaintain': that.$('.js-p_CanMaintain').is(':checked')
                         }, {
                             wait: true,
                             success: function (model, response) {
@@ -79,31 +89,7 @@ define([
             // debugger
             // this.$el = $dialog.getModalContent().get(0);
             this.$el.html($dialog.getModalContent());
-            // this.$('.js-plugins').html(tplFBAnim());
-
-            // get available plugins and check activated for this user
-            // var pluginsUrl = APP.getApiLink('system', 'plugins');
-            // $.get(pluginsUrl, function (data) {
-            //     that.$('.js-plugins').empty();
-            //     var userPlugins = that.model.get('Plugins');
-            //     _(data).each(function (pName) {
-            //         if (pName === "system") {
-            //             return;
-            //         }
-            //         var isActivated = _(userPlugins).indexOf(pName) >= 0;
-            //         that.$('.js-plugins').append(
-            //             $('<label>').html(
-            //                 [$('<input>').attr({
-            //                     type: 'checkbox',
-            //                     'class': 'js-plugin-item',
-            //                     name: pName,
-            //                     value: pName,
-            //                     checked: isActivated
-            //                 }).prop('checked', isActivated), $('<span>').text(pName)]
-            //             )
-            //         );
-            //     });
-            // });
+            this.$('.js-permissions .switcher').bootstrapSwitch(this.options.switchOptions);
 
             // // setup logo upload
             // var logoUpload = new WgtImageUpload({

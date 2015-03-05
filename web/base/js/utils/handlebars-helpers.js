@@ -366,8 +366,9 @@ define([
     helpers.ifLtEq = helpers.if_lteq;
     helpers.unlessLtEq = helpers.unless_lteq;
     helpers.srtStartsWith = function (text, startPart, options) {
-        if (text.startWith(startPart))
+        if (text && text.toString().startWith(startPart)) {
             return options.fn(this);
+        }
         return options.inverse(this);
     }
     // from: http://stackoverflow.com/a/12002281

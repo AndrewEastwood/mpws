@@ -47,9 +47,9 @@ class auth {
         if (empty($user)) {
             return false;
         }
-        if (!isset($user['Permissions']['Can' . $action]))
+        if (!isset($user['p_Can' . $action]))
             return false;
-        return $user['Permissions']['Can' . $action];
+        return $user['p_Can' . $action];
     }
 
     public function updateSessionAuth () {

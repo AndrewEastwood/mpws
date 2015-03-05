@@ -62,13 +62,13 @@
             </div>
             {{/if}}
             <!-- User passwords -->
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label class="col-md-4 control-label">{{lang.editors.user.labelPassword}}</label>
                 <div class="col-md-6">
                     <input class="form-control input-md js-password" value="">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label class="col-md-4 control-label">{{lang.editors.user.labelPasswordVerify}}</label>
                 <div class="col-md-6">
                     <input class="form-control input-md js-passwordverify" value="">
@@ -76,7 +76,17 @@
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">{{lang.editors.user.permissions.title}}</label>
-                <div class="checkbox col-md-offset-4 js-permissions permissions-list">
+                <div class="col-md-6 js-permissions permissions-list">
+                    <div class="list-group">
+                    {{#each data}}
+                    {{#srtStartsWith @key 'p_Can'}}
+                        <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
+                            <input type="checkbox" class="switcher pull-right js-{{@key}}"{{#if this}}checked{{/if}}>
+                            <span class="property-label">{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix='label' }}</span>
+                        </a>
+                    {{/srtStartsWith}}
+                    {{/each}}
+                    </div>
                 </div>
             </div>
         </fieldset>

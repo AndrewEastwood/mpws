@@ -4,6 +4,7 @@ namespace web\plugins\system\api;
 use \engine\lib\api as API;
 use \engine\lib\secure as Secure;
 use \engine\lib\validate as Validate;
+use Exception;
 
 class users {
 
@@ -18,7 +19,6 @@ class users {
         // $configPermissions = dbquery::getPermissions($UserID);
         // $user['Permissions'] = $app->getDB()->query($configPermissions, true) ?: array();
         $user['Addresses'] = API::getAPI('system:address')->getAddresses($UserID);
-        $user['Permissions'] = $this->getUserPermissionsByUserID($UserID);
 
         // adjust values
         $user['ID'] = $UserID;
@@ -29,11 +29,18 @@ class users {
         $user['isBlocked'] = $user['Status'] === "REMOVED";
         $user['isCurrent'] = API::getAPI('system:auth')->getAuthenticatedUserID() === $UserID;
         unset($user['CustomerID']);
-        unset($user['Permissions']['ID']);
-        unset($user['Permissions']['UserID']);
-        unset($user['Permissions']['DateUpdated']);
-        unset($user['Permissions']['DateCreated']);
         unset($user['Password']);
+
+
+        $permissions = $this->getUserPermissionsByUserID($UserID);
+        unset($permissions['ID']);
+        unset($permissions['UserID']);
+        unset($permissions['DateUpdated']);
+        unset($permissions['DateCreated']);
+
+        foreach ($permissions as $key => $value) {
+            $user['p_' . $key] = $value;
+        }
 
         // customizations
         $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
@@ -116,7 +123,6 @@ class users {
             'p_CanAdmin' => array('bool', 'notEmpty'),
             'p_CanCreate' => array('bool', 'notEmpty'),
             'p_CanEdit' => array('bool', 'notEmpty'),
-            'p_CanView' => array('bool', 'notEmpty'),
             'p_CanUpload' => array('bool', 'notEmpty'),
             'p_CanViewReports' => array('bool', 'notEmpty'),
             'p_CanAddUsers' => array('bool', 'notEmpty'),
@@ -192,22 +198,21 @@ class users {
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),
             'ConfirmPassword' => array('skipIfUnset', 'equalTo' => 'Password', 'notEmpty'),
             // permissions
-            // 'p_CanAdmin' => array('bool', 'notEmpty'),
-            // 'p_CanCreate' => array('bool', 'notEmpty'),
-            // 'p_CanEdit' => array('bool', 'notEmpty'),
-            // 'p_CanView' => array('bool', 'notEmpty'),
-            // 'p_CanUpload' => array('bool', 'notEmpty'),
-            // 'p_CanViewReports' => array('bool', 'notEmpty'),
-            // 'p_CanAddUsers' => array('bool', 'notEmpty'),
-            // 'p_CanMaintain' => array('bool', 'notEmpty')
+            'p_CanAdmin' => array('bool', 'skipIfUnset'),
+            'p_CanCreate' => array('bool', 'skipIfUnset'),
+            'p_CanEdit' => array('bool', 'skipIfUnset'),
+            'p_CanUpload' => array('bool', 'skipIfUnset'),
+            'p_CanViewReports' => array('bool', 'skipIfUnset'),
+            'p_CanAddUsers' => array('bool', 'skipIfUnset'),
+            'p_CanMaintain' => array('bool', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
-                $app->getDB()->beginTransaction();
-
                 $validatedValues = $validatedDataObj['values'];
+
+                $app->getDB()->beginTransaction();
 
                 // separate data
                 $dataUser = array();
@@ -336,7 +341,8 @@ class users {
         $PermissionID = null;
         try {
             $query = dbquery::createUserPermissions($UserID, $data);
-            $PermissionID = $app->getDB()->query($query) ?: null;
+            $PermissionID = $app->getDB()->query($query, false) ?: null;
+            $success = true;
         } catch (Exception $e) {
             $errors[] = 'PermissionsCreateError';
         }
@@ -353,7 +359,8 @@ class users {
         $success = false;
         try {
             $query = dbquery::updateUserPermissions($UserID, $data);
-            $app->getDB()->query($query) ?: null;
+            $app->getDB()->query($query, false) ?: null;
+            $success = true;
         } catch (Exception $e) {
             $errors[] = 'PermissionsUpdateError';
         }
@@ -401,17 +408,17 @@ class users {
         $allAccess = API::getAPI('system:auth')->ifYouCan('Admin') ||
             API::getAPI('system:auth')->ifYouCan('AddUsers') ||
             API::getAPI('system:auth')->ifYouCan('Maintain');
-
-        if (empty($req->get['id']) && $allAccess) {
+        // var_dump($req);
+        if (empty($req->get['params']) && $allAccess) {
             $resp = $this->getUsers_List($req->get);
             return;
         } else {
-            if (is_numeric($req->get['id']) && $allAccess) {
-                $UserID = intval($req->get['id']);
+            if (is_numeric($req->get['params']) && $allAccess) {
+                $UserID = intval($req->get['params']);
                 $resp = $this->getUserByID($UserID);
                 return;
-            } elseif (is_string($req->get['id'])) {
-                $resp = $this->getUserByValidationString($req->get['id']);
+            } elseif (is_string($req->get['params'])) {
+                $resp = $this->getUserByValidationString($req->get['params']);
                 return;
             } elseif (!empty($req->get['activate'])) {
                 $ValidationString = $req->get['activate'];
@@ -432,17 +439,22 @@ class users {
         $resp = $this->createUser($req->data);
     }
 
-    public function patch (&$resp, $req) {
+    public function put (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->get['id'])) {
-            $UserID = intval($req->get['id']);
-            $resp = $this->updateUser($UserID, $req->data);
-            return;
+        if (!empty($req->get['params'])) {
+            if (is_numeric($req->get['params'])) {
+                $UserID = intval($req->get['params']);
+                $resp = $this->updateUser($UserID, $req->data);
+                return;
+            } else {
+                $resp['error'] = "MissedParameter_id";
+                return;
+            }
         }
-        $resp['error'] = 'MissedParameter_id';
+        $resp['error'] = 'UnknownAction';
     }
 
     public function delete (&$resp, $req) {
@@ -455,7 +467,7 @@ class users {
             $resp = $this->disableUserByID($UserID);
             return;
         }
-        $resp['error'] = 'MissedParameter_id';
+        $resp['error'] = 'UnknownAction';
     }
 }
 
