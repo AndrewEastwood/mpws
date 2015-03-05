@@ -119,7 +119,7 @@ define([
             });
         },
 
-        customerList: function () {
+        customersList: function () {
             require(['plugins/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
                 // debugger;
                 // create new view
@@ -132,7 +132,7 @@ define([
             });
         },
 
-        customerListByStatus: function (status) {
+        customersListByStatus: function (status) {
             require(['plugins/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
                 // debugger;
                 // create new view

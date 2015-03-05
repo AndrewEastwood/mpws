@@ -250,7 +250,7 @@ class feeds {
             // $imagesToDownload = array();
             $urls = $app->getSettings('urls');
             $options = array(
-                'script_url' =>  $urls['upload'],
+                'script_url' =>  $urls->upload,
                 'download_via_php' => true,
                 'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
                 'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),

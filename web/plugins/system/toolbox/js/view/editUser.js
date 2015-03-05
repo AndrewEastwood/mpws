@@ -12,7 +12,8 @@ define([
     'i18n!plugins/system/toolbox/nls/translation',
     'image-upload',
     'select2',
-    'bootstrap-editable'
+    'bootstrap-editable',
+    'bootstrap-switch'
 ], function (Sandbox, Backbone, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {

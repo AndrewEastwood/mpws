@@ -17,7 +17,7 @@
                     {{#if data.Images.[0].sm}}
                     <script>
                     (function() {
-                        require(["base/js/plugin/image!{{data.Images.[0].normal}}"], function(img){
+                        require(["base/js/plugin/image!{{data.Images.[0].xs}}"], function(img){
                             $('.image_{{data.ID}}').removeClass('noimage').html($(img).attr({
                                 title: "{{data._displayName}}",
                                 alt: "{{data._displayName}}",

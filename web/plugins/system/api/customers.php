@@ -301,8 +301,8 @@ class customers {
                             $pList[] = $value;
                         }
                     }
-                    $validatedValues['Plugins'] = implode(',', $pList);
                 }
+                $validatedValues['Plugins'] = implode(',', $pList);
 
                 $app->getDB()->beginTransaction();
 

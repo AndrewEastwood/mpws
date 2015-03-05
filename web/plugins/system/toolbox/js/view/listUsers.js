@@ -169,13 +169,21 @@ define([
         },
         startLoadingAnim: function () {
             var self = this;
+            // debugger
             setTimeout(function () {
-                // console.log('adding spinner');
+                console.log('adding spinner');
+                self.$('.mpwsDataSpinner').remove();
                 self.$el.append(spinner.el);
+                // self.$el.append($anim);
+                // $anim.removeClass('hidden');
             }, 0);
         },
         stopLoadingAnim: function () {
-            this.$('.mpwsDataSpinner').remove();
+            // debugger
+            setTimeout(function () {
+                this.$('.mpwsDataSpinner').remove();
+                // $anim.addClass('hidden');
+            }, 200);
         },
         render: function () {
             // console.log('listUsers: render');
@@ -184,6 +192,8 @@ define([
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);
                 this.$el.append(this.paginator.render().$el);
+                // this.$el.append($anim);
+                this.startLoadingAnim();
             } else {
                 this.$el.html(this.grid.emptyText);
             }

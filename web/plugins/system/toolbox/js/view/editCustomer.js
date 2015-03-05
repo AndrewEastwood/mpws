@@ -12,7 +12,8 @@ define([
     'i18n!plugins/system/toolbox/nls/translation',
     'image-upload',
     'select2',
-    'bootstrap-editable'
+    'bootstrap-editable',
+    'bootstrap-switch'
 ], function (Sandbox, Backbone, ModelCustomer, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
@@ -28,6 +29,12 @@ define([
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-customer',
         initialize: function () {
+            this.options = {};
+            this.options.switchOptions = {
+                size: 'mini',
+                onText: '<i class="fa fa-check fa-fw"></i>',
+                offText: '<i class="fa fa-times fa-fw"></i>'
+            };
             this.model = new ModelCustomer();
             this.listenTo(this.model, 'change', this.render);
         },
@@ -64,7 +71,7 @@ define([
                                 // debugger;
                                 if (response && response.success) {
                                     BSAlert.success(lang.editors.customer.messageSuccess);
-                                    // window.location.reload();
+                                    window.location.reload();
                                 } else {
                                     BSAlert.danger(lang.editors.customer.messageError);
                                 }
@@ -87,24 +94,28 @@ define([
             var pluginsUrl = APP.getApiLink('system', 'plugins');
             $.get(pluginsUrl, function (data) {
                 that.$('.js-plugins').empty();
-                var customerPlugins = that.model.get('Plugins');
+                var customerPlugins = that.model.get('Plugins'),
+                    $list = $('<div>').addClass('list-group');
                 _(data).each(function (pName) {
                     if (pName === "system") {
                         return;
                     }
                     var isActivated = _(customerPlugins).indexOf(pName) >= 0;
-                    that.$('.js-plugins').append(
-                        $('<label>').html(
-                            [$('<input>').attr({
+                    $list.append(
+                        $('<span>').addClass('list-group-item').html([
+                            $('<input>').attr({
                                 type: 'checkbox',
-                                'class': 'js-plugin-item',
+                                'class': 'switcher js-plugin-item',
                                 name: pName,
                                 value: pName,
-                                checked: isActivated
-                            }).prop('checked', isActivated), $('<span>').text(pName)]
-                        )
+                                'checked': isActivated
+                            }).prop('checked', isActivated),
+                            $('<span>').addClass('property-label').text(pName)
+                        ])
                     );
                 });
+                that.$('.js-plugins').html($list);
+                that.$('.js-plugins .switcher').bootstrapSwitch(that.options.switchOptions);
             });
 
             // setup logo upload
