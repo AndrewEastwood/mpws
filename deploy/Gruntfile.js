@@ -103,7 +103,7 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     baseUrl: paths.web,
-                    // appDir: paths.web,
+                    // appDir: paths.dist,
                     mainConfigFile: paths.base + 'js/loader.js',
                     dir: paths.dist,
                     // name: 'app',
@@ -115,7 +115,7 @@ module.exports = function (grunt) {
                             'quote_keys': true
                         }
                     },
-                    keepBuildDir: false,
+                    keepBuildDir: true,
                     modules: [
                         {
                             name: 'customers/pb.com.ua/js/router'

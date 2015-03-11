@@ -4,9 +4,7 @@ define([
     'backbone',
     'utils',
     /* template */
-    'hbs!../../hbs/breadcrumb',
-    /* ui components */
-    'bootstrap'
+    'hbs!customers/pb.com.ua/hbs/breadcrumb'
 ], function ($, _, Backbone, Utils, tpl) {
 
     var Breadcrumb = Backbone.View.extend({

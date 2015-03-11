@@ -7,7 +7,7 @@ define([
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* charts */
-    'sasync!//maps.google.com/maps/api/js?sensor=false',
+    'async!//maps.google.com/maps/api/js?sensor=false',
     'goog!visualization,1,packages:[corechart,geochart]'
 ], function (Backbone, ModelOrdersIntensity, Utils, tpl, lang) {
 

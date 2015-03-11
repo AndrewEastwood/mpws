@@ -71,7 +71,7 @@ define([
         }
     }, Backbone.Events);
 
-    APP.Sandbox.eventSubscribe("global:ajax:response", function (/*data*/) {
+    Backbone.on("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();
         // if (!data.isAuthRequest) {
         // }

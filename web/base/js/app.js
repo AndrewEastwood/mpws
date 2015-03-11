@@ -164,7 +164,7 @@
             } catch (exception) {
                 console.log(exception);
             }
-            APP.Sandbox.eventNotify("global:ajax:response", {
+            Backbone.trigger("global:ajax:response", {
                 response: response,
                 isAuthRequest: new RegExp('^' + APP.getAuthLink()).test(ajaxOptions.url)
             });

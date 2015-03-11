@@ -2,7 +2,7 @@ define([
     'jquery',
     'underscore',
     './view/breadcrumb'
-], function ($, _, Breadcrumb) {
+], function ($, _) {
 
     var _customerOptions = {};
 
@@ -19,7 +19,7 @@ define([
         itemprop: 'logo'
     });
     $('.navbar-brand').removeClass('hide');
-    var breadcrumb = new Breadcrumb();
+    // var breadcrumb = new Breadcrumb();
     // breadcrumb.render();
 
     // add banner image
@@ -29,15 +29,15 @@ define([
     function CustomerClass () {}
 
     CustomerClass.prototype.setBreadcrumb = function (options) {
-        breadcrumb.render(options);
-        APP.Sandbox.eventNotify('global:content:render', {
-            name: 'CommonBreadcrumbTop',
-            el: breadcrumb.$el.clone()
-        });
-        APP.Sandbox.eventNotify('global:content:render', {
-            name: 'CommonBreadcrumbBottom',
-            el: breadcrumb.$el.clone()
-        });
+        // breadcrumb.render(options);
+        // APP.Sandbox.eventNotify('global:content:render', {
+        //     name: 'CommonBreadcrumbTop',
+        //     el: breadcrumb.$el.clone()
+        // });
+        // APP.Sandbox.eventNotify('global:content:render', {
+        //     name: 'CommonBreadcrumbBottom',
+        //     el: breadcrumb.$el.clone()
+        // });
     }
 
     return CustomerClass;
