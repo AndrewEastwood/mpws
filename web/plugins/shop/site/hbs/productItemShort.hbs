@@ -11,7 +11,7 @@
                 <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey}}" class="link">
                     <div class="image productimage noimage image_{{data.ID}}">
                         {{#if data.Images.[0].sm}}
-                        {{>base/hbs/animationFacebook}}
+                        {{>animSpinnerFB}}
                         {{/if}}
                     </div>
                     {{#if data.Images.[0].sm}}

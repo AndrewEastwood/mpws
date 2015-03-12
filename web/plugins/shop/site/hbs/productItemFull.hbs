@@ -27,7 +27,7 @@
                     <a href="{{app.location.homepage}}{{data.Images.[0].normal}}" class="link" data-lightbox="shop-product-image-main">
                         <div class="image productimage noimage image_{{data.ID}}">
                             {{#if data.Images.[0].sm}}
-                            {{>base/hbs/animationFacebook}}
+                            {{>animSpinnerFB}}
                             {{/if}}
                         </div>
                         {{#if data.Images.[0].sm}}
@@ -319,7 +319,7 @@
                                     </div>
                                     <div class="image productimage noimage image_{{ID}}">
                                         {{#if Images.[0].xs}}
-                                        {{>base/hbs/animationFacebook}}
+                                        {{>animSpinnerFB}}
                                         {{/if}}
                                     </div>
                                     {{#if Images.[0].xs}}
