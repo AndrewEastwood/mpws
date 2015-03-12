@@ -1,7 +1,6 @@
 define([
     'jquery',
     'underscore',
-    'handlebars',
     'auth',
     'cachejs',
     'base/js/partials/animSpinnerFB',

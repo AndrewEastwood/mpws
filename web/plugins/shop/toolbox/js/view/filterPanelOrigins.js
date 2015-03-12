@@ -126,7 +126,7 @@ define([
         render: function () {
             var _data = Utils.getHBSTemplateData(this);
             _(_data.data).each(function (item) {
-                item.contextButton = tplBtnMenuMainItem(Utils.getHBSTemplateData(item));
+                item.contextButton = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(item));
             });
             this.$el.html(this.template(_data));
             this.$('.dropdown-toggle').addClass('btn-link');

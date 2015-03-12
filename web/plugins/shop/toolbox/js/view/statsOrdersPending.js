@@ -32,7 +32,7 @@ define([
         },
         render: function () {
             // render into panel body
-            this.$el.html(this.handlebars(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
