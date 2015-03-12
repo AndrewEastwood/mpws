@@ -14,6 +14,7 @@ require.config({
         'image-upload': 'base/js/utils/image-upload',
         'formatter-price': 'base/js/utils/formatter-price',
         'handlebars-helpers': 'base/js/utils/handlebars-helpers',
+        'handlebars-partials': 'base/js/utils/handlebars-partials',
         'sandbox': 'base/js/utils/sandbox',
         'utils': 'base/js/utils/utils',
         // vendors
