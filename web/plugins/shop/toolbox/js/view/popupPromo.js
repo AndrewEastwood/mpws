@@ -22,7 +22,7 @@ define([
     }
 
     var PopupPromo = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             var self = this;

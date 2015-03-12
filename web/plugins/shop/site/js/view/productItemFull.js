@@ -16,7 +16,7 @@ define([
 
     var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click .open-popup-shipping': 'openPopupShipping',

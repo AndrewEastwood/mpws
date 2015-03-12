@@ -17,7 +17,7 @@ define([
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',

@@ -11,7 +11,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-default',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.model = new ModelWidgetPrivatBankExchangeRate();
             this.listenTo(this.model, 'change', this.render);

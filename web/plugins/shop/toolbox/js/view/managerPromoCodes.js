@@ -10,7 +10,7 @@ define([
 ], function (Sandbox, Backbone, Utils, ViewOrdersListPromos, tpl, lang) {
 
     var ManagerPromos = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'plugin-shop-promos',
         events: {

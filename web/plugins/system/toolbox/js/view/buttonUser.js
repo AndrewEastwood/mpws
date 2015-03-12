@@ -11,7 +11,7 @@ define([
     var ButtonUser = Backbone.View.extend({
         tagName: 'li',
         className: 'dropdown plugin-system-user-button',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);

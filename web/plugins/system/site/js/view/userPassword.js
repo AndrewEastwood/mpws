@@ -11,7 +11,7 @@ define([
     var AccountPassword = Backbone.View.extend({
         // tagName: 'li',
         // className: 'col-sm-9 col-md-9',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click #account-password-pwdgen-btn-ID': 'generatePassword',

@@ -9,7 +9,7 @@ define([
         tagName: 'li',
         className: 'dropdown shop-dropdown-catalog',
         id: 'shop-dropdown-catalog-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         model: new modelCatalogStructureMenu(),
         initialize: function () {
             this.model.on('change', this.render, this);

@@ -13,7 +13,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-default',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.collection = new CollectionProductsPopular();
             this.viewList = new ViewListProducts({

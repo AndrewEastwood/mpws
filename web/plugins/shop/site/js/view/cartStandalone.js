@@ -22,7 +22,7 @@ define([
     var CartStandalone = Backbone.View.extend({
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function (options) {
             this.modelSettings = options && options.settings || null;

@@ -14,7 +14,7 @@ define([
 
     var FilterPanelOrigins = Backbone.View.extend({
         className: 'panel panel-default shop_filterPanelOrigins',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click #show_removed': 'showRemoved',

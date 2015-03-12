@@ -14,7 +14,7 @@ define([
 ], function (Sandbox, Backbone, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'shop-manager-feeds',
         events: {

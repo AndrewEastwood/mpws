@@ -18,7 +18,7 @@ define([
 
     var AccountCreate = Backbone.View.extend({
         className: 'container',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "submit .form": 'doRegister',

@@ -12,7 +12,7 @@ define([
         collection: compareCollectionInstance,
         className: 'row shop-products-compare clearfix',
         id: 'shop-products-compare-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click .compare-mode': 'toggleCompareMode'

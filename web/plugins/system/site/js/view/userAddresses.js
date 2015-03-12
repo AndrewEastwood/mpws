@@ -15,7 +15,7 @@ define([
         // tagName: 'li',
         // className: 'col-sm-9 col-md-9',
         addressList: [],
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "click #account-address-add-btn-ID": "addNewAddress",

@@ -10,7 +10,7 @@ define([
 
     var MenuCart = Backbone.View.extend({
         tagName: 'li',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             this.model.on('change', this.render, this);

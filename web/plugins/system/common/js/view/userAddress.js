@@ -10,7 +10,7 @@ define([
 ], function (Backbone, ModelUserAddress, Utils, BSAlert, tpl, lang) {
 
     var UserAddress = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "click #save-btn": "saveAddress",

@@ -14,7 +14,7 @@ define([
     var WidgetAddress = Backbone.View.extend({
         className: 'address-widget',
         id: 'address-widget-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click .address-option': 'changeUserAddress'

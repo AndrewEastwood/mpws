@@ -10,7 +10,7 @@ define([
     var TrackingStatus = Backbone.View.extend({
         className: 'row shop-tracking-status',
         id: 'shop-tracking-status-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         model: new ModelTrackingStatus(),
         events: {

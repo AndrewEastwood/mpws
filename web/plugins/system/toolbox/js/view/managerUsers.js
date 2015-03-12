@@ -11,7 +11,7 @@ define([
 ], function (Backbone, Utils, ViewListUsers, BootstrapDialog, BSAlert, tpl, lang) {
 
     var ManagerUsers = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'plugin-system-users',
         events: {

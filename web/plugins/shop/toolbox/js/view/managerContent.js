@@ -13,7 +13,7 @@ define([
 ], function (_, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'plugin-shop-content',
         initialize: function (options) {

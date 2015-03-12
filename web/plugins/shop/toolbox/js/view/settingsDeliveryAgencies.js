@@ -16,7 +16,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-default',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         events: {
             'switchChange.bootstrapSwitch .switcher': 'setAgencyState',
             // 'switchChange.bootstrapSwitch .switcher-config-self-pickup': 'setSelfPickupMode',

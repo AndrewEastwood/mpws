@@ -21,7 +21,7 @@ define([
         id: 'shop-stats-ID',
         className: 'plugin-shop-stats',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         render: function () {
             var wgtOrdersPending = new ViewStatsOrdersPending();
             var wgtOrdersExpired = new ViewStatsOrdersExpired();

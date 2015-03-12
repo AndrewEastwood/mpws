@@ -13,7 +13,7 @@ define([
         //     rel: "menu"
         // },
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             var self = this;
             APP.Sandbox.eventSubscribe('global:auth:status:inactive', function () {

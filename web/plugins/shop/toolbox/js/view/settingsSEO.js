@@ -13,7 +13,7 @@ define([
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-seo",
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click a.list-group-item': 'editValue'

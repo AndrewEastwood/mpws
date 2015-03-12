@@ -12,7 +12,7 @@ define([
     var CartEmbedded = Backbone.View.extend({
         className: 'btn-group shop-cart-embedded',
         id: 'shop-cart-embedded-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click .open-shopping-cart-embedded': 'openShoppingCartModal'

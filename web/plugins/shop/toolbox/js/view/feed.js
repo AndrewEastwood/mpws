@@ -10,7 +10,7 @@ define([
     return Backbone.View.extend({
         className: 'feed-item-wrapper',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             if (this.model) {
                 this.listenTo(this.model, 'change', this.render);

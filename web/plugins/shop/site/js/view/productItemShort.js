@@ -14,7 +14,7 @@ define([
 
     var ProductItemShort = Backbone.View.extend({
         className: 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             _.bindAll(this, 'refresh', 'switchCurrency');

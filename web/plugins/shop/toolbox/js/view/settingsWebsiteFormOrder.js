@@ -14,7 +14,7 @@ define([
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-website-form-order",
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'switchChange.bootstrapSwitch .switcher': 'setSettingStatus'

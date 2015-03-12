@@ -12,7 +12,7 @@ define([
         collection: wishCollectionInstance,
         className: 'row shop-wishlist-standalone clearfix',
         id: 'shop-cart-wishlist-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             this.listenTo(this.collection, 'reset', this.render);

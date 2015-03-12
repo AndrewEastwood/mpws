@@ -14,7 +14,7 @@ define([
 ], function (Sandbox, Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
 
     var PopupSettingsAddress = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'keypress #js-ShopName': 'updateTitle',

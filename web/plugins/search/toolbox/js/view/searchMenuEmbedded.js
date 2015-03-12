@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'hbs!plugins/search/toolbox/hbs/searchMenuEmbedded',
+    'text!plugins/search/toolbox/hbs/searchMenuEmbedded.hbs',
     /* lang */
     'i18n!plugins/search/toolbox/nls/translation',
 ], function ($, _, Backbone, Utils, tpl, lang) {
@@ -12,7 +12,7 @@ define([
         tagName: 'li',
         className: 'sidebar-search',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
         }

@@ -14,7 +14,7 @@ define([
 
     var ManagerContent_Products = ViewListProducts.extend({
         className: 'panel panel-default plugin-shop-manager-products',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'itemAdded .search': 'search',

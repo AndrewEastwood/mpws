@@ -2,9 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     /* template */
-    'hbs!customers/pb.com.ua/hbs/breadcrumb'
+    'text!customers/pb.com.ua/hbs/breadcrumb'
 ], function ($, _, Backbone, Utils, tpl) {
 
     var Breadcrumb = Backbone.View.extend({

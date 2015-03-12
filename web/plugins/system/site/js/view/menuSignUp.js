@@ -7,7 +7,7 @@ define([
 
     var MenuSignUp = Backbone.View.extend({
         tagName: 'li',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.listenTo(this.model, "change", this.render);
         },

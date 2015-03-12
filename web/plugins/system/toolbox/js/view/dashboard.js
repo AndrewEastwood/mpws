@@ -18,7 +18,7 @@ define([
         },
         className: 'plugin-system-overview',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.model = new ModelStats();
             this.listenTo(this.model, "change", this.render);

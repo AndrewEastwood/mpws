@@ -8,7 +8,7 @@ define([
 
     var PageHome = Backbone.View.extend({
         className: 'shop-page-home',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         listProductLatest: new ListProductLatest(),
         categoryNav: new CategoryNavigation(),
         initialize: function () {

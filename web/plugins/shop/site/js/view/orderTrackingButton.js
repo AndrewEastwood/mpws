@@ -7,7 +7,7 @@ define([
     var TrackingButton = Backbone.View.extend({
         className: 'btn-group shop-order-tracking-button',
         id: 'shop-order-tracking-button-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         }

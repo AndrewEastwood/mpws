@@ -14,7 +14,7 @@ define([
 ], function (Sandbox, Backbone, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click #show_removed': 'showRemoved'

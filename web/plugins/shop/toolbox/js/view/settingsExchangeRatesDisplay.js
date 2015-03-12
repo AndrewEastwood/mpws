@@ -23,7 +23,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-default',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         events: {
             'click .refresh-userlist-currencies': 'refreshUserCurrencyList',
             'click .save-currency-display': 'saveCurrencyDisplay'

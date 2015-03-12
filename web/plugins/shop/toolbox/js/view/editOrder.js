@@ -46,7 +46,7 @@ define([
     }
 
     var EditOrder = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-shop-order',
         initialize: function () {

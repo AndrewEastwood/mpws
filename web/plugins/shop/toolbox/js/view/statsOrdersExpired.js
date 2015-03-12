@@ -12,7 +12,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-danger',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.collection = new CollectionOrdersExpired();
             this.viewList = new ViewListOrders({

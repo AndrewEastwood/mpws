@@ -11,7 +11,7 @@ define([
         className: 'row shop-profile-orders',
         id: 'shop-profile-orders-ID',
         model: new ModelProfileOrders(),
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function() {
             MView.prototype.initialize.call(this);

@@ -11,7 +11,7 @@ define([
 ], function (Backbone, Utils, ViewListCustomers, BootstrapDialog, BSAlert, tpl, lang) {
 
     var ManagerCustomers = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'plugin-system-customers',
         events: {

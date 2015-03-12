@@ -8,7 +8,7 @@ define([
 
     var Menu = Backbone.View.extend({
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
         },

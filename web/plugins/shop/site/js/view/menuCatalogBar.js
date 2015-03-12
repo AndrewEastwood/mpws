@@ -8,7 +8,7 @@ define([
     var MenuCatalogBar = Backbone.View.extend({
         // tagName: 'ul',
         className: 'navbar yamm navbar-default navbar-fixed-top shop-catalog-bar',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             this.model = new modelCatalogStructureMenu();
             this.model.on('change', this.render, this);

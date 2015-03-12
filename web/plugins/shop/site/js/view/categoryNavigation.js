@@ -7,7 +7,7 @@ define([
 
     var MenuCatalog = Backbone.View.extend({
         className: 'row shop-catalog-navigation',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         model: new modelCatalogStructureMenu(),
         initialize: function () {
             this.model.on('change', this.render, this);

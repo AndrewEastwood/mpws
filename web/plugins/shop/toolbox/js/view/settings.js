@@ -25,7 +25,7 @@ define([
     ViewSettingsProduct, ViewSettingsSEO, ViewExchangeRates, ViewExchangeRatesDisplay, ViewWidgetPrivatBankExchageRates, tpl, lang) {
 
     var Settings = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'shop-settings',
         initialize: function (options) {

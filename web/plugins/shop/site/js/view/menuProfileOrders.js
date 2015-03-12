@@ -5,7 +5,7 @@ define([
 
     var MenuCart = Backbone.View.extend({
         tagName: 'li',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         initialize: function () {
             var _self = this;
             // this should react on new order made by active profile

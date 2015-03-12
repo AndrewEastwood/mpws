@@ -25,7 +25,7 @@ define([
     }
 
     var EditCustomer = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-customer',
         initialize: function () {

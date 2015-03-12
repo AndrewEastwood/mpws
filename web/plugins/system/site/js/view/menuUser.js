@@ -12,7 +12,7 @@ define([
         tagName: 'li',
         className: 'dropdown account-dropdown-signin',
         id: 'account-dropdown-signin-ID',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "submit .form": 'doSignIn',

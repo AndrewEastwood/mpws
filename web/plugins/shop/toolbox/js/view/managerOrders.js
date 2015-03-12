@@ -11,7 +11,7 @@ define([
 ], function (Sandbox, Backbone, Utils, ViewOrdersListOrders, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'plugin-shop-orders',
         events: {

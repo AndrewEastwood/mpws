@@ -12,7 +12,7 @@ define([
     var SignIn = Backbone.View.extend({
         tagName: 'form',
         className: 'form form-horizontal toolbox-component-form-signin',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "submit": 'doSignIn'

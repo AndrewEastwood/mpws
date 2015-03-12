@@ -10,7 +10,7 @@ define([
     var AccountProfile = Backbone.View.extend({
         // viewName: 'AccountProfile',
         // className: 'col-sm-3 col-md-3',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         render: function (pageContent) {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));

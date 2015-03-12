@@ -16,7 +16,7 @@ define([
     return Backbone.View.extend({
         className: 'panel panel-info',
         lang: lang,
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         events: {
             'click .add-currency': 'addExchangeRate',
             'click .create-currency': 'createExchangeRate',

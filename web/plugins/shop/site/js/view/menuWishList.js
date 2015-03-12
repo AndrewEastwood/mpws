@@ -8,7 +8,7 @@ define([
 
     var MenuWishList = Backbone.View.extend({
         tagName: 'li',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         collection: wishCollectionInstance,
         initialize: function () {
             this.listenTo(wishCollectionInstance, 'reset', this.render);

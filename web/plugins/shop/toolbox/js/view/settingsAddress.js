@@ -14,7 +14,7 @@ define([
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-addresses",
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             'click .add-address': 'addAddress',

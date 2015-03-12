@@ -9,7 +9,7 @@ define([
     var UserSummary = Backbone.View.extend({
         // tagName: 'li',
         // className: 'col-sm-9 col-md-9',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
             if (this.model)

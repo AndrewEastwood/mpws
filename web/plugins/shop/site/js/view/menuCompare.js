@@ -8,7 +8,7 @@ define([
 
     var MenuCompare = Backbone.View.extend({
         tagName: 'li',
-        template: tpl,
+        template: Handlebars.compile(tpl), // check
         collection: compareCollectionInstance,
         initialize: function () {
             this.listenTo(compareCollectionInstance, 'reset', this.render);
