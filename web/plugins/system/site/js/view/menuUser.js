@@ -1,12 +1,12 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'auth',
     'utils',
-    'hbs!plugins/system/site/hbs/menuUser',
+    'text!plugins/system/site/hbs/menuUser.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function (Sandbox, Backbone, Auth, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Auth, Utils, tpl, lang) {
 
     var MenuAccount = Backbone.View.extend({
         tagName: 'li',
@@ -42,7 +42,8 @@ define([
             }
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            return this;
         }
     });
 

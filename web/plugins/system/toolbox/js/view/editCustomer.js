@@ -1,20 +1,20 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/system/toolbox/js/model/customer',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/system/toolbox/hbs/editCustomer',
-    'hbs!base/hbs/animationFacebook',
+    'text!plugins/system/toolbox/hbs/editCustomer.hbs',
+    'text!base/hbs/animationFacebook.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     'image-upload',
     'select2',
     'bootstrap-editable',
     'bootstrap-switch'
-], function (Sandbox, Backbone, ModelCustomer, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelCustomer, Utils, BootstrapDialog, BSAlert, tpl, tplFBAnim, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -43,7 +43,7 @@ define([
             var $dialog = new BootstrapDialog({
                 closable: false,
                 title: _getTitle(this.model.isNew()),
-                message: $(tpl(Utils.getHBSTemplateData(this))),
+                message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.editors.customer.buttonClose,
                     cssClass: 'btn-default btn-link',

@@ -1,16 +1,17 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     'bootstrap-dialog',
     'plugins/shop/toolbox/js/collection/filterPanelOrigins',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/filterPanelOrigins',
-    'hbs!plugins/shop/toolbox/hbs/buttonMenuOriginListItem',
+    'text!plugins/shop/toolbox/hbs/filterPanelOrigins.hbs',
+    'text!plugins/shop/toolbox/hbs/buttonMenuOriginListItem.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (_, Backbone, Utils, Cache, BootstrapDialog, CollectionOriginsFilter, tpl, tplBtnMenuMainItem, lang) {
+], function (_, Backbone, Handlebars, Utils, Cache, BootstrapDialog, CollectionOriginsFilter, tpl, tplBtnMenuMainItem, lang) {
 
     var FilterPanelOrigins = Backbone.View.extend({
         className: 'panel panel-default shop_filterPanelOrigins',
@@ -127,7 +128,7 @@ define([
             _(_data.data).each(function (item) {
                 item.contextButton = tplBtnMenuMainItem(Utils.getHBSTemplateData(item));
             });
-            this.$el.html(tpl(_data));
+            this.$el.html(this.template(_data));
             this.$('.dropdown-toggle').addClass('btn-link');
             this.restoreLayout();
             return this;

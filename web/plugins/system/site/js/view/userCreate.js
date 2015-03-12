@@ -2,19 +2,20 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     /* model */
     'plugins/system/common/js/model/user',
     /* template */
-    'hbs!plugins/system/site/hbs/userCreate',
+    'text!plugins/system/site/hbs/userCreate.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
     "base/js/lib/bootstrapvalidator/bootstrapValidator",
     "base/js/lib/bootstrapvalidator/validator/emailAddress",
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength"
-], function ($, _, Backbone, Utils, Cache, ModelAccount, tpl, lang) {
+], function ($, _, Backbone, Handlebars, Utils, Cache, ModelAccount, tpl, lang) {
 
     var AccountCreate = Backbone.View.extend({
         className: 'container',

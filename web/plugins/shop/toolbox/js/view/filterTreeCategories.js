@@ -1,17 +1,17 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     'bootstrap-dialog',
     'plugins/shop/toolbox/js/collection/filterTreeCategories',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/filterTreeCategories',
+    'text!plugins/shop/toolbox/hbs/filterTreeCategories.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
     'jstree'
-], function (Sandbox, Backbone, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
+], function (Backbone, Handlebars, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: Handlebars.compile(tpl), // check
@@ -30,7 +30,7 @@ define([
         },
         render: function () {
             var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('#categoryTree').jstree({
                 core: {
                     check_callback: true,

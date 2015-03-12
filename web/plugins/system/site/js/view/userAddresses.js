@@ -1,15 +1,15 @@
 define([
-    'sandbox',
     'jquery',
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'plugins/system/common/js/view/userAddress',
-    'hbs!plugins/system/site/hbs/userAddresses',
+    'text!plugins/system/site/hbs/userAddresses.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
     'bootstrap-editable'
-], function (Sandbox, $, _, Backbone, Utils, ViewUserAddress, tpl, lang) {
+], function ($, _, Backbone, Handlebars, Utils, ViewUserAddress, tpl, lang) {
 
     var UserAddresses = Backbone.View.extend({
         // tagName: 'li',

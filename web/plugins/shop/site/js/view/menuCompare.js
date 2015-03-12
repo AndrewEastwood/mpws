@@ -1,10 +1,10 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/collection/listProductCompare',
     'utils',
-    'hbs!plugins/shop/site/hbs/menuCompare'
-], function (Sandbox, Backbone, compareCollectionInstance, Utils, tpl) {
+    'text!plugins/shop/site/hbs/menuCompare.hbs'
+], function (Backbone, Handlebars, compareCollectionInstance, Utils, tpl) {
 
     var MenuCompare = Backbone.View.extend({
         tagName: 'li',

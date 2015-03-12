@@ -1,15 +1,16 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settingsSEO',
+    'text!plugins/shop/toolbox/hbs/settingsSEO.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-switch'
-], function (Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-seo",
@@ -34,7 +35,7 @@ define([
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
             tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
-            this.$el.html(tpl(tplData));
+            this.$el.html(this.template(tplData));
             return this;
         },
         editValue: function (event) {

@@ -1,12 +1,13 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     /* collection */
     "plugins/system/toolbox/js/collection/listCustomers",
     /* template */
-    'hbs!plugins/system/toolbox/hbs/buttonMenuCustomerListItem',
-    'hbs!base/hbs/animationFacebook',
+    'text!plugins/system/toolbox/hbs/buttonMenuCustomerListItem.hbs',
+    'text!base/hbs/animationFacebook.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     /* extensions */
@@ -14,7 +15,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, tplFBAnim, lang, Spinner) {
+], function (Backbone, Handlebars, Utils, Backgrid, CollectionCustomers, tplBtnMenuMainItem, tplFBAnim, lang, Spinner) {
 
     // var $anim = $(tplFBAnim()).addClass('mp-tableloader');
     var opts = {

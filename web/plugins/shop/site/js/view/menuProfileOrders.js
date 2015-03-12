@@ -1,7 +1,8 @@
 define([
     'backbone',
-    'hbs!plugins/shop/site/hbs/menuProfileOrders'
-], function (Backbone, tpl) {
+    'handlebars',
+    'text!plugins/shop/site/hbs/menuProfileOrders.hbs'
+], function (Backbone, Handlebars, tpl) {
 
     var MenuCart = Backbone.View.extend({
         tagName: 'li',

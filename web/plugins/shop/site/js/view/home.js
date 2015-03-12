@@ -1,10 +1,11 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/shop/site/hbs/home',
+    'text!plugins/shop/site/hbs/home.hbs',
     'plugins/shop/site/js/view/listProductLatest',
     'plugins/shop/site/js/view/categoryNavigation'
-], function (Backbone, Utils, tpl, ListProductLatest, CategoryNavigation) {
+], function (Backbone, Handlebars, Utils, tpl, ListProductLatest, CategoryNavigation) {
 
     var PageHome = Backbone.View.extend({
         className: 'shop-page-home',

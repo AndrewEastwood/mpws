@@ -1,13 +1,13 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     'bootstrap-dialog',
     /* collection */
     "plugins/shop/toolbox/js/collection/listPromos",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/buttonMenuPromoListItem',
+    'text!plugins/shop/toolbox/hbs/buttonMenuPromoListItem.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
@@ -15,7 +15,7 @@ define([
     "backgrid-select-all",
     'moment',
     "backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, BootstrapDialog, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Backbone, Handlebars, Utils, Backgrid, BootstrapDialog, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
 
@@ -40,7 +40,7 @@ define([
                             btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success'));
                             btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success'));
                         }
-                        btn.push(tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON())));
+                        btn.push(Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON())));
                     }
 
                     return btn;

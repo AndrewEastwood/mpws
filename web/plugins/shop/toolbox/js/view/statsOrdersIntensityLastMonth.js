@@ -1,15 +1,16 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/statsOrdersIntensityLastMonth',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsOrdersIntensityLastMonth',
+    'text!plugins/shop/toolbox/hbs/statsOrdersIntensityLastMonth.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* charts */
     'async!//maps.google.com/maps/api/js?sensor=false',
     'goog!visualization,1,packages:[corechart,geochart]'
-], function (Backbone, ModelOrdersIntensity, Utils, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrdersIntensity, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -20,7 +21,7 @@ define([
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             if (google) {
 
                 // orders income for last month

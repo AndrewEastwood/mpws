@@ -1,14 +1,14 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     'plugins/shop/toolbox/js/view/listOrders',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/managerOrders',
+    'text!plugins/shop/toolbox/hbs/managerOrders.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-tagsinput'
-], function (Sandbox, Backbone, Utils, ViewOrdersListOrders, tpl, lang) {
+], function (Backbone, Handlebars, Utils, ViewOrdersListOrders, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -50,7 +50,7 @@ define([
             if (this.$el.is(':empty')) {
                 this.viewOrdersList.grid.emptyText = $('<h4>').text(lang.pluginMenu_Orders_Grid_noData_ByStatus);
                 this.viewOrdersList.render();
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
                 // show sub-view
                 this.$('.orders').html(this.viewOrdersList.$el);
                 this.$('.search').tagsinput();

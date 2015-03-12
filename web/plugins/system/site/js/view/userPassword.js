@@ -1,12 +1,13 @@
 define([
     'jquery',
     'backbone',
+    'handlebars',
     'utils',
     'bootstrap-dialog',
-    'hbs!plugins/system/site/hbs/userPassword',
+    'text!plugins/system/site/hbs/userPassword.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function ($, Backbone, Utils, BootstrapDialog, tpl, lang) {
+], function ($, Backbone, Handlebars, Utils, BootstrapDialog, tpl, lang) {
 
     var AccountPassword = Backbone.View.extend({
         // tagName: 'li',

@@ -1,10 +1,10 @@
 define([
-    'sandbox',
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
-    'hbs!plugins/shop/site/hbs/cartStandalone',
+    'text!plugins/shop/site/hbs/cartStandalone.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie',
@@ -17,7 +17,7 @@ define([
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength",
     'jquery.maskedinput'
-], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Cache, tpl, lang) {
 
     var CartStandalone = Backbone.View.extend({
         className: 'row shop-cart-standalone',

@@ -1,10 +1,11 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/system/toolbox/hbs/menu',
+    'text!plugins/system/toolbox/hbs/menu.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function (Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var Menu = Backbone.View.extend({
         lang: lang,
@@ -13,7 +14,7 @@ define([
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$el = $(this.$el.html());
             return this;
         }

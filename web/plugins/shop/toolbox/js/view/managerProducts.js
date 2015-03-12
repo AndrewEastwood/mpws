@@ -1,16 +1,16 @@
 // this is a part of managerContent so it's better to move all into manager
 define([
-    'sandbox',
     'cachejs',
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'plugins/shop/toolbox/js/view/listProducts',
-    'hbs!plugins/shop/toolbox/hbs/managerProducts',
+    'text!plugins/shop/toolbox/hbs/managerProducts.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-tagsinput'
-], function (Sandbox, Cache, _, Backbone, Utils, ViewListProducts, tpl, lang) {
+], function (Cache, _, Backbone, Handlebars, Utils, ViewListProducts, tpl, lang) {
 
     var ManagerContent_Products = ViewListProducts.extend({
         className: 'panel panel-default plugin-shop-manager-products',
@@ -70,7 +70,7 @@ define([
             // debugger;
             if (this.$el.is(':empty')) {
                 var data = Utils.getHBSTemplateData(this);
-                this.$el.html(tpl(data));
+                this.$el.html(this.template(data));
                 this.$('.products').append(this.grid.render().$el);
                 this.$('.products').append(this.paginator.render().$el);
                 // debugger;

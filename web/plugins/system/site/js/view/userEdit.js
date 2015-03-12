@@ -1,14 +1,14 @@
 define([
-    'sandbox',
     'jquery',
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/system/site/hbs/userEdit',
+    'text!plugins/system/site/hbs/userEdit.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
     'bootstrap-editable',
     'jquery.maskedinput'
-], function (Sandbox, $, Backbone, Utils, tpl, lang) {
+], function ($, Backbone, Handlebars, Utils, tpl, lang) {
 
     var AccountEdit = Backbone.View.extend({
         // tagName: 'li',

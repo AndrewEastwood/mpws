@@ -1,12 +1,13 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/statsOrdersOverview',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsOrdersOverview',
+    'text!plugins/shop/toolbox/hbs/statsOrdersOverview.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, ModelOrdersOverview, Utils, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrdersOverview, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -17,7 +18,7 @@ define([
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
         }
     });

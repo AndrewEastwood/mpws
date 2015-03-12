@@ -1,9 +1,9 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/system/site/hbs/menuSignUp'
-], function (Sandbox, Backbone, Utils, tpl) {
+    'text!plugins/system/site/hbs/menuSignUp.hbs'
+], function (Backbone, Handlebars, Utils, tpl) {
 
     var MenuSignUp = Backbone.View.extend({
         tagName: 'li',
@@ -13,6 +13,7 @@ define([
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            return this;
         }
     });
 

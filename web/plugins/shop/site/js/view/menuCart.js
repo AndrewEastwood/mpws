@@ -1,12 +1,12 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     // 'plugins/shop/site/js/collection/listProductCart',
-    'hbs!plugins/shop/site/hbs/menuCart',
+    'text!plugins/shop/site/hbs/menuCart.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (Sandbox, Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var MenuCart = Backbone.View.extend({
         tagName: 'li',

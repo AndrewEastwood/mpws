@@ -1,17 +1,17 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/promo',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/popupPromo',
+    'text!plugins/shop/toolbox/hbs/popupPromo.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     'moment'
-], function (Sandbox, Backbone, ModelPromo, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelPromo, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle(isNew) {
         if (isNew) {
@@ -68,7 +68,7 @@ define([
         render: function () {
             // debugger;
             this.$title.html(_getTitle(this.model.isNew()));
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.date').editable({
                 format: 'YYYY-MM-DD',
                 viewformat: 'YYYY-MM-DD',

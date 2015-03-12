@@ -1,16 +1,17 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/system/common/js/model/user',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/system/toolbox/hbs/editUser',
+    'text!plugins/system/toolbox/hbs/editUser.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     // 'image-upload',
     'bootstrap-switch'
-], function (Backbone, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -39,7 +40,7 @@ define([
             var $dialog = new BootstrapDialog({
                 closable: false,
                 title: _getTitle(this.model.isNew()),
-                message: $(tpl(Utils.getHBSTemplateData(this))),
+                message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.editors.user.buttonClose,
                     cssClass: 'btn-default btn-link',

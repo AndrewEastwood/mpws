@@ -1,13 +1,14 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/statsOrdersExpired',
     'plugins/shop/toolbox/js/view/listOrders',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsOrdersExpired',
+    'text!plugins/shop/toolbox/hbs/statsOrdersExpired.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, CollectionOrdersExpired, ViewListOrders, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollectionOrdersExpired, ViewListOrders, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-danger',
@@ -31,7 +32,7 @@ define([
         },
         render: function () {
             // render into panel body
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.panel-body').html(this.viewList.$el);
             return this;
         }

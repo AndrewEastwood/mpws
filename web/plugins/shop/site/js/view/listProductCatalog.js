@@ -6,7 +6,7 @@ define([
     'plugins/shop/site/js/collection/listProductCatalog',
     'plugins/shop/site/js/view/productItemShort',
     'bootstrap-dialog',
-    'hbs!plugins/shop/site/hbs/listProductCatalog',
+    'text!plugins/shop/site/hbs/listProductCatalog.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'bootstrap',

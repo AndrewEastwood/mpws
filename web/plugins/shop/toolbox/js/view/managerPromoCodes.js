@@ -1,13 +1,13 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     'plugins/shop/toolbox/js/view/listPromos',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/managerPromoCodes',
+    'text!plugins/shop/toolbox/hbs/managerPromoCodes.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, ViewOrdersListPromos, tpl, lang) {
+], function (Backbone, Handlebars, Utils, ViewOrdersListPromos, tpl, lang) {
 
     var ManagerPromos = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -43,7 +43,7 @@ define([
             // TODO:
             // add expired and todays orders
             if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
                 this.viewPromosList.grid.emptyText = $('<h4>').text(lang.listPromos_Promo_Grid_noData);
                 this.viewPromosList.render();
                 // show sub-view

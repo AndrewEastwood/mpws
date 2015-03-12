@@ -1,11 +1,12 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/feed',
+    'text!plugins/shop/toolbox/hbs/feed.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'feed-item-wrapper',
@@ -21,7 +22,7 @@ define([
             }
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
         },
         disableImportButton: function () {

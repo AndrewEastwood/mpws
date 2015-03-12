@@ -1,16 +1,16 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/origin',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/editOrigin',
+    'text!plugins/shop/toolbox/hbs/editOrigin.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable'
-], function (Sandbox, Backbone, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -34,7 +34,7 @@ define([
                 closable: false,
                 draggable: false,
                 title: _getTitle(this.model.isNew()),
-                message: $(tpl(Utils.getHBSTemplateData(this))),
+                message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.popup_origin_button_Close,
                     cssClass: 'btn-default btn-link',

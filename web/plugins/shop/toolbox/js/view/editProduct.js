@@ -1,5 +1,6 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/product',
     'utils',
     'cachejs',
@@ -8,7 +9,7 @@ define([
     "formatter-price",
     "image-upload",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/editProduct',
+    'text!plugins/shop/toolbox/hbs/editProduct.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'select2',
@@ -16,7 +17,7 @@ define([
     'jquery.maskmoney',
     'bootstrap-tagsinput',
     'bootstrap-editable'
-], function (Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
+], function (Backbone, Handlebars, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -59,7 +60,7 @@ define([
                 closable: false,
                 draggable: false,
                 title: _getTitle(that.model.id),
-                message: $(tpl(Utils.getHBSTemplateData(that))),
+                message: $(this.template(Utils.getHBSTemplateData(that))),
                 buttons: [{
                     label: lang.popup_product_button_Close,
                     cssClass: 'btn-default btn-link',

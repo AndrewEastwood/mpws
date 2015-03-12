@@ -1,16 +1,17 @@
 define([
     'backbone',
+    'handlebars',
     'underscore',
     'plugins/system/toolbox/js/model/dashboard',
     'utils',
     /* template */
-    'hbs!plugins/system/toolbox/hbs/dashboard',
+    'text!plugins/system/toolbox/hbs/dashboard.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     /* charts */
     'async!http://maps.google.com/maps/api/js?sensor=false',
     'goog!visualization,1,packages:[corechart]'
-], function (Backbone, _, ModelStats, Utils, tpl, lang) {
+], function (Backbone, Handlebars, _, ModelStats, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         attributes: {
@@ -26,7 +27,7 @@ define([
         render: function () {
 
             var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
 
             // set top container for system plugin
             // this.$el.wrap($('<div/>').attr({
@@ -39,7 +40,7 @@ define([
             // }).html($sysTpl));
 
             // template for system dashaboard
-            // var $sysTpl = tpl(Utils.getHBSTemplateData(this));
+            // var $sysTpl = this.template(Utils.getHBSTemplateData(this));
 
             // debugger;
             if (google) {

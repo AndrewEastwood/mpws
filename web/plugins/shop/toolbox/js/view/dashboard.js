@@ -1,5 +1,6 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
     'plugins/shop/toolbox/js/view/statsOrdersPending',
     'plugins/shop/toolbox/js/view/statsOrdersExpired',
@@ -10,10 +11,10 @@ define([
     'plugins/shop/toolbox/js/view/statsProductsPopular',
     'plugins/shop/toolbox/js/view/statsProductsNonPopular',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/dashboard',
+    'text!plugins/shop/toolbox/hbs/dashboard.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, Utils, ViewStatsOrdersPending, ViewStatsOrdersExpired, 
+], function (Backbone, Handlebars, Utils, ViewStatsOrdersPending, ViewStatsOrdersExpired, 
     ViewStatsOrdersOverview, ViewStatsProductsOverview, ViewStatsOrdersIntensityLastMonth,
     ViewStatsProductsIntensityLastMonth, ViewStatsProductsPopular, ViewStatsProductsNonPopular, tpl, lang) {
 
@@ -41,7 +42,7 @@ define([
             wgtProductsPopular.collection.fetch({reset: true});
             wgtProductsNonPopular.collection.fetch({reset: true});
 
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
 
             this.$('.ordersPending').html(wgtOrdersPending.render().$el);
             this.$('.ordersExpired').html(wgtOrdersExpired.render().$el);

@@ -1,11 +1,12 @@
 define([
     'jquery',
     'underscore',
+    'handlebars',
     'auth',
     'cachejs',
-    'hbs!base/hbs/animationFacebook',
+    'base/js/partials/animSpinnerFB',
     'bootstrap'
-], function ($, _, Auth, Cache, tplFBAnim) {
+], function ($, _, Auth, Cache, animSpinnerFB) {
 
     APP.dfd.customerReady = new $.Deferred();
 
@@ -50,7 +51,7 @@ define([
                 'class': 'well dashboard-container dashboard-container-' + pluginName,
                 rel: 'menu'
             });
-            $blockItem.html(tplFBAnim());
+            $blockItem.html(animSpinnerFB);
             blocks.push($blockItem);
         });
         return blocks;

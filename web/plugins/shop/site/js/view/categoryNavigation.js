@@ -1,9 +1,10 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/model/menuCatalog',
     'utils',
-    'hbs!plugins/shop/site/hbs/categoryNavigation'
-], function (Backbone, modelCatalogStructureMenu, Utils, tpl) {
+    'text!plugins/shop/site/hbs/categoryNavigation.hbs'
+], function (Backbone, Handlebars, modelCatalogStructureMenu, Utils, tpl) {
 
     var MenuCatalog = Backbone.View.extend({
         className: 'row shop-catalog-navigation',

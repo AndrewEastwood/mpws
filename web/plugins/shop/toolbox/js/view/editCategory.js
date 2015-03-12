@@ -1,17 +1,17 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/category',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/editCategory',
+    'text!plugins/shop/toolbox/hbs/editCategory.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'image-upload',
     'select2',
-], function (Sandbox, Backbone, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
 
     function _getTitle(isNew) {
         if (isNew) {
@@ -39,7 +39,7 @@ define([
                 closable: false,
                 draggable: false,
                 title: _getTitle(this.model.isNew()),
-                message: $(tpl(Utils.getHBSTemplateData(this))),
+                message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.popup_category_button_Close,
                     cssClass: 'btn-default btn-link',

@@ -1,10 +1,11 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/shop/toolbox/hbs/menu',
+    'text!plugins/shop/toolbox/hbs/menu.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var Menu = Backbone.View.extend({
         // tagName: 'li',
@@ -22,7 +23,7 @@ define([
             });
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$el = $(this.$el.html());
             return this;
         }

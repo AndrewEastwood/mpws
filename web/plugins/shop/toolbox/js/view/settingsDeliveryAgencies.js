@@ -1,17 +1,18 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/listDeliveryAgencies',
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settingsDeliveryAgencies',
+    'text!plugins/shop/toolbox/hbs/settingsDeliveryAgencies.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     'bootstrap-switch'
-], function (Backbone, CollectionDeliveryAgencies, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, CollectionDeliveryAgencies, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -54,7 +55,7 @@ define([
             _.bindAll(this, 'updateAgency', 'hideSaveButton', 'showSaveButton');
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             this.$('.editable:visible').editable(this.options.editableOptions)
                 .on('save', this.updateAgency)

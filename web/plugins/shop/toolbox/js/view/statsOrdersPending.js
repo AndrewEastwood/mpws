@@ -1,13 +1,14 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/statsOrdersPending',
     'plugins/shop/toolbox/js/view/listOrders',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsOrdersPending',
+    'text!plugins/shop/toolbox/hbs/statsOrdersPending.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, CollectionOrdersTodays, ViewListOrders, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollectionOrdersTodays, ViewListOrders, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-success',
@@ -31,7 +32,7 @@ define([
         },
         render: function () {
             // render into panel body
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.handlebars(Utils.getHBSTemplateData(this)));
             this.$('.panel-body').html(this.viewList.$el);
             return this;
         }

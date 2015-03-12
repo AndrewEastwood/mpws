@@ -1,11 +1,12 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/model/trackingStatus',
     'utils',
-    'hbs!plugins/shop/site/hbs/trackingStatus',
+    'text!plugins/shop/site/hbs/trackingStatus.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (Backbone, ModelTrackingStatus, Utils, tpl, lang) {
+], function (Backbone, Handlebars, ModelTrackingStatus, Utils, tpl, lang) {
 
     var TrackingStatus = Backbone.View.extend({
         className: 'row shop-tracking-status',

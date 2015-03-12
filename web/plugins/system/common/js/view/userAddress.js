@@ -1,13 +1,14 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/system/common/js/model/userAddress',
     'utils',
     'bootstrap-alert',
-    'hbs!plugins/system/common/hbs/partials/userAddress',
+    'text!plugins/system/common/hbs/partials/userAddress.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
     'bootstrap-editable'
-], function (Backbone, ModelUserAddress, Utils, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelUserAddress, Utils, BSAlert, tpl, lang) {
 
     var UserAddress = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check

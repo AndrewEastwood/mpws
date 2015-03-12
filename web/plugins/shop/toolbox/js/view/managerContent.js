@@ -1,16 +1,17 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     'plugins/shop/toolbox/js/view/managerProducts',
     'plugins/shop/toolbox/js/view/filterPanelOrigins',
     'plugins/shop/toolbox/js/view/filterTreeCategories',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/managerContent',
+    'text!plugins/shop/toolbox/hbs/managerContent.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (_, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -87,7 +88,7 @@ define([
             // add expired and todays products
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
                 this.viewProductsList.grid.emptyText = $('<h4>').text(lang.managerContent.products.nodata);
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);

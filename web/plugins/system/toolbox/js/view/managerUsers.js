@@ -1,14 +1,15 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
     'plugins/system/toolbox/js/view/listUsers',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/system/toolbox/hbs/managerUsers',
+    'text!plugins/system/toolbox/hbs/managerUsers.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function (Backbone, Utils, ViewListUsers, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, Utils, ViewListUsers, BootstrapDialog, BSAlert, tpl, lang) {
 
     var ManagerUsers = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -42,7 +43,7 @@ define([
             // TODO:
             // add expired and todays orders
             if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
                 this.viewUsersList.grid.emptyText = $('<h4>').text(lang.managers.users.noData);
                 this.viewUsersList.render();
                 // show sub-view

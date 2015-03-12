@@ -1,11 +1,11 @@
 define([
-    'sandbox',
     'base/js/view/mView',
+    'handlebars',
     'plugins/system/common/js/model/user',
-    'hbs!plugins/system/site/hbs/userDelete',
+    'text!plugins/system/site/hbs/userDelete.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function (Sandbox, MView, ModelUserInstance, tpl, lang) {
+], function (MView, Handlebars, ModelUserInstance, tpl, lang) {
 
     var UserDelete = MView.extend({
         // tagName: 'li',

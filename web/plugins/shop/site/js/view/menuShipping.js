@@ -1,9 +1,10 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
     'bootstrap-dialog',
-    'hbs!plugins/shop/site/hbs/menuShipping'
-], function (Backbone, Utils, BootstrapDialog, tpl) {
+    'text!plugins/shop/site/hbs/menuShipping.hbs'
+], function (Backbone, Handlebars, Utils, BootstrapDialog, tpl) {
 
     var MenuShipping = Backbone.View.extend({
         tagName: 'li',

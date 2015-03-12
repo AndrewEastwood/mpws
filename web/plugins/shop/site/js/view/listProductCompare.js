@@ -1,12 +1,13 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/collection/listProductCompare',
     'utils',
-    'hbs!plugins/shop/site/hbs/listProductCompare',
+    'text!plugins/shop/site/hbs/listProductCompare.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, compareCollectionInstance, Utils, tpl, lang) {
+], function (Backbone, Handlebars, compareCollectionInstance, Utils, tpl, lang) {
 
     var ListProductCompare = Backbone.View.extend({
         collection: compareCollectionInstance,

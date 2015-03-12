@@ -1,13 +1,14 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'bootstrap-dialog',
     // 'plugins/shop/site/js/collection/listProductCart',
-    'hbs!plugins/shop/site/hbs/cartEmbedded',
+    'text!plugins/shop/site/hbs/cartEmbedded.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Utils, BootstrapDialog, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, BootstrapDialog, tpl, lang) {
 
     var CartEmbedded = Backbone.View.extend({
         className: 'btn-group shop-cart-embedded',

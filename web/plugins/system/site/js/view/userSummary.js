@@ -1,10 +1,11 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/system/site/hbs/userSummary',
+    'text!plugins/system/site/hbs/userSummary.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function (Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var UserSummary = Backbone.View.extend({
         // tagName: 'li',

@@ -1,19 +1,19 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     /* collection */
     "plugins/shop/toolbox/js/collection/listOrigins",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/buttonMenuOriginListItem',
+    'text!plugins/shop/toolbox/hbs/buttonMenuOriginListItem.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrigins, tplBtnMenuMainItem, lang) {
+], function (Backbone, Handlebars, Utils, Backgrid, CollectionOrigins, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
         // TODO: do smth to fetch states from server
@@ -29,7 +29,7 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    var btn = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
                     return btn;
                 }
             }

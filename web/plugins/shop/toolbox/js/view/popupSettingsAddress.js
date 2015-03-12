@@ -1,17 +1,17 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/popupSettingsAddress',
+    'text!plugins/shop/toolbox/hbs/popupSettingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     // 'base/js/components/x-bootstrap-wysihtml5'
-], function (Sandbox, Backbone, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
 
     var PopupSettingsAddress = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -119,7 +119,7 @@ define([
             var that = this,
                 tplData = Utils.getHBSTemplateData(this);
             tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
-            this.$el.html(tpl(tplData));
+            this.$el.html(this.template(tplData));
             // set up open hours editables
             this.$('#openhours .ediatble').editable(_.defaults({
                 emptytext: '00:00 - 00:00',

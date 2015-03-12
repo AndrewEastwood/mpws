@@ -1,13 +1,14 @@
 define([
     'jquery',
     'underscore',
+    'handlebars',
     'backbone',
     'auth',
     'utils',
-    'hbs!plugins/system/toolbox/hbs/signin',
+    'text!plugins/system/toolbox/hbs/signin.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function ($, _, Backbone, Auth, Utils, tpl, lang) {
+], function ($, _, Handlebars, Backbone, Auth, Utils, tpl, lang) {
 
     var SignIn = Backbone.View.extend({
         tagName: 'form',
@@ -40,7 +41,7 @@ define([
         render: function (auth_id, response) {
             this.extras = response;
             var data = Utils.getHBSTemplateData(this);
-            this.$el.html(tpl(data));
+            this.$el.html(this.template(data));
             return this;
         }
     });

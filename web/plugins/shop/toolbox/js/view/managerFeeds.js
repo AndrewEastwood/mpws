@@ -1,17 +1,17 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     'bootstrap-dialog',
     'plugins/shop/toolbox/js/view/feed',
     /* collection */
     "plugins/shop/toolbox/js/collection/feeds",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/managerFeeds',
+    'text!plugins/shop/toolbox/hbs/managerFeeds.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'image-upload',
-], function (Sandbox, Backbone, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
+], function (Backbone, Handlebars, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -31,7 +31,7 @@ define([
         },
         render: function () {
             var that = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.collection.each(function (feedModel) {
                 var feedView = new ViewFeed({model: feedModel});
                 feedView.render();

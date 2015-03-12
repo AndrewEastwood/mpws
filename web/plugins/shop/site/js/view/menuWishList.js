@@ -1,10 +1,10 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/collection/listProductWish',
     'utils',
-    'hbs!plugins/shop/site/hbs/menuWishList'
-], function (Sandbox, Backbone, wishCollectionInstance, Utils, tpl) {
+    'text!plugins/shop/site/hbs/menuWishList.hbs'
+], function (Backbone, Handlebars, wishCollectionInstance, Utils, tpl) {
 
     var MenuWishList = Backbone.View.extend({
         tagName: 'li',

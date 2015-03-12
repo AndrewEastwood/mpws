@@ -1,16 +1,17 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/common/js/collection/settings',
     'plugins/shop/toolbox/js/view/popupSettingsAddress',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settingsAddress',
+    'text!plugins/shop/toolbox/hbs/settingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-switch'
-], function (Backbone, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-addresses",
@@ -34,7 +35,7 @@ define([
             this.listenTo(this.collection, 'sync', this.render);
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             return this;
         },

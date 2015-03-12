@@ -1,18 +1,19 @@
 define([
     'backbone',
     'underscore',
+    'handlebars',
     'plugins/shop/site/js/view/productItemShort',
     'plugins/shop/site/js/model/product',
     'utils',
     'bootstrap-dialog',
-    'hbs!plugins/shop/site/hbs/productItemFull',
+    'text!plugins/shop/site/hbs/productItemFull.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     /* enhanced ui */
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (Backbone, _, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
+], function (Backbone, _, Handlebars, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
 
     var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',

@@ -1,11 +1,12 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/listExchangeRates',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settingsExchangeRates',
+    'text!plugins/shop/toolbox/hbs/settingsExchangeRates.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'select2',
@@ -68,7 +69,7 @@ define([
                     text: item
                 };
             });
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.editable').editable(this.options.editableOptions.rate)
                 .on('save', this.updateExchangeRate)
                 .on('shown', this.hideSaveButton)

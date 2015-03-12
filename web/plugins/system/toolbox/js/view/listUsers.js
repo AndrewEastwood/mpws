@@ -1,12 +1,12 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     /* collection */
     "plugins/system/toolbox/js/collection/listUsers",
     /* template */
-    'hbs!plugins/system/toolbox/hbs/buttonMenuUserListItem',
+    'text!plugins/system/toolbox/hbs/buttonMenuUserListItem.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     /* extensions */
@@ -14,7 +14,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionUsers, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Handlebars, Utils, Backgrid, CollectionUsers, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw

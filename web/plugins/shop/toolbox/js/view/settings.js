@@ -1,6 +1,6 @@
 define([
-    'sandbox',
     'underscore',
+    'handlebars',
     'backbone',
     'utils',
     'cachejs',
@@ -14,13 +14,13 @@ define([
     'plugins/shop/toolbox/js/view/settingsExchangeRatesDisplay',
     'plugins/shop/toolbox/js/view/widgetPrivatBankExchangerates',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settings',
+    'text!plugins/shop/toolbox/hbs/settings.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     'jquery.maskedinput',
     'bootstrap-switch'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,
+], function (_, Backbone, Handlebars, Utils, Cache, ViewSettingsAlerts,
     ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress,
     ViewSettingsProduct, ViewSettingsSEO, ViewExchangeRates, ViewExchangeRatesDisplay, ViewWidgetPrivatBankExchageRates, tpl, lang) {
 
@@ -51,7 +51,7 @@ define([
             // add expired and todays products
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
                 this.$('.shop-settings-alerts').html(this.viewAlerts.$el);
                 this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
                 this.$('.website-form-order').html(this.viewWebsiteFormOrder.$el);

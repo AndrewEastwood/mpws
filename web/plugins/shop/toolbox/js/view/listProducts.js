@@ -1,13 +1,13 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     "formatter-price",
     /* collection */
     "plugins/shop/toolbox/js/collection/listProducts",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/buttonMenuProductListItem',
+    'text!plugins/shop/toolbox/hbs/buttonMenuProductListItem.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
@@ -15,7 +15,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, priceFmt, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -54,7 +54,7 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    var btn = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
                     var dnd = $('<span class="dndrow"><i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i></span>');
                     return [dnd, btn];
                 }

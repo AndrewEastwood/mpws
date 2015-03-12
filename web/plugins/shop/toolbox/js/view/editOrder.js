@@ -1,16 +1,16 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/model/order',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/editOrder',
+    'text!plugins/shop/toolbox/hbs/editOrder.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable'
-], function (Sandbox, Backbone, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitleByStatus (status) {
         switch (status) {
@@ -63,7 +63,7 @@ define([
                 closable: false,
                 draggable: false,
                 title: _getTitleByStatus(that.model.get('Status')),
-                message: $(tpl(tplData)),
+                message: $(this.template(tplData)),
                 buttons: [{
                     label: "Надіслати фактуру",
                     cssClass: 'hidden',

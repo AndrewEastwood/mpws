@@ -1,12 +1,13 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/collection/listProductWish',
     'utils',
-    'hbs!plugins/shop/site/hbs/listProductWish',
+    'text!plugins/shop/site/hbs/listProductWish.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, wishCollectionInstance, Utils, tpl, lang) {
+], function (Backbone, Handlebars, wishCollectionInstance, Utils, tpl, lang) {
 
     var ListProductWish = Backbone.View.extend({
         collection: wishCollectionInstance,

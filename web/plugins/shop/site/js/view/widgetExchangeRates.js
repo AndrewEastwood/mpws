@@ -1,13 +1,14 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     /* template */
-    'hbs!plugins/shop/site/hbs/widgetExchangeRates',
+    'text!plugins/shop/site/hbs/widgetExchangeRates.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Utils, Cache, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Cache, tpl, lang) {
 
     var WidgetExchangeRates = Backbone.View.extend({
         className: 'btn-group exchange-rates-widget',

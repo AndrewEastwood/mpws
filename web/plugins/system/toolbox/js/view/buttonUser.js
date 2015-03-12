@@ -1,12 +1,12 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'auth',
     'utils',
-    'hbs!plugins/system/toolbox/hbs/buttonUser',
+    'text!plugins/system/toolbox/hbs/buttonUser.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function (Sandbox, Backbone, Auth, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Auth, Utils, tpl, lang) {
 
     var ButtonUser = Backbone.View.extend({
         tagName: 'li',
@@ -20,7 +20,7 @@ define([
             if (this.model.isEmpty())
                 this.remove();
             else
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         }
     });
 

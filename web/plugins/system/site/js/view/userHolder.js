@@ -1,11 +1,11 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/system/site/hbs/userHolder',
+    'text!plugins/system/site/hbs/userHolder.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function (Sandbox, Backbone, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var AccountProfile = Backbone.View.extend({
         // viewName: 'AccountProfile',

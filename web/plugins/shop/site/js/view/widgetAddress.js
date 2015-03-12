@@ -1,15 +1,16 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'cachejs',
     /* collection */
     'plugins/shop/common/js/collection/settings',
     /* template */
-    'hbs!plugins/shop/site/hbs/widgetAddress',
+    'text!plugins/shop/site/hbs/widgetAddress.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Utils, Cache, CollectionSettings, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Cache, CollectionSettings, tpl, lang) {
 
     var WidgetAddress = Backbone.View.extend({
         className: 'address-widget',

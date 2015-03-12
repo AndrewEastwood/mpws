@@ -1,19 +1,20 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/common/js/collection/settings',
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/settingsExchangeRatesDisplay',
-    'hbs!base/hbs/animationFacebook',
+    'text!plugins/shop/toolbox/hbs/settingsExchangeRatesDisplay.hbs',
+    'text!base/hbs/animationFacebook.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'select2',
     'bootstrap-editable',
     'bootstrap-switch'
-], function (Backbone, CollectionSettings, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, tplFBAnim, lang) {
+], function (Backbone, Handlebars, CollectionSettings, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, tplFBAnim, lang) {
 
     function notifySystemWithNewCurrencyFormatsFn (completed) {
         if (completed)
@@ -58,7 +59,7 @@ define([
         render: function () {
             var that = this,
                 tplData = Utils.getHBSTemplateData(this);
-            this.$el.html(tpl(tplData));
+            this.$el.html(this.template(tplData));
             this.$('.list-group .js-editable-format').editable(this.options.editableOptions);
             this.$('.list-group .js-editable-label').editable(this.options.editableOptions);
             // this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);

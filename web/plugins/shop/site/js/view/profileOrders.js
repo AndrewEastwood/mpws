@@ -1,11 +1,12 @@
 define([
+    'handlebars',
     'base/js/view/mView',
     'plugins/shop/site/js/model/profileOrders',
-    'hbs!plugins/shop/site/hbs/profileOrders',
+    'text!plugins/shop/site/hbs/profileOrders.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie',
-], function (MView, ModelProfileOrders, tpl, lang) {
+], function (Handlebars, MView, ModelProfileOrders, tpl, lang) {
 
     var ProfileOrders = MView.extend({
         className: 'row shop-profile-orders',

@@ -1,12 +1,13 @@
 define([
     'underscore',
     'backbone',
+    'handlebars',
     'utils',
     'handlebars',
-    'hbs!plugins/shop/site/hbs/productItemShort',
+    'text!plugins/shop/site/hbs/productItemShort.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Utils, Handlebars, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Handlebars, tpl, lang) {
 
     // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
     //     return opts.fn(data._origin.Name + ' ' + data.Model);

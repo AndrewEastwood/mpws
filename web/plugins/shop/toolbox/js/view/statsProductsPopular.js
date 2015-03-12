@@ -1,14 +1,15 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/statsProductsPopular',
     'plugins/shop/toolbox/js/view/listProducts',
     'formatter-price',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsProductsPopular',
+    'text!plugins/shop/toolbox/hbs/statsProductsPopular.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, CollectionProductsPopular, ViewListProducts, priceFmt, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollectionProductsPopular, ViewListProducts, priceFmt, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -48,7 +49,7 @@ define([
             this.viewList.grid.emptyText = "Немає популярних товарів";
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.panel-body').html(this.viewList.$el);
             return this;
         }

@@ -1,9 +1,10 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/site/js/model/menuCatalog',
     'utils',
-    'hbs!plugins/shop/site/hbs/menuCatalog'
-], function (Backbone, modelCatalogStructureMenu, Utils, tpl) {
+    'text!plugins/shop/site/hbs/menuCatalog.hbs'
+], function (Backbone, Handlebars, modelCatalogStructureMenu, Utils, tpl) {
 
     var MenuCatalog = Backbone.View.extend({
         tagName: 'li',

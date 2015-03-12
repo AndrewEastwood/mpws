@@ -1,8 +1,9 @@
 define([
     'backbone',
+    'handlebars',
     'utils',
-    'hbs!plugins/shop/site/hbs/orderTrackingButton'
-], function (Backbone, Utils, tpl) {
+    'text!plugins/shop/site/hbs/orderTrackingButton.hbs'
+], function (Backbone, Handlebars, Utils, tpl) {
 
     var TrackingButton = Backbone.View.extend({
         className: 'btn-group shop-order-tracking-button',

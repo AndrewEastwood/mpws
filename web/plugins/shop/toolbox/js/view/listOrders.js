@@ -1,20 +1,20 @@
 define([
-    'sandbox',
     'backbone',
+    'handlebars',
     'utils',
     "backgrid",
     "formatter-price",
     /* collection */
     "plugins/shop/toolbox/js/collection/listOrders",
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/buttonMenuOrderListItem',
+    'text!plugins/shop/toolbox/hbs/buttonMenuOrderListItem.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, priceFmt, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
         // we show following statuses only
@@ -32,7 +32,7 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    var btn = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
                     return btn;
                 }
             }

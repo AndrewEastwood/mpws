@@ -1,13 +1,14 @@
 define([
     'backbone',
+    'handlebars',
     'plugins/shop/toolbox/js/collection/statsProductsNonPopular',
     'plugins/shop/toolbox/js/view/listProducts',
     'utils',
     /* template */
-    'hbs!plugins/shop/toolbox/hbs/statsProductsNonPopular',
+    'text!plugins/shop/toolbox/hbs/statsProductsNonPopular.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation'
-], function (Backbone, CollectionProductsNonPopular, ViewListProducts, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollectionProductsNonPopular, ViewListProducts, Utils, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -27,7 +28,7 @@ define([
             this.viewList.grid.emptyText = "Немає не популярних товарів";
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
