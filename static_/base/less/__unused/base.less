@@ -1,0 +1,93 @@
+/* = start default [base.css] = */
+
+@import "mpws-vars.less";
+@import "bootstrap/bootstrap";
+@import "fuelux/fuelux";
+@import "fontawesome/font-awesome";
+
+/* page components */
+.MPWSPageBody {padding: 10px;}
+.MPWSPageHeader .MPWSBlockLeft {display: none;}
+
+body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background: url('@{imgBasePath}bg.png');
+    font-family: "Open Sans", Arial, sans-serif;
+}
+
+footer {
+    padding-top: 40px;
+    margin-top: 40px;
+    border-top: 1px solid #DEDEDE;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+.MPWSLayout {
+    max-width: 1210px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    background: rgba(0, 0, 0, 0.1);
+    .MPWSWidgetsTop {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding-right: 10px;
+        text-align: right;
+    }
+}
+
+.list-group > a.disabled {
+    color: #999999;
+}
+
+.list-group > a.disabled:hover,
+.list-group > a.disabled:focus {
+    color: #999999;
+    text-decoration: none;
+    cursor: not-allowed;
+}
+
+.splitter-vertical {}
+
+.helper {
+    cursor: pointer;
+}
+
+.visible-onhover {
+    opacity: 0.1;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.animated { 
+    -webkit-animation-duration: 0.5s; 
+    animation-duration: 0.5s; 
+    -webkit-animation-fill-mode: both; 
+    animation-fill-mode: both; 
+    -webkit-animation-timing-function: ease-in; 
+    animation-timing-function: ease-in; 
+} 
+
+@-webkit-keyframes pulse { 
+    0% { -webkit-transform: scale(1); } 
+    25% { -webkit-transform: scale(1.1); } 
+    50% { -webkit-transform: scale(1); } 
+    75% { -webkit-transform: scale(1.1); } 
+    100% { -webkit-transform: scale(1); } 
+} 
+@keyframes pulse { 
+    0% { transform: scale(1); } 
+    25% { -webkit-transform: scale(1.1); } 
+    50% { -webkit-transform: scale(1); } 
+    75% { -webkit-transform: scale(1.1); } 
+    100% { transform: scale(1); } 
+} 
+.pulse { 
+    -webkit-animation-name: pulse; 
+    animation-name: pulse; 
+}
+
+/* = end default [base.css] = */

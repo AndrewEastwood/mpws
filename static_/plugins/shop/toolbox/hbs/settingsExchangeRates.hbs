@@ -1,0 +1,32 @@
+<div class="panel-heading">
+    <i class="fa fa-plus fa-fw add-currency text-info"></i> Обмін валют
+</div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+    {{#if data}}
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item currency" data-id="{{ID}}">
+            <i class="fa fa-times fa-fw text-danger remove-currency"></i>
+            <span class="currency-text currency-a">{{CurrencyA}}</span>
+            <i class="fa fa-arrow-right fa-fw"></i>
+            <span class="rate-value rate editable" data-name="Rate">{{currency Rate}}</span>
+            <span class="currency-text currency-b">{{CurrencyB}}</span>
+        </a>
+    {{/each}}
+    </div>
+    {{else}}
+    <div class="label label-default label-no-data">Немає даних</div>
+    <div class="list-group hidden"></div>
+    {{/if}}
+</div>
+<!-- /.panel-body -->
+<a href="javascript://" class="list-group-item currency is-new currency-template hidden">
+    <ul class="list errors hidden"></ul>
+    <i class="fa fa-times fa-fw text-danger remove-currency"></i>
+    <span class="currency-text currency-a editable-select2"></span>
+    <i class="fa fa-arrow-right fa-fw"></i>
+    <span class="rate-input rate editable"></span>
+    <span class="currency-text currency-b editable-select2"></span>
+    <button type="button" class="btn btn-success btn-xs pull-right create-currency">Зберегти</button>
+</a>

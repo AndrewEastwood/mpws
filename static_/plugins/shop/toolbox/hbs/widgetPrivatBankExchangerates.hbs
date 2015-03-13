@@ -1,0 +1,21 @@
+<div class="panel-heading">
+    <i class="fa fa-money fa-fw"></i>
+    Курс валют від ПриватБанк
+</div>
+<div class="panel-body">
+    <div class="list-group">
+        <a href="javascript://" class="list-group-item header">
+            <span class="name">Валюта</span>
+            <span class="buy">Купівля</span>
+            <span class="sale">Продаж</span>
+        </a>
+    {{#each data}}
+        <a href="javascript://" class="list-group-item {{ccy}}">
+            <span class="name">{{ccy}}/{{base_ccy}}</span>
+            <span class="buy">{{buy}}</span>
+            <span class="sale">{{sale}}</span>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->

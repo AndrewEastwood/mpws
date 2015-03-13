@@ -1,0 +1,15 @@
+<!-- Single button -->
+<a href="{{bb_link instances.system.urls.userEdit id=data.ID asRoot=true}}">
+    <i class="fa fa-pencil fa-fw"></i>
+</a>
+{{#unless data.isCurrent}}
+{{#unless data.isBlocked}}
+<a href="javascript://" class="js-user-remove" data-id="{{data.ID}}">
+    <i class="fa fa-trash-o fa-fw text-danger"></i>
+</a>
+{{else}}
+<a href="javascript://" class="js-user-restore" data-id="{{data.ID}}">
+    <i class="fa fa-undo fa-fw text-warning"></i>
+</a>
+{{/unless}}
+{{/unless}}

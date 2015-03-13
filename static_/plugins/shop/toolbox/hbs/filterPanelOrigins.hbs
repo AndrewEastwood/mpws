@@ -1,0 +1,29 @@
+<div class="panel-heading">
+    <a href="{{bb_link instances.shop.urls.originCreate id=data.ID asRoot=true}}">
+        <i class="fa fa-plus fa-fw"></i>
+    </a>
+    {{lang.pluginMenu_Origins_Grid_Title}}
+</div>
+<div class="panel-body">
+    <p class="text-muted">
+        <small>Виберіть виробника для фільтрування списку товарів</small>
+    </p>
+    <label class="text-danger">
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked="checked"{{/if}}>
+        <small>Враховувати видалені</small>
+    </label>
+    <div class="filter-list-origins">
+        {{#each data}}
+        <div class="checkbox origin-item{{#if _isRemoved}} removed{{/if}}">
+            <label class="{{#if _isRemoved}}text-danger{{/if}}"> <input type="checkbox" class="shop-filter-origin" id="{{ID}}">{{Name}}</label>
+            {{{contextButton}}}
+            {{#if HomePage}}
+            <span class="pull-right">
+                <em><small><span class="label-datecreated">{{DateCreated}}</span></small></em>
+                <em><small><a href="{{HomePage}}" class="origin-homepage" target="_blank"><i class="fa fa-globe"></i></a></small></em>
+            </span>
+            {{/if}}
+        </div>
+        {{/each}}
+    </div>
+</div>

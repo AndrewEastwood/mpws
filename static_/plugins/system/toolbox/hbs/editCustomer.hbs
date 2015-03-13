@@ -1,0 +1,95 @@
+<div id="progress" class="progress">
+    <div class="progress-bar progress-bar-success"></div>
+</div>
+<div class="panel">
+    <form class="form-horizontal">
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.editors.customer.errors.title}}
+            <ol class="errors">
+                {{#each data.errors}}
+                {{#each this}}
+                <li>{{mpwsGetValueByKey ../../lang.editors.customer.errors key=this prefix=""}}</li>
+                {{/each}}
+                {{/each}}
+            </ol>
+        </div>
+        {{/mpwsIsNotEmpty}}
+        <fieldset>
+            
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">{{lang.editors.customer.labelHostName}}</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control input-md js-hostname" value="{{data.HostName}}">
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelHomePage}}</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control input-md js-homepage" value="{{data.HomePage}}">
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelTitle}}</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control input-md js-title" value="{{data.Title}}">
+                </div>
+            </div>
+            <!-- Select Basic -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="parent">{{lang.editors.customer.labelAdminTitle}}</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control input-md js-admintitle" value="{{data.AdminTitle}}">
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelLogo}}</label>
+                <div class="col-md-6">
+                    <div class="upload-errors"></div>
+                    <div class="upload-wrapper">
+                        <span class="btn fileinput-button">
+                        <i class="fa fa-upload text-success"></i>
+                        <i class="fa fa-warning text-danger"></i>
+                        <!-- The file input field used as target for the file upload widget -->
+                        <input id="logo" type="hidden" class="file-name js-file1" value="{{data.Logo.name}}" data-original="{{data.Logo.name}}">
+                        <input id="logo-image" class="temp-upload-image" type="file" name="files">
+                        {{#if data.Logo}}<img src="{{data.Logo.xs}}" class="uploaded-image" alt="{{data.Name}}">{{/if}}
+                        <span class="preview-image"></span>
+                        </span>
+                        <i class="fa fa-times fa-fw text-danger del-image"></i>
+                        <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelLang}}</label>
+                <div class="col-md-6">
+                    <input class="form-control input-md js-lang" value="{{data.Lang}}">
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelLocale}}</label>
+                <div class="col-md-6">
+                    <input class="form-control input-md js-locale" value="{{data.Locale}}">
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.labelProtocol}}</label>
+                <div class="col-md-6">
+                    <input class="form-control input-md js-protocol" value="{{data.Protocol}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.editors.customer.plugins.title}}</label>
+                <div class="checkbox col-md-6 js-plugins plugins-list"></div>
+            </div>
+        </fieldset>
+    </form>
+</div>

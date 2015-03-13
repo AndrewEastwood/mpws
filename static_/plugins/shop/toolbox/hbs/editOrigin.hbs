@@ -1,0 +1,45 @@
+<div class="panel">
+    <form class="form-horizontal">
+
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.shopping_cart_error_title}}
+            <ol class="errors">
+            {{#each data.errors}}
+                {{#each this}}
+                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
+                {{/each}}
+            {{/each}}
+            </ol>
+        </div>
+        {{/mpwsIsNotEmpty}}
+
+        <fieldset>
+
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_Name}}</label>
+          <div class="col-md-4">
+            <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_Description}}</label>
+          <div class="col-md-4">
+            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+          </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_HomePage}}</label>
+          <div class="col-md-4">
+            <input id="homepage" name="HomePage" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.HomePage}}">
+          </div>
+        </div>
+
+        </fieldset>
+    </form>
+</div>

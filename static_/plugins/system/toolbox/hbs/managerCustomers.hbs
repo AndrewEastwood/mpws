@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{bb_link instances.system.urls.customerCreate asRoot=true}}">
+                    <i class="fa fa-plus fa-fw"></i>
+                </a>
+                {{lang.managers.customers.title}}
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-tabs-plugin-system-customers">
+                        <li class="tab-link customers-active">
+                            <a href="{{bb_link instances.system.urls.customersListByStatus status="ACTIVE" asRoot=true}}">
+                                <i class="fa fa-check-circle"></i>
+                                {{lang.customer.statuses.ACTIVE}}
+                            </a>
+                        </li>
+                        <li class="tab-link customers-removed">
+                            <a href="{{bb_link instances.system.urls.customersListByStatus status="REMOVED" asRoot=true}}">
+                                <i class="fa fa-trash-o"></i>
+                                {{lang.customer.statuses.REMOVED}}
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div class="tab-pane active customer-list"></div>
+                    </div>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>

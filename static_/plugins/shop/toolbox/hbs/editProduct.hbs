@@ -1,0 +1,233 @@
+<div id="progress" class="progress">
+    <div class="progress-bar progress-bar-success"></div>
+</div>
+<div class="panel">
+    {{#mpwsIsNotEmpty data.errors }}
+    <div id="msg" class="alert alert-danger">
+        {{lang.shopping_cart_error_title}}
+        <ul class="errors">
+        {{#each data.errors}}
+            <li>
+                <strong>
+                    {{mpwsGetValueByKey ../lang key=@key prefix="popup_product_error_atField_"}}
+                </strong>
+                <ul>
+                {{#each this}}
+                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="popup_product_error_"}}</li>
+                {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+        </ul>
+    </div>
+    {{/mpwsIsNotEmpty}}
+    {{#if data.ID }}
+    <input name="ID" type="hidden" value="{{data.ID}}">
+    {{/if}}
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal">
+                <fieldset>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="category">{{lang.popup_product_section_details_filed_CategoryID}}</label>
+                        <div class="col-md-8">
+                            <input id="category" name="category" type="hidden" class="form-control input-md" value="{{data.CategoryID}}">
+                        </div>
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="origin">{{lang.popup_product_section_details_filed_OriginID}}</label>
+                        <div class="col-md-8">
+                            <input id="origin" name="origin" type="hidden" class="form-control input-md" value="{{data.OriginID}}">
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="name">{{lang.popup_product_section_details_filed_Name}}</label>
+                        <div class="col-md-8">
+                            <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="model">{{lang.popup_product_section_details_filed_Model}}</label>
+                        <div class="col-md-8">
+                            <input id="model" name="Model" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Model}}">
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_filed_Price}}</label>
+                        <div class="col-md-8">
+                            <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
+                        </div>
+                    </div>
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="description">{{lang.popup_product_section_details_filed_Description}}</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="ispromo"></label>
+                        <div class="col-md-8">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="IsPromo" id="ispromo" {{#if data.IsPromo}}checked="checked"{{/if}}>
+                                {{lang.popup_product_section_details_filed_IsPromo}}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="form-horizontal">
+                <fieldset>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <div class="col-md-12 uploads">
+                            <div class="upload-errors"></div>
+                            <div class="upload-wrapper">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="file1" type="hidden" class="file-name" value="{{data.Images.[0].name}}" data-original="{{data.Images.[0].name}}">
+                                    <input id="product-image-1" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Images.[0]}}<img src="{{data.Images.[0].xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                            </div>
+                            <div class="upload-wrapper">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="file2" type="hidden" class="file-name" value="{{data.Images.[1].name}}" data-original="{{data.Images.[1].name}}">
+                                    <input id="product-image-2" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Images.[1]}}<img src="{{data.Images.[1].xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                            </div>
+                            <div class="upload-wrapper">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="file3" type="hidden" class="file-name" value="{{data.Images.[2].name}}" data-original="{{data.Images.[2].name}}">
+                                    <input id="product-image-3" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Images.[2]}}<img src="{{data.Images.[2].xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                            </div>
+                            <div class="upload-wrapper">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="file4" type="hidden" class="file-name" value="{{data.Images.[3].name}}" data-original="{{data.Images.[3].name}}">
+                                    <input id="product-image-4" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Images.[3]}}<img src="{{data.Images.[3].xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                            </div>
+                            <div class="upload-wrapper">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="file5" type="hidden" class="file-name" value="{{data.Images.[4].name}}" data-original="{{data.Images.[4].name}}">
+                                    <input id="product-image-5" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Images.[4]}}<img src="{{data.Images.[4].xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_filed_Tags}}</span>
+                                <input id="tags" name="Tags" type="text" class="form-control" value="{{data.Attributes.TAGS}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_filed_ISBN}}</span>
+                                <input id="isbn" name="ISBN" type="text" class="form-control" value="{{data.Attributes.ISBN}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_filed_Warranty}}</span>
+                                <input id="warranty" name="Warranty" type="text" class="form-control" value="{{data.Attributes.Warranty}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11 features">
+                            <fieldset>
+                                <legend>
+                                    <i class="fa fa-plus text-success fa-fw add-feature"></i>
+                                    {{lang.popup_product_section_details_filed_Features}}
+                                </legend>
+                                {{#each data.Features}}
+                                <div class="feature-template multiple-form-group input-group feature-item">
+                                    <i class="fa fa-times text-danger fa-fw remove-feature"></i>
+                                    <div class="input-group-btn">
+                                        <div class="wrapper">
+                                            <button type="button" class="btn btn-link button-label"><span class="concept">{{@key}}</span></button>
+                                            <button type="button" class="btn btn-link dropdown-toggle hidden" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu feature-types hidden" role="menu">
+                                                {{#each ../extras.featureTypes}}
+                                                <li><a href="javascript://" class="feature-type">{{this}}</a></li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control features-list typeahead" name="{{@key}}">
+                                </div>
+                                {{/each}}
+                            </fieldset>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hidden">
+    <div class="feature-template multiple-form-group input-group feature-item">
+        <i class="fa fa-times text-danger fa-fw remove-feature"></i>
+        <div class="input-group-btn">
+            <div class="wrapper">
+                <button type="button" class="btn btn-link button-label"><span class="concept">немає</span></button>
+                <button type="button" class="btn btn-link dropdown-toggle hidden" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu feature-types hidden" role="menu">
+                    {{#each extras.featureTypes}}
+                    <li><a href="javascript://" class="feature-type">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <input type="text" class="form-control features-list typeahead" name="" value="">
+    </div>
+</div>

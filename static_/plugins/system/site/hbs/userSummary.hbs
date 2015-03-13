@@ -1,0 +1,50 @@
+<div class="well">
+    <h3>{{lang.profile_page_overview_title}}</h3>
+    <table class="table table-bordered table-striped">
+        <tbody> 
+            <tr>
+                <td width="20%">{{lang.profile_page_edit_field_firstName}}</td>
+                <td>{{data.FirstName}}</td>
+            </tr>
+            <tr>
+                <td>{{lang.profile_page_edit_field_lastName}}</td>
+                <td>{{data.LastName}}</td>
+            </tr>
+            <tr>
+                <td>{{lang.profile_page_edit_field_email}}</td>
+                <td>{{data.EMail}}</td>
+            </tr>
+            <tr>
+                <td>{{lang.profile_page_edit_field_phone}}</td>
+                <td>{{data.Phone}}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{#if data.addresses }}
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{lang.profile_page_overview_section_addresses_title}}</div>
+            <div class="panel-body">
+                {{#each data.addresses }}
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td width="20%">{{../../lang.profile_page_addresses_Address}}</td>
+                        <td>{{Address}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{../../lang.profile_page_addresses_POBox}}</td>
+                        <td>{{POBox}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{../../lang.profile_page_addresses_Country}}</td>
+                        <td>{{Country}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{../../lang.profile_page_addresses_City}}</td>
+                        <td>{{City}}</td>
+                    </tr>
+                </table>
+                {{/each}}
+            </div>
+        </div>
+    {{/if}}
+</div>

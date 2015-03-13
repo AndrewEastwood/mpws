@@ -1,0 +1,103 @@
+{{#if data.success }}
+    <button type="button" class="btn btn-default">
+        <i class="fa fa-shopping-cart fa-fw"></i> Ваш кошик порожній
+    </button>
+{{else}}
+    {{#if data.info.productCount }}
+    <button type="button" class="btn btn-default open-shopping-cart-embedded">
+        <i class="fa fa-shopping-cart fa-fw"></i>
+        {{data.info.productCount}}шт. у кошику
+        <span class="caret"></span>
+    </button>
+    <!-- Modal -->
+    <div class="shopping-cart-embedded hidden">
+        {{#if data.info.hasPromo }}
+            {{#unless data.info.allProductsWithPromo }}
+            <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+                <i class="fa fa-exclamation-circle fa-fw"></i>Не на всі товари діє знижка <strong>{{data.promo.Discount}}<span class="percentType">%</span></strong>
+            </div>
+            {{/unless}}
+        {{/if}}
+        <div class="shop-widget-productlist">
+        {{#each data.items }}
+            <div class="wrapper">
+                <div class="product-row">
+                    {{#if ../data.info.hasPromo}}
+                        {{#unless ../../data.info.allProductsWithPromo}}
+                            {{#if ../../IsPromo }}
+                                <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                            {{else}}
+                                <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                            {{/if}}
+                        {{/unless}}
+                    {{/if}}
+                    <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                    <div class="shop-product-image shop-product-image-main">
+                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                            <div class="image productimage noimage image_{{ID}}">
+                                {{#if Images.[0].xs}}
+                                {{>animSpinnerFB}}
+                                {{/if}}
+                            </div>
+                            {{#if Images.[0].xs}}
+                            <script>
+                            (function() {
+                                require(["image!{{Images.[0].xs}}"], function(img){
+                                    img.title = "{{Name}}";
+                                    img.className = "image img-responsive";
+                                    $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                            })();
+                            </script>
+                            {{/if}}
+                        </a>
+                    </div>
+                    <span class="product-name">
+                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                    </span>
+                    {{#each _prices.others}}
+                        <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                    {{/each}}
+                    {{#if _promoIsApplied}}
+                    <span class="label label-success">- {{_promo.Discount}}%</span>
+                    {{/if}}
+                    <span class="label label-default">x</span>
+                    <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
+                    <span class="label label-default">=</span>
+                    {{#each _totalSummary._totals}}
+                        <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
+        </div>
+        <div class="well cartInfo">
+            <div class="shopCartSubTotal">
+                <span class="value-prefix">Сума:</span>
+                {{#each data.totalSummary._subs}}
+                    <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+            </div>
+            {{#if data.info.hasPromo }}
+            <div class="shopCartDiscount">
+                <span class="value-prefix">Знижка:</span>
+                <span class="value"><strong>{{promo.Discount}}<span class="percentType">%</span></strong></span>
+                <sub class="promocode">Ваш промокод <b>{{promo.Code}}</b> діє до <b>{{promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+            </div>
+            {{/if}}
+            <div class="shopCartTotal">
+                <span class="value-prefix">До оплати:</span>
+                {{#each data.totalSummary._totals}}
+                    <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <button type="button" class="btn btn-default">
+        <i class="fa fa-shopping-cart fa-fw"></i>Ваш кошик порожній
+    </button>
+    {{/if}}
+{{/if}}

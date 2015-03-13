@@ -1,0 +1,92 @@
+{{#gt extras.addressCount 1}}
+<div class="btn-group address-switcher">
+    <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="shoptitle">
+            {{extras.activeAddress.ShopName}}
+        </span>
+        <span class="caret"></span>
+    </span>
+    <ul class="dropdown-menu" role="menu">
+        {{#each data}}
+        <li class="address-option" data-ref="{{ID}}">
+            <a href="javascript://">
+                <div itemprop="name">{{ShopName}}</div>
+                <link itemprop="url" content="{{../../app.location.protocol}}//{{../../app.location.host}}" />
+            </a>
+        </li>
+        {{/each}}
+    </ul>
+</div>
+{{/gt}}
+{{#each data}}
+<div itemscope itemtype="http://schema.org/Organization">
+    <div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{ID}}">
+        {{#is ../extras.addressCount 1}}
+        <div itemprop="name">{{ShopName}}</div>
+        <link itemprop="url" content="{{../../app.location.protocol}}//{{../../app.location.host}}" />
+        {{/is}}
+        <div>
+            {{#if MapUrl}}
+                <a href="{{MapUrl}}" target="_blank"><i class="fa fa-map-marker fa-fw"></i></a>
+            {{/if}}
+            {{#ifAny AddressLine1 AddressLine2 AddressLine3}}
+            <div class="block addresses" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+            {{#if AddressLine1}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1}}</span>{{/if}}
+            {{#if AddressLine2}}<span class="addressLine addressLine2" itemprop="addressLocality">{{AddressLine2}}</span>{{/if}}
+            {{#if AddressLine3}}<span class="addressLine addressLine3" itemprop="addressRegion">{{AddressLine3}}</span>{{/if}}
+            </div>
+            {{/ifAny}}
+            <div class="block openHours btn-group">
+                <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Сьогодні: {{OpenHoursToday}}
+                    <span class="caret"></span>
+                </span>
+                <ul class="dropdown-menu" role="menu">
+                {{#each OpenHoursMap}}
+                    <li{{#if isToday}} class="active"{{/if}}><a href="javascript://"><span class="dayname">{{dayShort}}:</span> {{hours}}</a></li>
+                {{/each}}
+                </ul>
+            </div>
+            {{#ifAny SocialFacebook SocialTwitter SocialLinkedIn SocialGooglePlus}}
+            <div class="block social">
+            {{#if SocialFacebook}}
+                <a href="{{SocialFacebook}}" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
+            {{/if}}
+            {{#if SocialTwitter}}
+                <a href="{{SocialTwitter}}" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+            {{/if}}
+            {{#if SocialLinkedIn}}
+                <a href="{{SocialLinkedIn}}" target="_blank"><i class="fa fa-fw fa-linkedin"></i></a>
+            {{/if}}
+            {{#if SocialGooglePlus}}
+                <a href="{{SocialGooglePlus}}" target="_blank"><i class="fa fa fa-fw-google-plus"></i></a>
+            {{/if}}
+            </div>
+        {{/ifAny}}
+        </div>
+        {{#or ActivePhones PhoneHotline}}
+        <div class="button-phones btn-group clearfix">
+            <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                {{#if PhoneHotline}}
+                <span class="hotline text-danger"><b>{{PhoneHotline}}</b></span>
+                {{else}}
+                {{#each_upto PhonesMap 1}}
+                <span class="preffix">{{label}}:</span> <span class="contact">{{value}}</span>
+                {{/each_upto}}
+                {{/if}}
+                {{#gt ../ActivePhones 1}}
+                <span class="caret"></span>
+                {{/gt}}
+            </span>
+            {{#gt ../ActivePhones 1}}
+            <ul class="dropdown-menu" role="menu">
+                {{#each PhonesMap}}
+                <li><a href="javascript://"><span class="preffix">{{label}}:</span> <span class="contact" itemprop="telephone">{{value}}</span></a></li>
+                {{/each}}
+            </ul>
+            {{/gt}}
+        </div>
+        {{/or}}
+    </div>
+</div>
+{{/each}}

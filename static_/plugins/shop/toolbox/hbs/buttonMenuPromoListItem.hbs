@@ -1,0 +1,8 @@
+<a href="{{bb_link instances.shop.urls.promoEdit id=data.ID asRoot=true}}" title="Редагувати">
+    <i class="fa fa-pencil fa-fw"></i>
+</a>
+{{#unless data._isFuture}}
+<a href="javascript://" data-id="{{data.ID}}" class="expire-promo" title="Завершити">
+    <i class="fa fa-times fa-fw"></i>
+</a>
+{{/unless}}

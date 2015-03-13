@@ -1,0 +1,39 @@
+<div class="panel-heading">
+    Коротко про замовлення:
+</div>
+<div class="panel-body">
+
+    <div class="list-group">
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-bolt fa-fw"></i> Нові замовлення
+            <span class="pull-right text-muted small"><em>{{default_value data.NEW 0}}</em>
+            </span>
+        </a>
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-spinner fa-spin fa-fw"></i> В процесі обробки
+            <span class="pull-right text-muted small"><em>{{default_value data.ACTIVE 0}}</em>
+            </span>
+        </a>
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-truck fa-fw"></i> Доставляється покупуцю
+            <span class="pull-right text-muted small"><em>{{default_value data.LOGISTIC_DELIVERING 0}}</em>
+            </span>
+        </a>
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-gift fa-fw"></i> Замовлення доставлено
+            <span class="pull-right text-muted small"><em>{{default_value data.LOGISTIC_DELIVERED 0}}</em>
+            </span>
+        </a>
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-check fa-fw"></i> Виконано
+            <span class="pull-right text-muted small"><em>{{default_value data.SHOP_CLOSED 0}}</em>
+            </span>
+        </a>
+        <a href="javascript://" class="list-group-item">
+            Всього замовлень в системі:
+            <span class="pull-right text-muted small"><em>{{default_value data.TOTAL 0}}</em>
+            </span>
+        </a>
+    </div>
+
+</div>

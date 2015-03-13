@@ -1,0 +1,64 @@
+<div class="panel">
+    <form class="form-horizontal">
+
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.shopping_cart_error_title}}
+            <ol class="errors">
+            {{#each data.errors}}
+                {{#each this}}
+                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
+                {{/each}}
+            {{/each}}
+            </ol>
+        </div>
+        {{/mpwsIsNotEmpty}}
+
+        <fieldset>
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="parent">{{lang.popup_category_section_details_filed_parentCategory}}</label>
+          <div class="col-md-6">
+            <input id="parent" name="parent" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
+          </div>
+        </div>
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_category_section_details_filed_name}}</label>
+          <div class="col-md-6">
+            <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textarea">{{lang.popup_category_section_details_filed_description}}</label>
+          <div class="col-md-6">
+            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textarea">{{lang.popup_category_section_details_filed_image}}</label>
+          <div class="col-md-6">
+            <div class="upload-errors"></div>
+            <div class="upload-wrapper">
+                <span class="btn fileinput-button">
+                    <i class="fa fa-upload text-success"></i>
+                    <i class="fa fa-warning text-danger"></i>
+                    <!-- The file input field used as target for the file upload widget -->
+                    <input id="file1" type="hidden" class="file-name" value="{{data.Image.name}}" data-original="{{data.Image.name}}">
+                    <input id="product-image-1" class="temp-upload-image" type="file" name="files">
+                    {{#if data.Image}}<img src="{{data.Image.xs}}" class="uploaded-image" alt="{{data.Name}}">{{/if}}
+                    <span class="preview-image"></span>
+                </span>
+                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+            </div>
+          </div>
+        </div>
+
+        </fieldset>
+    </form>
+</div>

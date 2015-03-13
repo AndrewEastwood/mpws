@@ -1,0 +1,16 @@
+<div class="panel-heading">
+    <i class="fa fa-bell"></i>
+    ! ( В процесі розробки ) ! Сповіщення
+    <span class="switcher-main pull-right"></span>
+</div>
+<div class="panel-body">
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
+            <input type="checkbox" class="switcher pull-right"{{#if this}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang.settings.alerts key=@key }}</span>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->

@@ -1,0 +1,351 @@
+<ul class="nav nav-pills">
+    <li class="tab tab-general active"><a href="#general" data-toggle="tab">Огляд</a></li>
+    <li class="tab tab-products"><a href="#products" data-toggle="tab">Товари</a></li>
+    <li class="tab tab-analytics"><a href="#analytics" data-toggle="tab">Аналіз</a></li>
+</ul>
+
+<h6>Внутрішній коментар (для адміністратора)</h6>
+<div class="form-group">
+    <textarea class="form-control" name="InternalComment" id="shop-order-internalComment-ID">{{data.InternalComment}}</textarea>
+</div>
+
+<div class="tab-content well">
+    
+    {{!-- general --}}
+    <div class="tab-pane fade in active" id="general">
+        <div class="row">
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}col-md-6{{/if}}">
+                <h5>Деталі замовлення:</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="prefix">Дата створення:</span>
+                        <span><strong>{{data.DateCreated}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Дата оновлення:</span>
+                        <span><strong>{{data.DateUpdated}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix"><i title="Код відстеження вантажу дає можливість покупцям дізнаватися поточний статус замовлення" class="fa fa-question-circle fa-fw helper helper-left"></i>Код відстеження:</span>
+                        <span><strong>{{data.Hash}}</strong></span>
+                    </li>
+                    {{#if instances.shop.settings.ShowDeliveryAganet._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Тип доставки:</span>
+                        <span>
+                            {{#if data.delivery}}
+                                <strong>{{data.delivery.Name}}</strong>
+                            {{else}}
+                                <strong>Самовивіз</strong>
+                            {{/if}}
+                        </span>
+                    </li>
+                    {{#if data.Warehouse }}
+                    <li class="list-group-item">
+                        <span class="prefix">Номер складу:</span>
+                        <span><strong>{{data.Warehouse}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{/if}}
+                    <li class="list-group-item list-group-item-status_{{data.Status}}">
+                        <span class="prefix">Статус:</span>
+                        <span class="editable">
+                            <select class="form-control hide" id="order-status-control-ID">
+                                {{#each data._statuses}}
+                                <option value="{{this}}">{{mpwsGetValueByKey ../lang key=this prefix="order_status_" }}</option>
+                                {{/each}}
+                            </select>
+                            <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang key=data.order.Status prefix="order_status_" }}</a>
+                        </span>
+                    </li>
+                    {{#if instances.shop.settings.ShowComment._isActive}}
+                    {{#if data.Comment }}
+                    <li class="list-group-item">
+                        <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i> Коментар:</span>
+                        <span><strong>{{data.Comment}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{/if}}
+                </ul>
+            </div>
+            
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}col-md-6{{/if}}">
+                <h5>Покупець:</h5>
+                <ul class="list-group">
+                    {{#if instances.shop.settings.ShowName._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Імя:</span>
+                        <span><strong>{{data.user.FirstName}} {{data.user.LastName}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowEMail._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Ел.адреса:</span>
+                        {{#if data.user.EMail}}
+                            <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left hidden"></i>
+                        {{/if}}
+                        <span><strong>{{data.user.EMail}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowPhone._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Телефон:</span>
+                        <span><strong>{{data.user.Phone}}</strong></span>
+                    </li>
+                    {{/if}}
+                </ul>
+                {{#ifAny instances.shop.settings.ShowAddress._isActive instances.shop.settings.ShowCity._isActive instances.shop.settings.ShowPOBox._isActive instances.shop.settings.ShowCountry._isActive }}
+                <h5>Адреса доставки:</h5>
+                <ul class="list-group">
+                    {{#if instances.shop.settings.ShowAddress._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Адреса:</span>
+                        <span><strong>{{data.address.Address}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowCountry._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Країна:</span>
+                        <span><strong>{{data.address.Country}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowCity._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Місто:</span>
+                        <span><strong>{{data.address.City}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowPOBox._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Поштовий індекс:</span>
+                        <span><strong>{{data.address.POBox}}</strong></span>
+                    </li>
+                    {{/if}}
+                </ul>
+                {{/ifAny}}
+            </div>
+
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}hidden{{/if}}">
+                <h5>Промокод:</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="prefix">Знижка:</span>
+                        <span><strong>{{data.promo.Discount}}%</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Промокод:</span>
+                        <span><strong>{{data.promo.Code}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Активний до:</span>
+                        <span><strong>{{data.promo.DateExpire}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Статус:</span>
+                        <span>
+                            {{#if data.promo._isActive}}<i class="fa fa-check-circle fa-fw text-success"></i>{{/if}}
+                            {{#if data.promo._isExpired}}<i class="fa fa-minus-circle fa-fw text-success"></i>{{/if}}
+                            {{#if data.promo._isFuture}}<i class="fa fa-clock-o fa-fw text-success"></i>{{/if}}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+
+    {{!-- products --}}
+    <div class="tab-pane fade in" id="products">
+        <div class="alert alert-danger">
+            Оформлено у валюті по курсу
+            <strong>{{data.CustomerCurrencyRate}} {{data.CustomerCurrencyName}}</strong>
+            за <strong>1 {{instances.shop.settings.MISC.DBPriceCurrencyType}}</strong>
+        </div>
+        {{#if data.info.hasPromo }}
+            {{#unless data.info.allProductsWithPromo }}
+            <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+                <i class="fa fa-exclamation-circle fa-fw"></i>Не на всі товари діє знижка <strong>{{data.promo.Discount}}<span class="percentType">%</span></strong>
+            </div>
+            {{/unless}}
+        {{/if}}
+        <div class="shop-widget-productlist">
+            <table class="table table-strpped">
+            {{#each data.items }}
+                <tr>
+                    {{#if ../data.info.hasPromo}}
+                        {{#unless ../../data.info.allProductsWithPromo}}
+                            {{#if ../../IsPromo }}
+                                <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                            {{else}}
+                                <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                            {{/if}}
+                        {{/unless}}
+                    {{/if}}
+                    <td>
+                        <span class="label label-info">#{{ID}}</span>
+                    </td>
+                    <td>
+                        <span class="product-name">
+                            <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">
+                                {{_origin.Name}} - {{Name}}
+                            </a>
+                        </span>
+                    </td>
+                    <td>
+                    {{#each _prices.others}}
+                        <strong itemprop="price" content="{{this}}" class="product-price moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                    {{/each}}
+                    </td>
+                    <td>
+                        {{#if _promoIsApplied}}
+                        <span class="label label-success">- {{_promo.Discount}}%</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        x
+                    </td>
+                    <td>
+                        <strong>{{_orderQuantity}}</strong>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td>
+                        {{#each _totalSummary._customer_totals}}
+                            <strong itemprop="price" content="{{this}}" class="product-total moneyValue {{@key}}{{#isnt ../../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                        {{/each}}
+                    </td>
+                </tr>
+            {{/each}}
+            </table>
+        </div>
+    </div>
+
+    {{!-- analytics --}}
+    <div class="tab-pane fade in" id="analytics">
+        {{#if data.rates.dbCurrencyIsChanged}}
+        <div class="alert alert-danger">
+            На момент створення замовлення внутрішня валюта магазину була <strong>{{data.rates.orderBaseCurrencyName}}</strong><br/>
+            В цей момент поточна валюта магизну - <strong>{{data.rates.defaultDBCurrency.CurrencyA}}</strong>
+        </div>
+        {{/if}}
+        <ul class="list-group">
+            {{!-- {{#unless data.rates.dbCurrencyIsChanged}} --}}
+            <li class="list-group-item">
+                Основна валюта магазину
+                <strong>{{instances.shop.settings.MISC.DBPriceCurrencyType}}</strong>
+            </li>
+            <li class="list-group-item">
+                Покупець обрав валюту
+                <strong>{{data.CustomerCurrencyName}}</strong>
+                {{#isnt data.CustomerCurrencyName instances.shop.settings.MISC.DBPriceCurrencyType}}
+                де курс до основної (<strong>{{data.rates.orderBaseCurrencyName}}</strong>) валюти в момент купівлі був
+                <strong>
+                    {{currency data.CustomerCurrencyRate currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                </strong>
+                {{/isnt}}
+            </li>
+            {{#isnt data.CustomerCurrencyName instances.shop.settings.MISC.DBPriceCurrencyType}}
+            <li class="list-group-item">
+                Поточний курс валюти <strong>
+                {{currency data.rates.actual currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong> за <strong>
+                {{currency 1 currency=data.rates.orderBaseCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+            </li>
+            {{/isnt}}
+            {{#isnt data.rates.ourBenefit 0}}
+            <li class="list-group-item">
+                {{#gt data.rates.ourBenefit 0}}
+                    <i class="fa fa-check-circle fa-fw text-success"></i>
+                    Це замовлення є для нас прибуткове
+                {{else}}
+                    <i class="fa fa-minus-circle fa-fw text-danger"></i>
+                    Це замовлення є для нас збиткове
+                {{/gt}}
+            </li>
+            {{/isnt}}
+            {{!-- {{/unless}} --}}
+            <li class="list-group-item">
+                Сума грошей, яку покупець має заплатити
+                {{#each data.totalSummary._customer_totals}}
+                    <strong class="{{#isnt ../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
+            </li>
+            {{!-- {{#unless data.rates.dbCurrencyIsChanged}} --}}
+            {{#isnt data.rates.ourBenefit 0}}
+            <li class="list-group-item">
+                Вартість цього замовлення на поточний момент
+                {{#each data.totalSummary._totals}}
+                    <strong class="{{#isnt ../../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
+            </li>
+            <li class="list-group-item">
+                {{#gt data.rates.ourBenefit 0}}
+                    <i class="fa fa-check-circle fa-fw text-success"></i>
+                    Сума грошей, які ми заробляємо
+                {{else}}
+                    <i class="fa fa-minus-circle fa-fw text-danger"></i>
+                    Сума грошей, які ми втрачаємо
+                {{/gt}}
+                становить
+                {{#each data.totalSummary._diff_totals}}
+                    <strong class="{{#isnt ../data.CustomerCurrencyName @key}}hidden{{/isnt}}">
+                        {{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}
+                    </strong>
+                {{/each}}
+            </li>
+            {{/isnt}}
+            {{!-- {{/unless}} --}}
+            {{#if data.info.hasPromo }}
+            <li class="list-group-item">
+                Також, покупець, скористався промокодм, де знижка <strong>{{data.promo.Discount}}%</strong>
+            </li>
+            <li class="list-group-item">
+                Сума без знижки становить: <strong>
+                {{selectValueByCurrency data.totalSummary._customer_subs currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+            </li>
+            <li class="list-group-item">
+                Знижка в грошовому еквіваленті: <strong>
+                {{selectValueByCurrency data.totalSummary._diff_promo currency=data.CustomerCurrencyName display=instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+</div>
+
+<div class="well cartInfo">
+    {{#if data.info.hasPromo }}
+    <div class="shopCartPromo">
+        <span class="value-prefix">Покупець використав промокод:</span>
+        <span class="value"> <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></span>
+    </div>
+    <div class="shopCartTotal">
+        <span class="value-prefix">Сума без знижки:</span>
+        {{#each data.totalSummary._customer_subs}}
+            <span class="value moneyValue {{@key}}{{#isnt ../data.CustomerCurrencyName @key}} hidden{{/isnt}}">
+                {{#withItem ../instances.shop.settings.EXCHANAGERATESDISPLAY key=@key}}
+                    {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                    <strong class="value">{{currency ../this}}</strong>
+                    {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                {{/withItem}}
+            </span>
+        {{/each}}
+    </div>
+    <div class="shopCartDiscount">
+        <span class="value-prefix">Знижка:</span>
+        <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+    </div>
+    {{/if}}
+    <div class="shopCartTotal">
+        <span class="value-prefix">До оплати:</span>
+        {{#each data.totalSummary._customer_totals}}
+            <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <meta itemprop="priceCurrency" content="{{@key}}" />
+                <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../data.CustomerCurrencyName @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+            </span>
+        {{/each}}
+    </div>
+</div>
