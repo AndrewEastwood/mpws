@@ -42,10 +42,15 @@ and put the following contfiguration.
 server {
     listen 5001;
     root   /var/www/mpws;
-    server_name pb.com.ua www.pb.com.ua;
+    server_name pb.com.ua www.pb.com.ua toolbox.pb.com.ua;
     access_log /var/www/mpws/nginx.access.log;
     error_log /var/www/mpws/nginx.error.log;
     index /engine/controllers/display.php;
+#   add_header Access-Control-Allow-Headers "X-Requested-With";
+#   add_header Access-Control-Allow-Methods "GET, HEAD, OPTIONS";
+#   add_header Access-Control-Allow-Origin "*";
+
+    location ~ /static_/.*\.php$ { return 404; }
 
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -58,15 +63,10 @@ server {
         include fastcgi_params;
     }
 
-    location /static {
-      rewrite ^/static/customers/([\.a-z_-]+)/nls/(.*) /engine/controllers/nls.php?customer=$1&lang=$2 last;
-      rewrite ^/static/(customers|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
-    }
-
     location /api {
-      rewrite ^/api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 last;
+      rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&params=$3 last;
       rewrite ^/api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 last;
-      rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&$3 last;
+      rewrite ^/api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 last;
     }
 
     location /upload {
@@ -74,6 +74,7 @@ server {
     }
 
 }
+
 ```
 You may change paths to log files according to your project's location.
 When you complete working on configuration file then the nginx's folder will probably look like this:

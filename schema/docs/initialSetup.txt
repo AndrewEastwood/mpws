@@ -3,40 +3,40 @@ Clone Project into /var/www/ directory
 Configure apache site /etc/apache2/sites-available/default:
 
 <VirtualHost *:80>
-	ServerAdmin webmaster@localhost
-	DocumentRoot /var/www/mpws/
-	ServerName pb.com.ua
-	Options +FollowSymLinks
-	<Directory />
-		RewriteEngine On
-		Options FollowSymLinks
-		AllowOverride All
-	</Directory>
-	<Directory /var/www/mpws/>
-		RewriteEngine On
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride All
-		Order allow,deny
-		allow from all
-	</Directory>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/mpws/
+    ServerName pb.com.ua
+    Options +FollowSymLinks
+    <Directory />
+        RewriteEngine On
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+    <Directory /var/www/mpws/>
+        RewriteEngine On
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
 </VirtualHost>
 <VirtualHost *:80>
-	ServerAdmin webmaster@localhost
-	DocumentRoot /var/www/mpws/
-	ServerName toolbox.pb.com.ua
-	Options +FollowSymLinks
-	<Directory />
-		RewriteEngine On
-		Options FollowSymLinks
-		AllowOverride All
-	</Directory>
-	<Directory /var/www/mpws/>
-		RewriteEngine On
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride All
-		Order allow,deny
-		allow from all
-	</Directory>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/mpws/
+    ServerName toolbox.pb.com.ua
+    Options +FollowSymLinks
+    <Directory />
+        RewriteEngine On
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+    <Directory /var/www/mpws/>
+        RewriteEngine On
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
 </VirtualHost>
 
 Updated /etc/hosts/

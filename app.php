@@ -104,7 +104,7 @@ class app {
             )
         ),
         'urls' => array(
-            'static' => '/static/',
+            'static' => '/static_/',
             'api' => '/api/',
             'upload' => '/upload/'
         )

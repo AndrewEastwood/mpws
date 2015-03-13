@@ -25,7 +25,7 @@ class path {
         return 'middlewares';
     }
     public static function getDirNameWeb () {
-        return 'web';
+        return 'static_';
     }
     public static function getDirNameDefault () {
         return 'base';

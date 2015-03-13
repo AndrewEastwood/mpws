@@ -1,1 +1,0 @@
-define(['base/js/partials/animSpinnerFB'], function () {});

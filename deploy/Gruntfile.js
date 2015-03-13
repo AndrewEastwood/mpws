@@ -3,13 +3,13 @@
 module.exports = function (grunt) {
 
     // Configurable paths for the application
-    var webPath = '../web/',
+    var staticPath = '../static_/',
         distPath = '../build/',
-        staticPathBase = '../web/base/',
-        staticPathCustomers = '../web/customers/',
-        staticPathPlugins = '../web/plugin/',
+        staticPathBase = '../static_/base/',
+        staticPathCustomers = '../static_/customers/',
+        staticPathPlugins = '../static_/plugin/',
         paths = {
-            'web': webPath,
+            'static': staticPath,
             'dist': distPath,
             'base': staticPathBase,
             'customers': staticPathCustomers,
@@ -53,7 +53,7 @@ module.exports = function (grunt) {
         less: {
             theme: {
                 options: {
-                    paths: ['<%= paths.web %>']
+                    paths: ['<%= paths.static %>']
                 },
                 files: [{
                     expand: true,
@@ -91,7 +91,7 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= paths.web %>',
+                    cwd: '<%= paths.static %>',
                     dest: '<%= paths.dist %>',
                     src: '**/*'
                 }]
@@ -103,7 +103,7 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     // appDir: paths.dist,
-                    baseUrl: paths.web,
+                    baseUrl: paths.static,
                     mainConfigFile: paths.base + 'js/loader.js',
                     dir: paths.dist,
                     // name: 'app',
@@ -131,7 +131,8 @@ module.exports = function (grunt) {
                     keepBuildDir: true,
                     modules: [
                         {
-                            name: 'customers/pb.com.ua/js/router'
+                            name: 'customers/pb.com.ua/js/router',
+                            exclude: ['common/js/app']
                         }
                     ]
                 }
