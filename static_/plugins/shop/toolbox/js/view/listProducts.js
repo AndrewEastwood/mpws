@@ -293,7 +293,7 @@ define([
         },
         render: function () {
             console.log('listOrders: render');
-            debugger;
+            // debugger;
             this.$el.off().empty();
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);

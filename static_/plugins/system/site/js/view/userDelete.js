@@ -1,13 +1,13 @@
 define([
-    'base/js/view/mView',
+    'backbone',
     'handlebars',
     'plugins/system/common/js/model/user',
     'text!plugins/system/site/hbs/userDelete.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation'
-], function (MView, Handlebars, ModelUserInstance, tpl, lang) {
+], function (Backbone, Handlebars, ModelUserInstance, tpl, lang) {
 
-    var UserDelete = MView.extend({
+    var UserDelete = Backbone.View.extend({
         // tagName: 'li',
         // className: 'col-sm-9 col-md-9',
         template: Handlebars.compile(tpl), // check

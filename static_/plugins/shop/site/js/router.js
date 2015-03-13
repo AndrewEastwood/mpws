@@ -32,8 +32,8 @@ define([
         "!/shop/cart": "shop_cart",
         "!/shop/wishlist": "shop_wishlist",
         "!/shop/compare": "shop_compare",
-        "!/shop/tracking/(:id)": "shop_tracking",
-        "!/shop/profile/orders": "shop_profile_orders"
+        "!/shop/tracking/(:id)": "shop_tracking"
+        // "!/shop/profile/orders": "shop_profile_orders"
     };
 
     var Router = Backbone.Router.extend({
@@ -229,33 +229,33 @@ define([
         },
 
         //
-        shop_profile_orders: function () {
-            APP.getCustomer().setBreadcrumb();
-            if (!Site.hasPlugin('account') || !Auth.getUserID()) {
-                Backbone.history.navigate("", true);
-                return;
-            }
-            require(['plugins/shop/site/js/view/profileOrders'], function (ProfileOrders) {
-                // Cache.withObject('ProfileOrders', function (cachedView) {
-                // debugger;
-                // remove previous view
-                // if (cachedView && cachedView.remove)
-                //     cachedView.remove();
+        // shop_profile_orders: function () {
+        //     APP.getCustomer().setBreadcrumb();
+        //     if (!Site.hasPlugin('account') || !Auth.getUserID()) {
+        //         Backbone.history.navigate("", true);
+        //         return;
+        //     }
+        //     require(['plugins/shop/site/js/view/profileOrders'], function (ProfileOrders) {
+        //         // Cache.withObject('ProfileOrders', function (cachedView) {
+        //         // debugger;
+        //         // remove previous view
+        //         // if (cachedView && cachedView.remove)
+        //         //     cachedView.remove();
 
-                // create new view
-                var profileOrders = new ProfileOrders();
-                // view.setPagePlaceholder(profileOrders.$el);
-                profileOrders.fetchAndRender({
-                    profileID: Cache.getObject('AccountProfileID')
-                });
+        //         // create new view
+        //         var profileOrders = new ProfileOrders();
+        //         // view.setPagePlaceholder(profileOrders.$el);
+        //         profileOrders.fetchAndRender({
+        //             profileID: Cache.getObject('AccountProfileID')
+        //         });
 
-                APP.Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
+        //         APP.Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
 
-                // return view object to pass it into this function at next invocation
-                // return profileOrders;
-                // });
-            });
-        }
+        //         // return view object to pass it into this function at next invocation
+        //         // return profileOrders;
+        //         // });
+        //     });
+        // }
 
     }, {
         preload: function (callback) {

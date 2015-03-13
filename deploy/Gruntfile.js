@@ -3,23 +3,38 @@
 module.exports = function (grunt) {
 
     // Configurable paths for the application
-    var staticPath = '../static_/',
-        distPath = '../build/',
+    var appDir = '../',
+        staticPath = '../static_/',
+        jsBuildPath = '../_dist_/static_/',
+        distPath = '../_dist_/',
         staticPathBase = '../static_/base/',
         staticPathCustomers = '../static_/customers/',
         staticPathPlugins = '../static_/plugin/',
+        modulesBase = [
+            'sandbox',
+            'jquery',
+            'underscore',
+            'backbone',
+            'auth',
+            'jsurl',
+            'cachejs',
+            'handlebars-helpers',
+            'handlebars-partials',
+            // localizations
+            'vendors/moment/locale/uk',
+            'vendors/select2/select2_locale_uk',
+            'bootstrap'
+        ],
+        customers = ['toolbox', 'pb.com.ua'],
+        plugins = ['system', 'shop'],
         paths = {
+            'app': appDir,
             'static': staticPath,
+            'jsbuild': jsBuildPath,
             'dist': distPath,
             'base': staticPathBase,
             'customers': staticPathCustomers,
-            'plugins': staticPathPlugins,
-            // 'customerCss': staticPathCustomers + 'css/',
-            // 'customerJs': staticPathCustomers + 'js/',
-            // 'customerLess': staticPathCustomers + 'less/',
-            // 'pluginJsSite': staticPathPlugins + 'site/js/',
-            // 'pluginJsToolbox': staticPathPlugins + 'toolbox/js/',
-            // 'pluginJsCommon': staticPathPlugins + 'common/js/'
+            'plugins': staticPathPlugins
         };
 
     // Load grunt tasks automatically
@@ -91,9 +106,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= paths.static %>',
+                    cwd: '<%= paths.app %>',
                     dest: '<%= paths.dist %>',
-                    src: '**/*'
+                    src: ['engine/**/*', 'app.php', '.htaccess', 'env.txt', 'robots.txt', 'version.txt']
                 }]
             }
         },
@@ -102,43 +117,44 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    // appDir: paths.dist,
                     baseUrl: paths.static,
                     mainConfigFile: paths.base + 'js/loader.js',
-                    dir: paths.dist,
-                    // name: 'app',
+                    dir: paths.jsbuild,
                     findNestedDependencies: true,
-                    optimizeAllPluginResources: true,
-                    optimize: 'none',
-                    uglify2: {
-                        output: {
-                            'quote_keys': true
-                        }
-                    },
-                    optimizeCss: "standard",
-                    // optimize: "none",
-                    // inlining ftw
-                    inlineText: true,
-                    pragmasOnSave: {
-                        //removes Handlebars.Parser code (used to compile template strings) set
-                        //it to `false` if you need to parse template strings even after build
-                        excludeHbsParser : true,
-                        // kills the entire plugin set once it's built.
-                        excludeHbs: true,
-                        // removes i18n precompiler, handlebars and json2
-                        excludeAfterBuild: true
-                    },
-                    keepBuildDir: true,
-                    modules: [
-                        {
-                            name: 'customers/pb.com.ua/js/router',
-                            exclude: ['common/js/app']
-                        }
-                    ]
+                    optimize: 'uglify2',
+                    skipDirOptimize: true,
+                    modules: getModules()
                 }
             }
         }
     });
+
+    function getModules () {
+        var mods = [];
+
+        mods.push({
+            name: 'base/js/app',
+            include: modulesBase
+        });
+
+        for (var i = 0; i < customers.length; i++) {
+            mods.push({
+                name: 'customers/' + customers[i] + '/js/router',
+                exclude: modulesBase
+            });
+        }
+        for (var i = 0; i < plugins.length; i++) {
+            mods.push({
+                name: 'plugins/' + plugins[i] + '/toolbox/js/router',
+                exclude: modulesBase
+            });
+            mods.push({
+                name: 'plugins/' + plugins[i] + '/site/js/router',
+                exclude: modulesBase
+            });
+        }
+        return mods;
+    }
 
     grunt.registerTask('default', [
         // 'jshint:all',
@@ -146,7 +162,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('deploy', 'Deployment', function () {
-        grunt.log.writeln('Running production build...');
-        grunt.task.run([/*'jshint', */'requirejs', 'less'/*, 'copy:dist'*/]);
+        grunt.log.writeln('Running deployment...');
+        grunt.task.run([/*'jshint', */'requirejs', 'less', 'copy:dist']);
+        grunt.file.write(distPath + 'version.txt', Date.now());
     });
 };

@@ -39,7 +39,8 @@
         'handlebars-partials',
         // localizations
         'vendors/moment/locale/uk',
-        'vendors/select2/select2_locale_uk'
+        'vendors/select2/select2_locale_uk',
+        'bootstrap'
     ];
 
     // simple extend function
