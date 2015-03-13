@@ -9,7 +9,6 @@ define([
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
     /* charts */
-    'async!http://maps.google.com/maps/api/js?sensor=false',
     'goog!visualization,1,packages:[corechart]'
 ], function (Backbone, Handlebars, _, ModelStats, Utils, tpl, lang) {
 

@@ -184,7 +184,7 @@ class users {
         return $result;
     }
 
-    public function updateUser ($UserID, $reqData) {
+    public function updateUser ($UserID, $reqData, $isUpdate = false) {
         global $app;
 
         $errors = array();
@@ -198,13 +198,13 @@ class users {
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),
             'ConfirmPassword' => array('skipIfUnset', 'equalTo' => 'Password', 'notEmpty'),
             // permissions
-            'p_CanAdmin' => array('bool', 'skipIfUnset'),
-            'p_CanCreate' => array('bool', 'skipIfUnset'),
-            'p_CanEdit' => array('bool', 'skipIfUnset'),
-            'p_CanUpload' => array('bool', 'skipIfUnset'),
-            'p_CanViewReports' => array('bool', 'skipIfUnset'),
-            'p_CanAddUsers' => array('bool', 'skipIfUnset'),
-            'p_CanMaintain' => array('bool', 'skipIfUnset')
+            'p_CanAdmin' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanCreate' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanEdit' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanUpload' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanViewReports' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanAddUsers' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_CanMaintain' => array('bool', 'skipIfUnset', 'transformToTinyInt')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -248,8 +248,8 @@ class users {
                 $app->getDB()->rollBack();
                 // echo $app->getDB()->getLastErrorCode();
                 // echo $e;
-                // return glWrap("error", 'UserUpdateError');
                 $errors[] = 'UserUpdateError';
+                $errors[] = $e->getMessage();
             }
         else
             $errors = $validatedDataObj["errors"];
@@ -363,6 +363,7 @@ class users {
             $success = true;
         } catch (Exception $e) {
             $errors[] = 'PermissionsUpdateError';
+            $errors[] = $e->getMessage();
         }
         $result = $this->getUserPermissionsByUserID($UserID);
         $result['errors'] = $errors;
@@ -448,6 +449,24 @@ class users {
             if (is_numeric($req->get['params'])) {
                 $UserID = intval($req->get['params']);
                 $resp = $this->updateUser($UserID, $req->data);
+                return;
+            } else {
+                $resp['error'] = "MissedParameter_id";
+                return;
+            }
+        }
+        $resp['error'] = 'UnknownAction';
+    }
+
+    public function patch (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (!empty($req->get['params'])) {
+            if (is_numeric($req->get['params'])) {
+                $UserID = intval($req->get['params']);
+                $resp = $this->updateUser($UserID, $req->data, true);
                 return;
             } else {
                 $resp['error'] = "MissedParameter_id";

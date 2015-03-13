@@ -99,6 +99,7 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             labelValidationString: 'Код активації',
             labelPassword: 'Пароль',
             labelPasswordVerify: 'Підтвердження',
+            labelСurrentPassword: 'Поточний пароль',
             labelp_CanAdmin: 'Адміністрування',
             labelp_CanCreate: 'Створення записів',
             labelp_CanEdit: 'Редагування записів',

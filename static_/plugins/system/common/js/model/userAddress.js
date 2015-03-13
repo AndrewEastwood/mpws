@@ -4,15 +4,16 @@ define([
 
     var UserAddress = Backbone.Model.extend({
         idAttribute: "ID",
-        url: function () {
-            var _params =  {
-                source: 'system',
-                fn: 'address'
-            };
-            if (!this.isNew())
-                _params.id = this.id;
-            return APP.getApiLink(_params);
-        },
+        urlRoot: APP.getApiLink('system', 'address')
+        // url: function () {
+        //     var _params =  {
+        //         source: 'system',
+        //         fn: 'address'
+        //     };
+        //     if (!this.isNew())
+        //         _params.id = this.id;
+        //     return APP.getApiLink(_params);
+        // },
         // initialize: function () {
         //     APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
         //         this.unset('errors', {silent: true});

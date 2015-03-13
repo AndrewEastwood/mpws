@@ -53,7 +53,7 @@ define([
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    return tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    return Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
                 }
             }
         };

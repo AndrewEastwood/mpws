@@ -93,9 +93,13 @@ class validate {
             }
 
             // bool
-            if (in_array("bool", $rules, true) && !is_bool($values[$keyToValidate])) {
-                $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
-                $wrongTypeCount++;
+            if (in_array("bool", $rules, true)) {
+                if (!is_bool($values[$keyToValidate])) {
+                    $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
+                    $wrongTypeCount++;
+                } elseif (in_array("transformToTinyInt", $rules, true)) {
+                    $values[$keyToValidate] = $values[$keyToValidate] ? 1 : 0;
+                }
             }
 
             // null
@@ -131,6 +135,12 @@ class validate {
             // var_dump($errors);
             // var_dump($dataArray);
             // var_dump('isset:'.$keyToValidate . ':' . (isset($dataArray[$keyToValidate]) ? 1:0));
+
+            if (isset($dataArray[$keyToValidate]) && empty($dataArray[$keyToValidate]) && isset($rules["defaultValueIfEmpty"])) {
+                $values[$keyToValidate] = $rules["defaultValueIfEmpty"];
+                continue;
+            }
+
 
             // exists
             if (!array_key_exists($keyToValidate, $dataArray)) {

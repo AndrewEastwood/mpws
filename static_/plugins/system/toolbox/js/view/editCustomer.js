@@ -71,6 +71,7 @@ define([
                                 // debugger;
                                 if (response && response.success) {
                                     BSAlert.success(lang.editors.customer.messageSuccess);
+                                    Backbone.history.navigate(APP.instances.system.urls.customersList, true);
                                     window.location.reload();
                                 } else {
                                     BSAlert.danger(lang.editors.customer.messageError);

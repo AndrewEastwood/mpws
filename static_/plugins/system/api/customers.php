@@ -166,14 +166,14 @@ class customers {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'HostName' => array('string', 'notEmpty', 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'localhost'),
-            'Title' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'Happy Site :)'),
-            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfUnset' => 'MPWS Admin'),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfEmpty' => 'localhost'),
+            'Title' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfEmpty' => 'Happy Site :)'),
+            'AdminTitle' => array('string', 'skipIfUnset', 'max' => 200, 'defaultValueIfEmpty' => 'MPWS Admin'),
             'file1' => array('string', 'skipIfEmpty'),
-            'Lang' => array('string', 'skipIfUnset', 'max' => 50, 'defaultValueIfUnset' => 'en'),
-            'Locale' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'en_us'),
-            'Protocol' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfUnset' => 'http'),
-            'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfUnset' => 'system')
+            'Lang' => array('string', 'skipIfUnset', 'max' => 50, 'defaultValueIfEmpty' => 'en'),
+            'Locale' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfEmpty' => 'en_us'),
+            'Protocol' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfEmpty' => 'http'),
+            'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfEmpty' => 'system')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -234,7 +234,7 @@ class customers {
         return $result;
     }
 
-    public function updateCustomer ($CustomerID, $reqData) {
+    public function updateCustomer ($CustomerID, $reqData, $isPatch = false) {
         global $app;
         $result = array();
         $errors = array();
@@ -267,7 +267,6 @@ class customers {
 
                     if (!empty($validatedValues['file1'])) {
                         $newFileName = $validatedValues['file1'];
-                        unset($validatedValues['file1']);
                     }
 
                     if ($newFileName !== $currentFileName) {
@@ -291,18 +290,25 @@ class customers {
                     }
                 }
 
+                // adjust fields
+                if (isset($validatedValues['file1'])) {
+                    unset($validatedValues['file1']);
+                }
+
                 // adjust plugins
-                $pList = array('system');
-                if (isset($validatedValues['Plugins']) && !empty($validatedValues['Plugins'])) {
-                    $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
-                    foreach ($reqPluginsList as $key => $value) {
-                        $value = trim($value);
-                        if (!empty($value) && $value !== 'system') {
-                            $pList[] = $value;
+                if (isset($validatedValues['Plugins'])) {
+                    $pList = array('system');
+                    if (!empty($validatedValues['Plugins'])) {
+                        $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
+                        foreach ($reqPluginsList as $key => $value) {
+                            $value = trim($value);
+                            if (!empty($value) && $value !== 'system') {
+                                $pList[] = $value;
+                            }
                         }
                     }
+                    $validatedValues['Plugins'] = implode(',', $pList);
                 }
-                $validatedValues['Plugins'] = implode(',', $pList);
 
                 $app->getDB()->beginTransaction();
 
@@ -402,7 +408,7 @@ class customers {
         } else {
             if (is_numeric($req->get['params'])) {
                 $CustomerID = intval($req->get['params']);
-                $resp = $this->updateCustomer($CustomerID, $req->data);
+                $resp = $this->updateCustomer($CustomerID, $req->data, true);
             } else {
                 $resp['error'] = 'WrongParameter_id';
             }

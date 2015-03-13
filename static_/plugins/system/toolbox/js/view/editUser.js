@@ -24,6 +24,9 @@ define([
     var EditUser = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
         lang: lang,
+        events: {
+            "click .add-address": "addAddress",
+        },
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-user',
         initialize: function () {
             this.options = {};
@@ -33,7 +36,7 @@ define([
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.model = new ModelUser();
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
             var that = this;
@@ -62,7 +65,6 @@ define([
                             'p_CanAdmin': that.$('.js-p_CanAdmin').is(':checked'),
                             'p_CanCreate': that.$('.js-p_CanCreate').is(':checked'),
                             'p_CanEdit': that.$('.js-p_CanEdit').is(':checked'),
-                            'p_CanView': that.$('.js-p_CanView').is(':checked'),
                             'p_CanUpload': that.$('.js-p_CanUpload').is(':checked'),
                             'p_CanViewReports': that.$('.js-p_CanViewReports').is(':checked'),
                             'p_CanAddUsers': that.$('.js-p_CanAddUsers').is(':checked'),
@@ -101,6 +103,9 @@ define([
             // .setupFileUploadItem(this.$(), this);
             return this;
         },
+        addAddress: function () {
+            
+        }
         // getSelectedPlugins: function () {
         //     var plugins = this.$('.js-plugin-item:checked').map(function () {
         //         return $(this).val();

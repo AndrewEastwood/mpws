@@ -37,6 +37,7 @@ define([
             }
         },
         is: function (value, test, options) {
+            debugger
             if (value === test) {
                 return options.fn(this);
             } else {
@@ -367,9 +368,9 @@ define([
     helpers.unlessLtEq = helpers.unless_lteq;
     helpers.srtStartsWith = function (text, startPart, options) {
         if (text && text.toString().startWith(startPart)) {
-            return options.fn(this);
+            return options.fn(this.valueOf());
         }
-        return options.inverse(this);
+        return options.inverse(this.valueOf());
     }
     // from: http://stackoverflow.com/a/12002281
     helpers.foreach = function (arr, options) {
