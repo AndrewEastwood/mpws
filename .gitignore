@@ -18,3 +18,4 @@ uploads/
 .metadata
 .fuse_*
 vendors
+_dist_
