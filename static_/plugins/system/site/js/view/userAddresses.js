@@ -14,15 +14,14 @@ define([
     var UserAddresses = Backbone.View.extend({
         // tagName: 'li',
         className: 'well user-addresses account-profile-addresses',
-        addressList: [],
+        addressListActive: [],
+        addressListRemoved: [],
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "click #account-address-add-btn-ID": "addNewAddress",
         },
         initialize: function () {
-            _(this.addressList).invoke('remove');
-            this.addressList = [];
             if (this.model) {
                 this.listenTo(this.model, 'change', this.render);
             }
@@ -31,11 +30,16 @@ define([
         render: function () {
             var self = this;
             // debugger;
+            _(this.addressListActive).invoke('remove');
+            _(this.addressListRemoved).invoke('remove');
+            this.addressListActive = [];
+            this.addressListRemoved = [];
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
 
             var addresses = this.model.get('Addresses');
 
             // debugger;
+            // console.log(addresses);
             _(addresses).each(function(address){
                 self.renderAddressItem(address);
             });
@@ -50,30 +54,33 @@ define([
             return this;
         },
         refreshAddNewAddressButton: function () {
-            this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressList.length >= 3);
+            this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressListActive.length >= 3);
         },
         renderAddressItem: function (address) {
-
             // debugger;
+            var self = this;
             var addressView = new ViewUserAddress({
                 UserID: this.model.id,
                 address: address
             });
             addressView.render();
 
-            var self = this;
-
-            addressView.model.on('change', function() {
-                self.model.fetch({silent: true});
-            });
+            // addressView.model.on('change', function() {
+            //     self.model.fetch({silent: true});
+            // });
             addressView.model.on('destroy:ok', function() {
-                self.model.fetch({silent: true});
+                // self.model.fetch({silent: true});
                 addressView.remove();
-                self.addressList = _(self.addressList).without(addressView);
+                self.addressListActive = _(self.addressListActive).without(addressView);
+                
                 self.refreshAddNewAddressButton();
             });
 
-            this.addressList.push(addressView);
+            if (address.isRemoved) {
+                this.addressListRemoved.push(addressView);
+            } else {
+                this.addressListActive.push(addressView);
+            }
 
             this.$('.account-addresses').append(addressView.$el);
 

@@ -39,12 +39,18 @@ define([
             }
             return this;
         },
-        saveAddress: function (event) {
-            var _addressBlock = $(event.target).parents('table.account-profile-address-entry');
-            var updatedData = _addressBlock.find('.editable').editable('getValue');
+        saveAddress: _.debounce(function (event) {
+            var that = this,
+                updatedData = $(event.target).parents('.user-address-item').find('.editable').editable('getValue');
             this.model.set(updatedData);
-            this.model.save();
-        },
+            this.model.save().then(function () {
+                setTimeout(function() {
+                    that.$('.alert').fadeTo(1500, 0).slideUp(500, function(){
+                        $(this).remove();
+                    });
+                }, 1000);
+            });
+        }, 500),
         removeAddress: function () {
             var that = this;
             BootstrapDialog.confirm("Видалити цю адресу", function (rez) {
