@@ -2,6 +2,9 @@
 namespace static_\plugins\system\api;
 
 use \engine\lib\validate as Validate;
+use \engine\lib\api as API;
+use \engine\lib\path as Path;
+use Exception;
 
 class address {
 
@@ -10,6 +13,7 @@ class address {
             return null;
         $address['ID'] = intval($address['ID']);
         $address['UserID'] = intval($address['UserID']);
+        $address['isRemoved'] = $address['Status'] === 'REMOVED';
         return $address;
     }
 
@@ -162,31 +166,107 @@ class address {
     // we don't allow get user address
     public function get () {}
 
-    public function patch (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            $AddressID = intval($req->get['id']);
-            $resp = $this->_updateAddressByID($AddressID, $req->data);
-            return;
+    public function put (&$resp, $req) {
+        if (empty($req->get['params'])) {
+            $resp['error'] = 'WrongIDParameter';
+        } else {
+            $UserID = null;
+            if (is_numeric($req->data['UserID'])) {
+                $UserID = intval($req->data['UserID']);
+            } else {
+                $resp['error'] = 'EmptyUserID';
+                return;
+            }
+            ;
+            if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
+                $resp['error'] = "AccessDenied";
+                return;
+            }
+            if (is_numeric($req->get['params'])) {
+                $addressID = intval($req->get['params']);
+                $resp = $this->_updateAddressByID($addressID, $req->data);
+            } else {
+                $resp['error'] = 'WrongIDParameter';
+            }
         }
-        $resp['error'] = 'MissedParameter_id';
+
+
+
+        // if (!empty($req->get['id'])) {
+        //     $AddressID = intval($req->get['id']);
+        //     $resp = $this->_updateAddressByID($AddressID, $req->data);
+        //     return;
+        // }
+        // $resp['error'] = 'WrongIDParameter';
     }
+    // public function patch (&$resp, $req) {
+    //     if (!empty($req->get['id'])) {
+    //         $AddressID = intval($req->get['id']);
+    //         $resp = $this->_updateAddressByID($AddressID, $req->data);
+    //         return;
+    //     }
+    //     $resp['error'] = 'WrongIDParameter';
+    // }
 
     public function post (&$resp, $req) {
-        if (!empty($req->data['UserID'])) {
+        $UserID = null;
+        if (is_numeric($req->data['UserID'])) {
             $UserID = intval($req->data['UserID']);
-            $resp = $this->createAddress($UserID, $req->data);
+        } else {
+            $resp['error'] = 'EmptyUserID';
             return;
         }
-        $resp['error'] = 'MissedParameter_UserID';
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        $resp = $this->createAddress($UserID, $req->data);
+        // if (!empty($req->data['UserID'])) {
+        //     $UserID = intval($req->data['UserID']);
+        //     $resp = $this->createAddress($UserID, $req->data);
+        //     return;
+        // }
+        // $resp['error'] = 'MissedParameter_UserID';
     }
 
     public function delete (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            $AddressID = intval($req->get['id']);
-            $resp = $this->disableAddressByID($AddressID);
-            return;
+        if (empty($req->get['params'])) {
+            $resp['error'] = 'WrongIDParameter';
+        } else {
+            if (is_numeric($req->get['params'])) {
+                $addressID = intval($req->get['params']);
+                $address = $this->getAddressByID($addressID);
+                if (empty($address)) {
+                    $resp['error'] = 'WrongAddressID';
+                    return;
+                }
+                if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
+                    $resp['error'] = "AccessDenied";
+                    return;
+                }
+                $resp = $this->disableAddressByID($addressID);
+            } else {
+                $resp['error'] = 'WrongIDParameter';
+            }
+
+            // $UserID = null;
+            // if (is_numeric($req->data['UserID'])) {
+            //     $UserID = intval($req->data['UserID']);
+            // } else {
+            //     $resp['error'] = 'EmptyUserID';
+            //     return;
+            // }
+            // $resp = $this->createAddress($UserID, $req->data);
         }
-        $resp['error'] = 'MissedParameter_id';
+
+
+
+        // if (!empty($req->get['id'])) {
+        //     $AddressID = intval($req->get['id']);
+        //     $resp = $this->disableAddressByID($AddressID);
+        //     return;
+        // }
+        // $resp['error'] = 'WrongIDParameter';
     }
 }
 

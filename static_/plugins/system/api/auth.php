@@ -22,6 +22,10 @@ class auth {
         return $_SESSION[$this->authKey];
     }
 
+    public function isUserIDAuthenticated ($userID) {
+        return $this->getAuthenticatedUserID() === $userID;
+    }
+
     public function getAuthenticatedUserID () {
         if (!isset($_SESSION[$this->authKey]))
             $_SESSION[$this->authKey] = null;

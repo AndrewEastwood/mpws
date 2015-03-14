@@ -13,7 +13,7 @@ define([
 
     var UserAddresses = Backbone.View.extend({
         // tagName: 'li',
-        // className: 'col-sm-9 col-md-9',
+        className: 'well user-addresses account-profile-addresses',
         addressList: [],
         template: Handlebars.compile(tpl), // check
         lang: lang,
@@ -23,8 +23,9 @@ define([
         initialize: function () {
             _(this.addressList).invoke('remove');
             this.addressList = [];
-            if (this.model)
+            if (this.model) {
                 this.listenTo(this.model, 'change', this.render);
+            }
             _.bindAll(this, 'addNewAddress', 'refreshAddNewAddressButton', 'renderAddressItem');
         },
         render: function () {
@@ -39,10 +40,10 @@ define([
                 self.renderAddressItem(address);
             });
 
-            this.$('.editable').editable({
-                mode: 'inline',
-                emptytext: lang.profile_page_addresses_label_emptyValue
-            });
+            // this.$('.table:not(.removed) .editable').editable({
+            //     mode: 'inline',
+            //     emptytext: lang.profile_page_addresses_label_emptyValue
+            // });
 
             this.refreshAddNewAddressButton();
 

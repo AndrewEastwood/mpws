@@ -915,3 +915,42 @@ input[type="radio"], input[type="checkbox"] {
 .dashboard {
     .list {overflow: auto;}
 }
+
+.plugin-system-edit-user {
+    .bootstrap-dialog-message > .panel {
+        box-shadow: none;
+    }
+    .user-addresses {
+        background: none;
+        border: none;
+        box-shadow: none;
+        h3 {display: none;}
+    }
+    .user-address-item {
+        position: relative;
+        overflow: hidden;
+        .overlay-removed {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(170, 170, 170, 0.5);
+        }
+        .msg-removed {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 28px;
+            color: rgba(100, 100, 100, 0.5);
+            text-align: center;
+            line-height: 140px;
+            transform: rotate(15deg);
+            text-shadow: 2px 2px 5px #DADADA;
+            font-weight: bold;
+        }
+    }
+    .account-addresses-buttons {
+        margin-bottom: 10px;
+    }
+}

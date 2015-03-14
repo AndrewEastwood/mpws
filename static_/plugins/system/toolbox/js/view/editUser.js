@@ -9,9 +9,10 @@ define([
     'text!plugins/system/toolbox/hbs/editUser.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation',
+    'plugins/system/site/js/view/userAddresses',
     // 'image-upload',
     'bootstrap-switch'
-], function (Backbone, Handlebars, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, ViewUserAddresses, WgtImageUpload) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -24,9 +25,6 @@ define([
     var EditUser = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
         lang: lang,
-        events: {
-            "click .add-address": "addAddress",
-        },
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-user',
         initialize: function () {
             this.options = {};
@@ -36,6 +34,9 @@ define([
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.model = new ModelUser();
+            this.viewUserAddresses = new ViewUserAddresses({
+                model: this.model
+            });
             this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
@@ -94,6 +95,8 @@ define([
             this.$el.html($dialog.getModalContent());
             this.$('.js-permissions .switcher').bootstrapSwitch(this.options.switchOptions);
 
+            this.$('#addresses').html(this.viewUserAddresses.$el);
+            this.viewUserAddresses.render();
             // // setup logo upload
             // var logoUpload = new WgtImageUpload({
             //     el: this.$el,
@@ -102,9 +105,6 @@ define([
             // logoUpload.render();
             // .setupFileUploadItem(this.$(), this);
             return this;
-        },
-        addAddress: function () {
-            
         }
         // getSelectedPlugins: function () {
         //     var plugins = this.$('.js-plugin-item:checked').map(function () {
