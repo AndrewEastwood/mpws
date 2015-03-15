@@ -1,11 +1,11 @@
 <div class="panel">
 
-    {{#if data.success }}
-    <div id="msg" class="alert alert-success">{{lang.editors.user.alerts.success}}</div>
-    {{/if}}
+    <div class="alert alert-success{{#unless data.success }} hidden{{/unless}}">
+        {{lang.editors.user.alerts.success}}
+    </div>
 
     {{#mpwsIsNotEmpty data.errors }}
-    <div id="msg" class="alert alert-danger">
+    <div class="alert alert-danger">
         {{lang.editors.user.errors.title}}
         <ul class="errors">
         {{#each data.errors}}
@@ -155,6 +155,7 @@
                         {{lang.editors.user.buttonAddAddress}}
                     </button>
                 </div>
+                <div class="account-addresses-new"></div>
                 <div class="account-addresses">
                     {{#each extras.addrActive}}
                         {{> userAddrItem}}

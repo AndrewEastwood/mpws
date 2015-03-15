@@ -43,9 +43,11 @@
 
     {{#unless isRemoved}}
     <div class="address-buttons">
+        {{#unless isNew}}
         <button class="btn btn-danger btn-xs removeAddress">
             <i class="fa fa-trash-o"></i>
         </button>
+        {{/unless}}
         <button class="btn btn-success btn-xs saveAddress">
             <i class="fa fa-floppy-o"></i>
             {{lang.editors.user.buttonSaveAddress}}

@@ -126,6 +126,7 @@ define({
             phEMail: 'some@mail.ua',
             phPassword: 'Пароль',
             phConfirmPassword: 'Підтвердження',
+            labelEmptyValue: "Немає значення",
 
     profile_page_password_title: "Зміна паролю",
     profile_page_password_field_Password: "Пароль",

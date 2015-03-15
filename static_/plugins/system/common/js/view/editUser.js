@@ -14,7 +14,8 @@ define([
     'i18n!plugins/system/common/nls/translation',
     'plugins/system/common/js/view/userAddress',
     // 'image-upload',
-    'bootstrap-switch'
+    'bootstrap-switch',
+    'bootstrap-editable'
 ], function (Backbone, Handlebars, ModelUser, ModelAddress, Utils, cachejs, BootstrapDialog, BSAlert, tpl, pUserAddr, lang, ViewUserAddress, WgtImageUpload) {
 
     function _getTitle (isNew) {
@@ -39,7 +40,7 @@ define([
             'click #account-password-pwdgen-btn-ID': 'generatePassword',
             'submit .account-profile-password form': 'changePassword'
         },
-        addressModels: null,
+        // addressModels: null,
         initialize: function () {
             this.options = {};
             this.options.switchOptions = {
@@ -50,7 +51,7 @@ define([
             this.addressModels = {};
             this.model = new ModelUser();
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'saveActiveTab', 'setActiveTab', 'saveAddress');
+            _.bindAll(this, 'saveActiveTab', 'setActiveTab', 'saveAddress', 'showSuccessMessage');
         },
         render: function () {
             var that = this;
@@ -135,16 +136,16 @@ define([
             this.refreshAddNewAddressButton();
             // this.$('.address-buttons').removeClass('hide');
 
-            setTimeout(function() {
-                that.$('.alert.alert-success').fadeTo(1000, 0).slideUp(500, function(){
-                    $(this).remove();
-                });
-            }, 1000);
-            setTimeout(function() {
-                that.$('.alert.alert-danger').fadeTo(5000, 0).slideUp(500, function(){
-                    $(this).remove();
-                });
-            }, 30000);
+            // setTimeout(function() {
+            //     that.$('.alert.alert-success').fadeTo(1000, 0).slideUp(500, function(){
+            //         $(this).remove();
+            //     });
+            // }, 1000);
+            // setTimeout(function() {
+            //     that.$('.alert.alert-danger').fadeTo(5000, 0).slideUp(500, function(){
+            //         $(this).remove();
+            //     });
+            // }, 30000);
             // // setup logo upload
             // var logoUpload = new WgtImageUpload({
             //     el: this.$el,
@@ -160,6 +161,9 @@ define([
         setActiveTab: function () {
             var activeTab = cachejs.get('toolboxUserEditActiveTab') || '#general';
             this.$('.nav-tabs li').find('a[href="' + activeTab + '"]').tab('show');
+        },
+        showSuccessMessage: function () {
+            this.$('.alert.alert-success').removeClass('hidden').fadeTo(2000, 0).slideUp(500, function () {$(this).addClass('hidden').removeAttr('style'); })
         },
         getActiveAddressesCount: function () {
             return _.chain(this.addressModels).invoke('toJSON').where({isRemoved: false}).value().length;
@@ -207,7 +211,20 @@ define([
                 return;
             }
             this.$('.address-buttons, .add-address').addClass('hide');
-            this.renderAddressItem();
+            // this.renderAddressItem();
+            var addrItem = {
+                isNew: true,
+                UserID: this.model.id,
+                lang: lang
+            };
+            var newAddrModel = new ModelAddress(addrItem);
+            addrItem.ID = newAddrModel.cid;
+            this.addressModels[newAddrModel.cid] = newAddrModel;
+            this.$('.account-addresses-new').append(Handlebars.partials.userAddrItem(addrItem));
+            this.$('.account-addresses-new .editable').editable({
+                mode: 'inline',
+                emptytext: lang.editors.user.labelEmptyValue
+            });
         },
         changePassword: function () {
             this.model.changePassword(this.$('#Password').val(), this.$('#Verify').val());
@@ -237,17 +254,19 @@ define([
             });
         },
         saveAddress: _.debounce(function (event) {
+            debugger
             var addrCnt = $(event.target).parents('.user-address-item'),
                 addrId = addrCnt.data('id'),
                 updatedData = addrCnt.find('.editable').editable('getValue'),
                 addrModel = this.addressModels[addrId];
             // this.model.set(updatedData);
             if (addrModel) {
-                addrModel.save(updatedData);
+                addrModel.save(updatedData).then(this.showSuccessMessage);
             }
         }, 500),
         removeAddress: function (event) {
-            var addrCnt = $(event.target).parents('.user-address-item'),
+            var that = this,
+                addrCnt = $(event.target).parents('.user-address-item'),
                 addrId = addrCnt.data('id'),
                 addrModel = this.addressModels[addrId];
             if (addrModel) {
@@ -262,6 +281,7 @@ define([
                                 }
                                 else if (response.error)
                                     BSAlert.danger(lang.editors.user.alerts['error' + response.error || '']);
+                                that.showSuccessMessage();
                             }
                         });
                     }
