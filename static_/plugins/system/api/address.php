@@ -54,13 +54,14 @@ class address {
                 // TODO: if user is authorized and do not have maximum addresses
                 // we must link new address to the user otherwise create unlinked user
                 $user = API::getAPI('system:users')->getUserByID($UserID);
-                if (empty($user))
+                if (empty($user)) {
                     throw new Exception("WrongUser", 1);
-                elseif (count($user['Addresses']) >= 3) {
-                    if (!$allowStandalone)
+                } elseif ($user['ActiveAddressesCount'] >= 3) {
+                    if (!$allowStandalone) {
                         throw new Exception("AddressLimitExceeded", 1);
-                    else
+                    } else {
                         $UserID = null;
+                    }
                 }
 
                 $app->getDB()->beginTransaction();
@@ -158,6 +159,7 @@ class address {
             $errors[] = 'AddressDisableError';
         }
 
+        $result = $this->getAddressByID($AddressID);
         $result['errors'] = $errors;
         $result['success'] = $success;
         return $result;

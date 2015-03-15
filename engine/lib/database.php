@@ -75,8 +75,10 @@ class database {
     public function rollback () {
         if (!$this->isTransactionsAllowed())
             return false;
-        $this->getDBLink()->rollBack();
-        $this->transactionIsActive = false;
+        if ($this->transactionIsActive) {
+            $this->getDBLink()->rollBack();
+            $this->transactionIsActive = false;
+        }
     }
 
     public function disableTransactions () {

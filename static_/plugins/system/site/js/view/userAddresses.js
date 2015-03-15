@@ -15,7 +15,6 @@ define([
         // tagName: 'li',
         className: 'well user-addresses account-profile-addresses',
         addressListActive: [],
-        addressListRemoved: [],
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
@@ -31,19 +30,22 @@ define([
             var self = this;
             // debugger;
             _(this.addressListActive).invoke('remove');
-            _(this.addressListRemoved).invoke('remove');
             this.addressListActive = [];
-            this.addressListRemoved = [];
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
 
             var addresses = this.model.get('Addresses');
 
             // debugger;
             // console.log(addresses);
-            _(addresses).each(function(address){
-                self.renderAddressItem(address);
+            // TODO: optimize
+            _(addresses).each(function(address) {
+                if (!address.isRemoved)
+                    self.renderAddressItem(address);
             });
-
+            _(addresses).each(function(address) {
+                if (address.isRemoved)
+                    self.renderAddressItem(address);
+            });
             // this.$('.table:not(.removed) .editable').editable({
             //     mode: 'inline',
             //     emptytext: lang.profile_page_addresses_label_emptyValue
@@ -54,7 +56,8 @@ define([
             return this;
         },
         refreshAddNewAddressButton: function () {
-            this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressListActive.length >= 3);
+            var activeAddrItems = _(this.addressListActive).where({isRemoved: false});
+            this.$("#account-address-add-btn-ID").toggleClass('hide', activeAddrItems.length >= 3);
         },
         renderAddressItem: function (address) {
             // debugger;
@@ -68,26 +71,39 @@ define([
             // addressView.model.on('change', function() {
             //     self.model.fetch({silent: true});
             // });
-            addressView.model.on('destroy:ok', function() {
-                // self.model.fetch({silent: true});
-                addressView.remove();
-                self.addressListActive = _(self.addressListActive).without(addressView);
-                
+            addressView.model.on('sync', function() {
+                // debugger
                 self.refreshAddNewAddressButton();
+                addressView.render();
             });
+            addressView.model.on('destory', function() {
+                // debugger
+                self.refreshAddNewAddressButton();
+                addressView.render();
+            });
+            // addressView.model.on('destroy', function() {
+            //     debugger
+            //     // addressView.model.fetch({silent: true});
+            //     addressView.render();
+            //     // self.render();
+            //     // addressView.prependTo(this.$('.account-addresses'));
+            //     // self.addressListActive = _(self.addressListActive).without(addressView);
+            //     // self.refreshAddNewAddressButton();
+            // });
 
-            if (address.isRemoved) {
-                this.addressListRemoved.push(addressView);
-            } else {
+            if (address && !address.isRemoved) {
                 this.addressListActive.push(addressView);
             }
 
-            this.$('.account-addresses').append(addressView.$el);
+            if (!address || !address.isRemoved)
+                this.$('.account-addresses').prepend(addressView.$el);
+            else
+                this.$('.account-addresses').append(addressView.$el);
 
-            this.refreshAddNewAddressButton();
+            // this.refreshAddNewAddressButton();
         },
         addNewAddress: function (address) {
-            if (this.addressList.length >= 3)
+            if (this.addressListActive.length >= 3)
                 return;
             this.renderAddressItem();
         }

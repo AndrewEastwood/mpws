@@ -44,7 +44,9 @@ class users {
 
         // customizations
         $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
-
+        $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
+            return !$v['isRemoved'];
+        }));
         return $user;
     }
 

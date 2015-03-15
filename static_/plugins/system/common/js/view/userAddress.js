@@ -42,10 +42,13 @@ define([
         saveAddress: _.debounce(function (event) {
             var that = this,
                 updatedData = $(event.target).parents('.user-address-item').find('.editable').editable('getValue');
-            this.model.set(updatedData);
-            this.model.save().then(function () {
+            // this.model.set(updatedData);
+            this.model.save(updatedData).then(function () {
                 setTimeout(function() {
-                    that.$('.alert').fadeTo(1500, 0).slideUp(500, function(){
+                    that.$('.alert.alert-success').fadeTo(1500, 0).slideUp(500, function(){
+                        $(this).remove();
+                    });
+                    that.$('.alert.alert-danger').fadeTo(3500, 0).slideUp(500, function(){
                         $(this).remove();
                     });
                 }, 1000);
@@ -56,17 +59,25 @@ define([
             BootstrapDialog.confirm("Видалити цю адресу", function (rez) {
                 if (rez) {
                     that.model.destroy({
-                        success: function (model, response) {
-                            if (response) {
-                                if (response.success) {
-                                    BSAlert.success(lang.profile_page_editAddress_destroySuccess);
-                                    that.model.trigger('destroy:ok');
-                                }
-                                else if (response.error)
-                                    BSAlert.danger(lang['profile_page_editAddress_error_' + response.error]);
+                        success: function (m, response) {
+                            that.model.set(response);
+                            if (response.success) {
+                                BSAlert.success(lang.profile_page_editAddress_destroySuccess);
                             }
+                            else if (response.error)
+                                BSAlert.danger(lang['profile_page_editAddress_error_' + response.error]);
                         }
-                    });
+                    })
+
+
+                    // .then(function (response) {
+                    //         // debugger
+                    //         // console.log(that.model.toJSON());
+                    //         that.trigger('destroy:ok');
+                    //     // success: function (model, response) {
+                    //     //     if (response) {
+                    //     // }
+                    // });
                 }
             });
         }
