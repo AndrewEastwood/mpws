@@ -3,6 +3,7 @@ define([
     'handlebars',
     'plugins/system/common/js/model/user',
     'utils',
+    'cachejs',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
@@ -12,7 +13,7 @@ define([
     'plugins/system/site/js/view/userAddresses',
     // 'image-upload',
     'bootstrap-switch'
-], function (Backbone, Handlebars, ModelUser, Utils, BootstrapDialog, BSAlert, tpl, lang, ViewUserAddresses, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelUser, Utils, cachejs, BootstrapDialog, BSAlert, tpl, lang, ViewUserAddresses, WgtImageUpload) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -26,6 +27,9 @@ define([
         template: Handlebars.compile(tpl), // check
         lang: lang,
         className: 'bootstrap-dialog type-primary size-normal plugin-system-edit-user',
+        events: {
+            'shown.bs.tab a[data-toggle="tab"]': 'saveActiveTab'
+        },
         initialize: function () {
             this.options = {};
             this.options.switchOptions = {
@@ -34,10 +38,8 @@ define([
                 offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.model = new ModelUser();
-            this.viewUserAddresses = new ViewUserAddresses({
-                model: this.model
-            });
             this.listenTo(this.model, 'sync', this.render);
+            _.bindAll(this, 'saveActiveTab', 'setActiveTab');
         },
         render: function () {
             var that = this;
@@ -94,9 +96,13 @@ define([
             // this.$el = $dialog.getModalContent().get(0);
             this.$el.html($dialog.getModalContent());
             this.$('.js-permissions .switcher').bootstrapSwitch(this.options.switchOptions);
-
+            this.viewUserAddresses = new ViewUserAddresses({
+                model: this.model
+            });
+            this.viewUserAddresses.remove();
             this.$('#addresses').html(this.viewUserAddresses.$el);
             this.viewUserAddresses.render();
+            this.setActiveTab();
             // // setup logo upload
             // var logoUpload = new WgtImageUpload({
             //     el: this.$el,
@@ -105,6 +111,13 @@ define([
             // logoUpload.render();
             // .setupFileUploadItem(this.$(), this);
             return this;
+        },
+        saveActiveTab: function () {
+            cachejs.set('toolboxUserEditActiveTab', this.$('.nav-tabs li.active').find('a').attr('href'));
+        },
+        setActiveTab: function () {
+            var activeTab = cachejs.get('toolboxUserEditActiveTab') || '#general';
+            this.$('.nav-tabs li').find('a[href="' + activeTab + '"]').tab('show');
         }
         // getSelectedPlugins: function () {
         //     var plugins = this.$('.js-plugin-item:checked').map(function () {

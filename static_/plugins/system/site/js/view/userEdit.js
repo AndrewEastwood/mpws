@@ -3,18 +3,22 @@ define([
     'backbone',
     'handlebars',
     'utils',
+    'cachejs',
     'text!plugins/system/site/hbs/userEdit.hbs',
     /* lang */
     'i18n!plugins/system/site/nls/translation',
     'bootstrap-editable',
     'jquery.maskedinput'
-], function ($, Backbone, Handlebars, Utils, tpl, lang) {
+], function ($, Backbone, Handlebars, Utils, cachejs, tpl, lang) {
 
     var AccountEdit = Backbone.View.extend({
         // tagName: 'li',
         // className: 'col-sm-9 col-md-9',
         template: Handlebars.compile(tpl), // check
         lang: lang,
+        events: {
+            'click .nav-tabs li': 'saveActiveTab'
+        },
         initialize: function () {
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
@@ -46,6 +50,9 @@ define([
             });
 
             return this;
+        },
+        saveActiveTab: function () {
+            cachejs.set('toolboxUserEditActiveTab', this.$('.nav-tabs li.active').find('a').attr('href'));
         }
     });
 

@@ -18,7 +18,7 @@ define([
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
-            "click #account-address-add-btn-ID": "addNewAddress",
+            "click .add-address": "addNewAddress",
         },
         initialize: function () {
             if (this.model) {
@@ -52,12 +52,18 @@ define([
             // });
 
             this.refreshAddNewAddressButton();
+            this.delegateEvents();
 
             return this;
         },
+        getActiveAddressesCount: function () {
+            return _.chain(this.addressListActive).pluck('model').invoke('toJSON').where({isRemoved: false}).value().length;
+        },
+        canCreateAddress: function () {
+            return this.getActiveAddressesCount() < 3;
+        },
         refreshAddNewAddressButton: function () {
-            var activeAddrItems = _(this.addressListActive).where({isRemoved: false});
-            this.$("#account-address-add-btn-ID").toggleClass('hide', activeAddrItems.length >= 3);
+            this.$(".add-address").toggleClass('hide', !this.canCreateAddress());
         },
         renderAddressItem: function (address) {
             // debugger;
@@ -73,13 +79,15 @@ define([
             // });
             addressView.model.on('sync', function() {
                 // debugger
-                self.refreshAddNewAddressButton();
-                addressView.render();
+                // addressView.render();
+                // self.refreshAddNewAddressButton();
+                self.model.fetch();
             });
             addressView.model.on('destory', function() {
                 // debugger
-                self.refreshAddNewAddressButton();
-                addressView.render();
+                // addressView.render();
+                // self.refreshAddNewAddressButton();
+                self.model.fetch();
             });
             // addressView.model.on('destroy', function() {
             //     debugger
@@ -91,21 +99,23 @@ define([
             //     // self.refreshAddNewAddressButton();
             // });
 
-            if (address && !address.isRemoved) {
-                this.addressListActive.push(addressView);
-            }
+            this.addressListActive.push(addressView);
 
             if (!address || !address.isRemoved)
                 this.$('.account-addresses').prepend(addressView.$el);
             else
                 this.$('.account-addresses').append(addressView.$el);
 
-            // this.refreshAddNewAddressButton();
+            this.refreshAddNewAddressButton();
         },
         addNewAddress: function (address) {
-            if (this.addressListActive.length >= 3)
+            // debugger
+            if (!this.canCreateAddress()) {
                 return;
+            }
+            this.$('.address-buttons').addClass('hide');
             this.renderAddressItem();
+            this.$('.add-address').addClass('hide');
         }
     });
 
