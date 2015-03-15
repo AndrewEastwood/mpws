@@ -1,76 +1,55 @@
 {{!-- <table class="table table-bordered table-striped account-profile-address-entry"> --}}
-{{#if data.success }}
-<div id="msg" class="alert alert-success">{{lang.profile_page_editAddress_saveSuccess}}</div>
-{{/if}}
 
-{{#mpwsIsNotEmpty data.errors }}
-<div id="msg" class="alert alert-danger">
-    {{lang.profile_page_editAddress_error_commonError}}
-    <ul class="errors">
-    {{#each data.errors}}
-        <li>
-            <strong>
-                {{mpwsGetValueByKey ../lang key=@key prefix="profile_page_edit_error_atField_"}}
-            </strong>
-            <ul>
-            {{#each this}}
-                <li>{{mpwsGetValueByKey ../../lang key=this prefix="profile_page_edit_error_"}}</li>
-            {{/each}}
-            </ul>
-        </li>
-    {{/each}}
-    </ul>
+<div class="user-address-item" data-id="{{ID}}">
+    {{#if isRemoved}}
+    <div class="overlay-removed"></div>
+    <div class="msg-removed">Ця адреса є видалена</div>
+    {{/if}}
+
+    <table class="table{{#if isRemoved}} removed{{/if}}">
+        <tr>
+            <td width="20%">{{lang.editors.user.labelAddress}}</td>
+            <td>
+                <a href="javascript://" id="account-address-ID" class="editable editable-click", data-type="text" data-name="Address">
+                    {{Address}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>{{lang.editors.user.labelPOBox}}</td>
+            <td>
+                <a href="javascript://" id="account-pobox-ID" class="editable editable-click", data-type="text" data-name="POBox">
+                    {{POBox}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>{{lang.editors.user.labelCountry}}</td>
+            <td>
+                <a href="javascript://" id="account-country-ID" class="editable editable-click", data-type="text" data-name="Country">
+                    {{Country}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>{{lang.editors.user.labelCity}}</td>
+            <td>
+                <a href="javascript://" id="account-city-ID" class="editable editable-click", data-type="text" data-name="City">
+                    {{City}}
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    {{#unless isRemoved}}
+    <div class="address-buttons">
+        <button class="btn btn-danger btn-xs removeAddress">
+            <i class="fa fa-trash-o"></i>
+        </button>
+        <button class="btn btn-success btn-xs saveAddress">
+            <i class="fa fa-floppy-o"></i>
+            {{lang.editors.user.buttonSaveAddress}}
+        </button>
+    </div>
+    {{/unless}}
 </div>
-{{/mpwsIsNotEmpty}}
-
-{{#if data.isRemoved}}
-<div class="overlay-removed"></div>
-<div class="msg-removed">Ця адреса є видалена</div>
-{{/if}}
-
-<table class="table{{#if data.isRemoved}} removed{{/if}}">
-    <tr>
-        <td width="20%">{{lang.profile_page_addresses_Address}}</td>
-        <td>
-            <a href="javascript://" id="account-address-ID" class="editable editable-click", data-type="text" data-name="Address">
-                {{data.Address}}
-            </a>
-        </td>
-    </tr>
-    <tr>
-        <td>{{lang.profile_page_addresses_POBox}}</td>
-        <td>
-            <a href="javascript://" id="account-pobox-ID" class="editable editable-click", data-type="text" data-name="POBox">
-                {{data.POBox}}
-            </a>
-        </td>
-    </tr>
-    <tr>
-        <td>{{lang.profile_page_addresses_Country}}</td>
-        <td>
-            <a href="javascript://" id="account-country-ID" class="editable editable-click", data-type="text" data-name="Country">
-                {{data.Country}}
-            </a>
-        </td>
-    </tr>
-    <tr>
-        <td>{{lang.profile_page_addresses_City}}</td>
-        <td>
-            <a href="javascript://" id="account-city-ID" class="editable editable-click", data-type="text" data-name="City">
-                {{data.City}}
-            </a>
-        </td>
-    </tr>
-</table>
-
-{{#unless data.isRemoved}}
-<div class="address-buttons">
-    <button class="btn btn-danger btn-xs removeAddress">
-        <i class="fa fa-trash-o"></i>
-    </button>
-    <button class="btn btn-success btn-xs saveAddress">
-        <i class="fa fa-floppy-o"></i>
-        {{lang.profile_page_addresses_button_saveAddress}}
-    </button>
-</div>
-{{/unless}}

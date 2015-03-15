@@ -155,5 +155,21 @@ define([
         }
     }
 
+    Utils.generatePwd = function () {
+        var text = '',
+            blocks = [
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "abcdefghijklmnopqrstuvwxyz",
+                "0123456789",
+                "!@#$%&*?)("
+            ];
+        for(var i = 0, len = blocks.length; i < len; i++ ) {
+            for(var j = 0; j < 2; j++) {
+                text += blocks[i].charAt(Math.floor(Math.random() * blocks[i].length));
+            }
+        }
+        return text.split('').sort(function() {return 0.5 - Math.random()}).join('');;
+    }
+
     return Utils;
 });

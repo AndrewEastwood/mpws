@@ -27,7 +27,7 @@ define([
             _.bindAll(this, 'saveAddress', 'removeAddress');
         },
         render: function () {
-            var self = this;
+            var that = this;
             // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
 
@@ -37,22 +37,23 @@ define([
                     emptytext: lang.profile_page_addresses_label_emptyValue
                 });
             }
+            // setTimeout(function() {
+            //     that.$('.alert.alert-success').fadeTo(1000, 0).slideUp(500, function(){
+            //         $(this).remove();
+            //     });
+            // }, 1000);
+            // setTimeout(function() {
+            //     that.$('.alert.alert-danger').fadeTo(5000, 0).slideUp(500, function(){
+            //         $(this).remove();
+            //     });
+            // }, 30000);
             return this;
         },
         saveAddress: _.debounce(function (event) {
             var that = this,
                 updatedData = $(event.target).parents('.user-address-item').find('.editable').editable('getValue');
             // this.model.set(updatedData);
-            this.model.save(updatedData).then(function () {
-                setTimeout(function() {
-                    that.$('.alert.alert-success').fadeTo(1500, 0).slideUp(500, function(){
-                        $(this).remove();
-                    });
-                    that.$('.alert.alert-danger').fadeTo(3500, 0).slideUp(500, function(){
-                        $(this).remove();
-                    });
-                }, 1000);
-            });
+            this.model.save(updatedData);
         }, 500),
         removeAddress: function () {
             var that = this;
@@ -60,24 +61,15 @@ define([
                 if (rez) {
                     that.model.destroy({
                         success: function (m, response) {
+                            console.log('destroy success');
                             that.model.set(response);
-                            if (response.success) {
+                            if (response.success_address) {
                                 BSAlert.success(lang.profile_page_editAddress_destroySuccess);
                             }
                             else if (response.error)
                                 BSAlert.danger(lang['profile_page_editAddress_error_' + response.error]);
                         }
-                    })
-
-
-                    // .then(function (response) {
-                    //         // debugger
-                    //         // console.log(that.model.toJSON());
-                    //         that.trigger('destroy:ok');
-                    //     // success: function (model, response) {
-                    //     //     if (response) {
-                    //     // }
-                    // });
+                    });
                 }
             });
         }

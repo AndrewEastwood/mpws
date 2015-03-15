@@ -1,43 +1,132 @@
-define("plugins/system/site/nls/ua_uk/translation", {
-    /* form register */
-    form_register_title: "Реєстрація",
-    form_register_field_FirstName: "Імя",
-    form_register_field_LastName: "Прізвище",
-    form_register_field_EMail: "Ел. адреса",
-    form_register_field_Password: "Пароль",
-    form_register_field_ConfirmPassword: "Підтвердження паролю",
-    form_register_message_bottom: "",
-    form_register_message_success_title: "Новий профіль успішно створнений!",
-    form_register_message_success_line1: "На Вашу ел. скриньку надійде повідомлення з підтвредженням Вашї реєстрації.",
-    form_register_message_success_line2: "Для успішного завершення реєстрації Вам необхідно виконати інструкції в отриманому листі",
-    form_register_button_create: "Сворити профіль",
-    form_register_commonError: "Помилка під час створення профілю",
-    /* form signin */
-    form_signin_menu_title: "Увійти",
-    form_signin_field_Email: "Ел.адреса",
-    form_signin_field_Password: "Пароль",
-    form_signin_field_RememberMe: "Запамятати мене",
-    form_signin_message_bottom: "",
-    form_signin_button_signin: "Увійти",
-    form_signin_error: 'Невірний логін або пароль',
-    /* profile menu short */
-    profile_menu_title: "",
-    profile_menu_welcome: "Вітаємо: ",
-    profile_menu_lastAccessDate: "Останній вхід: ",
-    profile_menu_profile: "Профіль",
-    profile_menu_logout: "Вийти",
-    /* profile pages */
-    profile_page_menu_profile: "Профіль",
-    profile_page_menu_profile_overview: "Огляд",
-    profile_page_menu_profile_password: "Зміна паролю",
-    profile_page_menu_profile_edit: "Змінити профіль",
-    profile_page_menu_profile_addresses: "Мої адреси",
-    profile_page_menu_profile_delete: "Видалити профіль",
-    profile_page_menu_plugins: "Компоненти",
-    /* profile page:overview */
-    profile_page_overview_title: "Огляд",
-    profile_page_overview_section_addresses_title: "Мої адреси",
-    /* profile page:settings */
+define({
+    menu: {
+        title: 'Система',
+        dashboard: 'Огляд системи',
+        customers: 'Сайти',
+        customerEdit: 'Редагувати',
+        migrations: 'Маграції БД',
+        users: 'Користувачі'
+    },
+    form: {
+        signin: {
+            title: 'Вхід у систему',
+            generalError: 'Невірний логін або пароль',
+            fieldLogin: 'Лоігн',
+            fieldPassword: 'Пароль',
+            buttonSubmit: 'Вхід'
+        }
+    },
+    managers: {
+        customers: {
+            title: 'Сайти',
+            noData: 'Нема даних'
+        },
+        users: {
+            title: 'Користувачі',
+            noData: 'Нема даних'
+        }
+    },
+    lists: {
+        customers: {
+            columnID: '#',
+            columnName: 'Назва',
+            columnStatus: 'Статус',
+            columnLang: 'Мова',
+            columnLocale: 'Локалізація',
+            columnDateCreated: 'Дата Створення',
+            columnDateUpdated: 'Дата Оновлення'
+        },
+        users: {
+            columnID: '#',
+            columnIsOnline: 'Онлайн',
+            columnFullName: 'Імя',
+            columnEMail: 'Мейл',
+            columnPhone: 'Тел.',
+            columnValidationString: 'Код',
+            columnStatus: 'Стату',
+            columnDateLastAccess: 'Ост.Доступ',
+            columnDateCreated: 'Дата Створення',
+            columnDateUpdated: 'Дата Оновлення'
+        }
+    },
+    customer: {
+        statuses: {
+            ACTIVE: 'Активний',
+            REMOVED: 'Видалений'
+        }
+    },
+    user: {
+        statuses: {
+            ACTIVE: 'Активний',
+            REMOVED: 'Видалений',
+            TEMP: 'Тимчасовий'
+        }
+    },
+    editors: {
+        customer: {
+            titleForNew: 'Створення сайту',
+            titleForExistent: 'Редагування сайту',
+            errors: {
+                title: ''
+            },
+            labelHostName: 'Хост',
+            labelHomePage: 'Домашня сторінка',
+            labelTitle: 'Заголовок',
+            labelAdminTitle: 'Зголовок адміністрування',
+            labelLogo: 'Логотип',
+            labelLang: 'Мова',
+            labelLocale: 'Локалізація',
+            labelProtocol: 'Протокол',
+            buttonSave: 'Зберегти',
+            buttonClose: 'Назад',
+            messageSuccess: 'Успішно',
+            messageError: 'Помилка',
+            plugins: {
+                title: 'Додатки'
+            }
+        },
+        user: {
+            titleForNew: 'Створення користувача',
+            titleForExistent: 'Редагування користувача',
+            errors: {
+                title: ''
+            },
+            alerts: {
+                success: 'Успішно',
+                successAddrRemove: 'Адресу видалено',
+                error: 'Помилка'
+            },
+            popups: {
+                password: {
+                    title: 'Згенерований пароль'
+                }
+            },
+            labelIsOnline: '- on-line індикатор',
+            labelFirstName: 'Імя',
+            labelLastName: '',
+            labelEMail: 'Ел.Адреса',
+            labelPhone: 'Телеофн',
+            labelValidationString: 'Код активації',
+            labelPassword: 'Пароль',
+            labelConfirmPassword: 'Підтвердження',
+            labelp_CanAdmin: 'Адміністрування',
+            labelp_CanCreate: 'Створення записів',
+            labelp_CanEdit: 'Редагування записів',
+            labelp_CanUpload: 'Завантаження файлів',
+            labelp_CanViewReports: 'Перегляд звітів',
+            labelp_CanAddUsers: 'Створення користувачів',
+            labelp_CanMaintain: 'Сервіс',
+            labelAddress: 'Адреса',
+            labelPOBox: 'Поштовий індекс',
+            labelCountry: 'Країна',
+            labelCity: 'Місто',
+            phFirstName: 'імя',
+            phLastName: 'прізвище',
+            phPhone: '(000) 000-00-00',
+            phEMail: 'some@mail.ua',
+            phPassword: 'Пароль',
+            phConfirmPassword: 'Підтвердження',
+
     profile_page_password_title: "Зміна паролю",
     profile_page_password_field_Password: "Пароль",
     profile_page_password_field_Password_placeholder: "Пароль",
@@ -101,18 +190,18 @@ define("plugins/system/site/nls/ua_uk/translation", {
     profile_page_edit_error_AddressLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
     profile_page_edit_error_AddressIsNoString: 'Немає літер в адресі',
     profile_page_edit_error_AddressIsEmpty: 'Порожнє значення',
-    /* profile page:delete */
-    profile_page_delete_title: "Видалення профілю",
-    /* profile page:addresses */
-    profile_page_addresses_title: "Мої адреси",
-    profile_page_addresses_Address: "Адреса",
-    profile_page_addresses_POBox: "Поштовий індекс",
-    profile_page_addresses_Country: "Країна",
-    profile_page_addresses_City: "Місто",
-    profile_page_addresses_entry_new: "Введіть адресу",
-    profile_page_addresses_label_emptyValue: "Немає значення",
-    profile_page_addresses_message_saveSuccess: "Зміни успішно збережені",
-    profile_page_addresses_message_saveError: "Помилка під час збереження адреси",
-    profile_page_addresses_button_addAddress: "Додати адресу",
-    profile_page_addresses_button_saveAddress: "Зберегти"
+
+            buttonGeneratePasswordCancel: 'Скасувати',
+            buttonAddAddress: 'Додати адресу',
+            buttonGeneratePassword: 'Згенерувати',
+            buttonSaveAddress: 'Зберегти',
+            buttonSave: 'Зберегти',
+            buttonClose: 'Назад',
+            messageSuccess: 'Успішно',
+            messageError: 'Помилка',
+            permissions: {
+                title: 'Права доступу'
+            }
+        }
+    }
 });

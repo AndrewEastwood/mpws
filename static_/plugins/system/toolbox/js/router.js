@@ -174,7 +174,7 @@ define([
         },
 
         userEdit: function (id) {
-            require(['plugins/system/toolbox/js/view/editUser'], function (ViewEditUser) {
+            require(['plugins/system/common/js/view/editUser'], function (ViewEditUser) {
                 // debugger;
                 // create new view
                 var viewEditUser = new ViewEditUser();

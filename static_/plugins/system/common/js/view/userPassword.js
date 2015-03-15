@@ -6,7 +6,8 @@ define([
     'bootstrap-dialog',
     'text!plugins/system/site/hbs/userPassword.hbs',
     /* lang */
-    'i18n!plugins/system/site/nls/translation'
+    'i18n!plugins/system/site/nls/translation',
+    'passwordgenerator'
 ], function ($, Backbone, Handlebars, Utils, BootstrapDialog, tpl, lang) {
 
     var AccountPassword = Backbone.View.extend({
@@ -23,9 +24,19 @@ define([
                 this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            var self = this;
+            var that = this;
             // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            setTimeout(function() {
+                that.$('.alert.alert-success').fadeTo(1000, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+            }, 1000);
+            setTimeout(function() {
+                that.$('.alert.alert-danger').fadeTo(5000, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+            }, 30000);
             return this;
         },
         changePassword: function () {
@@ -42,7 +53,7 @@ define([
                 return;
             }
 
-            var pwd = Math.random().toString(36).slice(-8);
+            var pwd = Utils.generatePwd();// Math.random().toString(36).slice(-8);
             this.$('#Password, #Verify').val(pwd).prop('disabled', true);
 
             $btn.data('pwd', pwd);

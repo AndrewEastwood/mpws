@@ -91,6 +91,9 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             errors: {
                 title: ''
             },
+            alerts: {
+                success: 'Успішно'
+            },
             labelIsOnline: '- on-line індикатор',
             labelFirstName: 'Імя',
             labelLastName: '',

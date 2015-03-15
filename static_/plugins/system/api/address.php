@@ -95,6 +95,7 @@ class address {
 
         $result['errors'] = $errors;
         $result['success'] = $success;
+        $result['success_address'] = $success;
 
         return $result;
     }
@@ -136,6 +137,7 @@ class address {
         $result = $this->getAddressByID($AddressID);
         $result['errors'] = $errors;
         $result['success'] = $success;
+        $result['success_address'] = $success;
 
         return $result;
     }
@@ -162,6 +164,7 @@ class address {
         $result = $this->getAddressByID($AddressID);
         $result['errors'] = $errors;
         $result['success'] = $success;
+        $result['success_address'] = $success;
         return $result;
     }
 

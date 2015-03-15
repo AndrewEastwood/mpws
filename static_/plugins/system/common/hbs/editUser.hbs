@@ -1,17 +1,28 @@
 <div class="panel">
+
+    {{#if data.success }}
+    <div id="msg" class="alert alert-success">{{lang.editors.user.alerts.success}}</div>
+    {{/if}}
+
     {{#mpwsIsNotEmpty data.errors }}
     <div id="msg" class="alert alert-danger">
         {{lang.editors.user.errors.title}}
-        <ol class="errors">
-            {{#each data.errors}}
-            {{#each this}}
-            <li>{{mpwsGetValueByKey ../../lang.editors.user.errors key=this prefix=""}}</li>
-            {{/each}}
-            {{/each}}
-        </ol>
+        <ul class="errors">
+        {{#each data.errors}}
+            <li>
+                <strong>
+                    {{mpwsGetValueByKey ../lang.editors.user.errors key=@key }}
+                </strong>
+                <ul>
+                {{#each this}}
+                    <li>{{mpwsGetValueByKey ../../lang.editors.user.errors key=this}}</li>
+                {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+        </ul>
     </div>
     {{/mpwsIsNotEmpty}}
-            
 
     <div role="tabpanel">
 
@@ -23,9 +34,11 @@
             <li role="presentation">
                 <a href="#pwd" aria-controls="pwd" role="tab" data-toggle="tab">Пароль</a>
             </li>
+            {{#unless extras.isNew}}
             <li role="presentation">
                 <a href="#addresses" aria-controls="addresses" role="tab" data-toggle="tab">Адреси</a>
             </li>
+            {{/unless}}
             <li role="presentation">
                 <a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">
                     {{lang.editors.user.permissions.title}}
@@ -56,28 +69,28 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="textinput">{{lang.editors.user.labelFirstName}}</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control input-md js-firstname" value="{{data.FirstName}}">
+                                <input type="text" class="form-control input-md js-firstname" value="{{data.FirstName}}" placeholder="{{lang.editors.user.phFirstName}}">
                             </div>
                         </div>
                         <!-- Textarea -->
                         <div class="form-group">
                             <label class="col-md-4 control-label">{{lang.editors.user.labelLastName}}</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control input-md js-lastname" value="{{data.LastName}}">
+                                <input type="text" class="form-control input-md js-lastname" value="{{data.LastName}}" placeholder="{{lang.editors.user.phLastName}}">
                             </div>
                         </div>
                         <!-- Textarea -->
                         <div class="form-group">
                             <label class="col-md-4 control-label">{{lang.editors.user.labelEMail}}</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control input-md js-email" value="{{data.EMail}}">
+                                <input type="text" class="form-control input-md js-email" value="{{data.EMail}}" placeholder="{{lang.editors.user.phEMail}}">
                             </div>
                         </div>
                         <!-- Select Basic -->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="parent">{{lang.editors.user.labelPhone}}</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control input-md js-phone" value="{{data.Phone}}">
+                                <input type="text" class="form-control input-md js-phone" value="{{data.Phone}}" placeholder="{{lang.editors.user.phPhone}}">
                             </div>
                         </div>
                         <!-- Textarea -->
@@ -100,39 +113,63 @@
 
 
 
+        <form class="form-horizontal">
+            <fieldset>
 
-                <form class="form-horizontal">
-                    <fieldset>
-                        <!-- User passwords -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">{{lang.editors.user.labelСurrentPassword}}</label>
-                            <div class="col-md-6">
-                                <input class="form-control input-md js-password" value="">
+                <!-- Button Drop Down -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="Password">{{lang.editors.user.labelPassword}}</label>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input id="Password" name="Password" type="password" class="form-control" placeholder="{{lang.editors.user.phPassword}}" type="text">
+                            <div class="input-group-btn">
+                                <button id="account-password-pwdgen-btn-ID" type="button" class="btn btn-default">{{lang.editors.user.buttonGeneratePassword}}</button>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">{{lang.editors.user.labelPassword}}</label>
-                            <div class="col-md-6">
-                                <input class="form-control input-md js-password" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">{{lang.editors.user.labelPasswordVerify}}</label>
-                            <div class="col-md-6">
-                                <input class="form-control input-md js-passwordverify" value="">
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
+                    </div>
+                </div>
 
+                <!-- Password input-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="Verify">{{lang.editors.user.labelConfirmPassword}}</label>
+                    <div class="col-md-6">
+                        <input id="Verify" name="Verify" type="password" placeholder="{{lang.editors.user.phConfirmPassword}}" class="form-control input-md" required="">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
 
 
 
 
             </div>
-            <div role="tabpanel" class="tab-pane" id="addresses"></div>
-            <div role="tabpanel" class="tab-pane" id="permissions">
+            {{#unless extras.isNew}}
+            <div role="tabpanel" class="tab-pane" id="addresses">
                 
+
+                <h3>{{lang.editors.user.addressesTitle}}</h3>
+                <div class="account-addresses-buttons">
+                    <button class="btn btn-success btn-xs add-address">
+                        <i class="fa fa-plus fa-fw"></i>
+                        {{lang.editors.user.buttonAddAddress}}
+                    </button>
+                </div>
+                <div class="account-addresses">
+                    {{#each extras.addrActive}}
+                        {{> userAddrItem}}
+                    {{/each}}
+                </div>
+                <div class="account-addresses-removed">
+                    {{#each extras.addrRemoved}}
+                        {{> userAddrItem}}
+                    {{/each}}
+                </div>
+
+
+            </div>
+            {{/unless}}
+            <div role="tabpanel" class="tab-pane" id="permissions">
 
 
                     <div class="list-group js-permissions">
@@ -145,7 +182,6 @@
                     {{/srtStartsWith}}
                     {{/each}}
                     </div>
-
 
 
 
