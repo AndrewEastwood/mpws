@@ -14,6 +14,7 @@ require.config({
         'handlebars-partials': 'base/js/utils/handlebars-partials',
         'sandbox': 'base/js/utils/sandbox',
         'utils': 'base/js/utils/utils',
+        'createPopupTitle': 'base/js/utils/createPopupTitle',
         // vendors
         'backbone': 'vendors/backbone/backbone',
         'backbone-pageable': 'vendors/backbone-pageable/lib/backbone-pageable',

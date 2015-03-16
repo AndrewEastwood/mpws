@@ -7,7 +7,7 @@ define([
     'bootstrap-dialog',
     'text!plugins/system/common/hbs/partials/userAddress.hbs',
     /* lang */
-    'i18n!plugins/system/site/nls/translation',
+    'i18n!plugins/system/common/nls/translation',
     'bootstrap-editable'
 ], function (Backbone, Handlebars, ModelUserAddress, Utils, BSAlert, BootstrapDialog, tpl, lang) {
 
@@ -18,56 +18,62 @@ define([
         events: {
             "click .saveAddress": "saveAddress",
             "click .removeAddress": "removeAddress",
+            "click .cancel": "cancelAdding",
         },
         initialize: function (options) {
             // debugger;
             this.model = new ModelUserAddress(options.address || {});
             this.model.set('UserID', options.UserID);
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'saveAddress', 'removeAddress');
+            _.bindAll(this, 'render', 'saveAddress', 'removeAddress');
         },
         render: function () {
+            console.log('rendering address item');
             var that = this;
-            // debugger;
+            this.model.extras = {
+                isNew: this.model.isNew()
+            };
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-
             if (!this.model.get('isRemoved')) {
                 this.$('.editable').editable({
                     mode: 'inline',
-                    emptytext: lang.profile_page_addresses_label_emptyValue
+                    emptytext: lang.editors.user.labelEmptyValue
                 });
             }
-            // setTimeout(function() {
-            //     that.$('.alert.alert-success').fadeTo(1000, 0).slideUp(500, function(){
-            //         $(this).remove();
-            //     });
-            // }, 1000);
-            // setTimeout(function() {
-            //     that.$('.alert.alert-danger').fadeTo(5000, 0).slideUp(500, function(){
-            //         $(this).remove();
-            //     });
-            // }, 30000);
+            this.delegateEvents();
             return this;
         },
+        isActive: function () {
+            return !this.model.get('isRemoved');
+        },
         saveAddress: _.debounce(function (event) {
+            console.log('saving address');
             var that = this,
                 updatedData = $(event.target).parents('.user-address-item').find('.editable').editable('getValue');
-            // this.model.set(updatedData);
-            this.model.save(updatedData);
+            this.model.save(updatedData, {wait: true}).then(function (response) {
+                if (response.success_address) {
+                    that.trigger('custom:saved', that.cid);
+                }
+                that.render();
+            }, this.render);
         }, 500),
+        cancelAdding: function () {
+            this.remove();
+            this.trigger('custom:cancel', this.cid);
+        },
         removeAddress: function () {
             var that = this;
             BootstrapDialog.confirm("Видалити цю адресу", function (rez) {
                 if (rez) {
                     that.model.destroy({
                         success: function (m, response) {
-                            console.log('destroy success');
                             that.model.set(response);
                             if (response.success_address) {
-                                BSAlert.success(lang.profile_page_editAddress_destroySuccess);
+                                that.trigger('custom:disabled', that.cid);
+                                BSAlert.success(lang.editors.user.alerts.successAddrRemove);
                             }
                             else if (response.error)
-                                BSAlert.danger(lang['profile_page_editAddress_error_' + response.error]);
+                                BSAlert.danger(lang.editors.user.alerts['error' + response.error || '']);
                         }
                     });
                 }

@@ -1,60 +1,4 @@
 define({
-    menu: {
-        title: 'Система',
-        dashboard: 'Огляд системи',
-        customers: 'Сайти',
-        customerEdit: 'Редагувати',
-        migrations: 'Маграції БД',
-        users: 'Користувачі'
-    },
-    form: {
-        signin: {
-            title: 'Вхід у систему',
-            generalError: 'Невірний логін або пароль',
-            fieldLogin: 'Лоігн',
-            fieldPassword: 'Пароль',
-            buttonSubmit: 'Вхід'
-        }
-    },
-    managers: {
-        customers: {
-            title: 'Сайти',
-            noData: 'Нема даних'
-        },
-        users: {
-            title: 'Користувачі',
-            noData: 'Нема даних'
-        }
-    },
-    lists: {
-        customers: {
-            columnID: '#',
-            columnName: 'Назва',
-            columnStatus: 'Статус',
-            columnLang: 'Мова',
-            columnLocale: 'Локалізація',
-            columnDateCreated: 'Дата Створення',
-            columnDateUpdated: 'Дата Оновлення'
-        },
-        users: {
-            columnID: '#',
-            columnIsOnline: 'Онлайн',
-            columnFullName: 'Імя',
-            columnEMail: 'Мейл',
-            columnPhone: 'Тел.',
-            columnValidationString: 'Код',
-            columnStatus: 'Стату',
-            columnDateLastAccess: 'Ост.Доступ',
-            columnDateCreated: 'Дата Створення',
-            columnDateUpdated: 'Дата Оновлення'
-        }
-    },
-    customer: {
-        statuses: {
-            ACTIVE: 'Активний',
-            REMOVED: 'Видалений'
-        }
-    },
     user: {
         statuses: {
             ACTIVE: 'Активний',
@@ -63,33 +7,34 @@ define({
         }
     },
     editors: {
-        customer: {
-            titleForNew: 'Створення сайту',
-            titleForExistent: 'Редагування сайту',
-            errors: {
-                title: ''
-            },
-            labelHostName: 'Хост',
-            labelHomePage: 'Домашня сторінка',
-            labelTitle: 'Заголовок',
-            labelAdminTitle: 'Зголовок адміністрування',
-            labelLogo: 'Логотип',
-            labelLang: 'Мова',
-            labelLocale: 'Локалізація',
-            labelProtocol: 'Протокол',
-            buttonSave: 'Зберегти',
-            buttonClose: 'Назад',
-            messageSuccess: 'Успішно',
-            messageError: 'Помилка',
-            plugins: {
-                title: 'Додатки'
-            }
-        },
         user: {
             titleForNew: 'Створення користувача',
             titleForExistent: 'Редагування користувача',
             errors: {
-                title: ''
+                title: 'Помилка збереження даних',
+                Address: 'Помилка в полі Адреса',
+                AddressIsEmpty: 'порожнє значення',
+                AddressLengthIsLowerThan_2: 'потрбіно більше 2ох символів',
+                POBox: 'Помилка в полі Поштовий інвекс',
+                POBoxIsEmpty: 'порожнє значення',
+                POBoxLengthIsLowerThan_2: 'потрбіно більше 2ох символів',
+                Country: 'Помилка в полі Країна',
+                CountryLengthIsLowerThan_2: 'потрбіно більше 2ох символів',
+                City: 'Помилка в полі Місто',
+                CityLengthIsLowerThan_2: 'потрбіно більше 2ох символів',
+                AddressIsNoString: 'Адреса не може бути числом',
+                CountryIsNoString: 'Країна не може бути числом',
+                CityIsNoString: 'Місто не може бути числом',
+                // password
+                Password: 'Помилка в полі Пароль',
+                PasswordDoesNotContainAnyUpperCase: 'Потрібно ввести хоча б одну велику літеру',
+                PasswordDoesNotContainAnyLowerCase: 'Потрібно ввести хоча б одну маленьку літеру',
+                PasswordDoesNotContainAnyNumber: 'Потрібно ввести хоча б одину цифру',
+                PasswordDoesNotContainAnySpecial: 'Потрібно ввести хоча б один спец-символ: ! @ # $ % * ) (',
+                PasswordLengthIsLowerThan_8: 'Мінімальна довжина паролю 8 символів',
+                PasswordMissedRelatedField_ConfirmPassword: 'Потрібно (підтвердити) ввести такий самий пароль в полі Підтвердження',
+                ConfirmPassword: 'Помилка в полі Підтвердження',
+                ConfirmPasswordIsNotEqualTo_Password: 'Пароль підтвердження не співпадає з новим паролем',
             },
             alerts: {
                 success: 'Успішно',
@@ -191,6 +136,8 @@ define({
     profile_page_edit_error_AddressLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
     profile_page_edit_error_AddressIsNoString: 'Немає літер в адресі',
     profile_page_edit_error_AddressIsEmpty: 'Порожнє значення',
+
+            linkCreateAddressCancel: 'Скасувати',
 
             buttonGeneratePasswordCancel: 'Скасувати',
             buttonAddAddress: 'Додати адресу',

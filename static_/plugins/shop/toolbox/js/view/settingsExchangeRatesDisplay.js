@@ -34,6 +34,7 @@ define([
             this.DBPriceCurrencyType = null;
             this.options = {};
             this.options.switchOptions = {
+                onColor: 'success',
                 size: 'mini',
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'

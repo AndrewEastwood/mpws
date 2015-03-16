@@ -1,11 +1,13 @@
 <div class="panel">
 
-    <div class="alert alert-success{{#unless data.success }} hidden{{/unless}}">
+    <div class="alert alert-success hidden">
+        <i class="fa fa-check-circle animate hidden"></i>
         {{lang.editors.user.alerts.success}}
     </div>
 
     {{#mpwsIsNotEmpty data.errors }}
     <div class="alert alert-danger">
+        <i class="fa fa-fw fa-times-circle"></i>
         {{lang.editors.user.errors.title}}
         <ul class="errors">
         {{#each data.errors}}
@@ -137,6 +139,18 @@
                     </div>
                 </div>
 
+                <!-- Password input-->
+                <div class="form-group">
+                    <label class="col-md-3"></label>
+                    <div class="col-md-6">
+                        <blockquote>
+                          <p>Новий пароль буде встановлено тоді, коли натиснути кнопку "Згенерувати" або ввести свій пароль.</p>
+                          <p class="text-danger">Пусті поля залишають поточний пароль без змін</p>
+                        </blockquote>
+                    </div>
+                </div>
+
+
             </fieldset>
         </form>
 
@@ -156,16 +170,8 @@
                     </button>
                 </div>
                 <div class="account-addresses-new"></div>
-                <div class="account-addresses">
-                    {{#each extras.addrActive}}
-                        {{> userAddrItem}}
-                    {{/each}}
-                </div>
-                <div class="account-addresses-removed">
-                    {{#each extras.addrRemoved}}
-                        {{> userAddrItem}}
-                    {{/each}}
-                </div>
+                <div class="account-addresses"></div>
+                <div class="account-addresses-removed"></div>
 
 
             </div>

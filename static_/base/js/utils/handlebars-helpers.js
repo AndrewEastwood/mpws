@@ -427,7 +427,7 @@ define([
         var key = context.hash.key || '',
             prefix = context.hash.prefix || '',
             suffix = context.hash.suffix || '';
-        return dictionary[prefix + key + suffix];
+        return dictionary[prefix + key + suffix] || (prefix + key + suffix);
     }
     helpers.withItem = function(object, options) {
         // debugger;

@@ -3,6 +3,7 @@ define([
     'handlebars',
     'plugins/system/toolbox/js/model/customer',
     'utils',
+    'createPopupTitle',
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
@@ -14,14 +15,11 @@ define([
     'select2',
     'bootstrap-editable',
     'bootstrap-switch'
-], function (Backbone, Handlebars, ModelCustomer, Utils, BootstrapDialog, BSAlert, tpl, animSpinnerFB, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelCustomer, Utils, createPopupTitle, BootstrapDialog, BSAlert, tpl, animSpinnerFB, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
-        if (isNew) {
-            return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.editors.customer.titleForNew);
-        } else {
-            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.editors.customer.titleForExistent);
-        }
+        return createPopupTitle(isNew ? lang.editors.customer.titleForNew : lang.editors.customer.titleForExistent,
+            APP.instances.system.urls.customersList);
     }
 
     var EditCustomer = Backbone.View.extend({
@@ -31,6 +29,7 @@ define([
         initialize: function () {
             this.options = {};
             this.options.switchOptions = {
+                onColor: 'success',
                 size: 'mini',
                 onText: '<i class="fa fa-check fa-fw"></i>',
                 offText: '<i class="fa fa-times fa-fw"></i>'

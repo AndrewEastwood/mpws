@@ -4,6 +4,74 @@
 @buttonTextColor: #333;
 @buttonColorHover: darken(@mainColor, 10%);
 
+.navbar-header {
+    overflow: hidden;
+    .navbar-brand {
+        color: #222;
+        text-shadow: -1px -1px 0 @brand-success, 1px -1px 0 @brand-success, -1px 1px 0 @brand-success, 1px 1px 0 @brand-success;
+        font-size: 50px;
+        opacity: .5;
+        -moz-animation: ontheblink 10s infinite;
+        -ms-animation: ontheblink 10s infinite;
+        -webkit-animation: ontheblink 10s infinite;
+    }
+}
+
+.panel {
+    border-radius: 0px;
+    .panel-heading {
+        border-radius: 0px;
+        .fa-plus {
+            cursor: pointer;
+            color: @btn-success-bg;
+        }
+    }
+}
+.well {
+    border-radius: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: @brand-primary;
+    .fa {
+        color: @gray;
+    }
+    .fa-trash-o {
+        color: @brand-danger;
+    }
+    &:hover {
+        text-decoration: none;
+        color: lighten(@brand-primary, 10%);
+        .fa {
+            color: @gray-light;
+        }
+        .fa-trash-o {
+            color: lighten(@brand-danger, 10%);
+        }
+    }
+    &.btn, &.btn:hover {
+        .fa {
+            color: @gray-lighter;
+        }
+    }
+}
+
+div.bootstrap-switch {
+    span.bootstrap-switch-success {
+        i.fa.fa-check {
+            color: #fff;
+        }
+    }
+}
+
+li.tab-link {
+    a, a i.fa, a:hover, a:hover i.fa {
+        color: @gray-dark;
+        text-decoration: none;
+    }
+}
+
 .bootstrap-dialog.type-primary {
     .modal-content {
         border-radius: 0px;
@@ -24,6 +92,8 @@
     clear: both;
     color: #ddd;
     margin-top: -10px;
+    font-weight: bold;
+    opacity: .99;
     &:hover {
         color: #fff
     }
