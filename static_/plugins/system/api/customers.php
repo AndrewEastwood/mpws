@@ -29,6 +29,13 @@ class customers {
         return $this->_statuses;
     }
 
+    public function loadActiveCustomer () {
+        global $app;
+        if (!$this->switchToCustomerByID($_SESSION['site_id'])) {
+            $this->switchToDefaultCustomer();
+        }
+    }
+
     public function switchToDefaultCustomer () {
         global $app;
         return $this->switchToCustomerByName($app->customerName());
@@ -376,7 +383,22 @@ class customers {
             $resp['error'] = "AccessDenied";
             return;
         }
-        $resp = $this->createCustomer($req->data);
+        if (isset($req->data['switchto'])) {
+            if (API::getAPI('system:auth')->ifYouCan('Maintain')) {
+                if (is_numeric($req->data['switchto'])) {
+                    $CustomerID = intval($req->data['switchto']);
+                    $resp = $this->switchToCustomerByID($CustomerID);
+                } else {
+                    $resp['error'] = "WrongCustomerID";
+                    return;
+                }
+            } else {
+                $resp['error'] = "AccessDenied";
+                return;
+            }
+        } else {
+            $resp = $this->createCustomer($req->data);
+        }
         // $this->_getOrSetCachedState('changed:product', true);
     }
 

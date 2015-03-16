@@ -5,11 +5,12 @@ define([
     'plugins/system/common/js/model/user',
     'auth',
     'cachejs',
-], function ($, _, Backbone, User, Auth, Cache) {
+], function ($, _, Backbone, ModelUser, Auth, Cache) {
 
     // this is the user instance
     var menuView = null;
-    var user = new User();
+    var customerSwitcherView = null;
+    var user = new ModelUser();
     // APP.dfd.systemDashboard = new $.Deferred();
     // APP.dfd.systemMenu = new $.Deferred();
     // Backbone.on('auth:info auth:registered', function () {
@@ -34,7 +35,7 @@ define([
         }
         // show this menu when user is can manage
         // debugger
-        require(['plugins/system/toolbox/js/view/menu'], function (ViewMenu) {
+        require(['plugins/system/toolbox/js/view/menu', 'plugins/system/toolbox/js/view/dropdownCustomerSwitcher'], function (ViewMenu, ViewCustomerSwitcher) {
             menuView = new ViewMenu({
                 model: user
             });
@@ -42,6 +43,14 @@ define([
             APP.Sandbox.eventNotify('global:content:render', {
                 name: 'MenuForPlugin_system',
                 el: menuView.$el
+            });
+
+            customerSwitcherView = new ViewCustomerSwitcher();
+            customerSwitcherView.render();
+            APP.Sandbox.eventNotify('global:content:render', {
+                name: 'TopMenuLeft',
+                el: customerSwitcherView.$el,
+                append: true
             });
         });
     });

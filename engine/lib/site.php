@@ -16,7 +16,7 @@ class site {
     public function init () {
         session_start();
         $apiCustomer = API::getAPI('system:customers');
-        $apiCustomer->switchToDefaultCustomer();
+        $apiCustomer->loadActiveCustomer();
     }
 
     public function getHtmlPage () {
@@ -73,6 +73,8 @@ class site {
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             CUSTOMER: '" . $displayCustomer . "',
+            ACTIVEID: " . $customer['ID'] . ",
+            ACTIVEHOSTNAME: '" . $customer['HostName'] . "',
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
