@@ -45,13 +45,20 @@ define([
                 el: menuView.$el
             });
 
-            customerSwitcherView = new ViewCustomerSwitcher();
-            customerSwitcherView.render();
-            APP.Sandbox.eventNotify('global:content:render', {
-                name: 'TopMenuLeft',
-                el: customerSwitcherView.$el,
-                append: true
-            });
+            if (APP.config.USER.p_CanMaintain) {
+                customerSwitcherView = new ViewCustomerSwitcher();
+                customerSwitcherView.render();
+                APP.Sandbox.eventNotify('global:content:render', {
+                    name: 'TopMenuLeft',
+                    el: customerSwitcherView.$el,
+                    append: true
+                });
+            } else {
+                if (customerSwitcherView) {
+                    customerSwitcherView.remove();
+                    customerSwitcherView = null;
+                }
+            }
         });
     });
 

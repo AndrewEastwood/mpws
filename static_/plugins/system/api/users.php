@@ -64,7 +64,7 @@ class users {
 
     public function getUserByID ($UserID) {
         global $app;
-        $user = $app->getDB()->query(dbquery::getUserByID($UserID));
+        $user = $app->getDB()->query(dbquery::getUserByID($UserID), !$app->isToolbox());
         // var_dump('getUserByID', $UserID);
         if (!is_null($user))
             $user = $this->__attachUserDetails($user);
@@ -95,7 +95,7 @@ class users {
         // avoid removed account
         // $query["fields"] = array("ID");
         $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
-        $user = $app->getDB()->query($query);
+        $user = $app->getDB()->query($query, !$app->isToolbox());
         // var_dump($user);
         if (!is_null($user))
             $user = $this->__attachUserDetails($user);

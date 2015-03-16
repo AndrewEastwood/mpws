@@ -13,3 +13,8 @@
 </a>
 {{/unless}}
 {{/unless}}
+{{#if data.IsTemp}}
+<a href="javascript://" class="js-user-activate" data-id="{{data.ID}}">
+    <i class="fa fa-check fa-fw text-success"></i>
+</a>
+{{/if}}

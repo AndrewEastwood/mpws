@@ -29,10 +29,23 @@ class customers {
         return $this->_statuses;
     }
 
+    public function setCustomerSessionID ($id) {
+        $_SESSION['site_id'] = $id;
+        return $id;
+    }
+
+    public function getCustomerSessionID () {
+        return isset($_SESSION['site_id']) ? $_SESSION['site_id'] : null;
+    }
+
     public function loadActiveCustomer () {
         global $app;
-        if (!$this->switchToCustomerByID($_SESSION['site_id'])) {
-            $this->switchToDefaultCustomer();
+        // try to load session customer
+        if (!$this->switchToCustomerByID($this->getCustomerSessionID())) {
+            // otherwise try to load default customer
+            if (!$this->switchToDefaultCustomer()) {
+                throw new Exception("Unable to load default cusetomer", 1);
+            }
         }
     }
 
@@ -43,7 +56,8 @@ class customers {
 
     public function switchToCustomerByName ($customerName) {
         if (isset($this->customersCache[$customerName])) {
-            $_SESSION['site_id'] = $this->customersCache[$customerName]['ID'];
+            $this->setCustomerSessionID($this->customersCache[$customerName]['ID']);
+            // $_SESSION['site_id'] = ;
             return $this->customersCache[$customerName];
         }
         if (empty($customerName)) {
@@ -54,7 +68,8 @@ class customers {
             return false;
         }
         $ID = $customer['ID'];
-        $_SESSION['site_id'] = $ID;
+        // $_SESSION['site_id'] = $ID;
+        $this->setCustomerSessionID($ID);
         $this->customersCache[$ID] = $customer;
         $this->customersCache[$customer['HostName']] = $customer;
         return $customer;
@@ -62,17 +77,37 @@ class customers {
 
     public function switchToCustomerByID ($ID) {
         if (isset($this->customersCache[$ID])) {
-            $_SESSION['site_id'] = $ID;
+            $this->setCustomerSessionID($ID);
+            // $_SESSION['site_id'] = $ID;
             return $this->customersCache[$ID];
         }
         if (empty($ID)) {
             return false;
         }
+        // try to load customer by given ID
         $customer = $this->getCustomerByID($ID);
         if (!isset($customer)) {
             return false;
         }
-        $_SESSION['site_id'] = $ID;
+        $this->setCustomerSessionID($ID);
+        // $_SESSION['site_id'] = $ID;
+        $this->customersCache[$ID] = $customer;
+        $this->customersCache[$customer['HostName']] = $customer;
+        return $customer;
+    }
+
+    public function getDefaultCustomer () {
+        global $app;
+        $customerName = $app->customerName();
+        // QDfe6#(9
+        if (isset($this->customersCache[$customerName])) {
+            return $this->customersCache[$customerName];
+        }
+        $customer = $this->getCustomerByName($customerName);
+        if (!isset($customer)) {
+            return false;
+        }
+        $ID = $customer['ID'];
         $this->customersCache[$ID] = $customer;
         $this->customersCache[$customer['HostName']] = $customer;
         return $customer;
@@ -84,15 +119,20 @@ class customers {
         // we can access to all customer via toolbox only
         if ($app->isToolbox()) {
             // ability to switch customers
-            $activeCustomerID = $_SESSION['site_id'];
-            if ($activeCustomerID >= 0)
-                $customer = $this->getCustomerByID($activeCustomerID);
-            else {
-                $customer = $this->getCustomerByName($app->customerName());
-                if (isset($customer['ID'])) {
-                    $_SESSION['site_id'] = $customers['ID'];
-                }
+            $ID = $this->getCustomerSessionID();// $_SESSION['site_id'];
+            if (!isset($this->customersCache[$ID])) {
+                throw new Exception("Cannot get runtime customer by given id: " . $ID, 1);
             }
+            $customer = $this->customersCache[$ID];
+            // if ($activeCustomerID >= 0)
+            //     $customer = $this->getCustomerByID($activeCustomerID);
+            // else {
+            //     $customer = $this->getCustomerByName($app->customerName());
+            //     if (isset($customer['ID'])) {
+            //         $this->setCustomerSessionID($customers['ID']);
+            //         // $_SESSION['site_id'] = $customers['ID'];
+            //     }
+            // }
         } else {
             $customer = $this->getCustomerByName($app->customerName());
         }
@@ -100,12 +140,20 @@ class customers {
     }
 
     public function getRuntimeCustomerID () {
-        $ID = isset($_SESSION['site_id']) ? $_SESSION['site_id'] : null;
+        $ID = $this->getCustomerSessionID();
         if (isset($this->customersCache[$ID])) {
             return $ID;
         }
         unset($this->customersCache[$ID]);
-        throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by current id=" . $ID, 1);
+        throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by session id=" . $ID, 1);
+    }
+
+    public function isRunningCustomerDefault () {
+        $defCustomer = $this->getDefaultCustomer();
+        $runtimeID = $this->getRuntimeCustomerID();
+        // var_dump($defCustomer);
+        // var_dump($runtimeID);
+        return $runtimeID === $defCustomer['ID'];
     }
 
     private function __adjustCustomer (&$customer) {
@@ -304,17 +352,21 @@ class customers {
 
                 // adjust plugins
                 if (isset($validatedValues['Plugins'])) {
-                    $pList = array('system');
-                    if (!empty($validatedValues['Plugins'])) {
-                        $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
-                        foreach ($reqPluginsList as $key => $value) {
-                            $value = trim($value);
-                            if (!empty($value) && $value !== 'system') {
-                                $pList[] = $value;
+                    if (API::getAPI('system:auth')->ifYouCan('Maintain')) {
+                        $pList = array('system');
+                        if (!empty($validatedValues['Plugins'])) {
+                            $reqPluginsList = explode(',', strtolower(trim($validatedValues['Plugins'])));
+                            foreach ($reqPluginsList as $key => $value) {
+                                $value = trim($value);
+                                if (!empty($value) && $value !== 'system') {
+                                    $pList[] = $value;
+                                }
                             }
                         }
+                        $validatedValues['Plugins'] = implode(',', $pList);
+                    } else {
+                        unset($validatedValues['Plugins']);
                     }
-                    $validatedValues['Plugins'] = implode(',', $pList);
                 }
 
                 $app->getDB()->beginTransaction();
@@ -379,7 +431,9 @@ class customers {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->ifYouCan('Create') &&
+            !API::getAPI('system:auth')->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -403,7 +457,9 @@ class customers {
     }
 
     public function put (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->ifYouCan('Edit') &&
+            !API::getAPI('system:auth')->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -421,7 +477,9 @@ class customers {
     }
 
     public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->ifYouCan('Edit') &&
+            !API::getAPI('system:auth')->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -438,7 +496,9 @@ class customers {
     }
 
     public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->ifYouCan('Edit') &&
+            !API::getAPI('system:auth')->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }

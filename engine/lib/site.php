@@ -73,7 +73,7 @@ class site {
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             CUSTOMER: '" . $displayCustomer . "',
-            ACTIVEID: " . $customer['ID'] . ",
+            ACTIVEID: '" . $customer['ID'] . "',
             ACTIVEHOSTNAME: '" . $customer['HostName'] . "',
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',

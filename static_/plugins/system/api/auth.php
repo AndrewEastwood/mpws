@@ -108,20 +108,29 @@ class auth {
 
             $user = API::getAPI('system:users')->getActiveUserByCredentials($email, $password);
             // $UserID = null;
+            // var_dump($user);
             // var_dump($config);
             if (empty($user))
                 $resp['error'] = 'WrongCredentials';
             else {
+                $_SESSION[$this->authKey] = $user;
+
+                // var_dump($user);
+                // don't allow non-managment users browse cross-domain sites
+                if (!API::getAPI('system:customers')->isRunningCustomerDefault() && !$this->ifYouCan('Maintain')) {
+                    $this->clearAuthID();
+                    return;
+                }
                 // $UserID = $user['ID'];
                 // var_dump($user);
                 unset($user['Addresses']);
                 // $_SESSION[$this->authKey] = $UserID;
-                $_SESSION[$this->authKey] = $user;
                 // set online state for account
                 API::getAPI('system:users')->setOnline($user['ID']);
             }
             // $resp[$this->authKey] = $this->getAuthID();
             $this->updateSessionAuth();
+
         // }
         // if (isset($req->get['signout'])) {
         //     $resp[$authKey] = $this->clearAuthID();

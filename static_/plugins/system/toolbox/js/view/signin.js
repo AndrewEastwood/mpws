@@ -16,12 +16,13 @@ define([
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
-            "submit": 'doSignIn'
+            'submit': 'doSignIn'
         },
         initialize: function () {
-            var self = this;
-            APP.Sandbox.eventSubscribe('global:auth:status:active', function(){
-                self.remove();
+            var that = this;
+            Auth.on('registered', function(){
+                that.remove();
+                location.reload();
             });
             _.bindAll(this, 'render');
         },
@@ -31,11 +32,11 @@ define([
             return false;
         },
         collectCredentials: function () {
-            var self = this;
+            var that = this;
             return {
-                email: self.$('#signinEmail').val(),
-                password: self.$('#signinPassword').val(),
-                remember: self.$('#signinRemember').is(':checked')
+                email: that.$('#signinEmail').val(),
+                password: that.$('#signinPassword').val(),
+                remember: that.$('#signinRemember').is(':checked')
             }
         },
         render: function (auth_id, response) {

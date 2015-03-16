@@ -17,7 +17,8 @@ define([
         className: 'plugin-system-users',
         events: {
             'click a.js-user-remove': 'userRemove',
-            'click a.js-user-restore': 'userActivate'
+            'click a.js-user-restore': 'userRestore',
+            'click a.js-user-activate': 'userActivate'
         },
         initialize: function (options) {
             this.options = options || {};
@@ -51,31 +52,44 @@ define([
             }
             return this;
         },
-        userActivate: function (event) {
-            var that = this;
+        userRestore: function () {
+            var that = this,
+                $item = $(event.target).parents('.js-user-restore'),
+                id = parseInt($item.data('id'), 10);
             BootstrapDialog.confirm("Do you want to restore user?", function (rez) {
                 if (rez) {
-                    // debugger
-                    var $item = $(event.target).parents('.js-user-restore'),
-                        id = parseInt($item.data('id'), 10),
-                        model = that.collection.get(id);
-                    if (model && model.save) {
-                        model.save({
-                            Status: 'ACTIVE'
-                        }, {
-                            patch: true,
-                            success: function () {
-                                that.collection.fetch({
-                                    reset: true
-                                });
-                            },
-                            error: function () {
-                                BSAlert.danger('Unable to comple action');
-                            }
-                        });
-                    }
+                    that.userSetState(id, 'ACTIVE');
                 }
             });
+        },
+        userActivate: function () {
+            var that = this,
+                $item = $(event.target).parents('.js-user-activate'),
+                id = parseInt($item.data('id'), 10);
+            BootstrapDialog.confirm("Do you want to activate user?", function (rez) {
+                if (rez) {
+                    that.userSetState(id, 'ACTIVE');
+                }
+            });
+        },
+        userSetState: function (id, state) {
+            var that = this,
+                model = that.collection.get(id);
+            if (model && model.save) {
+                model.save({
+                    Status: state
+                }, {
+                    patch: true,
+                    success: function () {
+                        that.collection.fetch({
+                            reset: true
+                        });
+                    },
+                    error: function () {
+                        BSAlert.danger('Unable to comple action');
+                    }
+                });
+            }
         },
         userRemove: function (event) {
             var that = this;

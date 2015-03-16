@@ -94,6 +94,11 @@ define([
             var pluginsUrl = APP.getApiLink('system', 'plugins');
             $.get(pluginsUrl, function (data) {
                 that.$('.js-plugins').empty();
+                if (data && data.error) {
+                    that.$('.js-plugins-wrapper').addClass('hidden');
+                    return;
+                }
+                that.$('.js-plugins-wrapper').removeClass('hidden');
                 var customerPlugins = that.model.get('Plugins'),
                     $list = $('<div>').addClass('list-group');
                 _(data).each(function (pName) {

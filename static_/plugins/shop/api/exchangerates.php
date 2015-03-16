@@ -205,7 +205,10 @@ class exchangerates {
         $currencyName = null;
         $prop = API::getAPI('shop:settings')->getSettingsMisc();
         if ($prop === null || empty($prop) || empty($prop['DBPriceCurrencyType'])) {
-            throw new Exception('#[ShopExRt0003] NeedToDefineDBPriceCurrencyType');
+            $prop = API::getAPI('shop:settings')->createDefaultSettingsMisc();
+            if (empty($prop) ||!$prop['success']) {
+                throw new Exception('#[ShopExRt0003] NeedToDefineDBPriceCurrencyType');
+            }
         }
         $currencyName = $prop['DBPriceCurrencyType'];
         $rate = $this->getExchangeRateFrom_ByCurrencyName($currencyName);

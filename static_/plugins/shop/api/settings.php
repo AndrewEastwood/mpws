@@ -538,6 +538,13 @@ class settings {
         }
         return intval($sCount['ItemsCount']);
     }
+
+    public function createDefaultSettingsMisc () {
+        $defaultMisc = array();
+        $defaultMisc['DBPriceCurrencyType'] = 'USD';
+        $defaultMisc['SiteDefaultPriceCurrencyType'] = 'USD';
+        return $this->createOrUpdateSetting($this->SETTING_TYPE->MISC, $defaultMisc);
+    }
     // public function getSettingsMapFormOrder () {
     //     $map = array();
     //     $items = $this->getSettingsFormOrder();
