@@ -152,10 +152,10 @@ class validate {
                         // var_dump('unset: '. $keyToValidate);
                         unset($values[$keyToValidate]);
                     }
-                    continue;
                 } else {
                     $errors[$keyToValidate][] = $keyToValidate . "IsNotExists";
                 }
+                continue;
             }
 
             // notEmpty
@@ -169,7 +169,7 @@ class validate {
             }
 
             // email
-            if (in_array("isPassword", $rules, true)) {
+            if (in_array("isPassword", $rules, true) && isset($dataArray[$keyToValidate])) {
                 $err = self::validatePassword($dataArray[$keyToValidate]);
                 $errors[$keyToValidate] = array_merge($errors[$keyToValidate], $err);
             }

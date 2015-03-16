@@ -35,6 +35,15 @@ define({
                 PasswordMissedRelatedField_ConfirmPassword: 'Потрібно (підтвердити) ввести такий самий пароль в полі Підтвердження',
                 ConfirmPassword: 'Помилка в полі Підтвердження',
                 ConfirmPasswordIsNotEqualTo_Password: 'Пароль підтвердження не співпадає з новим паролем',
+                // user
+                FirstName: 'Помилка в полі Імя',
+                FirstNameIsEmpty: 'прожнє значення',
+                FirstNameLengthIsLowerThan_2: 'потрбіно більше 2ох символів',
+                EMail: 'Помилка в полі EMail',
+                EMailIsNotEmail: 'неправильна ел.адреса',
+                EMailLengthIsLowerThan_5: 'ел.адреса повинна бути більше 5 символів',
+                PasswordIsNotExists: 'не вказано пароль',
+                ConfirmPasswordIsNotExists: 'не вказано підтвердження паролю',
             },
             alerts: {
                 success: 'Успішно',

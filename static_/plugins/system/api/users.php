@@ -119,16 +119,16 @@ class users {
             'LastName' => array('skipIfUnset', 'string', "defaultValueIfUnset" => ""),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('isPhone', 'skipIfUnset', 'defaultValueIfUnset' => Validate::getEmptyPhoneNumber()),
-            'Password' => array('isPassword', 'min' => 8, 'max' => 30),
+            'Password' => array('isPassword', 'notEmpty', 'min' => 8, 'max' => 30),
             'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty'),
             // permissions
-            'p_CanAdmin' => array('bool', 'notEmpty'),
-            'p_CanCreate' => array('bool', 'notEmpty'),
-            'p_CanEdit' => array('bool', 'notEmpty'),
-            'p_CanUpload' => array('bool', 'notEmpty'),
-            'p_CanViewReports' => array('bool', 'notEmpty'),
-            'p_CanAddUsers' => array('bool', 'notEmpty'),
-            'p_CanMaintain' => array('bool', 'notEmpty')
+            'p_CanAdmin' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanCreate' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanEdit' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanUpload' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanViewReports' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanAddUsers' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_CanMaintain' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -151,6 +151,8 @@ class users {
                 $dataUser["ValidationString"] = Secure::EncodeUserPassword(time());
                 // if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
                 //     throw new Exception("EmailAlreadyInUse", 1);
+                
+                unset($dataUser['ConfirmPassword']);
 
                 $app->getDB()->beginTransaction();
 
@@ -162,7 +164,7 @@ class users {
                 }
 
                 // create permission
-                $Permission = $this->createPermissions($UserID, $dataPermission);
+                $Permission = $this->createUserPermissions($UserID, $dataPermission);
                 if (!$Permission['success']) {
                     throw new Exception(implode(';', $Permission['errors']));
                 }

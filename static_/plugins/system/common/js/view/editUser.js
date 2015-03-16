@@ -56,12 +56,12 @@ define([
         render: function () {
             var that = this;
 
-            // this.model.extras = {
-            //     // addrViews: this.addressViews,
-            //     // addrActive: _addr.where({isRemoved: false}).value(),
-            //     // addrRemoved: _addr.where({isRemoved: true}).value(),
-            //     isNew: this.model.isNew()
-            // };
+            this.model.extras = {
+                // addrViews: this.addressViews,
+                // addrActive: _addr.where({isRemoved: false}).value(),
+                // addrRemoved: _addr.where({isRemoved: true}).value(),
+                isNew: this.model.isNew()
+            };
 
             // debugger
             var _addr = _.chain(this.model.get('Addresses')).each(function (addrItem) {
@@ -343,7 +343,7 @@ define([
             this.$('#Password, #Verify').val(pwd).prop('disabled', true);
 
             $btn.data('pwd', pwd);
-            $btn.text(lang.editors.user.buttonGeneratePasswordCancel);
+            $btn.text(lang.editors.user.buttonGeneratePasswordCancel + ': ' + pwd);
 
             // show password
             BootstrapDialog.show({

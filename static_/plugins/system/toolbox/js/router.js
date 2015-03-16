@@ -187,6 +187,19 @@ define([
             });
         },
 
+        userCreate: function (id) {
+            require(['plugins/system/common/js/view/editUser'], function (ViewEditUser) {
+                // debugger;
+                // create new view
+                var viewEditUser = new ViewEditUser();
+                viewEditUser.render();
+                APP.Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewEditUser.$el
+                });
+            });
+        },
+
         usersList: function () {
             require(['plugins/system/toolbox/js/view/managerUsers'], function (ViewManagerUsers) {
                 var viewManagerUsers = new ViewManagerUsers();
