@@ -101,9 +101,15 @@ define([
 
     // CustomerClass.waitPlugins = true;
 
+    var brandTitle = APP.config.TITLE.split(''),
+        blinkingCharPos = _.random(0, (brandTitle.length - 1) / 2),
+        blinkingCharPos2 = _.random((brandTitle.length + 1) / 2, brandTitle.length - 1);
+    brandTitle[blinkingCharPos] = $('<span>').addClass('anim-neonblink').text(brandTitle[blinkingCharPos]).get(0).outerHTML,
+    brandTitle[blinkingCharPos2] = $('<span>').addClass('anim-neonblink2').text(brandTitle[blinkingCharPos2]).get(0).outerHTML;
+        // debugger
     // return CustomerClass;
     $('head title').text(APP.config.TITLE);
-    $('a.navbar-brand').attr('href', '/#!/').html(APP.config.TITLE);
+    $('a.navbar-brand').attr('href', '/#!/').html(brandTitle.join(''));
     $('a.mpjs-opensite').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_HOMEPAGE);
     $('#navbar [name="TopMenuLeft"]').empty().append(renderMenuPlaceholdersFn());
 

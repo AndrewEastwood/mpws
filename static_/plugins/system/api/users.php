@@ -12,7 +12,7 @@ class users {
         return 'No Name';
     }
 
-    private function __attachUserDetails ($user) {
+    private function __attachUserDetails ($user, $withCustomerID = false) {
         $UserID = intval($user['ID']);
         // get user info
         // get user addresses
@@ -28,7 +28,9 @@ class users {
         $user['IsTemp'] = $user['Status'] === "TEMP";
         $user['isBlocked'] = $user['Status'] === "REMOVED";
         $user['isCurrent'] = API::getAPI('system:auth')->getAuthenticatedUserID() === $UserID;
-        unset($user['CustomerID']);
+        if (!$withCustomerID) {
+            unset($user['CustomerID']);
+        }
         unset($user['Password']);
 
 
@@ -84,12 +86,14 @@ class users {
                 return $_items;
             }
         );
-        // $options['useCustomerID'] = false;
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
+            $options['useCustomerID'] = true;
+        }
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
-    public function getActiveUserByCredentials ($login, $password) {
+    public function getActiveUserByCredentials ($login, $password, $withCustomerID = false) {
         global $app;
         $query = dbquery::getUserByCredentials($login, $password);
         // avoid removed account
@@ -97,8 +101,9 @@ class users {
         $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
         $user = $app->getDB()->query($query, !$app->isToolbox());
         // var_dump($user);
-        if (!is_null($user))
-            $user = $this->__attachUserDetails($user);
+        if (!is_null($user)) {
+            $user = $this->__attachUserDetails($user, $withCustomerID);
+        }
         return $user;
     }
 

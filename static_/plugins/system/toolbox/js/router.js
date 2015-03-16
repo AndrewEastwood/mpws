@@ -135,6 +135,10 @@ define([
         },
 
         customersList: function () {
+            if (!APP.config.USER.p_CanMaintain) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return;
+            }
             require(['plugins/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
                 // debugger;
                 // create new view
@@ -148,6 +152,10 @@ define([
         },
 
         customersListByStatus: function (status) {
+            if (!APP.config.USER.p_CanMaintain) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return;
+            }
             require(['plugins/system/toolbox/js/view/managerCustomers'], function (ViewManagerCustomers) {
                 // debugger;
                 // create new view
@@ -178,6 +186,10 @@ define([
         },
 
         customerCreate: function () {
+            if (!APP.config.USER.p_CanMaintain) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return;
+            }
             require(['plugins/system/toolbox/js/view/editCustomer'], function (ViewEditCustomer) {
                 // create new view
                 var viewEditCustomer = new ViewEditCustomer();

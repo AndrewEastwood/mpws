@@ -106,18 +106,23 @@ class auth {
 
             $password = Secure::EncodeUserPassword($password);
 
-            $user = API::getAPI('system:users')->getActiveUserByCredentials($email, $password);
+            $user = API::getAPI('system:users')->getActiveUserByCredentials($email, $password, true);
             // $UserID = null;
             // var_dump($user);
             // var_dump($config);
+            // return;
             if (empty($user))
                 $resp['error'] = 'WrongCredentials';
             else {
                 $_SESSION[$this->authKey] = $user;
-
-                // var_dump($user);
                 // don't allow non-managment users browse cross-domain sites
-                if (!API::getAPI('system:customers')->isRunningCustomerDefault() && !$this->ifYouCan('Maintain')) {
+                if ($this->ifYouCan('Admin') || $this->ifYouCan('Maintain')) {
+                    // detect users site
+                    if (!API::getAPI('system:customers')->switchToCustomerByID($user['CustomerID'])) {
+                        $this->clearAuthID();
+                        return;
+                    }
+                } else {
                     $this->clearAuthID();
                     return;
                 }

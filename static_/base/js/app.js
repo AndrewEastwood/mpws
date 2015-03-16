@@ -57,6 +57,8 @@
         return destination;
     };
 
+    this.APP = APP;
+
     require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache) {
 
         // APP.commonElements = $('div[name^="Common"]:not(:has(*))');
@@ -334,5 +336,4 @@
 
     });
     
-    this.APP = APP;
 })();
