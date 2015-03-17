@@ -1,8 +1,9 @@
 define([
     'jquery',
     'underscore',
+    'echo',
     './view/breadcrumb'
-], function ($, _) {
+], function ($, _, echo) {
 
     var _customerOptions = {};
 
@@ -39,6 +40,15 @@ define([
         //     el: breadcrumb.$el.clone()
         // });
     }
+
+    echo.init({
+        offset: 100,
+        throttle: 250,
+        unload: false,
+        callback: function (element, op) {
+            console.log(element, 'has been', op + 'ed')
+        }
+    });
 
     return CustomerClass;
 

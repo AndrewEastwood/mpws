@@ -52,6 +52,7 @@ require.config({
         'spin': 'vendors/spin.js/spin',
         'typehead': 'vendors/typehead.js/dist/typehead.jquery',
         'underscore': 'vendors/underscore/underscore',
+        'echo': 'vendors/echojs/dist/echo',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
