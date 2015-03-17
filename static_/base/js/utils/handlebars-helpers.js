@@ -37,7 +37,6 @@ define([
             }
         },
         is: function (value, test, options) {
-            debugger
             if (value === test) {
                 return options.fn(this);
             } else {
