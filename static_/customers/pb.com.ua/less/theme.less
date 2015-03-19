@@ -4,7 +4,8 @@
 @import "base/less/animations/animate";
 @import "base/less/bootstrap-alert";
 
-@import "vendors/bootstrap/less/bootstrap";
+// @import "vendors/bootstrap/less/bootstrap";
+@import (inline) "bootstrap.min.css";
 @import "vendors/fontawesome/less/font-awesome";
 @import "vendors/bootstrap-magnify/less/bootstrap-magnify";
 @import "vendors/bootstrap-select/less/bootstrap-select";
@@ -18,3 +19,16 @@
 @import "base/less/mpws-vars";
 @import "main";
 @import "orange";
+
+// customization
+header {
+    .logo-holder {
+        div.logo {
+            margin: -20px 0;
+            a {
+                overflow: hidden;
+                zoom: 1;
+            }
+        }
+    }
+}

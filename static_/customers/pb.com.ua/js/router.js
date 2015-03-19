@@ -1,9 +1,11 @@
 define([
     'jquery',
     'underscore',
+    'backbone',
+    'plugins/shop/site/plugin',
     'echo',
-    './view/breadcrumb'
-], function ($, _, echo) {
+    './view/breadcrumb',
+], function ($, _, Backbone, plgShop, echo) {
 
     var _customerOptions = {};
 
@@ -26,6 +28,29 @@ define([
     // add banner image
     var $banner = $('<div>').addClass('banner-decor');
     $('.MPWSBannerHeaderTop').append($banner);
+
+
+    var routes = {
+        "!/shop": "home",
+        "!/shop/catalog/:category": "shop_catalog_category",
+        "!/shop/catalog/:category/:page": "shop_catalog_category_page",
+        "!/shop/catalog/": "shop_catalog",
+        "!/shop/product/:product": "shop_product",
+        "!/shop/cart": "shop_cart",
+        "!/shop/wishlist": "shop_wishlist",
+        "!/shop/compare": "shop_compare",
+        "!/shop/tracking/(:id)": "shop_tracking"
+        // "!/shop/profile/orders": "shop_profile_orders"
+    };
+
+
+
+    var Router = Backbone.Router.extend({
+        routes: routes,
+
+        urls: _(routes).invert(),
+
+    });
 
     function CustomerClass () {}
 
