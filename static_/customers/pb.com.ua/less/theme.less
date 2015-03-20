@@ -1,24 +1,14 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800);
 
-
-@import "base/less/animations/animate";
-@import "base/less/bootstrap-alert";
-
-// @import "vendors/bootstrap/less/bootstrap";
-@import (inline) "bootstrap.min.css";
-@import "vendors/fontawesome/less/font-awesome";
-@import "vendors/bootstrap-magnify/less/bootstrap-magnify";
-@import "vendors/bootstrap-select/less/bootstrap-select";
-@import "vendors/seiyria-bootstrap-slider/less/bootstrap-slider";
-@import "vendors/bootstrap3-dialog/dist/less/bootstrap-dialog";
-// @import "base/less/bootstrapValidator";
-@import "base/less/animations/fbLoader";
-@import (css) "/static_/vendors/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css";
-@import (css) "/static_/vendors/select2/select2.css";
-@import (css) "/static_/vendors/lightbox/css/lightbox.css";
+@import "vendors";
 @import "base/less/mpws-vars";
-@import "main";
-@import "orange";
+
+// theme by http://transvelo.in/demo/html/media-center/index.php?page=home&style=alt1&style=alt1
+@import (inline) "theme/bootstrap.min.css";
+@import "theme/main";
+@import "theme/orange";
+
+@import "custom";
 
 // customization
 header {
@@ -28,6 +18,26 @@ header {
             a {
                 overflow: hidden;
                 zoom: 1;
+            }
+        }
+    }
+    .top-search-holder .contact-row {
+        margin-top: -18px;
+    }
+    .address-item {
+        &.single {
+            .shop-name {
+                display: none;
+            }
+        }
+        .address-lines {
+            > .block {
+                display: inline-block;
+                &.addresses {
+                    padding-right: 10px;
+                    margin-right: 10px;
+                    border-right: 1px solid #eee;
+                }
             }
         }
     }

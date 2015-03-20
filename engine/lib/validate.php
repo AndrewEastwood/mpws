@@ -119,8 +119,12 @@ class validate {
             }
 
             if (in_array("skipIfEmpty", $rules, true) && empty($values[$keyToValidate])) {
+                if (isset($values[$keyToValidate]) && empty($values[$keyToValidate]) && isset($rules["defaultValueIfEmpty"])) {
+                    $values[$keyToValidate] = $rules["defaultValueIfEmpty"];
+                    continue;
+                }
                 unset($errors[$keyToValidate]);
-                unset($values[$keyToValidate]);
+                // unset($values[$keyToValidate]);
                 continue;
             }
             // var_dump($keyToValidate);
@@ -136,10 +140,6 @@ class validate {
             // var_dump($dataArray);
             // var_dump('isset:'.$keyToValidate . ':' . (isset($dataArray[$keyToValidate]) ? 1:0));
 
-            if (isset($dataArray[$keyToValidate]) && empty($dataArray[$keyToValidate]) && isset($rules["defaultValueIfEmpty"])) {
-                $values[$keyToValidate] = $rules["defaultValueIfEmpty"];
-                continue;
-            }
 
 
             // exists

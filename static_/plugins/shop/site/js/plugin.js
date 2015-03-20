@@ -5,17 +5,18 @@ define([
     'cachejs',
     'auth',
     'plugins/shop/site/js/model/order',
-    'plugins/shop/site/js/view/siteMenu',
-    'plugins/shop/site/js/view/siteWidgets',
+    'plugins/shop/site/js/view/listProductLatest',
+    'plugins/shop/site/js/view/categoryNavigation'
     'plugins/shop/common/js/model/setting'
-], function ($, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
+], function ($, _, Backbone, Cache, Auth, ModelSiteOrder,
+     ViewProductsLatest, ViewCatNav, PluginSettings) {
 
     var PluginJS = function () {
 
-        var order = new SiteOrder({
+        var order = new ModelSiteOrder({
             ID: "temp"
         });
-        var settings = new SiteSettings();
+        var settings = new PluginSettings();
 
         // why it's here?
         order.url = APP.getApiLink({
@@ -27,16 +28,20 @@ define([
 
         order.fetch();
 
-
-
         this.getOffers = getOffers;
+        this.getLatestProducts = getLatestProducts;
+        this.getCategoryTree = getCategoryTree;
 
         function getOffers () {
 
         }
 
         function getLatestProducts () {
-
+            var v = new ViewProductsLatest();
+            v.collection.fetch({
+                reset: true
+            });
+            return v;
         }
 
         function getFeaturedProducts () {
@@ -52,7 +57,11 @@ define([
         }
 
         function getCategoryTree () {
-
+            var v = new ViewCatNav();
+            v.model.fetch({
+                reset: true
+            });
+            return v;
         }
 
         function getSubCategoriesByCategoryID (id) {

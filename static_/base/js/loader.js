@@ -33,6 +33,7 @@ require.config({
         'bootstrap-datetimepicker': 'vendors/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker',
         'bootstrap-editable': 'vendors/x-editable/dist/bootstrap3-editable/js/bootstrap-editable',
         'bootstrap-magnify': 'vendors/bootstrap-magnify/js/bootstrap-magnify',
+        'bootstrap-wysiwyg': 'vendors/bootstrap-wysiwyg/bootstrap-wysiwyg',
         'cachejs': 'vendors/cachejs/cache',
         'handlebars': 'vendors/handlebars/handlebars',
         'jquery': 'vendors/jquery/jquery',
@@ -112,6 +113,9 @@ require.config({
             deps: ['jquery', 'bootstrap']
         },
         'bootstrap-magnify': {
+            deps: ['jquery', 'bootstrap']
+        },
+        'bootstrap-wysiwyg': {
             deps: ['jquery', 'bootstrap']
         },
         'select2': {

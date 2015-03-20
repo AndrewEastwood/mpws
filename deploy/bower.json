@@ -51,6 +51,7 @@
     "jquery": "1.10.2",
     "cachejs": "~0.1.1",
     "underscore": "~1.8.2",
-    "echojs": "~1.7.1"
+    "echojs": "~1.7.1",
+    "bootstrap-wysiwyg": "*"
   }
 }

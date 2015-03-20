@@ -54,6 +54,13 @@
                         <input type="text" id="js-AddressLine3" class="form-control setting" value="{{data.AddressLine3}}">
                     </div>
                 </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Ел.адреса</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="js-EmailSupport" class="form-control setting" value="{{data.EmailSupport}}">
+                    </div>
+                </div>
             </fieldset>
         </form>
     </div>
@@ -178,7 +185,8 @@
         </table>
     </div>
     <div class="tab-pane fade" id="payments">
-        <div id="js-info-InfoPayment" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoPayment}}}</div>
+        <textarea cols="50" id="js-info-InfoPayment"></textarea>
+        {{!-- <div id="js-info-InfoPayment" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoPayment}}}</div> --}}
     </div>
     <div class="tab-pane fade" id="shipping">
         <div id="js-info-InfoShipping" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoShipping}}}</div>

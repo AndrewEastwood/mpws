@@ -316,6 +316,7 @@ class settings {
                         'InfoPayment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'InfoShipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'InfoWarranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
+                        'EmailSupport' => array('isEmail', 'skipIfEmpty'),
                         'Status' => array('string', 'skipIfUnset')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);

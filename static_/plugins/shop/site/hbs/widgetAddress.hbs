@@ -20,12 +20,12 @@
 {{/gt}}
 {{#each data}}
 <div itemscope itemtype="http://schema.org/Organization">
-    <div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{ID}}">
+    <div class="address-item{{#unless isActive}} hidden{{/unless}}{{#gt extras.addressCount 1}} multiple{{else}} single{{/gt}}" id="{{ID}}">
         {{#is ../extras.addressCount 1}}
-        <div itemprop="name">{{ShopName}}</div>
+        <div class="shop-name" itemprop="name">{{ShopName}}</div>
         <link itemprop="url" content="{{../../app.location.protocol}}//{{../../app.location.host}}" />
         {{/is}}
-        <div>
+        <div class="address-lines">
             {{#if MapUrl}}
                 <a href="{{MapUrl}}" target="_blank"><i class="fa fa-map-marker fa-fw"></i></a>
             {{/if}}
@@ -43,7 +43,9 @@
                 </span>
                 <ul class="dropdown-menu" role="menu">
                 {{#each OpenHoursMap}}
-                    <li{{#if isToday}} class="active"{{/if}}><a href="javascript://"><span class="dayname">{{dayShort}}:</span> {{hours}}</a></li>
+                    <li{{#if isToday}} class="active"{{/if}}><a href="javascript://">
+                        <span class="dayname">{{dayShort}}:</span> {{hours}}</a>
+                    </li>
                 {{/each}}
                 </ul>
             </div>
@@ -68,10 +70,13 @@
         <div class="button-phones btn-group clearfix">
             <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 {{#if PhoneHotline}}
-                <span class="hotline text-danger"><b>{{PhoneHotline}}</b></span>
+                <i class="fa fa-phone"></i>
+                <span class="phone hotline">{{PhoneHotline}}</span>
                 {{else}}
                 {{#each_upto PhonesMap 1}}
-                <span class="preffix">{{label}}:</span> <span class="contact">{{value}}</span>
+                <i class="fa fa-phone"></i>
+                <span class="preffix">{{label}}:</span>
+                <span class="contact">{{value}}</span>
                 {{/each_upto}}
                 {{/if}}
                 {{#gt ../ActivePhones 1}}
@@ -81,12 +86,23 @@
             {{#gt ../ActivePhones 1}}
             <ul class="dropdown-menu" role="menu">
                 {{#each PhonesMap}}
-                <li><a href="javascript://"><span class="preffix">{{label}}:</span> <span class="contact" itemprop="telephone">{{value}}</span></a></li>
+                <li>
+                    <a href="javascript://" class="phone">
+                        <i class="fa fa-phone"></i>
+                        <span class="preffix">{{label}}:</span>
+                        <span class="contact" itemprop="telephone">{{value}}</span>
+                    </a>
+                </li>
                 {{/each}}
             </ul>
             {{/gt}}
         </div>
         {{/or}}
+        {{#if EmailSupport}}
+        <span class="email email-support">
+            <i class="fa fa-fw fa-envelope"></i>{{EmailSupport}}
+        </span>
+        {{/if}}
     </div>
 </div>
 {{/each}}

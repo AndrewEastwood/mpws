@@ -6,62 +6,40 @@ define([
     'plugins/shop/site/js/view/menuCatalogBar'
 ], function (CartEmbedded, OrderTrackingButton, Address, ExchangeRates, CatalogBar) {
 
-    var SiteWidgets = function (models) {
+    function SiteWidgets (models) {
 
-        var renderItems = [];
-
+        // addres
         var addr = new Address();
         addr.collection.fetch({reset: true});
-        renderItems.push({
-            name: 'CommonWidgetsTop',
-            el: addr.$el,
-            append: true
-        });
 
         // show exchange rates selector
-        // debugger;
+        var rates = new ExchangeRates();
         if (APP.instances.shop.settings.MISC.ShowSiteCurrencySelector) {
-            var rates = new ExchangeRates();
             rates.render();
-            renderItems.push({
-                name: 'CommonWidgetsTop',
-                el: rates.$el,
-                append: true
-            });
         }
 
         // inject tracking order
         var orderTrackingButton = new OrderTrackingButton();
         orderTrackingButton.render();
-        renderItems.push({
-            name: 'CommonWidgetsTop',
-            el: orderTrackingButton.$el,
-            append: true
-        });
 
         // inject embedded shopping cart
         var cartEmbedded = new CartEmbedded({model: models.order});
         cartEmbedded.render();
-        renderItems.push({
-            name: 'CommonWidgetsTop',
-            el: cartEmbedded.$el,
-            append: true
-        });
 
+        // catalog navigation panel
         var cBar = new CatalogBar();
         cBar.model.fetch({reset: true});
-        renderItems.push({
-            name: 'CommonWidgetsTop',
-            el: cBar.$el,
-            append: true
-        });
 
-        APP.Sandbox.eventSubscribe('global:loader:complete', function () {
-            APP.Sandbox.eventNotify('global:content:render', renderItems);
-        });
+        APP.injectHtml('ShopWidgetAddresses', addr.el);
+        APP.injectHtml('ShopWidgetExchangeRates', rates.el);
+        APP.injectHtml('ShopWidgetTrackOrderButton', orderTrackingButton.el);
+        APP.injectHtml('ShopWidgetCartButton', cartEmbedded.el);
+        APP.injectHtml('ShopWidgetCatalogBar', cBar.el);
     };
 
+    // some static props
     SiteWidgets.ExchangeRates = ExchangeRates;
+
     return SiteWidgets;
 
 });

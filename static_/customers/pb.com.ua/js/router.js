@@ -1,11 +1,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'plugins/shop/site/plugin',
-    'echo',
-    './view/breadcrumb',
-], function ($, _, Backbone, plgShop, echo) {
+    './view/breadcrumb'
+], function ($, _) {
 
     var _customerOptions = {};
 
@@ -29,30 +26,13 @@ define([
     var $banner = $('<div>').addClass('banner-decor');
     $('.MPWSBannerHeaderTop').append($banner);
 
-
-    var routes = {
-        "!/shop": "home",
-        "!/shop/catalog/:category": "shop_catalog_category",
-        "!/shop/catalog/:category/:page": "shop_catalog_category_page",
-        "!/shop/catalog/": "shop_catalog",
-        "!/shop/product/:product": "shop_product",
-        "!/shop/cart": "shop_cart",
-        "!/shop/wishlist": "shop_wishlist",
-        "!/shop/compare": "shop_compare",
-        "!/shop/tracking/(:id)": "shop_tracking"
-        // "!/shop/profile/orders": "shop_profile_orders"
-    };
-
-
-
-    var Router = Backbone.Router.extend({
-        routes: routes,
-
-        urls: _(routes).invert(),
-
-    });
-
     function CustomerClass () {}
+
+    CustomerClass.prototype.renderProxy = function () {
+        // console.log('customer renderProxy');
+        // console.log(arguments);
+        return true;
+    }
 
     CustomerClass.prototype.setBreadcrumb = function (options) {
         // breadcrumb.render(options);
@@ -65,15 +45,6 @@ define([
         //     el: breadcrumb.$el.clone()
         // });
     }
-
-    echo.init({
-        offset: 100,
-        throttle: 250,
-        unload: false,
-        callback: function (element, op) {
-            console.log(element, 'has been', op + 'ed')
-        }
-    });
 
     return CustomerClass;
 

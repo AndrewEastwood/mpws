@@ -135,10 +135,28 @@
                 cnt.html(options.el);
         }
 
-        var renderFn = function (options) {
+        var renderFn = function (targetName, el) {
             // debugger;
-            if (!options || !options.name)
+            var options = {};
+            if (_.isString(targetName) && el) {
+                options.name = targetName;
+                options.el = el;
+            } else {
+                if (targetName && targetName.name && targetName.el) {
+                    options = targetName;
+                }
+            }
+            var tags = $(options.name);
+            if (tags.length) {
+                $(targetName).each(function () {
+                    $(this).wrap('<div/>').parent().replaceWith(el);
+                });
                 return;
+            }
+            if (!options || !options.name) {
+                throw "Wrong arguments for renderFn";
+                return;
+            }
             // debugger;
             var $el = $('[name="' + options.name + '"]');
             if ($el.length === 0) {
@@ -273,12 +291,15 @@
                 } else {
                     APP.instances[key] = pluginClass;
                 }
-                Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
+                if (APP.instances[key].trigger) {
+                    APP.instances[key].trigger('created');
+                }
+                // Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
                 var _loadedPlugins = _.omit(APP.instances, 'CustomerRouter');
                 // console.log('totalPluginCount: ' + totalPluginCount);
                 // debugger
                 if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
-                    // console.log('!!!!!!!!!!!! ALL PLUGINS READY !!!!!!!');
+                    // console.log('!!!!!!!!!!!! ALL PLUGINS ARE READY !!!!!!!');
                     $dfd.resolve();
                 }
             };
@@ -332,6 +353,26 @@
 
         APP.getCustomer = function () {
             return APP.instances.CustomerRouter;
+        };
+
+        APP.identity = function (v) {
+            return v;
+        };
+
+        APP.injectHtml = function (targetName, el) {
+            var proceed = false,
+                customerRenderProxy = APP.instances.CustomerRouter && APP.instances.CustomerRouter.renderProxy || APP.identity;
+            if (_.isArray(targetName)) {
+                _(targetName).each(function (option) {
+                    if (!!customerRenderProxy(option)) {
+                        renderFn(option);
+                    }
+                });
+            } else {
+                if (!!customerRenderProxy(targetName, el)) {
+                    renderFn(targetName, el);
+                }
+            }
         };
 
     });

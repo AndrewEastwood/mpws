@@ -50,10 +50,7 @@ define([
 
             var self = this;
 
-            Backbone.on('appinstance:added', function (key) {
-                if (key !== self.name) {
-                    return;
-                }
+            this.on('created', function () {
 
                 SiteMenu({
                     order: order
@@ -88,10 +85,7 @@ define([
             require(['plugins/shop/site/js/view/home'], function (PageHome) {
                 var pageHome = new PageHome();
                 pageHome.render();
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: pageHome.el
-                });
+                APP.injectHtml('ShopHome', pageHome.el);
             });
 
         },
@@ -105,11 +99,7 @@ define([
                 listProductCatalog.collection.fetch({
                     reset: true
                 });
-
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: listProductCatalog.el
-                });
+                APP.injectHtml('ShopCatalogBrowse', listProductCatalog.el);
             });
         },
 
@@ -126,11 +116,7 @@ define([
                 listProductCatalog.collection.fetch({
                     reset: true
                 });
-
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: listProductCatalog.el
-                });
+                APP.injectHtml('ShopCatalogBrowseWithPage', listProductCatalog.el);
             });
         },
 
@@ -141,10 +127,7 @@ define([
                     productID: productID
                 });
                 viewProductItemFull.model.fetch();
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: viewProductItemFull.el
-                });
+                APP.injectHtml('ShopProduct', viewProductItemFull.el);
             });
         },
 
@@ -154,10 +137,7 @@ define([
                 // create new view
                 var listProductCompare = new ListProductCompare();
                 listProductCompare.render();
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: listProductCompare.el
-                });
+                APP.injectHtml('ShopCompareList', listProductCompare.el);
             });
         },
 
@@ -195,10 +175,7 @@ define([
                 });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: cartStandalone.el
-                });
+                APP.injectHtml('ShopCart', cartStandalone.el);
             });
         },
 
@@ -208,10 +185,7 @@ define([
                 // create new view
                 var listProductWish = new ListProductWish();
                 listProductWish.render();
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: listProductWish.el
-                });
+                APP.injectHtml('ShopWishList', listProductWish.el);
             });
         },
 
@@ -221,10 +195,7 @@ define([
                 // create new view
                 var trackingStatus = new TrackingStatus();
                 trackingStatus.setOrderHash(orderHash);
-                APP.Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: trackingStatus.el
-                });
+                APP.injectHtml('ShopTrackOrder', trackingStatus.el);
             });
         },
 

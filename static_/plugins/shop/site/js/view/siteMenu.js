@@ -10,7 +10,7 @@ define([
 ], function (MenuCatalog, MenuCart, MenuWishList, MenuCompare,
     MenuPayment, MenuWarranty, MenuShipping, MenuProfileOrders) {
 
-    return function (models) {
+    function Menu (models) {
 
         // inject shop menu (category menu)
         // var menuCatalog = new MenuCatalog();
@@ -45,51 +45,14 @@ define([
         // var menuProfileOrders = new MenuProfileOrders();
         // menuProfileOrders.render();
 
-        // APP.Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-        //     view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
-        // });
-
-        // debugger;
-        APP.Sandbox.eventSubscribe('global:loader:complete', function () {
-            // placeholders.common.menu
-            APP.Sandbox.eventNotify('global:content:render', [
-                // {
-                //     name: 'CommonMenuLeft',
-                //     el: menuCatalog.$el,
-                //     append: true
-                // },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuCart.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuWishList.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuCompare.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuPayment.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuWarranty.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuShipping.$el,
-                    append: true
-                }
-            ]);
-        });
+        APP.injectHtml('ShopMenuItemCart', menuCart.el);
+        APP.injectHtml('ShopMenuItemWishList', menuWishList.el);
+        APP.injectHtml('ShopMenuItemCompareList', menuCompare.el);
+        APP.injectHtml('ShopMenuItemPopupInfoPayment', menuPayment.el);
+        APP.injectHtml('ShopMenuItemPopupInfoWarranty', menuWarranty.el);
+        APP.injectHtml('ShopMenuItemPopupInfoShipping', menuShipping.el);
     }
+
+    return Menu;
 
 });

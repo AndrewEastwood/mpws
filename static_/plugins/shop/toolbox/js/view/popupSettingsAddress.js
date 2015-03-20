@@ -9,9 +9,8 @@ define([
     'text!plugins/shop/toolbox/hbs/popupSettingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'bootstrap-editable',
-    // 'base/js/components/x-bootstrap-wysihtml5'
-], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang, dfdEditable, dfdXEditWysi) {
+    'bootstrap-editable'
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     var PopupSettingsAddress = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -91,6 +90,7 @@ define([
                             InfoPayment: that.$('#js-info-InfoPayment').editable('getValue', true),
                             InfoShipping: that.$('#js-info-InfoShipping').editable('getValue', true),
                             InfoWarranty: that.$('#js-info-InfoWarranty').editable('getValue', true),
+                            EmailSupport: that.$('#js-EmailSupport').editable('getValue', true),
                         });
                         that.model.save().then(function () {
                             BSAlerts.success(lang.settings_message_success);
@@ -126,13 +126,14 @@ define([
                 mode: 'inline'
             }, this.options.editableOptions));
             // set up wyswig
-            dfdXEditWysi.done(function () {
-                that.$('.wysihtml5').editable(_.defaults({
-                    mode: 'inline',
-                    emptytext: 'введіть текст'
-                }, that.options.editableOptions));
-            });
-            if (!this.$dialog.isOpened()) { 
+            // dfdXEditWysi.done(function () {
+            //     that.$('.wysihtml5').editable(_.defaults({
+            //         mode: 'inline',
+            //         emptytext: 'введіть текст'
+            //     }, that.options.editableOptions));
+            // });
+            // that.$('.wysihtml5').wysiwyg();
+            if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
             }
             this.updateTitle();
