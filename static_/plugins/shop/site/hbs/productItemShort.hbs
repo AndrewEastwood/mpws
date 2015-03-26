@@ -1,14 +1,14 @@
 <div class="panel">
     <div class="panel-heading">
         <h4 class="text-center">
-            <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey}}"><span class="product-title-origin">{{data._origin.Name}}</span> <span class="product-title-name">{{data.Name}}</span> <span class="product-title-model">{{data.Model}}</span></a>
+            <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-origin">{{data._origin.Name}}</span> <span class="product-title-name">{{data.Name}}</span> <span class="product-title-model">{{data.Model}}</span></a>
         </h4>
     </div>
     
     <div class="panel-body">
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
-                <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey}}" class="link">
+                <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
                     <div class="image productimage noimage image_{{data.ID}}">
                         {{#if data.Images.[0].sm}}
                         {{>animSpinnerFB}}
@@ -89,7 +89,7 @@
             {{/if}}
             </p>
             <p class="button-details">
-                <a title="Характеристики {{data._displayName}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey}}" class="btn btn-success btn-block btn-warning">
+                <a title="Характеристики {{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="btn btn-success btn-block btn-warning">
                 Детальніше <span class="fa fa-chevron-right"></span>
                 </a>
             </p>

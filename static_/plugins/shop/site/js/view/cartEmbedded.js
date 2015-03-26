@@ -44,7 +44,7 @@ define([
                     label: 'Переглянути всі позиції',
                     cssClass: 'btn btn-success',
                     action: function (dialog) {
-                        window.location.hash = APP.instances.shop.urls.shop_cart;
+                        window.location.hash = APP.instances.shop.urls.shopCart;
                         dialog.close();
                     }
                 }]

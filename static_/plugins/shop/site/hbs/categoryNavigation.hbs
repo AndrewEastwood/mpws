@@ -8,18 +8,18 @@
         <div class="well">
         {{#isNull ParentID}}
             {{#if Image}}
-            <a href="{{bb_link ../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">
+            <a href="{{bb_link ../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">
                 <img src="{{../../Image.sm}}" class="category-image" alt="{{../Name}}" onerror="$(this).remove();">
             </a>
             {{/if}}
             <h4>
-                <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+                <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
             </h4>
             {{#if childNodes}}
             <ul class="list-unstyled">
                 {{#each childNodes}}
                 <li>
-                    <a href="{{bb_link ../../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+                    <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
                 </li>
                 {{/each}}
             </ul>

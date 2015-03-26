@@ -45,12 +45,21 @@ define([
         // var menuProfileOrders = new MenuProfileOrders();
         // menuProfileOrders.render();
 
-        APP.injectHtml('ShopMenuItemCart', menuCart.el);
-        APP.injectHtml('ShopMenuItemWishList', menuWishList.el);
-        APP.injectHtml('ShopMenuItemCompareList', menuCompare.el);
-        APP.injectHtml('ShopMenuItemPopupInfoPayment', menuPayment.el);
-        APP.injectHtml('ShopMenuItemPopupInfoWarranty', menuWarranty.el);
-        APP.injectHtml('ShopMenuItemPopupInfoShipping', menuShipping.el);
+        // APP.injectHtml('ShopMenuItemCart', menuCart.el);
+        // APP.injectHtml('ShopMenuItemWishList', menuWishList.el);
+        // APP.injectHtml('ShopMenuItemCompareList', menuCompare.el);
+        // APP.injectHtml('ShopMenuItemPopupInfoPayment', menuPayment.el);
+        // APP.injectHtml('ShopMenuItemPopupInfoWarranty', menuWarranty.el);
+        // APP.injectHtml('ShopMenuItemPopupInfoShipping', menuShipping.el);
+
+        return {
+            cart: menuCart.$el,
+            wishList: menuWishList.$el,
+            compareList: menuCompare.$el,
+            popupInfoPayment: menuPayment.$el,
+            popupInfoWarranty: menuWarranty.$el,
+            popupInfoShipping: menuShipping.$el
+        }
     }
 
     return Menu;

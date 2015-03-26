@@ -8,16 +8,16 @@
             <li>
                 <!-- Content container to add padding -->
                 <div class="yamm-content">
-                    <h4 class="catalog-title"><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a></h4>
+                    <h4 class="catalog-title"><a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a></h4>
                     <div class="row">
                         {{#each childNodes}}
                         <ul class="col-sm-3 list-unstyled">
                             <li>
-                                <p><strong><a href="{{bb_link ../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a></strong></p>
+                                <p><strong><a href="{{bb_link ../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a></strong></p>
                             </li>
                             {{#recursive childNodes}}
                             <li>
-                                <a href="{{bb_link ../../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+                                <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
                                 {{#if childNodes}}
                                 <ul class="list-unstyled">
                                 {{{recursive childNodes}}}
@@ -32,7 +32,7 @@
             </li>
         </ul>
         {{else}}
-            <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+            <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
         {{/if}}
     </li>
     {{/each}}

@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="product-name">
-                <a itemprop="url" title="Огляд {{data._displayName}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}" class="product-title-url">
+                <a itemprop="url" title="Огляд {{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}" class="product-title-url">
                     <i class="fa fa-link fa-fw"></i>
-                    <span class="sr-only">{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}</span>
+                    <span class="sr-only">{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}</span>
                 </a>
                 <h3 itemprop="name">{{data._displayName}}</h3>
             </div>
@@ -200,7 +200,7 @@
                   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.0";
                   fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));</script>
-                <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey fullUrl=true}}" data-layout="icon"></div>
+                <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey fullUrl=true}}" data-layout="icon"></div>
             </li>
             {{/if}}
 
@@ -308,7 +308,7 @@
                         <!-- Wrapper for slides -->
                         <div class="carousel-inner">
                         {{#each data.Relations }}
-                            <div title="Характеристики {{_displayName}}" class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey}}" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
+                            <div title="Характеристики {{_displayName}}" class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shopProduct product=ExternalKey}}" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
                                 <div class="shop-product-image shop-product-image-main">
                                     <div class="productBadge {{Status}}">
                                        <div class="ribbon-wrapper">

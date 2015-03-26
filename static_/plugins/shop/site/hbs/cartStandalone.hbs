@@ -54,7 +54,7 @@
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                                 <div class="shop-product-image shop-product-image-main">
-                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                                         <div class="image productimage noimage image_{{ID}}">
                                             {{#if Images.[0].xs}}
                                             {{>animSpinnerFB}}
@@ -74,7 +74,7 @@
                                     </a>
                                 </div>
                                 <span class="product-name">
-                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                                 </span>
                                 {{#each _prices.others}}
                                     <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
@@ -325,7 +325,7 @@
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                                 <div class="shop-product-image shop-product-image-main">
-                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                                         <div class="image productimage noimage image_{{ID}}">
                                             {{#if Images.[0].xs}}
                                             {{>animSpinnerFB}}
@@ -345,7 +345,7 @@
                                     </a>
                                 </div>
                                 <span class="product-name">
-                                    <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                                 </span>
                                 {{#each _prices.others}}
                                     <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>

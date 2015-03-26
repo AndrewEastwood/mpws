@@ -5,14 +5,14 @@
 {{#recursive data}}
     {{#if childNodes}}
     <li class="dropdown-submenu">
-        <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+        <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
         <ul class="dropdown-menu">
             {{{recursive childNodes}}}
         </ul>
     </li>
     {{else}}
     <li>
-        <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+        <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
     </li>
     {{/if}}
 {{/recursive}}

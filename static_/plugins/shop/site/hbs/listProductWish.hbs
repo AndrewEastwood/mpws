@@ -41,7 +41,7 @@
                 <i class="fa fa-shopping-cart"></i>
             </a>
             <div class="shop-product-image shop-product-image-main">
-                <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                     <div class="image productimage noimage image_{{ID}}">
                         {{#if Images.[0].sm}}
                         {{>animSpinnerFB}}
@@ -61,7 +61,7 @@
                 </a>
             </div>
             <div class="product-row">
-                <span class="product-name"><a href="{{bb_link ../../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
+                <span class="product-name"><a href="{{bb_link ../../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
                 {{#unless _archived}}
                 <div class="shop-component shop-product-attr shop-product-attr-price label-warning product-price">
                     <div class="value-prefix">Ціна:</div>

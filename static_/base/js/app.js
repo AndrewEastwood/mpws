@@ -146,13 +146,13 @@
                     options = targetName;
                 }
             }
-            var tags = $(options.name);
-            if (tags.length) {
-                $(targetName).each(function () {
-                    $(this).wrap('<div/>').parent().replaceWith(el);
-                });
-                return;
-            }
+            // var tags = $(options.name);
+            // if (tags.length) {
+            //     $(targetName).each(function () {
+            //         $(this).wrap('<div/>').parent().replaceWith(el);
+            //     });
+            //     return;
+            // }
             if (!options || !options.name) {
                 throw "Wrong arguments for renderFn";
                 return;
@@ -276,26 +276,29 @@
         $dfd.done(function () {
             // start HTML5 History push
             APP.instances.root = root;
-            Backbone.history.start({hashChange: true});
             // notify all that loader completed its tasks
             APP.Sandbox.eventNotify('global:loader:complete');
             Backbone.trigger('global:loader:complete');
+            if (APP.instances.customer && APP.instances.customer instanceof Backbone.Router) {
+                APP.instances.customer.trigger('app:ready');
+            }
+            Backbone.history.start({hashChange: true});
             updatePageBodyClassNameFn();
         });
 
         var addPliginInstanceFn = function (pluginClass, key, preInitFn, totalPluginCount) {
             var initFn = function () {
                 // console.log('calling: initFn for key ' + key + ' ||| instances count: ' + Object.getOwnPropertyNames(APP.instances).length);
-                if (_.isFunction(pluginClass)) {
-                    APP.instances[key] = new pluginClass();
-                } else {
+                // if (_.isFunction(pluginClass)) {
+                //     APP.instances[key] = new pluginClass();
+                // } else {
                     APP.instances[key] = pluginClass;
-                }
+                // }
                 if (APP.instances[key].trigger) {
                     APP.instances[key].trigger('created');
                 }
                 // Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
-                var _loadedPlugins = _.omit(APP.instances, 'CustomerRouter');
+                var _loadedPlugins = _.omit(APP.instances, 'customer');
                 // console.log('totalPluginCount: ' + totalPluginCount);
                 // debugger
                 if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
@@ -339,29 +342,37 @@
         }
 
         // load customer
-        require(['customers/' + config.CUSTOMER + '/js/router'], function (CustomerRouter) {
-            if (_.isFunction(CustomerRouter)) {
-                var customerRouter = new CustomerRouter();
-                APP.instances.CustomerRouter = customerRouter;
+        require(['customers/' + config.CUSTOMER + '/js/router'], function (RouterCustomer) {
+            if (_.isFunction(RouterCustomer)) {
+                var customer = new RouterCustomer();
+                APP.instances.customer = customer;
             }
-            if (CustomerRouter && _.isFunction(CustomerRouter.releasePlugins)) {
-                CustomerRouter.releasePlugins(releasePluginsFn);
+            if (customer && _.isFunction(customer.releasePlugins)) {
+                customer.releasePlugins(releasePluginsFn);
             } else {
                 releasePluginsFn();
             }
         });
 
         APP.getCustomer = function () {
-            return APP.instances.CustomerRouter;
+            return APP.instances.customer;
         };
 
         APP.identity = function (v) {
             return v;
         };
 
+        APP.initPlugin = function (key, options) {
+            // debugger
+            var plg = APP.instances[key];
+            if (plg && _.isFunction(plg.setup))
+                return plg.setup(options);
+            return new plg(options);
+        };
+
         APP.injectHtml = function (targetName, el) {
             var proceed = false,
-                customerRenderProxy = APP.instances.CustomerRouter && APP.instances.CustomerRouter.renderProxy || APP.identity;
+                customerRenderProxy = APP.instances.customer && APP.instances.customer.renderProxy || APP.identity;
             if (_.isArray(targetName)) {
                 _(targetName).each(function (option) {
                     if (!!customerRenderProxy(option)) {

@@ -4,11 +4,50 @@ define([
     'backbone',
     'cachejs',
     'auth',
+    // 'plugins/shop/site/js/view/home',
+    'plugins/shop/site/js/view/listProductCatalog',
+    'plugins/shop/site/js/view/productItemFull',
+    'plugins/shop/site/js/view/listProductCompare',
+    'plugins/shop/site/js/view/cartStandalone',
+    'plugins/shop/site/js/view/listProductWish',
+    'plugins/shop/site/js/view/trackingStatus',
+    // 'plugins/shop/site/js/view/profileOrders',
+
+    'plugins/shop/site/js/view/menuCart',
+    'plugins/shop/site/js/view/menuWishList',
+    'plugins/shop/site/js/view/menuCompare',
+    'plugins/shop/site/js/view/menuPayment',
+    'plugins/shop/site/js/view/menuWarranty',
+    'plugins/shop/site/js/view/menuShipping',
+    // 'plugins/shop/site/js/view/menuCatalog',
+
+    'plugins/shop/site/js/view/widgetAddress',
+    'plugins/shop/site/js/view/widgetExchangeRates',
+    'plugins/shop/site/js/view/orderTrackingButton',
+    'plugins/shop/site/js/view/cartEmbedded',
+    'plugins/shop/site/js/view/menuCatalogBar',
+
     'plugins/shop/site/js/model/order',
-    'plugins/shop/site/js/view/siteMenu',
-    'plugins/shop/site/js/view/siteWidgets',
     'plugins/shop/common/js/model/setting'
-], function ($, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
+], function ($, _, Backbone, Cache, Auth, 
+    /*PageHome,*/
+    ListProductCatalog, ViewProductItemFull,
+    ListProductCompare, CartStandalone, ListProductWish, TrackingStatus,
+/*    ProfileOrders, */
+    // menu views
+    ViewMenuItemCart,
+    ViewMenuItemWishList,
+    ViewMenuItemCompareList,
+    ViewMenuItemPopupInfoPayment,
+    ViewMenuItemPopupInfoWarranty,
+    ViewMenuItemPopupInfoShipping,
+    // widgets
+    ViewWidgetAddresses,
+    ViewWidgetExchangeRates,
+    ViewWidgetOrderTrackingButton,
+    ViewWidgetCartEmbedded,
+    ViewWidgetCatalogBar,
+    SiteOrder, SiteSettings) {
 
     var order = new SiteOrder({
         ID: "temp"
@@ -21,52 +60,61 @@ define([
         fn: 'orders'
     });
 
+    var addr = null;
+
     var $dfdSettings = settings.fetch();
 
-    var routes = {
-        "!/shop": "home",
-        "!/shop/catalog/:category": "shop_catalog_category",
-        "!/shop/catalog/:category/:page": "shop_catalog_category_page",
-        "!/shop/catalog/": "shop_catalog",
-        "!/shop/product/:product": "shop_product",
-        "!/shop/cart": "shop_cart",
-        "!/shop/wishlist": "shop_wishlist",
-        "!/shop/compare": "shop_compare",
-        "!/shop/tracking/(:id)": "shop_tracking"
-        // "!/shop/profile/orders": "shop_profile_orders"
-    };
+    // var routes = {
+    //     "!/shop": "home",
+    //     "!/shop/catalog/:category": "shop_catalog_category",
+    //     "!/shop/catalog/:category/:page": "shop_catalog_category_page",
+    //     "!/shop/catalog/": "shop_catalog",
+    //     "!/shop/product/:product": "shop_product",
+    //     "!/shop/cart": "shop_cart",
+    //     "!/shop/wishlist": "shop_wishlist",
+    //     "!/shop/compare": "shop_compare",
+    //     "!/shop/tracking/(:id)": "shop_tracking"
+    //     // "!/shop/profile/orders": "shop_profile_orders"
+    // };
 
     var Router = Backbone.Router.extend({
 
-        name: "shop",
+        name: 'shop',
 
-        settings: null,
+        // settings: null,
 
-        routes: routes,
+        // routes: routes,
 
-        urls: _(routes).invert(),
+        // urls: _(routes).invert(),
 
-        initialize: function () {
+        initialize: function (options) {
+            // debugger
+            // var self = this;
 
-            var self = this;
+            this.constructor.urls = options.urls;
+            this.constructor.settings = {};
 
-            this.on('created', function () {
+            // this.on('created', function () {
 
-                SiteMenu({
-                    order: order
-                });
+            //     SiteMenu({
+            //         order: order
+            //     });
 
-                SiteWidgets({
-                    order: order
-                });
+            //     SiteWidgets({
+            //         order: order
+            //     });
 
-                order.fetch();
-            });
+            //     order.fetch();
+            // });
+            order.fetch();
+            addr = new ViewWidgetAddresses();
+            addr.collection.fetch({reset: true});
 
 
-            APP.Sandbox.eventSubscribe('global:page:index', function () {
-                self.home();
-            });
+
+            // APP.Sandbox.eventSubscribe('global:page:index', function () {
+            //     self.home();
+            // });
 
             // APP.Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
             //     self.offers();
@@ -80,18 +128,76 @@ define([
             // });
         },
 
-        home: function () {
-            APP.getCustomer().setBreadcrumb();
-            require(['plugins/shop/site/js/view/home'], function (PageHome) {
-                var pageHome = new PageHome();
-                pageHome.render();
-                APP.injectHtml('ShopHome', pageHome.el);
+        // home: function () {
+        //     APP.getCustomer().setBreadcrumb();
+        //     // require([''], function () {
+        //         var pageHome = new PageHome();
+        //         pageHome.render();
+        //         // APP.injectHtml('ShopHome', pageHome.el);
+        //     // });
+
+        // },
+        menuItemCart: function () {
+            var menuCart = new ViewMenuItemCart({
+                model: order
             });
-
+            return menuCart;
         },
-
-        shop_catalog_category: function (categoryID) {
-            require(['plugins/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
+        menuItemWishList: function () {
+            var menuWishList = new ViewMenuItemWishList();
+            menuWishList.collection.fetch();
+            return menuWishList;
+        },
+        menuItemCompareList: function () {
+            var menuCompare = new ViewMenuItemCompareList();
+            menuCompare.collection.fetch();
+            return menuCompare;
+        },
+        menuItemPopupInfoPayment: function () {
+            var menuPayment = new ViewMenuItemPopupInfoPayment();
+            menuPayment.render();
+            return menuPayment;
+        },
+        menuItemPopupInfoWarranty: function () {
+            var menuWarranty = new ViewMenuItemPopupInfoWarranty();
+            menuWarranty.render();
+            return menuWarranty;
+        },
+        menuItemPopupInfoShipping: function () {
+            var menuShipping = new ViewMenuItemPopupInfoShipping();
+            menuShipping.render();
+            return menuShipping;
+        },
+        widgetAddresses: function () {
+            return addr;
+        },
+        widgetExchangeRates: function () {
+            var rates = new ViewWidgetExchangeRates();
+            if (APP.instances.shop.settings.MISC.ShowSiteCurrencySelector) {
+                rates.render();
+            }
+            return rates;
+        },
+        widgetTrackOrderButton: function () {
+            // inject tracking order
+            var orderTrackingButton = new ViewWidgetOrderTrackingButton();
+            orderTrackingButton.render();
+            return orderTrackingButton;
+        },
+        widgetCartButton: function () {
+            // inject embedded shopping cart
+            var cartEmbedded = new ViewWidgetCartEmbedded({model: order});
+            cartEmbedded.render();
+            return cartEmbedded;
+        },
+        widgetCatalogBar: function () {
+            // catalog navigation panel
+            var cBar = new ViewWidgetCatalogBar();
+            cBar.model.fetch({reset: true});
+            return cBar;
+        },
+        shopCatalogCategory: function (categoryID) {
+            // require([''], function () {
                 // create new view
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
@@ -99,12 +205,13 @@ define([
                 listProductCatalog.collection.fetch({
                     reset: true
                 });
-                APP.injectHtml('ShopCatalogBrowse', listProductCatalog.el);
-            });
+                return listProductCatalog;
+                // APP.injectHtml('ShopCatalogBrowse', listProductCatalog.el);
+            // });
         },
 
-        shop_catalog_category_page: function (categoryID, pageNo) {
-            require(['plugins/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
+        shopCatalogCategoryPage: function (categoryID, pageNo) {
+            // require([''], function () {
                 // create new view
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
@@ -116,34 +223,37 @@ define([
                 listProductCatalog.collection.fetch({
                     reset: true
                 });
-                APP.injectHtml('ShopCatalogBrowseWithPage', listProductCatalog.el);
-            });
+                return listProductCatalog;
+                // APP.injectHtml('ShopCatalogBrowseWithPage', listProductCatalog.el);
+            // });
         },
 
-        shop_product: function (productID) {
-            require(['plugins/shop/site/js/view/productItemFull'], function (ViewProductItemFull) {
+        shopProduct: function (productID) {
+            // require([''], function () {
                 // create new view
                 var viewProductItemFull = new ViewProductItemFull({
                     productID: productID
                 });
                 viewProductItemFull.model.fetch();
-                APP.injectHtml('ShopProduct', viewProductItemFull.el);
-            });
+                return viewProductItemFull;
+                // APP.injectHtml('ShopProduct', viewProductItemFull.el);
+            // });
         },
 
-        shop_compare: function () {
-            APP.getCustomer().setBreadcrumb();
-            require(['plugins/shop/site/js/view/listProductCompare'], function (ListProductCompare) {
+        shopCompare: function () {
+            // APP.getCustomer().setBreadcrumb();
+            // require([''], function () {
                 // create new view
                 var listProductCompare = new ListProductCompare();
                 listProductCompare.render();
-                APP.injectHtml('ShopCompareList', listProductCompare.el);
-            });
+                return listProductCompare;
+                // APP.injectHtml('ShopCompareList', listProductCompare.el);
+            // });
         },
 
-        shop_cart: function () {
-            APP.getCustomer().setBreadcrumb();
-            require(['plugins/shop/site/js/view/cartStandalone'], function (CartStandalone) {
+        shopCart: function () {
+            // APP.getCustomer().setBreadcrumb();
+            // require([''], function () {
                 // debugger;
                 var plgAccount = APP.instances.account;
                 var accountModel = null;
@@ -175,28 +285,31 @@ define([
                 });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();
-                APP.injectHtml('ShopCart', cartStandalone.el);
-            });
+                return cartStandalone;
+                // APP.injectHtml('ShopCart', cartStandalone.el);
+            // });
         },
 
-        shop_wishlist: function () {
-            APP.getCustomer().setBreadcrumb();
-            require(['plugins/shop/site/js/view/listProductWish'], function (ListProductWish) {
+        shopWishlist: function () {
+            // APP.getCustomer().setBreadcrumb();
+            // require([''], function () {
                 // create new view
                 var listProductWish = new ListProductWish();
                 listProductWish.render();
-                APP.injectHtml('ShopWishList', listProductWish.el);
-            });
+                return listProductWish;
+                // APP.injectHtml('ShopWishList', listProductWish.el);
+            // });
         },
 
-        shop_tracking: function (orderHash) {
-            APP.getCustomer().setBreadcrumb();
-            require(['plugins/shop/site/js/view/trackingStatus'], function (TrackingStatus) {
+        shopTracking: function (orderHash) {
+            // APP.getCustomer().setBreadcrumb();
+            // require([''], function () {
                 // create new view
                 var trackingStatus = new TrackingStatus();
                 trackingStatus.setOrderHash(orderHash);
-                APP.injectHtml('ShopTrackOrder', trackingStatus.el);
-            });
+                return trackingStatus;
+                // APP.injectHtml('ShopTrackOrder', trackingStatus.el);
+            // });
         },
 
         //
@@ -206,7 +319,7 @@ define([
         //         Backbone.history.navigate("", true);
         //         return;
         //     }
-        //     require(['plugins/shop/site/js/view/profileOrders'], function (ProfileOrders) {
+            // require([''], function () {
         //         // Cache.withObject('ProfileOrders', function (cachedView) {
         //         // debugger;
         //         // remove previous view
@@ -232,9 +345,12 @@ define([
         preload: function (callback) {
             $dfdSettings.done(function () {
                 var _s = settings.toSettings();
+                debugger
                 Router.prototype.settings = _s;
                 Router.prototype.settings._user = {
-                    activeCurrency: SiteWidgets.ExchangeRates.getActiveCurrencyName(_s.MISC.SiteDefaultPriceCurrencyType && _s.MISC.SiteDefaultPriceCurrencyType, !!_s.MISC.ShowSiteCurrencySelector)
+                    activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
+                        _s.MISC.SiteDefaultPriceCurrencyType && _s.MISC.SiteDefaultPriceCurrencyType,
+                        !!_s.MISC.ShowSiteCurrencySelector)
                 }
                 // console.log('shop settings ready: calling callback');
                 callback();

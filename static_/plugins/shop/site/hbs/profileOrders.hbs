@@ -76,12 +76,12 @@
         {{#each boughts }}
             <div class="wrapper">
                 <div class="shop-product-image shop-product-image-main">
-                    <a href="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{OriginName}} - {{Name}}">
+                    <a href="{{bb_link instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" class="link" title="{{OriginName}} - {{Name}}">
                         <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
                     </a>
                 </div>
                 <div class="product-row">
-                    <span class="product-name"><a href="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+                    <span class="product-name"><a href="{{bb_link instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
                     <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
                     <span class="label label-default">x</span>
                     <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
