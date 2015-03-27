@@ -54,6 +54,7 @@ require.config({
         'typehead': 'vendors/typehead.js/dist/typehead.jquery',
         'underscore': 'vendors/underscore/underscore',
         'echo': 'vendors/echojs/dist/echo',
+        'async': 'vendors/async/lib/async',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',

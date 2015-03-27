@@ -35,6 +35,7 @@
         'auth',
         'jsurl',
         'cachejs',
+        'async',
         'handlebars-helpers',
         'handlebars-partials',
         // localizations
@@ -59,7 +60,7 @@
 
     this.APP = APP;
 
-    require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache) {
+    require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache, Async) {
 
         // APP.commonElements = $('div[name^="Common"]:not(:has(*))');
         Backbone.Model.prototype.isEmpty = function () {
@@ -273,53 +274,54 @@
         var $dfd = $.Deferred();
 
         // initialize plugins
-        $dfd.done(function () {
-            // start HTML5 History push
-            APP.instances.root = root;
-            // notify all that loader completed its tasks
-            APP.Sandbox.eventNotify('global:loader:complete');
-            Backbone.trigger('global:loader:complete');
-            if (APP.instances.customer && APP.instances.customer instanceof Backbone.Router) {
-                APP.instances.customer.trigger('app:ready');
-            }
-            Backbone.history.start({hashChange: true});
-            updatePageBodyClassNameFn();
-        });
+        // $dfd.done(function () {
+        //     // start HTML5 History push
+        //     APP.instances.root = root;
+        //     // notify all that loader completed its tasks
+        //     APP.Sandbox.eventNotify('global:loader:complete');
+        //     Backbone.trigger('global:loader:complete');
+        //     if (APP.instances.customer && APP.instances.customer instanceof Backbone.Router) {
+        //         APP.instances.customer.trigger('app:ready');
+        //     }
+        //     Backbone.history.start({hashChange: true});
+        //     updatePageBodyClassNameFn();
+        // });
 
-        var addPliginInstanceFn = function (pluginClass, key, preInitFn, totalPluginCount) {
-            var initFn = function () {
-                // console.log('calling: initFn for key ' + key + ' ||| instances count: ' + Object.getOwnPropertyNames(APP.instances).length);
-                // if (_.isFunction(pluginClass)) {
-                //     APP.instances[key] = new pluginClass();
-                // } else {
-                    APP.instances[key] = pluginClass;
-                // }
-                if (APP.instances[key].trigger) {
-                    APP.instances[key].trigger('created');
-                }
-                // Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
-                var _loadedPlugins = _.omit(APP.instances, 'customer');
-                // console.log('totalPluginCount: ' + totalPluginCount);
-                // debugger
-                if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
-                    // console.log('!!!!!!!!!!!! ALL PLUGINS ARE READY !!!!!!!');
-                    $dfd.resolve();
-                }
-            };
-            // console.log('preInitFn:');
-            // console.log(preInitFn);
-            if (_.isFunction(preInitFn)) {
-                // console.log('calling: preInitFn for key ' + key);
-                preInitFn(initFn);
-            } else {
-                // console.log('regular plugin init for key ' + key);
-                initFn();
-            }
-        }
+        // var addPliginInstanceFn = function (pluginClass, key, preInitFn, totalPluginCount) {
+        //     var initFn = function () {
+        //         // console.log('calling: initFn for key ' + key + ' ||| instances count: ' + Object.getOwnPropertyNames(APP.instances).length);
+        //         // if (_.isFunction(pluginClass)) {
+        //         //     APP.instances[key] = new pluginClass();
+        //         // } else {
+        //             APP.instances[key] = pluginClass;
+        //         // }
+        //         if (APP.instances[key].trigger) {
+        //             APP.instances[key].trigger('created');
+        //         }
+        //         // Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
+        //         var _loadedPlugins = _.omit(APP.instances, 'customer');
+        //         // console.log('totalPluginCount: ' + totalPluginCount);
+        //         // debugger
+        //         if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
+        //             // console.log('!!!!!!!!!!!! ALL PLUGINS ARE READY !!!!!!!');
+        //             $dfd.resolve();
+        //         }
+        //     };
+        //     // console.log('preInitFn:');
+        //     // console.log(preInitFn);
+        //     if (_.isFunction(preInitFn)) {
+        //         // console.log('calling: preInitFn for key ' + key);
+        //         preInitFn(initFn);
+        //     } else {
+        //         // console.log('regular plugin init for key ' + key);
+        //         initFn();
+        //     }
+        // }
 
         // load plugins
         var releasePluginsFn = function () {
-            var pluginList = [];
+            var pluginList = [],
+                pluginStack = [];
             // include site file
             for (var key in config.PLUGINS) {
                 pluginList.push('plugins/' + config.PLUGINS[key] + '/' + (config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
@@ -332,12 +334,32 @@
 
             require(pluginList, function () {
                 var _pluginsObjects = [].slice.call(arguments);
+
                 _(_pluginsObjects).each(function (pluginClass, key) {
-                    // console.log('calling: addPliginInstanceFn for key [[[[[' + pluginNames[key]);
-                    // console.log(pluginClass);
-                    // console.log('=====================');
-                    addPliginInstanceFn(pluginClass, pluginNames[key], pluginClass && pluginClass.preload, _pluginsObjects.length);
+                    pluginStack.push(function (callback) {
+                        var plugin = new pluginClass();
+                        APP.instances[key] = plugin;
+                        if (plugin.beforeInit) {
+                            plugin.beforeInit(callback);
+                        } else {
+                            callback();
+                        }
+                    });
                 });
+
+                Async.parallel(pluginStack, function () {
+                    // start HTML5 History push
+                    APP.instances.root = root;
+                    // notify all that loader completed its tasks
+                    APP.Sandbox.eventNotify('global:loader:complete');
+                    Backbone.trigger('global:loader:complete');
+                    if (APP.instances.customer && APP.instances.customer instanceof Backbone.Router) {
+                        APP.instances.customer.trigger('app:ready');
+                    }
+                    Backbone.history.start({hashChange: true});
+                    updatePageBodyClassNameFn();
+                });
+
             });
         }
 

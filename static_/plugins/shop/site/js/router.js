@@ -84,11 +84,33 @@ define([
 
         name: 'shop',
 
-        // settings: null,
+        settings: null,
 
         // routes: routes,
 
         // urls: _(routes).invert(),
+        beforeInitialize: function (callback) {
+            var that = this;
+            $dfdSettings.done(function () {
+                that.settings = settings.toSettings();
+                // Router.prototype.settings = staticSettings;
+                // Router.prototype.settings._user = {
+                that.settings._user = {
+                    activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
+                        that.settings.MISC.SiteDefaultPriceCurrencyType && that.settings.MISC.SiteDefaultPriceCurrencyType,
+                        !!that.settings.MISC.ShowSiteCurrencySelector)
+                }
+
+                addr.collection.set(that.settings.ADDRESS);
+
+                // console.log('shop settings ready: calling callback');
+                callback();
+
+                Backbone.on('changed:plugin-shop-currency', function (currencyName) {
+                    that.settings._user.activeCurrency = currencyName;
+                });
+            });
+        },
 
         initialize: function (options) {
             // debugger
@@ -313,6 +335,9 @@ define([
             // });
         },
 
+        setActiveAddress: function (addr) {
+            this.settings._activeAddress = addr;
+        }
         //
         // shop_profile_orders: function () {
         //     APP.getCustomer().setBreadcrumb();
@@ -342,33 +367,6 @@ define([
         //     });
         // }
 
-    }, {
-        urls: staticUrls,
-        settings: staticSettings,
-        preload: function (callback) {
-            $dfdSettings.done(function () {
-                staticSettings = settings.toSettings();
-                // Router.prototype.settings = staticSettings;
-                // Router.prototype.settings._user = {
-                staticSettings._user = {
-                    activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
-                        staticSettings.MISC.SiteDefaultPriceCurrencyType && staticSettings.MISC.SiteDefaultPriceCurrencyType,
-                        !!staticSettings.MISC.ShowSiteCurrencySelector)
-                }
-
-                addr.collection.set(staticSettings.ADDRESS);
-
-                // console.log('shop settings ready: calling callback');
-                callback();
-
-                Backbone.on('changed:plugin-shop-currency', function (currencyName) {
-                    Router.prototype.settings._user.activeCurrency = currencyName;
-                });
-            });
-        },
-        setActiveAddress: function (addr) {
-            staticSettings._activeAddress = addr;
-        }
     });
 
     return Router;
