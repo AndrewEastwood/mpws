@@ -76,9 +76,7 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            APP.Sandbox.eventNotify('global:page:setTitle', title);
-            APP.Sandbox.eventNotify('global:page:setKeywords', keywords);
-            APP.Sandbox.eventNotify('global:page:setDescription', description);
+            APP.setPageAttributes({title: title, keywords: keywords, description: description});
             // seo end
 
             return this;

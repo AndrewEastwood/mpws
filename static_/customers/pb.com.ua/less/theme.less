@@ -11,19 +11,45 @@
 @import "custom";
 
 // customization
+.top-bar {
+    .exchange-rates-widget {
+        li {
+            display: block;
+        }
+    }
+}
+.mpws-js-menu-cart {
+    a:hover .badge {
+        color: #F27A24;
+    }
+    .badge {
+        &:before {
+            content: '(';
+        }
+        &:after {
+            content: ')';
+        }
+        background: none;
+        color: #333;
+        font-weight: normal;
+        padding: 0px;
+    }
+}
 header {
     .logo-holder {
+        text-align: center;
+        // overflow: hidden;
+        // zoom: 1;
         div.logo {
             margin: -20px 0;
             a {
-                overflow: hidden;
-                zoom: 1;
+                display: inline-block;
             }
         }
     }
-    .top-search-holder .contact-row {
-        margin-top: -18px;
-    }
+    // .top-search-holder .contact-row {
+    //     margin-top: -18px;
+    // }
     .address-item {
         &.single {
             .shop-name {
@@ -31,6 +57,7 @@ header {
             }
         }
         .address-lines {
+            display: none;
             > .block {
                 display: inline-block;
                 &.addresses {

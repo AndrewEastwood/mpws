@@ -70,16 +70,17 @@ define([
                 that.setPlugin(APP.getPlugin('shop'));
 
                 // menu items
-                $('ul.js-mainnav').append(that.plugins.shop.menuItemCart().$el);
-                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoPayment().$el);
-                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoWarranty().$el);
-                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoShipping().$el);
-                $('.js-wishlist-compare-holder').append(that.plugins.shop.menuItemCompareList().$el);
-                $('.js-wishlist-compare-holder').append(that.plugins.shop.menuItemWishList().$el);
+                $('.mpws-js-menu-cart').html(that.plugins.shop.menuItemCart().$el);
+                $('.mpws-js-menu-payment').html(that.plugins.shop.menuItemPopupInfoPayment().$el);
+                $('.mpws-js-menu-warranty').html(that.plugins.shop.menuItemPopupInfoWarranty().$el);
+                $('.mpws-js-menu-shipping').html(that.plugins.shop.menuItemPopupInfoShipping().$el);
+                $('.mpws-js-menu-compare').html(that.plugins.shop.menuItemCompareList().$el);
+                $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
 
                 // widgets
-                $('.js-shop-addresses').html(that.plugins.shop.widgetAddresses().$el);
-                $('.js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
+                $('.mpws-js-shop-addresses').html(that.plugins.shop.widgetAddresses().$el);
+                $('.mpws-js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
+                $('.mpws-js-top-nav-right').html($('<li>').addClass('dropdown').html(that.plugins.shop.widgetExchangeRates().$el));
             });
 
             APP.Sandbox.eventSubscribe('global:page:index', function () {

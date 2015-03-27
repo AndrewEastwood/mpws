@@ -9,7 +9,7 @@ define([
 ], function (Backbone, Handlebars, Utils, tpl, lang) {
 
     var MenuCart = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'a',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
@@ -17,10 +17,12 @@ define([
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            this.$('.counter').empty();
             if (this.model.getProductCount() && !this.model.isSaved())
                 this.$('.counter').text(this.model.get('info').productCount);
-            else
-                this.$('.counter').empty();
+            this.$el.attr({
+                href: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopCart, {asRoot: true})
+            });
             return this;
         }
     });

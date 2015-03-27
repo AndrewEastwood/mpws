@@ -7,7 +7,7 @@ define([
 ], function (Backbone, Handlebars, wishCollectionInstance, Utils, tpl) {
 
     var MenuWishList = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'a',
         template: Handlebars.compile(tpl), // check
         collection: wishCollectionInstance,
         initialize: function () {
@@ -20,6 +20,9 @@ define([
                 this.$('.counter').text(wishCollectionInstance.length);
             else
                 this.$('.counter').empty();
+            this.$el.attr({
+                href: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopWishlist, {asRoot: true})
+            });
             return this;
         }
     });

@@ -7,7 +7,10 @@ define([
 ], function (Backbone, Handlebars, modelCatalogStructureMenu, Utils, tpl) {
 
     var MenuCatalog = Backbone.View.extend({
-        tagName: 'li',
+        // tagName: 'a',
+        // attributes: {
+        //     href: 'javascript://'
+        // },
         className: 'dropdown shop-dropdown-catalog',
         id: 'shop-dropdown-catalog-ID',
         template: Handlebars.compile(tpl), // check

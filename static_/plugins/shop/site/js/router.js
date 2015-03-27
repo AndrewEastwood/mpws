@@ -77,7 +77,7 @@ define([
     // var staticUrls = {};
     // var staticSettings = {};
 
-    var Router = Backbone.Router.extend({
+    var Router = Backbone.View.extend({
 
         settings: null,
 
@@ -90,6 +90,7 @@ define([
             this.urls = options && options.urls || {};
             var settings = new SiteSettings();
             settings.fetch().done(function () {
+                // debugger
                 that.settings = settings.toSettings();
                 // Router.prototype.settings = staticSettings;
                 // Router.prototype.settings._user = {
@@ -103,6 +104,7 @@ define([
 
                 // console.log('shop settings ready: calling callback');
                 callback();
+                // console.log('finished loading shop');
 
                 Backbone.on('changed:plugin-shop-currency', function (currencyName) {
                     that.settings._user.activeCurrency = currencyName;
@@ -110,6 +112,9 @@ define([
             });
         },
 
+        initialize: function () {
+            _.bindAll(this, 'setActiveAddress');
+        },
         // initialize: function (options) {
         //     debugger
         //     // var self = this;
@@ -195,6 +200,7 @@ define([
             } else {
                 addr.collection.fetch({reset: true});
             }
+            addr.render();
             return addr;
         },
         widgetExchangeRates: function () {

@@ -7,7 +7,10 @@ define([
 ], function (Backbone, Handlebars, modelCatalogStructureMenu, Utils, tpl) {
 
     var MenuCatalogBar = Backbone.View.extend({
-        // tagName: 'ul',
+        // tagName: 'a',
+        // attributes: {
+        //     href: 'javascript://'
+        // },
         className: 'navbar yamm navbar-default navbar-fixed-top shop-catalog-bar',
         template: Handlebars.compile(tpl), // check
         initialize: function () {

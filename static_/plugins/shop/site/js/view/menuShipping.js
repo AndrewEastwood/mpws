@@ -7,7 +7,10 @@ define([
 ], function (Backbone, Handlebars, Utils, BootstrapDialog, tpl) {
 
     var MenuShipping = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'a',
+        attributes: {
+            href: 'javascript://'
+        },
         template: Handlebars.compile(tpl), // check
         events: {
             'click': 'showPopup'

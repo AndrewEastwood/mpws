@@ -98,77 +98,77 @@
                 });
             return _url.toString();
         }
-        var contentInjection = function (cnt, options) {
+        // var contentInjection = function (cnt, options) {
 
-            if (!options || !options.name)
-                return;
+        //     if (!options || !options.name)
+        //         return;
 
-            if (!cnt || !cnt.length)
-                return;
+        //     if (!cnt || !cnt.length)
+        //         return;
 
-            // debugger;
-            if (options.keepExisted) {
-                // get element id that we want to replace
-                var _elID = options.el.attr('id');
-                // find existed elements
-                var _items = cnt.find('#' + _elID);
-                // do nothing when element exists
-                if (_items.length > 0)
-                    return;
-            }
+        //     // debugger;
+        //     if (options.keepExisted) {
+        //         // get element id that we want to replace
+        //         var _elID = options.el.attr('id');
+        //         // find existed elements
+        //         var _items = cnt.find('#' + _elID);
+        //         // do nothing when element exists
+        //         if (_items.length > 0)
+        //             return;
+        //     }
 
-            // debugger;
-            if (options.replace) {
-                // get element id that we want to replace
-                var _elID = options.el.attr('id');
-                if (_elID) {
-                    // find existed elements
-                    var _items = cnt.find('#' + _elID);
-                    // if there are some we do replace
-                    if (_items.length > 0)
-                        _items.replaceWith(options.el);
-                    else // or just append as new one into container
-                        cnt.append(options.el);
-                }
-            } else if (options.append)
-                cnt.append(options.el);
-            else if (options.prepend)
-                cnt.prepend(options.el);
-            else
-                cnt.html(options.el);
-        }
+        //     // debugger;
+        //     if (options.replace) {
+        //         // get element id that we want to replace
+        //         var _elID = options.el.attr('id');
+        //         if (_elID) {
+        //             // find existed elements
+        //             var _items = cnt.find('#' + _elID);
+        //             // if there are some we do replace
+        //             if (_items.length > 0)
+        //                 _items.replaceWith(options.el);
+        //             else // or just append as new one into container
+        //                 cnt.append(options.el);
+        //         }
+        //     } else if (options.append)
+        //         cnt.append(options.el);
+        //     else if (options.prepend)
+        //         cnt.prepend(options.el);
+        //     else
+        //         cnt.html(options.el);
+        // }
 
-        var renderFn = function (targetName, el) {
-            // debugger;
-            var options = {};
-            if (_.isString(targetName) && el) {
-                options.name = targetName;
-                options.el = el;
-            } else {
-                if (targetName && targetName.name && targetName.el) {
-                    options = targetName;
-                }
-            }
-            // var tags = $(options.name);
-            // if (tags.length) {
-            //     $(targetName).each(function () {
-            //         $(this).wrap('<div/>').parent().replaceWith(el);
-            //     });
-            //     return;
-            // }
-            if (!options || !options.name) {
-                throw "Wrong arguments for renderFn";
-                return;
-            }
-            // debugger;
-            var $el = $('[name="' + options.name + '"]');
-            if ($el.length === 0) {
-                if (APP.config.ISDEV) {
-                    throw "Render Error: Unable to resolve element by name: " + options.name;
-                }
-            } else
-                contentInjection($el, options);
-        }
+        // var renderFn = function (targetName, el) {
+        //     // debugger;
+        //     var options = {};
+        //     if (_.isString(targetName) && el) {
+        //         options.name = targetName;
+        //         options.el = el;
+        //     } else {
+        //         if (targetName && targetName.name && targetName.el) {
+        //             options = targetName;
+        //         }
+        //     }
+        //     // var tags = $(options.name);
+        //     // if (tags.length) {
+        //     //     $(targetName).each(function () {
+        //     //         $(this).wrap('<div/>').parent().replaceWith(el);
+        //     //     });
+        //     //     return;
+        //     // }
+        //     if (!options || !options.name) {
+        //         throw "Wrong arguments for renderFn";
+        //         return;
+        //     }
+        //     // debugger;
+        //     var $el = $('[name="' + options.name + '"]');
+        //     if ($el.length === 0) {
+        //         if (APP.config.ISDEV) {
+        //             throw "Render Error: Unable to resolve element by name: " + options.name;
+        //         }
+        //     } else
+        //         contentInjection($el, options);
+        // }
 
         var updatePageBodyClassNameFn = function () {
             // set page name
@@ -198,39 +198,43 @@
         APP.Cache = Cache;
 
         // Sandbox message handler
-        $('body').on('click', '[data-action]', function (event) {
-            // debugger;
-            var _data = $(this).data() || {};
-            _data.event = event;
-            APP.Sandbox.eventNotify($(this).data('action'), _data);
-        });
+        // $('body').on('click', '[data-action]', function (event) {
+        //     // debugger;
+        //     var _data = $(this).data() || {};
+        //     _data.event = event;
+        //     APP.Sandbox.eventNotify($(this).data('action'), _data);
+        // });
 
-        APP.Sandbox.eventSubscribe('global:page:setTitle', function (title) {
-            if (_.isArray(title))
-                $('head title').text(title.join(' - '));
-            else if (_.isString(title))
-                $('head title').text(title);
-        });
-
-        APP.Sandbox.eventSubscribe('global:page:setKeywords', function (keywords) {
-            $('head meta[name="keywords"]').attr('content', keywords);
-        });
-
-        APP.Sandbox.eventSubscribe('global:page:setDescription', function (description) {
-            $('head meta[name="description"]').attr('content', description);
-        });
+        APP.setPageAttributes = function (attr) {
+            if (!attr) return;
+            // set title
+            if (attr.title) {
+                if (_.isArray(attr.title))
+                    $('head title').text(attr.title.join(' - '));
+                else if (_.isString(attr.title))
+                    $('head title').text(attr.title);
+            }
+            // set keywords
+            if (attr.keywords) {
+                $('head meta[name="keywords"]').attr('content', attr.keywords);
+            }
+            // set description
+            if (attr.description) {
+                $('head meta[name="description"]').attr('content', attr.description);
+            }
+        }
 
         // debugger;
-        APP.Sandbox.eventSubscribe('global:content:render', function (options) {
-            // debugger;
-            if (_.isArray(options)) {
-                _(options).each(function (option) {
-                    renderFn(option);
-                });
-            } else {
-                renderFn(options);
-            }
-        });
+        // APP.Sandbox.eventSubscribe('global:content:render', function (options) {
+        //     // debugger;
+        //     if (_.isArray(options)) {
+        //         _(options).each(function (option) {
+        //             renderFn(option);
+        //         });
+        //     } else {
+        //         renderFn(options);
+        //     }
+        // });
 
         $(window).on('hashchange', function () {
             updatePageBodyClassNameFn();
@@ -273,7 +277,7 @@
         });
 
         var root = new Router();
-        var $dfd = $.Deferred();
+        // var $dfd = $.Deferred();
 
         // initialize plugins
         // $dfd.done(function () {
@@ -341,23 +345,27 @@
                 _(_pluginsObjects).each(function (pluginClass, key) {
                     pluginStack.push(function (callback) {
                         // debugger
+                        var name = pluginNames[key],
+                            plugin = null;
                         if (_.isFunction(pluginClass)) {
-                            var name = pluginNames[key],
-                                plugin = new pluginClass(pluginsConfig[name] || {});
+                            plugin = new pluginClass(pluginsConfig[name] || {});
                             plugin.name = name;
                             APP.instances[name] = plugin;
-                            if (plugin.beforeInit) {
-                                plugin.beforeInit(callback, pluginsConfig[name] || {});
+                            if (plugin.beforeInitialize) {
+                                plugin.beforeInitialize(callback, pluginsConfig[name] || {});
                             } else {
+                                // console.log('finished loading ' + name);
                                 callback();
                             }
                         } else {
                             callback();
+                            // console.log('finished loading ' + name);
                         }
                     });
                 });
 
                 Async.parallel(pluginStack, function (err) {
+                    console.log('all pluginas are loaded');
                     if (err) throw err;
                     // start HTML5 History push
                     APP.instances.root = root;
@@ -401,23 +409,23 @@
 
         APP.configurePlugins = function (config) {
             pluginsConfig = config || {};
-        },
-
-        APP.injectHtml = function (targetName, el) {
-            var proceed = false,
-                customerRenderProxy = APP.instances.customer && APP.instances.customer.renderProxy || APP.identity;
-            if (_.isArray(targetName)) {
-                _(targetName).each(function (option) {
-                    if (!!customerRenderProxy(option)) {
-                        renderFn(option);
-                    }
-                });
-            } else {
-                if (!!customerRenderProxy(targetName, el)) {
-                    renderFn(targetName, el);
-                }
-            }
         };
+
+        // APP.injectHtml = function (targetName, el) {
+        //     var proceed = false,
+        //         customerRenderProxy = APP.instances.customer && APP.instances.customer.renderProxy || APP.identity;
+        //     if (_.isArray(targetName)) {
+        //         _(targetName).each(function (option) {
+        //             if (!!customerRenderProxy(option)) {
+        //                 renderFn(option);
+        //             }
+        //         });
+        //     } else {
+        //         if (!!customerRenderProxy(targetName, el)) {
+        //             renderFn(targetName, el);
+        //         }
+        //     }
+        // };
 
     });
     

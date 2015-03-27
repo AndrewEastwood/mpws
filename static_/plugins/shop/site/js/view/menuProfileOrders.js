@@ -5,7 +5,10 @@ define([
 ], function (Backbone, Handlebars, tpl) {
 
     var MenuCart = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'a',
+        attributes: {
+            href: '/#!/shop/profile/orders'
+        },
         template: Handlebars.compile(tpl), // check
         initialize: function () {
             var _self = this;

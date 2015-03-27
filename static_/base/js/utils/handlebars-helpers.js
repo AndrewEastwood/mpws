@@ -514,16 +514,16 @@ define([
     helpers.bb_link = function (url, options) {
         url = url || "";
         url = "#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
-        if (options.hash.asRoot) {
+        if (options.asRoot || (options.hash && options.hash.asRoot)) {
             url = '/' + url;
         }
-        if (options.hash.fullUrl) {
+        if (options.fullUrl || (options.hash && options.hash.fullUrl)) {
             if (url[0] !== '/') {
                 url = '/' + url;
             }
             url = location.protocol + '//' + location.hostname + url;
         }
-        _(options.hash).each(function (v, k) {
+        _(options.hash || options).each(function (v, k) {
             if (/^_/.test(k))
                 url = url.replace("(:" + k.substr(1) + ")", v);
             else
