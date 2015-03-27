@@ -11,6 +11,8 @@ define([
     'plugins/shop/site/js/view/cartStandalone',
     'plugins/shop/site/js/view/listProductWish',
     'plugins/shop/site/js/view/trackingStatus',
+    'plugins/shop/site/js/view/listProductLatest',
+    'plugins/shop/site/js/view/categoryNavigation',
     // 'plugins/shop/site/js/view/profileOrders',
 
     'plugins/shop/site/js/view/menuCart',
@@ -33,6 +35,7 @@ define([
     /*PageHome,*/
     ListProductCatalog, ViewProductItemFull,
     ListProductCompare, CartStandalone, ListProductWish, TrackingStatus,
+    ListProductLatest, CategoryNavigation,
 /*    ProfileOrders, */
     // menu views
     ViewMenuItemCart,
@@ -153,6 +156,22 @@ define([
             // });
         },
 
+
+        latestProducts: function () {
+            var listProductLatest = new ListProductLatest();
+            listProductLatest.collection.fetch({
+                reset: true
+            });
+            return listProductLatest;
+        },
+
+        categoryNavigation: function () {
+            var categoryNav = new CategoryNavigation();
+            categoryNav.model.fetch({
+                reset: true
+            });
+            return categoryNav;
+        },
         // home: function () {
         //     APP.getCustomer().setBreadcrumb();
         //     // require([''], function () {

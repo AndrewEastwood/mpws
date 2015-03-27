@@ -41,7 +41,7 @@ define([
         //     return data;
         // },
         getProductCount: function () {
-            return 1;//_(this.get('items') || {}).keys().length;
+            return _(this.get('items') || {}).keys().length;
         },
         getProductByID: function (productID) {
             return this.get('items')[productID] || null;

@@ -50,10 +50,10 @@ define([
             }
 
             var data = this.model.toJSON();
-            APP.getCustomer().setBreadcrumb({
-                categories: data._category && data._category._location,
-                product: data
-            });
+            // APP.getCustomer().setBreadcrumb({
+            //     categories: data._category && data._category._location,
+            //     product: data
+            // });
 
             // seo start
             var formatTitle = "",

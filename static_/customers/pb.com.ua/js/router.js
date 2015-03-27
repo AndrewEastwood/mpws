@@ -107,6 +107,11 @@ define([
         },
         home: function () {
             // debugger
+            $('.mpws-js-main-section').html(this.plugins.shop.latestProducts().$el);
+        },
+        shopProduct: function (id) {
+            // debugger
+            $('.mpws-js-main-section').html(this.plugins.shop.shopProduct(id).$el);
         }
 
     });
