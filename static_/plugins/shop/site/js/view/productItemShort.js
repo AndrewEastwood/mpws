@@ -41,6 +41,7 @@ define([
                     $(this).removeClass("pulse").dequeue();
                 });
             this.$('[data-toggle="tooltip"]').tooltip();
+            this.$('.product-availability .fa').popover({trigger: 'hover'});
             return this;
         },
         switchCurrency: function (visibleCurrencyName) {

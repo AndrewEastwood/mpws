@@ -107,6 +107,7 @@ define([
         },
         home: function () {
             // debugger
+            $('.mpws-js-catalog-tree').html(this.plugins.shop.widgetCatalogBar().$el);
             $('.mpws-js-main-section').html(this.plugins.shop.latestProducts().$el);
         },
         shopProduct: function (id) {
