@@ -60,7 +60,7 @@ define([
         fn: 'orders'
     });
 
-    var addr = null;
+    var addr = new ViewWidgetAddresses();
 
     var $dfdSettings = settings.fetch();
 
@@ -77,6 +77,9 @@ define([
     //     // "!/shop/profile/orders": "shop_profile_orders"
     // };
 
+    var staticUrls = {};
+    var staticSettings = {};
+
     var Router = Backbone.Router.extend({
 
         name: 'shop',
@@ -91,8 +94,7 @@ define([
             // debugger
             // var self = this;
 
-            this.constructor.urls = options.urls;
-            this.constructor.settings = {};
+            staticUrls = options.urls;
 
             // this.on('created', function () {
 
@@ -107,8 +109,7 @@ define([
             //     order.fetch();
             // });
             order.fetch();
-            addr = new ViewWidgetAddresses();
-            addr.collection.fetch({reset: true});
+            // addr.collection.fetch({reset: true});
 
 
 
@@ -342,16 +343,21 @@ define([
         // }
 
     }, {
+        urls: staticUrls,
+        settings: staticSettings,
         preload: function (callback) {
             $dfdSettings.done(function () {
-                var _s = settings.toSettings();
-                debugger
-                Router.prototype.settings = _s;
-                Router.prototype.settings._user = {
+                staticSettings = settings.toSettings();
+                // Router.prototype.settings = staticSettings;
+                // Router.prototype.settings._user = {
+                staticSettings._user = {
                     activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
-                        _s.MISC.SiteDefaultPriceCurrencyType && _s.MISC.SiteDefaultPriceCurrencyType,
-                        !!_s.MISC.ShowSiteCurrencySelector)
+                        staticSettings.MISC.SiteDefaultPriceCurrencyType && staticSettings.MISC.SiteDefaultPriceCurrencyType,
+                        !!staticSettings.MISC.ShowSiteCurrencySelector)
                 }
+
+                addr.collection.set(staticSettings.ADDRESS);
+
                 // console.log('shop settings ready: calling callback');
                 callback();
 
@@ -359,6 +365,9 @@ define([
                     Router.prototype.settings._user.activeCurrency = currencyName;
                 });
             });
+        },
+        setActiveAddress: function (addr) {
+            staticSettings._activeAddress = addr;
         }
     });
 

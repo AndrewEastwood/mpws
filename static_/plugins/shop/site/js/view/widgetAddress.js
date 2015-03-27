@@ -53,8 +53,8 @@ define([
             this.$el.toggleClass('hidden', this.collection.length === 0);
             this.$el.html(this.template(tplData));
             // set active address
-            debugger
-            APP.instances.shop.settings._activeAddress = activeAddress;
+            // debugger
+            APP.instances.shop.setActiveAddress(activeAddress);
             return this;
         },
         changeUserAddress: function (event) {
