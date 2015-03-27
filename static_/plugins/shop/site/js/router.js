@@ -52,7 +52,6 @@ define([
     var order = new SiteOrder({
         ID: "temp"
     });
-    var settings = new SiteSettings();
 
     // why it's here?
     order.url = APP.getApiLink({
@@ -60,9 +59,7 @@ define([
         fn: 'orders'
     });
 
-    var addr = new ViewWidgetAddresses();
-
-    var $dfdSettings = settings.fetch();
+    // var $dfdSettings = settings.fetch();
 
     // var routes = {
     //     "!/shop": "home",
@@ -77,21 +74,22 @@ define([
     //     // "!/shop/profile/orders": "shop_profile_orders"
     // };
 
-    var staticUrls = {};
-    var staticSettings = {};
+    // var staticUrls = {};
+    // var staticSettings = {};
 
     var Router = Backbone.Router.extend({
-
-        name: 'shop',
 
         settings: null,
 
         // routes: routes,
+        urls: {},
 
         // urls: _(routes).invert(),
-        beforeInitialize: function (callback) {
+        beforeInitialize: function (callback, options) {
             var that = this;
-            $dfdSettings.done(function () {
+            this.urls = options && options.urls || {};
+            var settings = new SiteSettings();
+            settings.fetch().done(function () {
                 that.settings = settings.toSettings();
                 // Router.prototype.settings = staticSettings;
                 // Router.prototype.settings._user = {
@@ -101,7 +99,7 @@ define([
                         !!that.settings.MISC.ShowSiteCurrencySelector)
                 }
 
-                addr.collection.set(that.settings.ADDRESS);
+                order.fetch();
 
                 // console.log('shop settings ready: calling callback');
                 callback();
@@ -112,37 +110,36 @@ define([
             });
         },
 
-        initialize: function (options) {
-            // debugger
-            // var self = this;
-
-            staticUrls = options.urls;
-
-            // this.on('created', function () {
-
-            //     SiteMenu({
-            //         order: order
-            //     });
-
-            //     SiteWidgets({
-            //         order: order
-            //     });
-
-            //     order.fetch();
-            // });
-            order.fetch();
-            // addr.collection.fetch({reset: true});
+        // initialize: function (options) {
+        //     debugger
+        //     // var self = this;
 
 
+        //     // this.on('created', function () {
 
-            // APP.Sandbox.eventSubscribe('global:page:index', function () {
-            //     self.home();
-            // });
+        //     //     SiteMenu({
+        //     //         order: order
+        //     //     });
 
-            // APP.Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
-            //     self.offers();
-            // });
-        },
+        //     //     SiteWidgets({
+        //     //         order: order
+        //     //     });
+
+        //     //     order.fetch();
+        //     // });
+        //     order.fetch();
+        //     // addr.collection.fetch({reset: true});
+
+
+
+        //     // APP.Sandbox.eventSubscribe('global:page:index', function () {
+        //     //     self.home();
+        //     // });
+
+        //     // APP.Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
+        //     //     self.offers();
+        //     // });
+        // },
 
         offers: function () {
             // APP.Sandbox.eventNotify('global:content:render', {
@@ -192,6 +189,12 @@ define([
             return menuShipping;
         },
         widgetAddresses: function () {
+            var addr = new ViewWidgetAddresses();
+            if (this.settings && this.settings.ADDRESS) {
+                addr.collection.set(this.settings.ADDRESS);
+            } else {
+                addr.collection.fetch({reset: true});
+            }
             return addr;
         },
         widgetExchangeRates: function () {

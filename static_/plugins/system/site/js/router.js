@@ -162,7 +162,7 @@ define([
             // APP.Sandbox.eventNotify('global:breadcrumb:show');
             APP.getCustomer().setBreadcrumb();
             require(['plugins/system/site/js/view/userDelete'], function (UserDelete) {
-                // create new viewl
+                // create new view
                 var userDelete = new UserDelete();
                 // view.setPagePlaceholder(userDelete.el);
                 self.showToolbar(userDelete.el);

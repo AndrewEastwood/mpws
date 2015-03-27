@@ -27,6 +27,12 @@ define([
         // "!/shop/profile/orders": "shop_profile_orders"
     };
 
+    APP.configurePlugins({
+        shop: {
+            urls: _(shopRoutes).invert()
+        }
+    });
+
     var Router = Backbone.Router.extend({
 
         name: 'pb.com.ua',
@@ -45,20 +51,35 @@ define([
 
         plugins: {},
 
+        getPlugin: function (name) {
+            return this.plugins[name] || null;
+        },
+
+        setPlugin: function (plugin) {
+            if (!plugin || !plugin.name)
+                throw 'wrong plugin object. plugin is ' + (typeof plugin);
+            this.plugins[plugin.name] = plugin;
+        },
+
         initialize: function () {
 
             var that = this;
 
             this.on('app:ready', function () {
 
-                that.plugins.shop = APP.initPlugin('shop', {
-                    urls: _(shopRoutes).invert()
-                });
+                that.setPlugin(APP.getPlugin('shop'));
 
-                $('ul.js-mainnav').append(this.plugins.shop.menuItemCart().$el);
-                $('ul.js-mainnav').append(this.plugins.shop.menuItemPopupInfoPayment().$el);
-                $('ul.js-mainnav').append(this.plugins.shop.menuItemPopupInfoWarranty().$el);
-                $('ul.js-mainnav').append(this.plugins.shop.menuItemPopupInfoShipping().$el);
+                // menu items
+                $('ul.js-mainnav').append(that.plugins.shop.menuItemCart().$el);
+                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoPayment().$el);
+                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoWarranty().$el);
+                $('ul.js-mainnav').append(that.plugins.shop.menuItemPopupInfoShipping().$el);
+                $('.js-wishlist-compare-holder').append(that.plugins.shop.menuItemCompareList().$el);
+                $('.js-wishlist-compare-holder').append(that.plugins.shop.menuItemWishList().$el);
+
+                // widgets
+                $('.js-shop-addresses').html(that.plugins.shop.widgetAddresses().$el);
+                $('.js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
             });
 
             APP.Sandbox.eventSubscribe('global:page:index', function () {

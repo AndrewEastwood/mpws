@@ -2,6 +2,8 @@
 
     var config = JSON.parse(JSON.stringify(MPWS));
 
+    var pluginsConfig = {};
+
     var APP = {
         config: config,
         instances: {},
@@ -35,7 +37,7 @@
         'auth',
         'jsurl',
         'cachejs',
-        'async',
+        'asyncjs',
         'handlebars-helpers',
         'handlebars-partials',
         // localizations
@@ -321,6 +323,7 @@
         // load plugins
         var releasePluginsFn = function () {
             var pluginList = [],
+                pluginNames = [],
                 pluginStack = [];
             // include site file
             for (var key in config.PLUGINS) {
@@ -328,26 +331,34 @@
             }
             // return modules;
             // console.log(pluginList);
-            var pluginNames = _(pluginList).map(function (pluginListItem) {
+            pluginNames = _(pluginList).map(function (pluginListItem) {
                 return pluginListItem.match(/^plugins\/(\w+)\//)[1];
             });
+            // debugger
 
             require(pluginList, function () {
                 var _pluginsObjects = [].slice.call(arguments);
-
                 _(_pluginsObjects).each(function (pluginClass, key) {
                     pluginStack.push(function (callback) {
-                        var plugin = new pluginClass();
-                        APP.instances[key] = plugin;
-                        if (plugin.beforeInit) {
-                            plugin.beforeInit(callback);
+                        // debugger
+                        if (_.isFunction(pluginClass)) {
+                            var name = pluginNames[key],
+                                plugin = new pluginClass(pluginsConfig[name] || {});
+                            plugin.name = name;
+                            APP.instances[name] = plugin;
+                            if (plugin.beforeInit) {
+                                plugin.beforeInit(callback, pluginsConfig[name] || {});
+                            } else {
+                                callback();
+                            }
                         } else {
                             callback();
                         }
                     });
                 });
 
-                Async.parallel(pluginStack, function () {
+                Async.parallel(pluginStack, function (err) {
+                    if (err) throw err;
                     // start HTML5 History push
                     APP.instances.root = root;
                     // notify all that loader completed its tasks
@@ -384,13 +395,13 @@
             return v;
         };
 
-        APP.initPlugin = function (key, options) {
-            // debugger
-            var plg = APP.instances[key];
-            if (plg && _.isFunction(plg.setup))
-                return plg.setup(options);
-            return new plg(options);
+        APP.getPlugin = function (key, options) {
+            return APP.instances[key];
         };
+
+        APP.configurePlugins = function (config) {
+            pluginsConfig = config || {};
+        },
 
         APP.injectHtml = function (targetName, el) {
             var proceed = false,
