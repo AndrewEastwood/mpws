@@ -26,7 +26,7 @@ define([
     'plugins/shop/site/js/view/widgetExchangeRates',
     'plugins/shop/site/js/view/orderTrackingButton',
     'plugins/shop/site/js/view/cartEmbedded',
-    'plugins/shop/site/js/view/menuCatalogBar',
+    'plugins/shop/site/js/view/categoryList',
 
     'plugins/shop/site/js/model/order',
     'plugins/shop/site/js/model/menuCatalog',
@@ -49,7 +49,7 @@ define([
     ViewWidgetExchangeRates,
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
-    ViewWidgetCatalogBar,
+    ViewCategoryList,
     SiteOrder, SiteCatalogStructure, SiteSettings) {
 
     var order = new SiteOrder({
@@ -235,17 +235,24 @@ define([
             cartEmbedded.render();
             return cartEmbedded;
         },
-        widgetCatalogBar: function () {
+        categoryList: function (options) {
             // catalog navigation panel
-            var cBar = new ViewWidgetCatalogBar({
+            var cBar = new ViewCategoryList(_.extend({}, {
                 model: catalogStructure
-            });
+            }, options || {}));
             // cBar.model.fetch({reset: true});
             cBar.render();
             return cBar;
         },
-        categoryNavigation: function () {
-            var categoryNav = new CategoryNavigation({
+        // categoryNavigation: function () {
+        //     var categoryNav = new CategoryNavigation({
+        //         model: catalogStructure
+        //     });
+        //     categoryNav.render();
+        //     return categoryNav;
+        // },
+        categoryTopLebelItems: function () {
+            var categoryNav = new CategoryTopLevelList({
                 model: catalogStructure
             });
             categoryNav.render();
@@ -292,7 +299,9 @@ define([
             // create new view
             var viewProductItem = new ViewProductItem({
                 productID: productID,
-                style: 'full'
+                design: {
+                    style: 'full'
+                }
             });
             viewProductItem.model.fetch();
             return viewProductItem;

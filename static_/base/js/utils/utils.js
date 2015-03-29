@@ -119,21 +119,25 @@ define([
     }
 
     Utils.getHBSTemplateData = function (obj) {
-        var _tplData = obj;
-        var _tplExtras = null;
+        var _tplData = obj,
+            viewOptions = {},
+            _tplExtras = null;
         if (Utils.isCollectionView(obj)) {
             _tplData = obj.collection.toJSON();
             _tplExtras = obj.collection.extras || {};
         } else if (Utils.isModelView(obj)) {
             _tplData = obj.model.toJSON();
             _tplExtras = obj.model.extras || {};
+            viewOptions = obj.options || {};
         } else if (Utils.isView(obj)) {
-            _tplData = obj.options;
+            _tplData = obj.options || {};
+            viewOptions = obj.options || {};
             _tplExtras = obj.extras || {};
         }
         // debugger;
         return {
             lang: obj.lang || {},
+            viewOptions: viewOptions,
             // options: APP.options || {},
             // plugins: APP.config.PLUGINS,
             app: {

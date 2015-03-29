@@ -21,7 +21,7 @@ define([
     //     return opts.fn(data._origin.Name + ' ' + data.Model);
     // });
     var ProductItemShort = Backbone.View.extend({
-        className: 'shop-product-item col-sm-4 col-md-3',// 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
+        className: 'shop-product-item',// 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
         templates: {
             short: Handlebars.compile(tplShort), // check
             minimal: Handlebars.compile(tplMinimal), // check
@@ -51,12 +51,14 @@ define([
 
             // refresh price when currency widget is changed
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
-            if (this.model) {
-                this.listenTo(this.model, 'change', this.render);
-            } else if (this.options.productID) {
+            if (this.options.productID) {
                 this.model = new ModelProduct({
                     ID: this.options.productID
                 });
+            }
+            if (this.model) {
+                this.listenTo(this.model, 'change', this.render);
+                this.listenTo(this.model, 'sync', this.render);
             }
         },
         refresh: function (data) {

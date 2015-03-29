@@ -6,7 +6,7 @@ define([
 
     // debugger;
     var ListProductLatest = Backbone.View.extend({
-        className: 'shop-product-list shop-product-list-latest clearfix',
+        className: 'shop-product-list clearfix',
         initialize: function (options) {
             this.options = options || {};
             this.collection = new CollListProducts(this.options);
@@ -14,20 +14,26 @@ define([
         },
         render: function () {
             var that = this,
-                isList = this.options && this.options.design && this.options.design.asList || false;
-            this.$el.empty();
+                isList = this.options.design && this.options.design.asList || false,
+                $list = $('<ul/>');
+            if (this.options.type) {
+                this.$el.addClass('shop-product-list-' + this.options.type);
+            }
             if (isList) {
-                this.$el = $('<ul/>');
+                this.tagName = 'ul';
             }
             this.collection.each(function (model) {
                 var productView = new ProductItem(_.extend({}, that.options, {model: model})),
                     $productEl = productView.render().$el;
                 if (isList) {
-                    $productEl = $('<li/>').html($productEl);
+                    $list.append($('<li/>').html($productEl));
+                } else {
+                    that.$el.append($productEl);
                 }
-                that.$el.append($productEl);
             });
-            debugger
+            if (isList) {
+                this.$el.html($list);
+            }
             this.trigger('shop:rendered');
             return this;
         },

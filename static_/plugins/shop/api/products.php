@@ -365,7 +365,7 @@ class products {
         return $dataList;
     }
 
-    public function getTopProducts_List () {
+    public function getTopProducts_List (array $options = array()) {
         global $app;
         $config = dbquery::shopStat_PopularProducts();
         $self = $this;
@@ -378,7 +378,7 @@ class products {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -389,9 +389,9 @@ class products {
         return $dataList;
     }
 
-    public function getOnSaleProducts_List () {
+    public function getOnSaleProducts_List (array $options = array()) {
         global $app;
-        $options = array('_pStatus' => 'DISCOUNT');
+        $options['_pStatus'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -1180,7 +1180,7 @@ class products {
                         break;
                     }
                     case 'top': {
-                        $resp = $this->getTopProducts_List();
+                        $resp = $this->getTopProducts_List($req->get);
                         break;
                     }
                     case 'viewed': {
@@ -1188,7 +1188,7 @@ class products {
                         break;
                     }
                     case 'onsale': {
-                        $resp = $this->getOnSaleProducts_List();
+                        $resp = $this->getOnSaleProducts_List($req->get);
                         break;
                     }
                 }

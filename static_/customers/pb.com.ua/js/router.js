@@ -120,9 +120,12 @@ define([
             $('.MPWSBannerHeaderTop').append($banner);
         },
         home: function () {
-            var featuredProducts = this.plugins.shop.featuredProducts(),
-                newProducts = this.plugins.shop.newProducts(),
-                topProducts = this.plugins.shop.topProducts();
+            var productOptions = {design: {className: 'col-sm-4 col-md-3'}},
+                categoryOptions = {design: {className: 'nav'}},
+                featuredProducts = this.plugins.shop.featuredProducts(productOptions),
+                newProducts = this.plugins.shop.newProducts(productOptions),
+                topProducts = this.plugins.shop.topProducts(productOptions),
+                categoryTopLevelList = this.plugins.shop.categoryList({design: {style: 'toplevel', className: 'categories-filter animate-dropdown'}});
 
             featuredProducts.on('shop:rendered', initEchoJS);
             newProducts.on('shop:rendered', initEchoJS);
@@ -130,7 +133,7 @@ define([
 
             // set top category list with banner
             var $levtNavAndBanner = $(Handlebars.compile(tplLeftNavAndBanner)());
-            $levtNavAndBanner.find('.mpws-js-catalog-tree').html(this.plugins.shop.widgetCatalogBar().$el);
+            $levtNavAndBanner.find('.mpws-js-catalog-tree').html(this.plugins.shop.categoryList(categoryOptions).$el);
             $('.mpws-js-main-section').html($levtNavAndBanner);
             // append products tab
             var $tplProductsTab = $(Handlebars.compile(tplProductsTab)());
@@ -161,6 +164,7 @@ define([
                 $owlEl.trigger('prev.owl.carousel', [1500]);
             });
 
+            $('header .mpws-js-shop-categories-toplist').html(categoryTopLevelList.$el);
             this.addCommonFooter();
         },
         shopCart: function () {
@@ -194,10 +198,17 @@ define([
         addCommonFooter: function () {
             // adding footer
             var $tplFooter = $(Handlebars.compile(tplFooter)()),
-                productOptions = {limit: 5, design: {asList: true, style: 'minimal', wrap: '<div class="row"></div>'}};
-            $tplFooter.find('.mpws-js-shop-new-products-minimal-list').html(this.plugins.shop.newProducts(productOptions).$el);
-            $tplFooter.find('.mpws-js-shop-onsale-products-minimal-list').html(this.plugins.shop.onSaleProducts(productOptions).$el);
-            $tplFooter.find('.mpws-js-shop-top-products-minimal-list').html(this.plugins.shop.topProducts(productOptions).$el);
+                productOptions = {limit: 5, design: {asList: true, style: 'minimal', wrap: '<div class="row"></div>'}},
+                newProducts = this.plugins.shop.newProducts(productOptions),
+                onSaleProducts = this.plugins.shop.onSaleProducts(productOptions),
+                topProducts = this.plugins.shop.topProducts(productOptions),
+                categoryTopLevelList = this.plugins.shop.categoryList({design: {style: 'toplevel'}});
+
+            $tplFooter.find('.mpws-js-shop-new-products-minimal-list').html(newProducts.$el);
+            $tplFooter.find('.mpws-js-shop-onsale-products-minimal-list').html(onSaleProducts.$el);
+            $tplFooter.find('.mpws-js-shop-top-products-minimal-list').html(topProducts.$el);
+            $tplFooter.find('.mpws-js-shop-categories-toplist').html(categoryTopLevelList.$el);
+
             $('.mpws-js-main-footer').html($tplFooter);
         }
 

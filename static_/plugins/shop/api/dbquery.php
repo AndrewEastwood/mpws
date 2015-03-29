@@ -1164,7 +1164,7 @@ class dbquery {
 
 
     // >>>> Shop statistics
-    public static function shopStat_PopularProducts () {
+    public static function shopStat_PopularProducts (array $options = array()) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1174,13 +1174,13 @@ class dbquery {
                 "field" => "SoldTotal",
                 "ordering" => "DESC"
             ),
-            "limit" => 15,
+            "limit" => !empty($options['limit']) ? $options['limit'] : 15,
             "group" => "ProductID",
             "options" => null
         ));
     }
 
-    public static function shopStat_NonPopularProducts () {
+    public static function shopStat_NonPopularProducts (array $options = array()) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1194,7 +1194,7 @@ class dbquery {
                 "field" => "DateCreated",
                 "ordering" => "ASC"
             ),
-            "limit" => 15,
+            "limit" => !empty($options['limit']) ? $options['limit'] : 15,
             "options" => null
         ));
     }

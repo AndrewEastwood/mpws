@@ -13,13 +13,13 @@
             </a>
             {{/if}}
             <h4>
-                <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
+                <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
             </h4>
             {{#if childNodes}}
             <ul class="list-unstyled">
                 {{#each childNodes}}
                 <li>
-                    <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
+                    <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
                 </li>
                 {{/each}}
             </ul>

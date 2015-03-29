@@ -1,23 +1,23 @@
 {{#each data}}
 <li class="dropdown menu-item">
     {{#if childNodes}}
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{Name}}<b class="caret"></b></a>
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle" title="{{Name}}">{{Name}}<b class="caret"></b></a>
     <ul class="dropdown-menu mega-menu">
         <li class="yamm-content">
             <!-- Content container to add padding -->
             <div class="row">
                 <h4 class="catalog-title">
-                    <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
+                    <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
                 </h4>
                 {{#each childNodes}}
                 <div class="col-md-4">
                     <ul class="list-unstyled">
                         <li>
-                            <a href="{{bb_link ../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}"><b>{{Name}}</b></a>
+                            <a href="{{bb_link ../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}"><b>{{Name}}</b></a>
                         </li>
                         {{#recursive childNodes}}
                         <li>
-                            <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
+                            <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
                             {{#if childNodes}}
                             <ul class="list-unstyled">
                             {{{recursive childNodes}}}
@@ -35,7 +35,7 @@
         </li>
     </ul>
     {{else}}
-        <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
+        <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
     {{/if}}
 </li>
 {{/each}}
