@@ -131,12 +131,12 @@ define([
             return listProductLatest;
         },
 
-        recentlyViewed: function (options) {
-            var listProductRecent = new ListProducts(_.extend({}, options, {type: 'recent'}));
-            listProductRecent.collection.fetch({
+        viewedProducts: function (options) {
+            var listProductViewed = new ListProducts(_.extend({}, options, {type: 'viewed'}));
+            listProductViewed.collection.fetch({
                 reset: true
             });
-            return listProductRecent;
+            return listProductViewed;
         },
 
         topProducts: function (options) {

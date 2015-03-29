@@ -56,6 +56,8 @@ class products {
         $product['_origin'] = API::getAPI('shop:origins')->getOriginByID($product['OriginID']);
         $product['Attributes'] = $this->getProductAttributes($productID);
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
+        $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
+        $product['IsOffer'] = intval($product['IsOffer']) === 1;
 
         // create display product title
         $displayName = array();
@@ -392,6 +394,25 @@ class products {
     public function getOnSaleProducts_List (array $options = array()) {
         global $app;
         $options['_pStatus'] = 'DISCOUNT';
+        $config = dbquery::shopGetProductList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        return $dataList;
+    }
+
+    public function getFeaturedProducts_List (array $options = array()) {
+        global $app;
+        $options['_pStatus'] = 'ACTIVE';
+        $options['_fIsFeatured'] = true;
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -1189,6 +1210,10 @@ class products {
                     }
                     case 'onsale': {
                         $resp = $this->getOnSaleProducts_List($req->get);
+                        break;
+                    }
+                    case 'featured': {
+                        $resp = $this->getFeaturedProducts_List($req->get);
                         break;
                     }
                 }

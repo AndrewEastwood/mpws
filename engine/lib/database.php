@@ -561,7 +561,7 @@ class database {
         );
         $rez["type"] = "list";
         $rez["info"] = $listInfo;
-        $rez["items"] = $items ?: array();
+        $rez["items"] = array_values($items) ?: array();
         return $rez;
     }
 

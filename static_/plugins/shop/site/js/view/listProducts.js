@@ -7,15 +7,26 @@ define([
     // debugger;
     var ListProductLatest = Backbone.View.extend({
         className: 'shop-product-list clearfix',
+        currentPage: 0,
         initialize: function (options) {
             this.options = options || {};
-            this.collection = new CollListProducts(this.options);
-            this.collection.on('reset', this.render, this);
+            this.options.design = _.extend({pageSize: 0, asList: false}, this.options.design || {});
+            this.collection = new CollListProducts();
+            this.collection.setOptions(this.options);
+            this.collection.on('sync', this.render, this);
+            _.bindAll(this, 'revealNextPage');
         },
         render: function () {
+            if (this.collection.length === 0) {
+                this.trigger('shop:emptylist');
+                return this;
+            }
+            
             var that = this,
-                isList = this.options.design && this.options.design.asList || false,
+                design = this.options.design,
+                isList = design.asList,
                 $list = $('<ul/>');
+            
             if (this.options.type) {
                 this.$el.addClass('shop-product-list-' + this.options.type);
             }
@@ -25,6 +36,9 @@ define([
             this.collection.each(function (model) {
                 var productView = new ProductItem(_.extend({}, that.options, {model: model})),
                     $productEl = productView.render().$el;
+                if (design.pageSize) {
+                    $productEl.addClass('hidden');
+                }
                 if (isList) {
                     $list.append($('<li/>').html($productEl));
                 } else {
@@ -34,6 +48,7 @@ define([
             if (isList) {
                 this.$el.html($list);
             }
+            this.revealNextPage();
             this.trigger('shop:rendered');
             return this;
         },
@@ -78,6 +93,17 @@ define([
 
             return {title: title, keywords: keywords, description: description};
             // seo end
+        },
+        revealNextPage: function () {
+            if (!this.options.design.pageSize) {
+                this.$('.shop-product-item').removeClass('hidden');
+                this.trigger('shop:allvisible');
+                return;
+            }
+            this.$('.shop-product-item:lt(' + (this.options.design.pageSize * ++this.currentPage) + ')').removeClass('hidden');
+            if (this.options.design.pageSize * this.currentPage >= this.collection.length) {
+                this.trigger('shop:allvisible');
+            }
         }
     });
 

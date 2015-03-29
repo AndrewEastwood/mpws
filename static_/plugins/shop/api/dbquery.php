@@ -25,7 +25,7 @@ class dbquery {
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "IsFeatured", "IsOffer", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "options" => array(

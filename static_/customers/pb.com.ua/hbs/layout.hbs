@@ -59,19 +59,9 @@
                 <form>
                     <div class="control-group">
                         <input class="search-field" placeholder="введіть текст для пошуку" />
-                        <span class="mpws-js-shop-categories-toplist"></span>
-                        <ul class="">
-                            <li class="dropdown">
-
+                        <ul class="categories-filter animate-dropdown">
+                            <li class="dropdown mpws-js-shop-categories-toplist">
                                 <a class="dropdown-toggle"  data-toggle="dropdown" href="index.php?page=category-grid">весь каталог</a>
-
-                                <ul class="dropdown-menu" role="menu" >
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?page=category-grid">laptops</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?page=category-grid">tv & audio</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?page=category-grid">gadgets</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?page=category-grid">cameras</a></li>
-
-                                </ul>
                             </li>
                         </ul>
                         <a class="search-button" href="#" ></a>
@@ -94,6 +84,7 @@
             </div><!-- /.top-cart-row-container -->
         </div><!-- /.top-cart-row -->
     </div><!-- /.container -->
+    <div class="mpws-js-shop-categories-topnav"></div>
 </header>
 <!-- ========== HEADER : END ========== -->
 
@@ -103,7 +94,123 @@
 <!-- ========== CONTENT : END ========== -->
 
 
-<footer id="footer" class="color-bg mpws-js-main-footer"></footer>
+<footer id="footer" class="color-bg mpws-js-main-footer">
+    <div class="container">
+        <div class="row no-margin widgets-row">
+            <div class="col-xs-12  col-sm-4 no-margin-left">
+                <!-- ========== FEATURED PRODUCTS ========== -->
+                <div class="widget">
+                    <h2>Новинки</h2>
+                    <div class="body mpws-js-shop-new-products-minimal-list">
+                    </div><!-- /.body -->
+                </div> <!-- /.widget -->
+                <!-- ========== FEATURED PRODUCTS : END ========== -->
+            </div><!-- /.col -->
+
+            <div class="col-xs-12 col-sm-4 ">
+                <!-- ========== ON SALE PRODUCTS ========== -->
+                <div class="widget">
+                    <h2>Розпродаж</h2>
+                    <div class="body mpws-js-shop-onsale-products-minimal-list">
+                    </div><!-- /.body -->
+                </div> <!-- /.widget -->
+                <!-- ========== ON SALE PRODUCTS : END ========== -->
+            </div><!-- /.col -->
+
+            <div class="col-xs-12 col-sm-4 ">
+                <!-- ========== TOP RATED PRODUCTS ========== -->
+                <div class="widget">
+                    <h2>Популярні</h2>
+                    <div class="body mpws-js-shop-top-products-minimal-list">
+                    </div><!-- /.body -->
+                </div><!-- /.widget -->
+                <!-- ========== TOP RATED PRODUCTS : END ========== -->
+            </div><!-- /.col -->
+
+        </div><!-- /.widgets-row-->
+    </div><!-- /.container -->
+
+    <div class="sub-form-row">
+        <div class="container">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2 no-padding">
+                <form role="form">
+                    <input placeholder="Отримуйте найновіші пропозиції">
+                    <button class="le-button">Підписатися</button>
+                </form>
+            </div>
+        </div><!-- /.container -->
+    </div><!-- /.sub-form-row -->
+
+    <div class="link-list-row">
+        <div class="container no-padding">
+            <div class="col-xs-12 col-md-4 ">
+                <!-- ========== CONTACT INFO ========== -->
+                <div class="contact-info">
+                    <div class="footer-logo">
+                        <img alt="logo" src="{{URL_STATIC_CUSTOMER}}/img/logo_leo.png" width="180" height="auto"/>
+                    </div><!-- /.footer-logo -->
+                    
+                    <p class="regular-bold"> Feel free to contact us via phone,email or just send us mail.</p>
+                    
+                    <p>
+                        17 Princess Road, London, Greater London NW1 8JR, UK
+                        1-888-8MEDIA (1-888-892-9953)
+                    </p>
+
+                </div>
+                <!-- ========== CONTACT INFO : END ========== -->
+            </div>
+
+            <div class="col-xs-12 col-md-8 no-margin">
+                <!-- ========== LINKS FOOTER ========== -->
+                <div class="link-widget">
+                    <div class="widget">
+                        <h3>Каталог</h3>
+                        <span class="mpws-js-shop-categories-toplist"></span>
+                    </div><!-- /.widget -->
+                </div><!-- /.link-widget -->
+
+                <div class="link-widget">
+                    <div class="widget">
+                        <h3>Магазин</h3>
+                        <ul>
+                            <li><a href="index.php?page=category-grid">Про нас</a></li>
+                            <li><a href="index.php?page=category-grid">Контакти</a></li>
+                            <li><a href="index.php?page=category-grid">Пропозиції</a></li>
+
+                        </ul>
+                    </div><!-- /.widget -->
+                </div><!-- /.link-widget -->
+
+                <div class="link-widget">
+                    <div class="widget">
+                        <h3>Корисні сторінки</h3>
+                        <ul>
+                            <li><a href="index.php?page=category-grid">Мій профіль</a></li>
+                            <li><a href="index.php?page=category-grid">Вдстеження замовлення</a></li>
+                            <li><a href="index.php?page=category-grid">Мій список</a></li>
+                            <li><a href="index.php?page=category-grid">Сервіс</a></li>
+                            <li><a href="index.php?page=category-grid">Обмін / поверення</a></li>
+                            <li><a href="index.php?page=category-grid">FAQs</a></li>
+                            <li><a href="index.php?page=category-grid">Підтримка</a></li>
+                        </ul>
+                    </div><!-- /.widget -->
+                </div><!-- /.link-widget -->
+                <!-- ========== LINKS FOOTER : END ========== -->
+            </div>
+        </div><!-- /.container -->
+    </div><!-- /.link-list-row -->
+
+    <div class="copyright-bar">
+        <div class="container">
+            <div class="col-xs-12 col-sm-6 no-margin">
+                <div class="copyright">
+                    © <a href="index.php?page=home">Media Center</a> - all rights reserved
+                </div><!-- /.copyright -->
+            </div>
+        </div><!-- /.container -->
+    </div><!-- /.copyright-bar -->
+</footer>
 
 
 <div class="static-content-wrapper render-hidden" title="page basic javascript container">

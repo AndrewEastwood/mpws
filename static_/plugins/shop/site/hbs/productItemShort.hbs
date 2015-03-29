@@ -14,7 +14,7 @@
         </div>
         <div class="prices">
             {{#each data._prices.others}}
-                <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                <div class="price-current text-right moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
             {{/each}}
             {{#if data._promoIsApplied }}
             <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
