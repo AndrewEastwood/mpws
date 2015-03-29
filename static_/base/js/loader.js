@@ -55,6 +55,7 @@ require.config({
         'underscore': 'vendors/underscore/underscore',
         'echo': 'vendors/echojs/dist/echo',
         'asyncjs': 'vendors/async/lib/async',
+        'owl.carousel': 'vendors/owl.carousel/dist/owl.carousel',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
@@ -154,10 +155,18 @@ require.config({
         },
         'typehead': {
             deps: ['jquery']
+        },
+        'owl.carousel': {
+            deps: ['jquery']
         }
     },
     waitSeconds: 30,
     deps: ['base/js/app'],
+    config: {
+        'base/js/app': {
+            'urlStatic': '/static_/'
+        }
+    },
     urlArgs: "bust=" + (function () {
         return this && this.MPWS && this.MPWS.BUILD || Date.now();
     })()

@@ -4,14 +4,13 @@ define([
     'backbone',
     'cachejs',
     'auth',
-    // 'plugins/shop/site/js/view/home',
     'plugins/shop/site/js/view/listProductCatalog',
-    'plugins/shop/site/js/view/productItemFull',
+    'plugins/shop/site/js/view/productItem',
     'plugins/shop/site/js/view/listProductCompare',
     'plugins/shop/site/js/view/cartStandalone',
     'plugins/shop/site/js/view/listProductWish',
     'plugins/shop/site/js/view/trackingStatus',
-    'plugins/shop/site/js/view/listProductLatest',
+    'plugins/shop/site/js/view/listProducts',
     'plugins/shop/site/js/view/categoryNavigation',
     // 'plugins/shop/site/js/view/profileOrders',
 
@@ -30,12 +29,13 @@ define([
     'plugins/shop/site/js/view/menuCatalogBar',
 
     'plugins/shop/site/js/model/order',
+    'plugins/shop/site/js/model/menuCatalog',
     'plugins/shop/common/js/model/setting'
 ], function ($, _, Backbone, Cache, Auth, 
     /*PageHome,*/
-    ListProductCatalog, ViewProductItemFull,
+    ListProductCatalog, ViewProductItem,
     ListProductCompare, CartStandalone, ListProductWish, TrackingStatus,
-    ListProductLatest, CategoryNavigation,
+    ListProducts, CategoryNavigation,
 /*    ProfileOrders, */
     // menu views
     ViewMenuItemCart,
@@ -50,11 +50,13 @@ define([
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
     ViewWidgetCatalogBar,
-    SiteOrder, SiteSettings) {
+    SiteOrder, SiteCatalogStructure, SiteSettings) {
 
     var order = new SiteOrder({
         ID: "temp"
     });
+
+    var catalogStructure = new SiteCatalogStructure();
 
     // why it's here?
     order.url = APP.getApiLink({
@@ -90,8 +92,10 @@ define([
         // urls: _(routes).invert(),
         beforeInitialize: function (callback, options) {
             var that = this;
+            this.options = options || {};
             this.urls = options && options.urls || {};
             var settings = new SiteSettings();
+            catalogStructure.fetch();
             settings.fetch().done(function () {
                 // debugger
                 that.settings = settings.toSettings();
@@ -118,69 +122,57 @@ define([
         initialize: function () {
             _.bindAll(this, 'setActiveAddress');
         },
-        // initialize: function (options) {
-        //     debugger
-        //     // var self = this;
 
-
-        //     // this.on('created', function () {
-
-        //     //     SiteMenu({
-        //     //         order: order
-        //     //     });
-
-        //     //     SiteWidgets({
-        //     //         order: order
-        //     //     });
-
-        //     //     order.fetch();
-        //     // });
-        //     order.fetch();
-        //     // addr.collection.fetch({reset: true});
-
-
-
-        //     // APP.Sandbox.eventSubscribe('global:page:index', function () {
-        //     //     self.home();
-        //     // });
-
-        //     // APP.Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
-        //     //     self.offers();
-        //     // });
-        // },
-
-        offers: function () {
-            // APP.Sandbox.eventNotify('global:content:render', {
-            //     name: 'ShopOffers',
-            //     el: $('<h1>Offers Goes here</h1>')
-            // });
-        },
-
-
-        latestProducts: function () {
-            var listProductLatest = new ListProductLatest();
+        newProducts: function (options) {
+            var listProductLatest = new ListProducts(_.extend({}, options, {type: 'new'}));
             listProductLatest.collection.fetch({
                 reset: true
             });
             return listProductLatest;
         },
 
-        categoryNavigation: function () {
-            var categoryNav = new CategoryNavigation();
-            categoryNav.model.fetch({
+        recentlyViewed: function (options) {
+            var listProductRecent = new ListProducts(_.extend({}, options, {type: 'recent'}));
+            listProductRecent.collection.fetch({
                 reset: true
             });
-            return categoryNav;
+            return listProductRecent;
         },
-        // home: function () {
-        //     APP.getCustomer().setBreadcrumb();
-        //     // require([''], function () {
-        //         var pageHome = new PageHome();
-        //         pageHome.render();
-        //         // APP.injectHtml('ShopHome', pageHome.el);
-        //     // });
 
-        // },
+        topProducts: function (options) {
+            var listProductTop = new ListProducts(_.extend({}, options, {type: 'top'}));
+            listProductTop.collection.fetch({
+                reset: true
+            });
+            return listProductTop;
+        },
+
+        featuredProducts: function (options) {
+            var listProductFeatured = new ListProducts(_.extend({}, options, {type: 'featured'}));
+            listProductFeatured.collection.fetch({
+                reset: true
+            });
+            return listProductFeatured;
+        },
+
+        hotOffers: function (options) {
+            var listProductOffers = new ListProducts(_.extend({}, options, {type: 'offers'}));
+            listProductOffers.collection.fetch({
+                reset: true
+            });
+            return listProductOffers;
+        },
+
+        onSaleProducts: function (options) {
+            var listProductOffers = new ListProducts(_.extend({}, options, {type: 'onsale'}));
+            listProductOffers.collection.fetch({
+                reset: true
+            });
+            return listProductOffers;
+        },
+
+        // menu items
+
         menuItemCart: function () {
             var menuCart = new ViewMenuItemCart({
                 model: order
@@ -212,6 +204,8 @@ define([
             menuShipping.render();
             return menuShipping;
         },
+
+        // widgets
         widgetAddresses: function () {
             var addr = new ViewWidgetAddresses();
             if (this.settings && this.settings.ADDRESS) {
@@ -243,126 +237,125 @@ define([
         },
         widgetCatalogBar: function () {
             // catalog navigation panel
-            var cBar = new ViewWidgetCatalogBar();
-            cBar.model.fetch({reset: true});
+            var cBar = new ViewWidgetCatalogBar({
+                model: catalogStructure
+            });
+            // cBar.model.fetch({reset: true});
+            cBar.render();
             return cBar;
         },
-        shopCatalogCategory: function (categoryID) {
-            // require([''], function () {
-                // create new view
-                var listProductCatalog = new ListProductCatalog({
-                    categoryID: categoryID
+        categoryNavigation: function () {
+            var categoryNav = new CategoryNavigation({
+                model: catalogStructure
+            });
+            categoryNav.render();
+            return categoryNav;
+        },
+
+        promoBanners: function () {
+            var categoryNav = new CategoryNavigation({
+                model: catalogStructure
+            });
+            categoryNav.render();
+            return categoryNav;
+        },
+
+        // pages
+
+        catalogCategory: function (categoryID) {
+            // create new view
+            var listProductCatalog = new ListProductCatalog({
+                categoryID: categoryID
+            });
+            listProductCatalog.collection.fetch({
+                reset: true
+            });
+            return listProductCatalog;
+        },
+
+        catalogCategoryPage: function (categoryID, pageNo) {
+            // create new view
+            var listProductCatalog = new ListProductCatalog({
+                categoryID: categoryID
+            });
+            var _pageNo = parseInt(pageNo, 10);
+            if (_pageNo.toString() === pageNo) {
+                listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
+            }
+            listProductCatalog.collection.fetch({
+                reset: true
+            });
+            return listProductCatalog;
+        },
+
+        product: function (productID) {
+            // create new view
+            var viewProductItem = new ViewProductItem({
+                productID: productID,
+                style: 'full'
+            });
+            viewProductItem.model.fetch();
+            return viewProductItem;
+        },
+
+        compare: function () {
+            // create new view
+            var listProductCompare = new ListProductCompare();
+            listProductCompare.render();
+            return listProductCompare;
+        },
+
+        cart: function () {
+            // debugger;
+            var plgAccount = APP.instances.account;
+            var accountModel = null;
+            if (plgAccount) {
+                accountModel = plgAccount.constructor.account;
+                accountModel.on('change', function () {
+                    console.log('account model changed');
+                    if (accountModel.has('ID'))
+                        order.set('account', accountModel.toJSON());
+                    else
+                        order.unset('account');
                 });
-                listProductCatalog.collection.fetch({
-                    reset: true
-                });
-                return listProductCatalog;
-                // APP.injectHtml('ShopCatalogBrowse', listProductCatalog.el);
+            }
+            // var accountModel = Cache.getObject('account:model');
+            // APP.Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
+            //     // debugger;
+            //     if (accountModel.has('ID'))
+            //         order.set('account', accountModel.toJSON());
+            //     else
+            //         order.unset('account');
             // });
+            if (accountModel && accountModel.has('ID')) {
+                console.log('account model has data');
+                order.set('account', accountModel.toJSON());
+            }
+            // create new view
+            var cartStandalone = new CartStandalone({
+                model: order
+            });
+            // cartStandalone.collection.fetch({merge:true});
+            cartStandalone.render();
+            return cartStandalone;
         },
 
-        shopCatalogCategoryPage: function (categoryID, pageNo) {
-            // require([''], function () {
-                // create new view
-                var listProductCatalog = new ListProductCatalog({
-                    categoryID: categoryID
-                });
-                var _pageNo = parseInt(pageNo, 10);
-                if (_pageNo.toString() === pageNo) {
-                    listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
-                }
-                listProductCatalog.collection.fetch({
-                    reset: true
-                });
-                return listProductCatalog;
-                // APP.injectHtml('ShopCatalogBrowseWithPage', listProductCatalog.el);
-            // });
+        wishlist: function () {
+            // create new view
+            var listProductWish = new ListProductWish();
+            listProductWish.render();
+            return listProductWish;
         },
 
-        shopProduct: function (productID) {
-            // require([''], function () {
-                // create new view
-                var viewProductItemFull = new ViewProductItemFull({
-                    productID: productID
-                });
-                viewProductItemFull.model.fetch();
-                return viewProductItemFull;
-                // APP.injectHtml('ShopProduct', viewProductItemFull.el);
-            // });
+        tracking: function (orderHash) {
+            // create new view
+            var trackingStatus = new TrackingStatus();
+            trackingStatus.setOrderHash(orderHash);
+            return trackingStatus;
         },
 
-        shopCompare: function () {
-            // APP.getCustomer().setBreadcrumb();
-            // require([''], function () {
-                // create new view
-                var listProductCompare = new ListProductCompare();
-                listProductCompare.render();
-                return listProductCompare;
-                // APP.injectHtml('ShopCompareList', listProductCompare.el);
-            // });
-        },
 
-        shopCart: function () {
-            // APP.getCustomer().setBreadcrumb();
-            // require([''], function () {
-                // debugger;
-                var plgAccount = APP.instances.account;
-                var accountModel = null;
-                if (plgAccount) {
-                    accountModel = plgAccount.constructor.account;
-                    accountModel.on('change', function () {
-                        console.log('account model changed');
-                        if (accountModel.has('ID'))
-                            order.set('account', accountModel.toJSON());
-                        else
-                            order.unset('account');
-                    });
-                }
-                // var accountModel = Cache.getObject('account:model');
-                // APP.Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
-                //     // debugger;
-                //     if (accountModel.has('ID'))
-                //         order.set('account', accountModel.toJSON());
-                //     else
-                //         order.unset('account');
-                // });
-                if (accountModel && accountModel.has('ID')) {
-                    console.log('account model has data');
-                    order.set('account', accountModel.toJSON());
-                }
-                // create new view
-                var cartStandalone = new CartStandalone({
-                    model: order
-                });
-                // cartStandalone.collection.fetch({merge:true});
-                cartStandalone.render();
-                return cartStandalone;
-                // APP.injectHtml('ShopCart', cartStandalone.el);
-            // });
-        },
-
-        shopWishlist: function () {
-            // APP.getCustomer().setBreadcrumb();
-            // require([''], function () {
-                // create new view
-                var listProductWish = new ListProductWish();
-                listProductWish.render();
-                return listProductWish;
-                // APP.injectHtml('ShopWishList', listProductWish.el);
-            // });
-        },
-
-        shopTracking: function (orderHash) {
-            // APP.getCustomer().setBreadcrumb();
-            // require([''], function () {
-                // create new view
-                var trackingStatus = new TrackingStatus();
-                trackingStatus.setOrderHash(orderHash);
-                return trackingStatus;
-                // APP.injectHtml('ShopTrackOrder', trackingStatus.el);
-            // });
-        },
-
+        // utils 
         setActiveAddress: function (addr) {
             this.settings._activeAddress = addr;
         }

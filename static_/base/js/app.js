@@ -1,6 +1,12 @@
-(function () {
+(function (module) {
 
     var config = JSON.parse(JSON.stringify(MPWS));
+
+    config.app = {
+        staticUrl: '/static_/',
+        baseStaticUrl: '/static_/base/',
+        customerStaticUrl: '/static_/customers/' + config.CUSTOMER
+    };
 
     var pluginsConfig = {};
 
@@ -60,6 +66,7 @@
         return destination;
     };
 
+    // debugger
     this.APP = APP;
 
     require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache, Async) {
@@ -247,36 +254,36 @@
             }
         });
 
-        var routes = {
-            "": "index",
-            "!/": "index",
-            "!/signin": "signin",
-            "!/signout": "signout"
-        };
+        // var routes = {
+        //     "": "index",
+        //     "!/": "index",
+        //     "!/signin": "signin",
+        //     "!/signout": "signout"
+        // };
 
-        var Router = Backbone.Router.extend({
-            routes: routes,
+        // var Router = Backbone.Router.extend({
+        //     routes: routes,
 
-            urls: _(routes).invert(),
+        //     urls: _(routes).invert(),
 
-            index: function () {
-                if (location.pathname !== '/') {
-                    window.location.href = '/';
-                }
-                APP.Sandbox.eventNotify('global:page:index', '');
-            },
-            signin: function () {
-                APP.Sandbox.eventNotify('global:page:signin', 'signin');
-            },
-            signout: function () {
-                // debugger;
-                Auth.signout(function () {
-                    APP.Sandbox.eventNotify('global:page:signout', 'signout');
-                });
-            }
-        });
+        //     index: function () {
+        //         if (location.pathname !== '/') {
+        //             window.location.href = '/';
+        //         }
+        //         APP.Sandbox.eventNotify('global:page:index', '');
+        //     },
+        //     signin: function () {
+        //         APP.Sandbox.eventNotify('global:page:signin', 'signin');
+        //     },
+        //     signout: function () {
+        //         // debugger;
+        //         Auth.signout(function () {
+        //             APP.Sandbox.eventNotify('global:page:signout', 'signout');
+        //         });
+        //     }
+        // });
 
-        var root = new Router();
+        // var root = new Router();
         // var $dfd = $.Deferred();
 
         // initialize plugins
@@ -368,7 +375,7 @@
                     console.log('all pluginas are loaded');
                     if (err) throw err;
                     // start HTML5 History push
-                    APP.instances.root = root;
+                    // APP.instances.root = root;
                     // notify all that loader completed its tasks
                     APP.Sandbox.eventNotify('global:loader:complete');
                     Backbone.trigger('global:loader:complete');
@@ -409,6 +416,14 @@
 
         APP.configurePlugins = function (config) {
             pluginsConfig = config || {};
+        };
+        APP.getPluginOptions = function (name) {
+            var plg = APP.getPlugin(name);
+            return plg && plg.options || {};
+        };
+        APP.getPluginSettings = function (name) {
+            var plg = APP.getPlugin(name);
+            return plg && plg.settings || {};
         };
 
         // APP.injectHtml = function (targetName, el) {

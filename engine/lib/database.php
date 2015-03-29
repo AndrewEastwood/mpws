@@ -445,7 +445,8 @@ class database {
     }
 
     public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
-        $limit = $dsConfig['limit'];
+        $dsConfig = $dsConfig ?: array();
+        $limit = isset($dsConfig['limit']) ? $dsConfig['limit'] : 0;
         $page = 1;
         $items = array();
         $useCustomerID = true;
@@ -453,7 +454,7 @@ class database {
             $useCustomerID = $options['useCustomerID'];
         }
 
-        if ($dsConfig['action'] !== "select")
+        if (isset($dsConfig['action']) && $dsConfig['action'] !== "select")
             throw new Exception("ErrorProcessingDataListMethod", 1);
 
         // grab other fields
@@ -548,6 +549,19 @@ class database {
         $rez["info"] = $listInfo;
         $rez["items"] = $items ?: array();
 
+        return $rez;
+    }
+
+    public function getDataListFromArray (array $items) {
+        $listInfo = array(
+            "page" => 0,
+            "limit" => 0,
+            "total_pages" => 1,
+            "total_entries" => count($items)
+        );
+        $rez["type"] = "list";
+        $rez["info"] = $listInfo;
+        $rez["items"] = $items ?: array();
         return $rez;
     }
 

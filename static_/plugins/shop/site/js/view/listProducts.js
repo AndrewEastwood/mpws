@@ -1,24 +1,37 @@
 define([
     'backbone',
-    'plugins/shop/site/js/collection/listProductLatest',
-    'plugins/shop/site/js/view/productItemShort'
-], function (Backbone, CollListProductLatest, ProductItemShort) {
+    'plugins/shop/site/js/collection/listProducts',
+    'plugins/shop/site/js/view/productItem'
+], function (Backbone, CollListProducts, ProductItem, tplProductItemMinimal) {
 
     // debugger;
     var ListProductLatest = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-latest clearfix',
-        collection: new CollListProductLatest(),
-        initialize: function () {
-            // debugger;
+        initialize: function (options) {
+            this.options = options || {};
+            this.collection = new CollListProducts(this.options);
             this.collection.on('reset', this.render, this);
         },
         render: function () {
-            // debugger;
-            var self = this;
-            this.collection.each(function(model){
-                var productView = new ProductItemShort({model: model});
-                self.$el.append(productView.render().el);
+            var that = this,
+                isList = this.options && this.options.design && this.options.design.asList || false;
+            this.$el.empty();
+            if (isList) {
+                this.$el = $('<ul/>');
+            }
+            this.collection.each(function (model) {
+                var productView = new ProductItem(_.extend({}, that.options, {model: model})),
+                    $productEl = productView.render().$el;
+                if (isList) {
+                    $productEl = $('<li/>').html($productEl);
+                }
+                that.$el.append($productEl);
             });
+            debugger
+            this.trigger('shop:rendered');
+            return this;
+        },
+        getPageAttributes: function () {
             // seo start
             var formatTitle = "",
                 formatKeywords = "",
@@ -57,9 +70,8 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            APP.setPageAttributes({title: title, keywords: keywords, description: description});
+            return {title: title, keywords: keywords, description: description};
             // seo end
-            return this;
         }
     });
 

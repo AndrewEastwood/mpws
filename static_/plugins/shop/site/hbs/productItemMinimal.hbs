@@ -1,0 +1,21 @@
+<div class="col-xs-12 col-sm-9 no-margin">
+    <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-model">{{data.Model}}</span></a>
+    <div class="price">
+        {{#each data._prices.others}}
+            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+        {{/each}}
+        {{#if data._promoIsApplied }}
+        <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
+        {{/if}}
+        <span class="product-availability product-availability-{{data.Status}}">
+            <i class="fa fa-circle fa-fw" title="{{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}"></i>
+        </span>
+    </div>
+</div>
+<div class="col-xs-12 col-sm-3 no-margin">
+    <a href="#" class="thumb-holder">
+        <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].xs}}" class="image img-responsive">
+        </a>
+    </a>
+</div>

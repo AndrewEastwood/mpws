@@ -1,11 +1,13 @@
 define([
-    'backbone',
     'underscore',
+    'backbone',
     'handlebars',
-    'plugins/shop/site/js/view/productItemShort',
-    'plugins/shop/site/js/model/product',
     'utils',
+    'handlebars',
     'bootstrap-dialog',
+    'plugins/shop/site/js/model/product',
+    'text!plugins/shop/site/hbs/productItemMinimal.hbs',
+    'text!plugins/shop/site/hbs/productItemShort.hbs',
     'text!plugins/shop/site/hbs/productItemFull.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
@@ -13,48 +15,100 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (Backbone, _, Handlebars, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, Handlebars, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
 
-    var ProductItemFull = ViewProductItemShort.extend({
-        className: 'shop-product-item shop-product-item-full',
-        template: Handlebars.compile(tpl), // check
+    // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
+    //     return opts.fn(data._origin.Name + ' ' + data.Model);
+    // });
+    var ProductItemShort = Backbone.View.extend({
+        className: 'shop-product-item col-sm-4 col-md-3',// 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
+        templates: {
+            short: Handlebars.compile(tplShort), // check
+            minimal: Handlebars.compile(tplMinimal), // check
+            full: Handlebars.compile(tplFull), // check
+        },
         lang: lang,
         events: {
+            'click .add-to-cart': 'noop',
+            'click .add-to-wishlist': 'noop',
+            'click .add-to-compare': 'noop',
             'click .open-popup-shipping': 'openPopupShipping',
             'click .open-popup-payments': 'openPopupPayments',
             'click .open-popup-openhours': 'openPopupOpenHours',
             'click .open-popup-phones': 'openPopupPhones',
             'click .open-popup-warranty': 'openPopupWarranty'
         },
+        noop: $.noop,
         initialize: function (options) {
-            this.model = new ModelProduct({
-                ID: options.productID
-            });
-            ViewProductItemShort.prototype.initialize.call(this);
-            // this.listenTo(this.model, 'change', this.render);
-        },
-        render: function () {
-            ViewProductItemShort.prototype.render.call(this);
-            this.$('.shop-product-image-main img').magnify();
-            // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-            var _prices = _(this.model.get('Prices') || {}).values();
-            if (_prices.length) {
-                this.$("#sparkline").sparkline(_prices, {
-                    type: 'bar',
-                    width: '150px',
-                    height: '15px',
-                    lineColor: '#cf7400',
-                    fillColor: false,
-                    drawNormalOnTop: true
+            this.options = options || {};
+            // set default style
+            this.options.design = _.extend({style: 'short'}, this.options.design || {});
+            // bind context
+            _.bindAll(this, 'refresh', 'switchCurrency');
+            // APP.Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
+            // APP.Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
+            // APP.Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
+
+            // refresh price when currency widget is changed
+            Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
+            if (this.model) {
+                this.listenTo(this.model, 'change', this.render);
+            } else if (this.options.productID) {
+                this.model = new ModelProduct({
+                    ID: this.options.productID
                 });
             }
+        },
+        refresh: function (data) {
+            if (this.model) {
+                if (data && data.id && (data.id === this.model.id || data.id === "*")) {
+                    this.model.fetch();
+                }
+            }
+        },
+        render: function () {
+            var design = this.options.design,
+                tpl = this.templates[design.style];
+            this.$el.addClass('shop-product-item-' + design.style);
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            // shop pulse animation for cart button badge
+            if (this.model.hasChanged('_viewExtras') && this.model.previous('_viewExtras') && this.model.get('_viewExtras').InCartCount !== this.model.previous('_viewExtras').InCartCount)
+                this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
+                    $(this).removeClass("pulse").dequeue();
+                });
+            this.$('[data-toggle="tooltip"]').tooltip();
+            this.$('.product-availability .fa').popover({trigger: 'hover'});
 
+            if (design.className) {
+                this.$el.addClass(design.className);
+            }
+            if (this.isStyleFull()) {
+                this.$('.shop-product-image-main img').magnify();
+                // show price chart (powered by http://omnipotent.net/jquery.sparkline)
+                var _prices = _(this.model.get('Prices') || {}).values();
+                if (_prices.length) {
+                    this.$("#sparkline").sparkline(_prices, {
+                        type: 'bar',
+                        width: '150px',
+                        height: '15px',
+                        lineColor: '#cf7400',
+                        fillColor: false,
+                        drawNormalOnTop: true
+                    });
+                }
+            }
+
+            if (design.wrap) {
+                this.$el = $(design.wrap).html(this.$el);
+            }
+
+            return this;
+        },
+        isStyleFull: function () {
+            return this.options.design.style === 'full';
+        },
+        getPageAttributes: function () {
             var data = this.model.toJSON();
-            // APP.getCustomer().setBreadcrumb({
-            //     categories: data._category && data._category._location,
-            //     product: data
-            // });
-
             // seo start
             var formatTitle = "",
                 formatKeywords = "",
@@ -76,10 +130,12 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            APP.setPageAttributes({title: title, keywords: keywords, description: description});
+            return {title: title, keywords: keywords, description: description};
             // seo end
-
-            return this;
+        },
+        switchCurrency: function (visibleCurrencyName) {
+            this.$('.moneyValue').addClass('hidden');
+            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
         },
         openPopupShipping: function (event) {
             BootstrapDialog.show({
@@ -146,5 +202,6 @@ define([
         }
     });
 
-    return ProductItemFull;
+    return ProductItemShort;
+
 });

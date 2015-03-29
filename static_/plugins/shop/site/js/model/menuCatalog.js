@@ -9,6 +9,9 @@ define([
                 fn: 'categories',
                 tree: true
             })
+        },
+        getMenuSubItems: function (categoryID) {
+            
         }
     });
 

@@ -4,9 +4,9 @@
 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
 {{#recursive data}}
     {{#if childNodes}}
-    <li class="dropdown-submenu">
+    <li class="dropdown-submenu dropdown menu-item">
         <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}">{{Name}}</a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu mega-menu">
             {{{recursive childNodes}}}
         </ul>
     </li>

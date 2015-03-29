@@ -1,20 +1,15 @@
 define([
     'backbone',
     'handlebars',
-    'plugins/shop/site/js/model/menuCatalog',
     'utils',
     'text!plugins/shop/site/hbs/menuCatalogBar.hbs'
-], function (Backbone, Handlebars, modelCatalogStructureMenu, Utils, tpl) {
+], function (Backbone, Handlebars, Utils, tpl) {
 
     var MenuCatalogBar = Backbone.View.extend({
-        // tagName: 'a',
-        // attributes: {
-        //     href: 'javascript://'
-        // },
-        className: 'navbar yamm navbar-default navbar-fixed-top shop-catalog-bar',
+        tagName: 'ul',
+        className: 'nav shop-catalog-bar',
         template: Handlebars.compile(tpl), // check
         initialize: function () {
-            this.model = new modelCatalogStructureMenu();
             this.model.on('change', this.render, this);
         },
         render: function() {

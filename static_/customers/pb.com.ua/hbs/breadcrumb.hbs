@@ -1,107 +1,68 @@
-<ol class="breadcrumb shop-breadcrumb">
+<div class="animate-dropdown"><!-- ========================================= BREADCRUMB ========================================= -->
+<div id="top-mega-nav">
+    <div class="container">
+        <nav>
+            <ul class="inline">
+                <li class="dropdown le-dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-fw fa-list"></i>Всі категорії
+                    </a>
+                    
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Computer Cases &amp; Accessories</a></li>
+                        <li><a href="#">CPUs, Processors</a></li>
+                        <li><a href="#">Fans, Heatsinks &amp; Cooling</a></li>
+                        <li><a href="#">Graphics, Video Cards</a></li>
+                        <li><a href="#">Interface, Add-On Cards</a></li>
+                        <li><a href="#">Laptop Replacement Parts</a></li>
+                        <li><a href="#">Memory (RAM)</a></li>
+                        <li><a href="#">Motherboards</a></li>
+                        <li><a href="#">Motherboard &amp; CPU Combos</a></li>
+                        <li><a href="#">Motherboard Components</a></li>
+                    </ul>
+                </li>
 
-    <li class="active">
-        <a title="Повернутися назад" href="javascript://" onclick="javascript:history.go(-1);">
-            <i class="fa fa-arrow-circle-left fa-fw"></i>
-        </a>
-    </li>
+                <li class="breadcrumb-nav-holder"> 
+                    <ul>
+                        <li class="dropdown breadcrumb-item">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">laptops &amp; computers </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">PDA</a>
+                                    <a href="#">accesories</a>
+                                    <a href="#">tablets</a>
+                                    <a href="#">games</a>
+                                    <a href="#">consoles</a>
+                                </li>
+                            </ul>
+                        </li><!-- /.breadcrumb-item -->
 
-    {{#compare app.location.fragment "==" "" }}
-    <li class="active">Головна</li>
-    {{/compare}}
+                        <li class="dropdown breadcrumb-item">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Desktop PC </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">PDA</a>
+                                    <a href="#">accesories</a>
+                                    <a href="#">tablets</a>
+                                    <a href="#">games</a>
+                                    <a href="#">consoles</a>
+                                </li>
+                            </ul>
+                        </li><!-- /.breadcrumb-item -->
 
-    {{#compare app.location.fragment "==" "!/shop" }}
-    <li class="active">Головна</li>
-    {{/compare}}
+                        <li class="breadcrumb-item">
+                            <a href="#">Gaming</a>
+                        </li><!-- /.breadcrumb-item -->
 
-    {{#compare app.location.fragment "==" "!/shop/cart" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Кошик</li>
-    {{/compare}}
+                        <li class="breadcrumb-item current">
+                            <a href="#">VAIO Fit Laptop - Windows</a>
+                        </li><!-- /.breadcrumb-item -->
+                    </ul>
+                </li><!-- /.breadcrumb-nav-holder -->
 
-    {{#compare app.location.fragment "==" "!/shop/wishlist" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Мій список</li>
-    {{/compare}}
+            </ul><!-- /.inline -->
+        </nav>
 
-    {{#compare app.location.fragment "==" "!/shop/cart/checkout" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Оформлення</li>
-    {{/compare}}
-
-    {{#compare app.location.fragment "==" "!/shop/compare" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Порівняння</li>
-    {{/compare}}
-
-    {{#srtStartsWith app.location.fragment "!/shop/tracking" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Відстеження вантажу</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/login" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Вхід</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/create" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Реєстрація</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/shop/account/orders" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li><a title="Профіль" href="/#!/account/summary">Профіль</a></li>
-    <li class="active">Мої замовлення</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/summary" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li class="active">Профіль</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/password" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li><a title="Профіль" href="/#!/account/summary">Профіль</a></li>
-    <li class="active">Зміна паролю</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/edit" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li><a title="Профіль" href="/#!/account/summary">Профіль</a></li>
-    <li class="active">Редагування</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/delete" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li><a title="Профіль" href="/#!/account/summary">Профіль</a></li>
-    <li class="active">Видалення</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/account/addresses" }}
-    <li><a title="Головна" href="/">Головна</a></li>
-    <li><a title="Профіль" href="/#!/account/summary">Профіль</a></li>
-    <li class="active">Мої адреси</li>
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/shop/catalog/" }}
-        <li><a title="Головна" href="/">Головна</a></li>
-        {{#foreach data.categories}}
-            {{#if $last}}
-                <li class="active">{{Name}}</li>
-            {{else}}
-                <li><a title="Категорія {{Name}}" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}">{{Name}}</a></li>
-            {{/if}}
-        {{/foreach}}
-    {{/srtStartsWith}}
-
-    {{#srtStartsWith app.location.fragment "!/shop/product/" }}
-        <li><a title="Головна" href="/">Головна</a></li>
-        {{#foreach data.categories}}
-        <li><a title="Категорія {{Name}}" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}">{{Name}}</a></li>
-        {{/foreach}}
-        {{#if data.product}}
-        <li class="active"><a title="{{data.product._displayName}}" href="{{bb_link ../../instances.shop.urls.shop_product product=data.product.ExternalKey asRoot=true}}">{{data.product._displayName}}</a></li>
-        {{/if}}
-    {{/srtStartsWith}}
-</ol>
+    </div><!-- /.container -->
+</div><!-- /#top-mega-nav -->
+<!-- ========================================= BREADCRUMB : END ========================================= --></div>

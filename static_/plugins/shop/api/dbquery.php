@@ -130,6 +130,10 @@ class dbquery {
             }
         }
 
+        if (!empty($options['_pStatus'])) {
+            $config['condition']["shop_products.Status"] = $app->getDB()->createCondition($options['_pStatus']);
+        }
+
         // var_dump($config['condition']);
         return $config;
     }

@@ -53,6 +53,7 @@
     "underscore": "~1.8.2",
     "echojs": "~1.7.1",
     "bootstrap-wysiwyg": "*",
-    "async": "~0.9.2"
+    "async": "~0.9.2",
+    "owl.carousel": "*"
   }
 }

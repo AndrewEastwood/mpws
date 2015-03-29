@@ -4,7 +4,7 @@ define([
     'handlebars',
     'utils',
     'plugins/shop/site/js/collection/listProductCatalog',
-    'plugins/shop/site/js/view/productItemShort',
+    'plugins/shop/site/js/view/productItem',
     'bootstrap-dialog',
     'text!plugins/shop/site/hbs/listProductCatalog.hbs',
     /* lang */
@@ -13,7 +13,7 @@ define([
     'bootstrap-select',
     'bootstrap-slider',
     'jquery.cookie'
-], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItem, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -60,7 +60,7 @@ define([
             this.$el.html(this.template(data));
 
             this.collection.each(function(model){
-                var productView = new ProductItemShort({model: model});
+                var productView = new ProductItem({model: model});
                 productView.render();
                 // displayItems.push(productView.$el);
                 productView.$el.attr('class', 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4');

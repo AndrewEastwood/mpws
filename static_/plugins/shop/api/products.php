@@ -348,34 +348,62 @@ class products {
         return $dataList;
     }
 
-    public function getLatestProducts_List (array $options = array(), $skipRelations = false) {
+    public function getNewProducts_List (array $options = array()) {
         global $app;
         $config = dbquery::shopGetProductList($options);
         $self = $this;
-
         $callbacks = array(
-            "parse" => function ($items) use($self, $skipRelations) {
+            "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
                 }
                 return $_items;
             }
         );
-        // var_dump($options);
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        return $dataList;
+    }
 
-        // $dataList['_category'] = null;
+    public function getTopProducts_List () {
+        global $app;
+        $config = dbquery::shopStat_PopularProducts();
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ProductID'], true);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
+        return $dataList;
+    }
 
-        // if (isset($options['_pStats'])) {
-        //     $filter = array();
-        //     if (isset($options['_fCategoryID'])) {
-        //         $filter['_fCategoryID'] = $options['_fCategoryID'];
-        //         $dataList['_category'] = API::getAPI('shop:categories')->getCategoryByID($options['_fCategoryID']);
-        //     }
-        //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
-        // }
+    public function getViewedProducts_List () {
+        global $app;
+        $viewedProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
+        $dataList = $app->getDB()->getDataListFromArray($viewedProducts);
+        return $dataList;
+    }
 
+    public function getOnSaleProducts_List () {
+        global $app;
+        $options = array('_pStatus' => 'DISCOUNT');
+        $config = dbquery::shopGetProductList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -1147,9 +1175,21 @@ class products {
         } else {
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
-                    case 'latest': {
-                        $resp = $this->getLatestProducts_List($req->get);
-                        // $resp = $this->getProducts_List_Latest($req->get);
+                    case 'new': {
+                        $resp = $this->getNewProducts_List($req->get);
+                        break;
+                    }
+                    case 'top': {
+                        $resp = $this->getTopProducts_List();
+                        break;
+                    }
+                    case 'viewed': {
+                        $resp = $this->getViewedProducts_List();
+                        break;
+                    }
+                    case 'onsale': {
+                        $resp = $this->getOnSaleProducts_List();
+                        break;
                     }
                 }
             } else {

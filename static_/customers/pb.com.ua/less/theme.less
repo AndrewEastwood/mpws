@@ -10,12 +10,20 @@
 
 @import "custom";
 
+@link-color: #3D3D3D;
+@link-icon-color: #C6C6C6;
+@font-color: #5D5D5D;
+@hover-color: #F27A24;
+
 // customization
 .top-bar {
     .exchange-rates-widget {
         li {
             display: block;
         }
+    }
+    .mpws-js-top-nav-left {
+        .fa {display: none;}
     }
 }
 .mpws-js-menu-cart {
@@ -29,12 +37,35 @@
         &:after {
             content: ')';
         }
+        color: @font-color;
         background: none;
-        color: #333;
         font-weight: normal;
         padding: 0px;
     }
 }
+
+button.btn * {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#shop-cart-embedded-ID {
+    .btn {
+        color: @link-color;
+        .fa {
+            color: @link-icon-color;
+        }
+        &:hover {
+            color: @hover-color;
+            .fa {
+                color: @hover-color;
+            }
+        }
+    }
+}
+
 header {
     .logo-holder {
         text-align: center;
@@ -86,6 +117,14 @@ header {
                 font-size: 40px;
                 // margin-left: -25px;
             }
+        }
+    }
+}
+
+#footer {
+    .sub-form-row {
+        input {
+            width: 70%;
         }
     }
 }
