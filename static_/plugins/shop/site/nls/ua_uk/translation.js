@@ -10,12 +10,16 @@ define("plugins/shop/site/nls/ua_uk/translation", {
     product_status_DEFECT: "Уцінений товар",
     product_status_WAITING: "Очікується",
     product_status_PREORDER: "Під замовлення",
-    product_badge_ACTIVE: "",
-    product_badge_ARCHIVED: "Архівний",
-    product_badge_DISCOUNT: "Знижена ціна",
-    product_badge_DEFECT: "Уцінений товар",
-    product_badge_WAITING: "Очікується в магазині",
-    product_badge_PREORDER: "Під замовлення",
+    product:{
+        badge: {
+            ACTIVE: "",
+            ARCHIVED: "Архів",
+            DISCOUNT: "Знижка",
+            DEFECT: "Уцінка",
+            WAITING: "Скоро",
+            PREORDER: "На замов...",
+        }
+    },
     shopping_cart_link_removeAll: "Видалити всі товари з списку",
     shopping_cart_form_title: "Оформлення замовлення",
     shopping_cart_field_firstName: "Імя",

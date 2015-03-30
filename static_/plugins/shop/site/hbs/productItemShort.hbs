@@ -1,39 +1,40 @@
-{{!-- <div class="product-item-holder hover"> --}}
-    <div class="product-item">
-        <div class="image">
-            <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
-                <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].xs}}" class="image img-responsive">
-            </a>
+<div class="product-item">
+    <div class="ribbon blue mpws-shop-product-badge-{{data.Status}}">
+        <span>{{mpwsGetValueByKey lang.product.badge key=data.Status}}</span>
+    </div>
+    <div class="image">
+        <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].xs}}" class="image img-responsive">
+        </a>
+    </div>
+    <div class="body">
+        <div class="label-discount clear"></div>
+        <div class="title">
+            <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-model">{{data.Model}}</span></a>
         </div>
-        <div class="body">
-            <div class="label-discount clear"></div>
-            <div class="title">
-                <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-model">{{data.Model}}</span></a>
-            </div>
-            <div class="brand">{{data._origin.Name}}</div>
+        <div class="brand">{{data._origin.Name}}</div>
+    </div>
+    <div class="prices">
+        {{#each data._prices.others}}
+            <div class="price-current text-right moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+        {{/each}}
+        {{#if data._promoIsApplied }}
+        <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
+        {{/if}}
+        <span class="product-availability product-availability-{{data.Status}}">
+            <i class="fa fa-circle fa-fw" title="{{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}"></i>
+        </span>
+    </div>
+    <div class="hover-area">
+        <div class="add-cart-button">
+            <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="le-button">Придбати</a>
         </div>
-        <div class="prices">
-            {{#each data._prices.others}}
-                <div class="price-current text-right moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
-            {{/each}}
-            {{#if data._promoIsApplied }}
-            <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
-            {{/if}}
-            <span class="product-availability product-availability-{{data.Status}}">
-                <i class="fa fa-circle fa-fw" title="{{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}"></i>
-            </span>
-        </div>
-        <div class="hover-area">
-            <div class="add-cart-button">
-                <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="le-button">Придбати</a>
-            </div>
-            <div class="wish-compare">
-                <a class="btn-add-to-wishlist" href="#">до списку</a>
-                <a class="btn-add-to-compare" href="#">порівняти</a>
-            </div>
+        <div class="wish-compare">
+            <a class="btn-add-to-wishlist" href="#">до списку</a>
+            <a class="btn-add-to-compare" href="#">порівняти</a>
         </div>
     </div>
-{{!-- </div> --}}
+</div>
 
 
 

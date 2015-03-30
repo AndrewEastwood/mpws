@@ -127,7 +127,7 @@ class products {
         $isDirectRequestToProduct = Request::hasInGet('id');
         if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
-            $recentProducts[$productID] = $product;
+            $recentProducts[] = $productID;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;
         }
 
@@ -352,6 +352,10 @@ class products {
 
     public function getNewProducts_List (array $options = array()) {
         global $app;
+        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['order'] = 'DESC';
+        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        // var_dump($options);
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -386,14 +390,20 @@ class products {
 
     public function getViewedProducts_List () {
         global $app;
-        $viewedProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
-        $dataList = $app->getDB()->getDataListFromArray($viewedProducts);
+        $_items = array();
+        $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
+        foreach ($viewedProductsIDs as $productID) {
+            $_items[] = $this->getProductByID($productID, true);
+        }
+        $dataList = $app->getDB()->getDataListFromArray($_items);
         return $dataList;
     }
 
     public function getOnSaleProducts_List (array $options = array()) {
         global $app;
-        $options['_pStatus'] = 'DISCOUNT';
+        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['order'] = 'DESC';
+        $options['_fshop_products.Status'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -411,7 +421,9 @@ class products {
 
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
-        $options['_pStatus'] = 'ACTIVE';
+        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['order'] = 'DESC';
+        $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;
         $config = dbquery::shopGetProductList($options);
         $self = $this;
