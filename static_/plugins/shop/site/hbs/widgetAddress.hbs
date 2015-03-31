@@ -19,7 +19,7 @@
 </div>
 {{/gt}}
 {{#each data}}
-<div itemscope itemtype="http://schema.org/Organization">
+<div itemscope itemtype="http://schema.org/Organization" class="address-item-wrapper">
     <div class="address-item{{#unless isActive}} hidden{{/unless}}{{#gt extras.addressCount 1}} multiple{{else}} single{{/gt}}" id="{{ID}}">
         {{#is ../extras.addressCount 1}}
         <div class="shop-name" itemprop="name">{{ShopName}}</div>

@@ -1,0 +1,1 @@
+ALTER TABLE `shop_products` ADD `Synopsis` VARCHAR(350) NOT NULL AFTER `ExternalKey`;

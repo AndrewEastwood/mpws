@@ -4,7 +4,7 @@
     </div>
     <div class="image">
         <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
-            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].xs}}" class="image img-responsive">
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}" class="image img-responsive">
         </a>
     </div>
     <div class="body">
@@ -30,8 +30,8 @@
             <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="le-button">Придбати</a>
         </div>
         <div class="wish-compare">
-            <a class="btn-add-to-wishlist" href="#">до списку</a>
-            <a class="btn-add-to-compare" href="#">порівняти</a>
+            <a class="btn-add-to-wishlist{{#if data._viewExtras.InWish }} added{{/if}}" href="javascript://">до списку</a>
+            <a class="btn-add-to-compare{{#if data._viewExtras.InCompare }} added{{/if}}" href="javascript://">порівняти</a>
         </div>
     </div>
 </div>

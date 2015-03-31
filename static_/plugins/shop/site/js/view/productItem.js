@@ -36,7 +36,8 @@ define([
             'click .open-popup-payments': 'openPopupPayments',
             'click .open-popup-openhours': 'openPopupOpenHours',
             'click .open-popup-phones': 'openPopupPhones',
-            'click .open-popup-warranty': 'openPopupWarranty'
+            'click .open-popup-warranty': 'openPopupWarranty',
+            'click .le-quantity a': 'updateQuantity'
         },
         noop: $.noop,
         initialize: function (options) {
@@ -44,7 +45,7 @@ define([
             // set default style
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
             // bind context
-            _.bindAll(this, 'refresh', 'switchCurrency');
+            _.bindAll(this, 'refresh', 'switchCurrency', 'updateQuantity');
             // APP.Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             // APP.Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
             // APP.Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
@@ -98,6 +99,8 @@ define([
                         drawNormalOnTop: true
                     });
                 }
+                this.$('').click(function (e) {
+                });
             }
 
             if (design.wrap) {
@@ -105,6 +108,18 @@ define([
             }
 
             return this;
+        },
+        updateQuantity: function (e) {
+            // Quantity Spinner
+            e.preventDefault();
+            var $targetBtn = $(e.target),
+                $qInput = this.$('input[name="quantity"]'),
+                currentQty = parseInt($qInput.val(), 10);
+            if ($targetBtn.hasClass('minus') && currentQty > 0){
+                $qInput.val(currentQty - 1);
+            } else if($targetBtn.hasClass('plus')) {
+                $qInput.val(currentQty + 1);
+            }
         },
         isStyleFull: function () {
             return this.options.design.style === 'full';

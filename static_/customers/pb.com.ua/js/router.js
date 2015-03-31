@@ -6,20 +6,20 @@ define([
     'echo',
     // page templates
     'text!./../hbs/breadcrumb.hbs',
-    'text!./../hbs/leftNavAndBanner.hbs',
+    'text!./../hbs/homeFrame.hbs',
     'text!./../hbs/productsTab.hbs',
     'text!./../hbs/viewedProducts.hbs',
     'text!./../hbs/page404.hbs',
-    'text!./../hbs/categoriesTopNav.hbs',
+    'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
     'owl.carousel',
 ], function ($, _, Backbone, Handlebars, echo,
      tplBreadcrumb,
-     tplLeftNavAndBanner,
+     tplHomeFrame,
      tplProductsTab,
      tplViewedProducts,
      tplPage404,
-     tplCategoriesTopNav,
+     tplCategoriesRibbon,
      tplProductComparisons) {
 
     // var _customerOptions = {};
@@ -54,6 +54,10 @@ define([
 
 
     var templatesCompiled = {
+        homeFrame: $(Handlebars.compile(tplHomeFrame)()),
+        categoriesRibbon: $(Handlebars.compile(tplCategoriesRibbon)()),
+        breadcrumb: $(Handlebars.compile(tplBreadcrumb)()),
+        viewedProducts: $(Handlebars.compile(tplViewedProducts)()),
         productComparisons: $(Handlebars.compile(tplProductComparisons)()),
         page404: $(Handlebars.compile(tplPage404)())
     };
@@ -88,9 +92,15 @@ define([
         elements: {},
 
         templates: {
+            homeFrame: getTemplate('homeFrame'),
+            categoriesRibbon: getTemplate('categoriesRibbon'),
+            breadcrumb: getTemplate('breadcrumb'),
+            viewedProducts: getTemplate('viewedProducts'),
             productComparisons: getTemplate('productComparisons'),
             page404: getTemplate('page404'),
         },
+
+        views: {},
 
         getPlugin: function (name) {
             return this.plugins[name] || null;
@@ -122,96 +132,130 @@ define([
                 $('.mpws-js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
                 $('.mpws-js-top-nav-right').html($('<li>').addClass('dropdown').html(that.plugins.shop.widgetExchangeRates().$el));
 
+                // common elements
 
-                // setup middle navbar and bredcrumb
-                var $tplCategoriesTopNav = $(Handlebars.compile(tplCategoriesTopNav)()),
-                    $tplBreadcrumb = $(Handlebars.compile(tplBreadcrumb)()),
+
+                // setup ribbon nav and breadcrumb
+                var $tplBreadcrumb = that.templates.breadcrumb(),
+                    $tplCategoriesRibbon = that.templates.categoriesRibbon(),
                     optionsCategoryMenu = {design: {className: 'nav navbar-nav'}},
-                    categoryTopLevelList = this.plugins.shop.categoryList({design: {style: 'toplevel', className: 'dropdown-menu'}}),
-                    categoryMenu = this.plugins.shop.categoryList(optionsCategoryMenu);
+                    optionsTopLevelList = {design: {style: 'toplevel', className: 'dropdown-menu'}};
+                that.views.categoryMenu = that.plugins.shop.categoryList(optionsCategoryMenu),
+                that.views.categoryTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
                 $('.mpws-js-breadcrumb').html($tplBreadcrumb);
-                $('.mpws-js-shop-categories-topnav').html($tplCategoriesTopNav);
-                $tplCategoriesTopNav.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
-                $tplCategoriesTopNav.find('.mpws-js-shop-categories-toplist').html(categoryTopLevelList.render().$el);
-
-                categoryOptions = {design: {className: 'nav'}},
-                categoryMenu = this.plugins.shop.categoryList(categoryOptions)
-                categoryTopLevelList = this.plugins.shop.categoryList({design: {style: 'toplevel', className: 'dropdown-menu'}})
+                $('.mpws-js-shop-categories-ribbon').html($tplCategoriesRibbon);
+                $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryMenu.render().$el.clone());
+                $tplCategoriesRibbon.find('.mpws-js-shop-categories-toplist').html(that.views.categoryTopLevelList.render().$el.clone());
 
 
-                // setup home fame
-                var $tplLeftNavAndBanner = $(Handlebars.compile(tplLeftNavAndBanner)());
+                    // categoryListOptions = {design: {className: 'nav'}},
+                    // categoryMenu = that.plugins.shop.categoryList(categoryListOptions)
+                    // categoryTopLevelList = that.plugins.shop.categoryList({design: {style: 'toplevel', className: 'dropdown-menu'}})
                 // set top category list with banner
-                $tplLeftNavAndBanner.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
-                $('.mpws-js-main-home-frame').html($tplLeftNavAndBanner);
+                
+                // setup home fame
+                var $tplHomeFrame = that.templates.homeFrame();
+                $tplHomeFrame.find('.mpws-js-catalog-tree').html(that.views.categoryMenu.render().$el.clone());
+                $('.mpws-js-main-home-frame').html($tplHomeFrame);
+
                 // update searchbox categories
-                $('header li.mpws-js-shop-categories-toplist').append(categoryTopLevelList.render().$el);
+                $('header li.mpws-js-shop-categories-toplist').append(that.views.categoryTopLevelList.render().$el.clone());
 
+                // ;
                 // setup viewed products
+                var $tplViewedProducts = that.templates.viewedProducts(),
+                    $owlEl = $('.mpws-js-shop-viewed-products', $tplViewedProducts),
+                    optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
+                that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
+                that.views.viewedProducts.on('shop:rendered', function () {
+                    console.log('viewed rendering');
+                    $tplViewedProducts.removeClass('hidden');
+                    // recently viewed
+                    $owlEl.html(that.views.viewedProducts.$el.children());
+                    // init some js
+                    initEchoJS();
+                    $owlEl.owlCarousel({
+                        stopOnHover: true,
+                        rewindNav: false,
+                        items: 6,
+                        pagination: false,
+                        loop: true,
+                        dots: false,
+                        itemsTablet: [768,3],
+                        responsive:{
+                            0:{
+                                items:1
+                            },
+                            600:{
+                                items:3
+                            },
+                            1000:{
+                                items:5
+                            }
+                        }
+                    });
+
+                    $(".slider-next", $tplViewedProducts).click(function () {
+                        $owlEl.trigger('next.owl.carousel', [1500]);
+                    });
+                    
+                    $(".slider-prev", $tplViewedProducts).click(function () {
+                        $owlEl.trigger('prev.owl.carousel', [1500]);
+                    });
+                });
+                that.views.viewedProducts.on('shop:emptylist', function () {
+                    $tplViewedProducts.addClass('hidden');
+                });
+                $('.mpws-js-shop-viewed-products').html($tplViewedProducts);
+                // $('.owl-carousel', $tplViewedProducts).owlCarousel({
+                //     loop:true,
+                //     margin:10,
+                //     nav:true,
+                //     responsive:{
+                //         0:{
+                //             items:1
+                //         },
+                //         600:{
+                //             items:3
+                //         },
+                //         1000:{
+                //             items:5
+                //         }
+                //     }
+                // })
+
             });
 
-            APP.Sandbox.eventSubscribe('global:page:index', function () {
-                that.home();
-            });
+            // APP.Sandbox.eventSubscribe('global:page:index', function () {
+            //     that.home();
+            // });
 
             // configure titles and brand images
-            $('head title').text(this.settings.title);
-            $('#site-logo-ID').attr({
-                src: this.settings.logoImageUrl,
-                title: this.settings.title,
-                itemprop: 'logo'
-            });
-            $('.navbar-brand').removeClass('hide');
-            // var breadcrumb = new Breadcrumb();
-            // breadcrumb.render();
+            // $('head title').text(this.settings.title);
+            // $('#site-logo-ID').attr({
+            //     src: this.settings.logoImageUrl,
+            //     title: this.settings.title,
+            //     itemprop: 'logo'
+            // });
+            // $('.navbar-brand').removeClass('hide');
 
-            // add banner image
-            var $banner = $('<div>').addClass('banner-decor');
-            $('.MPWSBannerHeaderTop').append($banner);
         },
         refreshViewedProducts: function () {
-            var $tplViewedProducts = $(Handlebars.compile(tplViewedProducts)()),
-                options = {design: {className: 'no-margin carousel-item product-item-holder size-small hover'}},
-                viewedProducts = this.plugins.shop.viewedProducts();
-            viewedProducts.on('shop:rendered', function () {
-                $tplViewedProducts.removeClass('hidden');
-                // recently viewed
-                $tplViewedProducts.find('.mpws-js-shop-viewed-products').html(viewedProducts.$el.children());
-                initEchoJS();
-                // init some js
-                var $owlEl = $('#owl-recently-viewed', $tplViewedProducts);
-                $owlEl.owlCarousel({
-                    stopOnHover: true,
-                    rewindNav: false,
-                    items: 6,
-                    pagination: false,
-                    loop: true,
-                    dots: false,
-                    itemsTablet: [768,3]
-                });
-
-                $(".slider-next", $tplViewedProducts).click(function () {
-                    $owlEl.trigger('next.owl.carousel', [1500]);
-                });
-                
-                $(".slider-prev", $tplViewedProducts).click(function () {
-                    $owlEl.trigger('prev.owl.carousel', [1500]);
-                });
-            });
-            viewedProducts.on('shop:emptylist', function () {
-                $tplViewedProducts.addClass('hidden');
-            });
-            $('.mpws-js-shop-viewed-products').html($tplViewedProducts);
+            this.views.viewedProducts.collection.fetch({reset: true});
         },
         home: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(false);
+            this.toggleHomeFrame(true);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
+
+
             var $tplProductsTab = $(Handlebars.compile(tplProductsTab)()),
                 productOptions = {design: {className: 'col-sm-4 col-md-3 no-margin product-item-holder hover', pageSize: 4}},
                 featuredProducts = this.plugins.shop.featuredProducts(productOptions),
                 newProducts = this.plugins.shop.newProducts(productOptions),
                 topProducts = this.plugins.shop.topProducts(productOptions);
-
-            // cleanup unnecessary components
-            this.toggleCommonMiddelNavAndBreadcrumb(false);
 
             // show more buttons selectors
             var $btnShowMoreFeatured = $tplProductsTab.find('#mpws-js-shop-tab-products-featured .btn-loadmore'),
@@ -257,45 +301,58 @@ define([
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-top .btn-loadmore', topProducts.revealNextPage);
 
             $('.mpws-js-main-section').html($tplProductsTab);
-
-            this.updateFooter();
         },
         shopCart: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
             $('.mpws-js-main-section').html(this.plugins.shop.cart().$el);
 
-            this.updateFooter();
         },
         shopProduct: function (id) {
-            var breadcrumb = Handlebars.compile(tplBreadcrumb)();
-            $('.mpws-js-main-section').html(breadcrumb);
-            $('.mpws-js-main-section').append(this.plugins.shop.product(id).$el);
-
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
             this.updateFooter();
+
+            $('.mpws-js-main-section').html(this.plugins.shop.product(id).$el);
+
         },
         shopWishlist: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
             $('.mpws-js-main-section').html(this.plugins.shop.wishlist().$el);
 
-            this.updateFooter();
         },
         shopCompare: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
 
             $('.mpws-js-main-section').html(this.templates.productComparisons());
             $('.mpws-js-main-section').find('.mpws-js-product-comparisons').html(this.plugins.shop.compare().$el);
 
-            this.toggleCommonMiddelNavAndBreadcrumb(true);
-            this.updateFooter();
         },
         page404: function () {
-            //     $tplCategoriesTopNav = $(Handlebars.compile(tplCategoriesTopNav)()),
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
+            //     $tplCategoriesRibbon = $(Handlebars.compile(tplCategoriesRibbon)()),
             //     categoryOptions = {design: {className: 'nav navbar-nav'}},
             //     categoryMenu = this.plugins.shop.categoryList(categoryOptions);
-            // $tplCategoriesTopNav.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
+            // $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
 
-            // $('.mpws-js-shop-categories-topnav').html($tplCategoriesTopNav);
+            // $('.mpws-js-shop-categories-topnav').html($tplCategoriesRibbon);
             $('.mpws-js-main-section').html(this.templates.page404());
 
-            this.toggleCommonMiddelNavAndBreadcrumb(true);
-            this.updateFooter();
         },
 
         // utils
@@ -314,12 +371,12 @@ define([
             $tplFooter.find('.mpws-js-shop-top-products-minimal-list').html(topProducts.$el);
             $tplFooter.find('.mpws-js-shop-categories-toplist').html(categoryTopLevelList.$el);
         },
-        toggleHomeNavFrame: function (show) {
+        toggleCategoryRibbonAndBreadcrumb: function (show) {
             $('.mpws-js-breadcrumb').toggleClass('hidden', !show);
+            $('.mpws-js-shop-categories-ribbon').toggleClass('hidden', !show);
         },
-        toggleCommonMiddelNavAndBreadcrumb: function (show) {
-            $('.mpws-js-breadcrumb').toggleClass('hidden', !show);
-            $('.mpws-js-shop-categories-topnav').toggleClass('hidden', !show);
+        toggleHomeFrame: function (show) {
+            $('.mpws-js-main-home-frame').toggleClass('hidden', !show);
         },
 
     });
