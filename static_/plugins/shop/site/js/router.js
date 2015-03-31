@@ -29,7 +29,7 @@ define([
     'plugins/shop/site/js/view/categoryList',
 
     'plugins/shop/site/js/model/order',
-    'plugins/shop/site/js/model/menuCatalog',
+    'plugins/shop/site/js/model/catalog',
     'plugins/shop/common/js/model/setting'
 ], function ($, _, Backbone, Cache, Auth, 
     /*PageHome,*/
@@ -50,13 +50,13 @@ define([
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
     ViewCategoryList,
-    SiteOrder, SiteCatalogStructure, SiteSettings) {
+    SiteOrder, SiteCatalog, SiteSettings) {
 
     var order = new SiteOrder({
         ID: "temp"
     });
 
-    var catalogStructure = new SiteCatalogStructure();
+    var modelCatalog = new SiteCatalog();
 
     // why it's here?
     order.url = APP.getApiLink({
@@ -89,13 +89,15 @@ define([
         // routes: routes,
         urls: {},
 
+        catalog: modelCatalog,
+
         // urls: _(routes).invert(),
         beforeInitialize: function (callback, options) {
             var that = this;
             this.options = options || {};
             this.urls = options && options.urls || {};
             var settings = new SiteSettings();
-            catalogStructure.fetch();
+            modelCatalog.fetch();
             settings.fetch().done(function () {
                 // debugger
                 that.settings = settings.toSettings();
@@ -238,7 +240,7 @@ define([
         categoryList: function (options) {
             // catalog navigation panel
             var cBar = new ViewCategoryList(_.extend({}, {
-                model: catalogStructure
+                model: modelCatalog
             }, options || {}));
             // cBar.model.fetch({reset: true});
             cBar.render();
@@ -246,14 +248,14 @@ define([
         },
         // categoryNavigation: function () {
         //     var categoryNav = new CategoryNavigation({
-        //         model: catalogStructure
+        //         model: modelCatalog
         //     });
         //     categoryNav.render();
         //     return categoryNav;
         // },
         categoryTopLebelItems: function () {
             var categoryNav = new CategoryTopLevelList({
-                model: catalogStructure
+                model: modelCatalog
             });
             categoryNav.render();
             return categoryNav;
@@ -261,7 +263,7 @@ define([
 
         promoBanners: function () {
             var categoryNav = new CategoryNavigation({
-                model: catalogStructure
+                model: modelCatalog
             });
             categoryNav.render();
             return categoryNav;

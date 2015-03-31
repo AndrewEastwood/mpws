@@ -12,6 +12,7 @@ define([
     'text!./../hbs/page404.hbs',
     'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
+    'text!./../hbs/productWishlist.hbs',
     'owl.carousel',
     'bootstrap'
 ], function ($, _, Backbone, Handlebars, echo,
@@ -21,7 +22,8 @@ define([
      tplViewedProducts,
      tplPage404,
      tplCategoriesRibbon,
-     tplProductComparisons) {
+     tplProductComparisons,
+     tplProductWishlist) {
 
     // var _customerOptions = {};
 
@@ -60,6 +62,8 @@ define([
         breadcrumb: $(Handlebars.compile(tplBreadcrumb)()),
         viewedProducts: $(Handlebars.compile(tplViewedProducts)()),
         productComparisons: $(Handlebars.compile(tplProductComparisons)()),
+        productsTab: $(Handlebars.compile(tplProductsTab)()),
+        productWishlist: $(Handlebars.compile(tplProductWishlist)()),
         page404: $(Handlebars.compile(tplPage404)())
     };
 
@@ -97,7 +101,9 @@ define([
             categoriesRibbon: getTemplate('categoriesRibbon'),
             breadcrumb: getTemplate('breadcrumb'),
             viewedProducts: getTemplate('viewedProducts'),
+            productsTab: getTemplate('productsTab'),
             productComparisons: getTemplate('productComparisons'),
+            productWishlist: getTemplate('productWishlist'),
             page404: getTemplate('page404'),
         },
 
@@ -143,11 +149,11 @@ define([
                     optionsTopLevelList = {design: {style: 'toplevel', className: 'dropdown-menu'}};
 
                 that.views.categoryHomeMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
-                that.views.categorySearchTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
                 that.views.categoryRibbonMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
+                that.views.categorySearchTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
                 that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
 
-                $tplBreadcrumb.find('.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
+                $tplBreadcrumb.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
                 $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryRibbonMenu.render().$el);
                 
                 $('.mpws-js-breadcrumb').html($tplBreadcrumb);
@@ -203,7 +209,7 @@ define([
                                     items:3
                                 },
                                 1000:{
-                                    items:5
+                                    items:6
                                 }
                             }
                         });
@@ -225,9 +231,9 @@ define([
             this.views.viewedProducts.collection.fetch({reset: true});
         },
         updateBreadcrumb: function (items) {
-            $('.mpws-js-breadcrumb li:not(.locked)').remove();
+            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:not(.locked)').remove();
             if (_.isString(items)) {
-                items = [items];
+                items = [[items, null]];
             }
             _(items).each(function (item) {
                 if (!item || !item[0]) {
@@ -239,9 +245,22 @@ define([
                     .addClass('breadcrumb-item'),
                     $bcLink = $('<a>').attr('href', url || 'javascript://').text(text);
                 $bcItem.html($bcLink);
-                $('.mpws-js-breadcrumb ul').append($bcItem);
+                if (item[2]) {
+                    var $subMenu = $(item[2]);
+                    if ($subMenu.is('ul')) {
+                        $subMenu.addClass('dropdown-menu');
+                        $bcItem.append($subMenu);
+                        $bcLink.attr({
+                            'class': 'dropdown-toggle',
+                            'data-toggle': 'dropdown',
+                            'aria-expanded': 'true'
+                        });
+                        $bcItem.addClass('dropdown');
+                    }
+                }
+                $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list').append($bcItem);
             });
-            $('.mpws-js-breadcrumb li:last').addClass('currentl');
+            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:last').addClass('current');
         },
         home: function () {
             this.toggleCategoryRibbonAndBreadcrumb(false);
@@ -250,7 +269,7 @@ define([
             this.updateFooter();
 
 
-            var $tplProductsTab = $(Handlebars.compile(tplProductsTab)()),
+            var $tplProductsTab = this.templates.productsTab(),
                 productOptions = {design: {className: 'col-sm-4 col-md-3 no-margin product-item-holder hover', pageSize: 4}},
                 featuredProducts = this.plugins.shop.featuredProducts(productOptions),
                 newProducts = this.plugins.shop.newProducts(productOptions),
@@ -299,7 +318,7 @@ define([
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-new .btn-loadmore', newProducts.revealNextPage);
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-top .btn-loadmore', topProducts.revealNextPage);
 
-            $('.mpws-js-main-section').html($tplProductsTab);
+            $('section.mpws-js-main-section').html($tplProductsTab);
         },
         shopCart: function () {
             this.updateBreadcrumb('Кошик');
@@ -308,7 +327,7 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-            $('.mpws-js-main-section').html(this.plugins.shop.cart().$el);
+            $('section.mpws-js-main-section').html(this.plugins.shop.cart().$el);
 
         },
         shopProduct: function (id) {
@@ -324,13 +343,15 @@ define([
                 var brItems = [],
                     productLocationPath = productView.getPathInCatalog();
                 _(productLocationPath).each(function (locItem) {
-                    brItems.push([locItem.Name, locItem.url]);
+                    var pathCategorySubList = that.plugins.shop.categoryList({design: {style: 'toplevel', parentID: locItem.ID}}),
+                        subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
+                    brItems.push([locItem.Name, locItem.url, subList]);
                 });
                 brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
                 that.updateBreadcrumb(brItems);
             });
 
-            $('.mpws-js-main-section').html(productView.$el);
+            $('section.mpws-js-main-section').html(productView.$el);
 
         },
         shopWishlist: function () {
@@ -340,7 +361,9 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-            $('.mpws-js-main-section').html(this.plugins.shop.wishlist().$el);
+            $('section.mpws-js-main-section').html(this.templates.productWishlist());
+            // $('section.mpws-js-main-section').html(this.plugins.shop.wishlist().$el);
+            $('section.mpws-js-main-section').find('.mpws-js-products-wishlist').html(this.plugins.shop.wishlist().$el);
 
         },
         shopCompare: function () {
@@ -350,8 +373,8 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-            $('.mpws-js-main-section').html(this.templates.productComparisons());
-            $('.mpws-js-main-section').find('.mpws-js-product-comparisons').html(this.plugins.shop.compare().$el);
+            $('section.mpws-js-main-section').html(this.templates.productComparisons());
+            $('section.mpws-js-main-section').find('.mpws-js-product-comparisons').html(this.plugins.shop.compare().$el);
 
         },
         page404: function () {
@@ -366,7 +389,7 @@ define([
             // $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
 
             // $('.mpws-js-shop-categories-topnav').html($tplCategoriesRibbon);
-            $('.mpws-js-main-section').html(this.templates.page404());
+            $('section.mpws-js-main-section').html(this.templates.page404());
 
         },
 
