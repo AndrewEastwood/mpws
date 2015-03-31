@@ -27,6 +27,7 @@ define([
                 isList = design.asList,
                 $list = $('<ul/>');
             
+            this.$el.empty();
             if (this.options.type) {
                 this.$el.addClass('shop-product-list-' + this.options.type);
             }

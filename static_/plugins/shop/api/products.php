@@ -128,7 +128,7 @@ class products {
         if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[] = $productID;
-            $_SESSION[$this->_listKey_Recent] = $recentProducts;
+            $_SESSION[$this->_listKey_Recent] = array_unique($recentProducts);
         }
 
         // var_dump($product);

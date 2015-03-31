@@ -3,7 +3,6 @@ define([
     'backbone',
     'handlebars',
     'utils',
-    'handlebars',
     'bootstrap-dialog',
     'plugins/shop/site/js/model/product',
     'text!plugins/shop/site/hbs/productItemMinimal.hbs',
@@ -15,7 +14,7 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, Handlebars, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
+], function (_, Backbone, Handlebars, Utils, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
 
     // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
     //     return opts.fn(data._origin.Name + ' ' + data.Model);
@@ -99,15 +98,36 @@ define([
                         drawNormalOnTop: true
                     });
                 }
-                this.$('').click(function (e) {
-                });
             }
 
             if (design.wrap) {
                 this.$el = $(design.wrap).html(this.$el);
             }
 
+            this.trigger('render:complete');
             return this;
+        },
+        getPathInCatalog: function () {
+            var _category = this.model.get('_category'),
+                pathItems = [];
+            if (!_category || !_category._location) {
+                return pathItems;
+            }
+            _(_category._location).each(function (locItem) {
+                pathItems.push(_.extend({}, locItem, {
+                    url: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopCatalogCategory, {
+                        asRoot: true,
+                        category: locItem.ExternalKey
+                    })
+                }));
+            });
+            return pathItems;
+        },
+        getDisplayName: function () {
+            return this.model && this.model.get('_displayName');
+        },
+        getProductUrl: function () {
+            return this.model && Handlebars.helpers.bb_link(APP.instances.shop.urls.shopProduct, {asRoot: true, product: this.model.get('ExternalKey')});
         },
         updateQuantity: function (e) {
             // Quantity Spinner

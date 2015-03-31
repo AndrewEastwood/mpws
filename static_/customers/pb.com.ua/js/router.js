@@ -13,6 +13,7 @@ define([
     'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
     'owl.carousel',
+    'bootstrap'
 ], function ($, _, Backbone, Handlebars, echo,
      tplBreadcrumb,
      tplHomeFrame,
@@ -140,14 +141,17 @@ define([
                     $tplCategoriesRibbon = that.templates.categoriesRibbon(),
                     optionsCategoryMenu = {design: {className: 'nav navbar-nav'}},
                     optionsTopLevelList = {design: {style: 'toplevel', className: 'dropdown-menu'}};
-                that.views.categoryMenu = that.plugins.shop.categoryList(optionsCategoryMenu),
-                that.views.categoryTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
+
+                that.views.categoryHomeMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
+                that.views.categorySearchTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
+                that.views.categoryRibbonMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
+                that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
+
+                $tplBreadcrumb.find('.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
+                $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryRibbonMenu.render().$el);
+                
                 $('.mpws-js-breadcrumb').html($tplBreadcrumb);
                 $('.mpws-js-shop-categories-ribbon').html($tplCategoriesRibbon);
-                $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryMenu.render().$el.clone());
-                $tplCategoriesRibbon.find('.mpws-js-shop-categories-toplist').html(that.views.categoryTopLevelList.render().$el.clone());
-
-
                     // categoryListOptions = {design: {className: 'nav'}},
                     // categoryMenu = that.plugins.shop.categoryList(categoryListOptions)
                     // categoryTopLevelList = that.plugins.shop.categoryList({design: {style: 'toplevel', className: 'dropdown-menu'}})
@@ -155,100 +159,95 @@ define([
                 
                 // setup home fame
                 var $tplHomeFrame = that.templates.homeFrame();
-                $tplHomeFrame.find('.mpws-js-catalog-tree').html(that.views.categoryMenu.render().$el.clone());
+                $tplHomeFrame.find('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
                 $('.mpws-js-main-home-frame').html($tplHomeFrame);
 
                 // update searchbox categories
-                $('header li.mpws-js-shop-categories-toplist').append(that.views.categoryTopLevelList.render().$el.clone());
+                $('header li.mpws-js-shop-categories-toplist').append(that.views.categorySearchTopLevelList.$el);
 
-                // ;
-                // setup viewed products
+                // setup recently viewed products
                 var $tplViewedProducts = that.templates.viewedProducts(),
-                    $owlEl = $('.mpws-js-shop-viewed-products', $tplViewedProducts),
                     optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
                 that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
+
+                $('div.mpws-js-shop-viewed-products', $tplViewedProducts).html(that.views.viewedProducts.$el);
+                $('section.mpws-js-shop-viewed-products').html($tplViewedProducts);
+                that.views.viewedProducts.$el.addClass('owl-carousel');
+
+                // $owlEl.html($tplViewedProducts);
+                var owl = that.views.viewedProducts.$el.data('owlCarousel');
                 that.views.viewedProducts.on('shop:rendered', function () {
-                    console.log('viewed rendering');
-                    $tplViewedProducts.removeClass('hidden');
-                    // recently viewed
-                    $owlEl.html(that.views.viewedProducts.$el.children());
+                    // console.log('viewed rendering');
+                    // $tplViewedProducts.removeClass('hidden');
+                    // debugger
+                    // $owlEl.html(that.views.viewedProducts.$el);
+                    // console.log('items are added');
                     // init some js
-                    initEchoJS();
-                    $owlEl.owlCarousel({
-                        stopOnHover: true,
-                        rewindNav: false,
-                        items: 6,
-                        pagination: false,
-                        loop: true,
-                        dots: false,
-                        itemsTablet: [768,3],
-                        responsive:{
-                            0:{
-                                items:1
-                            },
-                            600:{
-                                items:3
-                            },
-                            1000:{
-                                items:5
+                    _.delay(function () {
+                        initEchoJS();
+                        // debugger
+                        // owl.update();
+                        // owl.destroy();
+                        that.views.viewedProducts.$el.owlCarousel({
+                            stopOnHover: true,
+                            rewindNav: false,
+                            items: 6,
+                            pagination: false,
+                            loop: false,
+                            itemsTablet: [768, 3],
+                            responsive:{
+                                0:{
+                                    items:1
+                                },
+                                600:{
+                                    items:3
+                                },
+                                1000:{
+                                    items:5
+                                }
                             }
-                        }
-                    });
-
-                    $(".slider-next", $tplViewedProducts).click(function () {
-                        $owlEl.trigger('next.owl.carousel', [1500]);
-                    });
-                    
-                    $(".slider-prev", $tplViewedProducts).click(function () {
-                        $owlEl.trigger('prev.owl.carousel', [1500]);
-                    });
+                        });
+                        // $owlEl.trigger('destroy.owl.carousel');
+                    }, 1000);
                 });
-                that.views.viewedProducts.on('shop:emptylist', function () {
-                    $tplViewedProducts.addClass('hidden');
+                // that.views.viewedProducts.on('shop:emptylist', function () {
+                //     $tplViewedProducts.addClass('hidden');
+                // });
+                $(".slider-next", $tplViewedProducts).click(function () {
+                    that.views.viewedProducts.$el.trigger('next.owl.carousel', [1500]);
                 });
-                $('.mpws-js-shop-viewed-products').html($tplViewedProducts);
-                // $('.owl-carousel', $tplViewedProducts).owlCarousel({
-                //     loop:true,
-                //     margin:10,
-                //     nav:true,
-                //     responsive:{
-                //         0:{
-                //             items:1
-                //         },
-                //         600:{
-                //             items:3
-                //         },
-                //         1000:{
-                //             items:5
-                //         }
-                //     }
-                // })
-
+                $(".slider-prev", $tplViewedProducts).click(function () {
+                    that.views.viewedProducts.$el.trigger('prev.owl.carousel', [1500]);
+                });
             });
-
-            // APP.Sandbox.eventSubscribe('global:page:index', function () {
-            //     that.home();
-            // });
-
-            // configure titles and brand images
-            // $('head title').text(this.settings.title);
-            // $('#site-logo-ID').attr({
-            //     src: this.settings.logoImageUrl,
-            //     title: this.settings.title,
-            //     itemprop: 'logo'
-            // });
-            // $('.navbar-brand').removeClass('hide');
-
         },
         refreshViewedProducts: function () {
             this.views.viewedProducts.collection.fetch({reset: true});
+        },
+        updateBreadcrumb: function (items) {
+            $('.mpws-js-breadcrumb li:not(.locked)').remove();
+            if (_.isString(items)) {
+                items = [items];
+            }
+            _(items).each(function (item) {
+                if (!item || !item[0]) {
+                    return;
+                }
+                var text = item[0] || null,
+                    url = item[1] || null,
+                    $bcItem = $('<li>')
+                    .addClass('breadcrumb-item'),
+                    $bcLink = $('<a>').attr('href', url || 'javascript://').text(text);
+                $bcItem.html($bcLink);
+                $('.mpws-js-breadcrumb ul').append($bcItem);
+            });
+            $('.mpws-js-breadcrumb li:last').addClass('currentl');
         },
         home: function () {
             this.toggleCategoryRibbonAndBreadcrumb(false);
             this.toggleHomeFrame(true);
             this.refreshViewedProducts();
             this.updateFooter();
-
 
 
             var $tplProductsTab = $(Handlebars.compile(tplProductsTab)()),
@@ -303,6 +302,7 @@ define([
             $('.mpws-js-main-section').html($tplProductsTab);
         },
         shopCart: function () {
+            this.updateBreadcrumb('Кошик');
             this.toggleCategoryRibbonAndBreadcrumb(true);
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
@@ -312,15 +312,29 @@ define([
 
         },
         shopProduct: function (id) {
+            var that = this;
             this.toggleCategoryRibbonAndBreadcrumb(true);
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
             this.updateFooter();
 
-            $('.mpws-js-main-section').html(this.plugins.shop.product(id).$el);
+            var productView = this.plugins.shop.product(id);
+
+            productView.on('render:complete', function () {
+                var brItems = [],
+                    productLocationPath = productView.getPathInCatalog();
+                _(productLocationPath).each(function (locItem) {
+                    brItems.push([locItem.Name, locItem.url]);
+                });
+                brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
+                that.updateBreadcrumb(brItems);
+            });
+
+            $('.mpws-js-main-section').html(productView.$el);
 
         },
         shopWishlist: function () {
+            this.updateBreadcrumb('Мій список');
             this.toggleCategoryRibbonAndBreadcrumb(true);
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
@@ -330,6 +344,7 @@ define([
 
         },
         shopCompare: function () {
+            this.updateBreadcrumb('Порівняння');
             this.toggleCategoryRibbonAndBreadcrumb(true);
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
