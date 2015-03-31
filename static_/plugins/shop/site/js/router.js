@@ -90,6 +90,7 @@ define([
         urls: {},
 
         catalog: modelCatalog,
+        order: order,
 
         // urls: _(routes).invert(),
         beforeInitialize: function (callback, options) {

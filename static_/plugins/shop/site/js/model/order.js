@@ -18,10 +18,10 @@ define([
         },
         initialize: function () {
             var self = this;
-            _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
-            APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
-            APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
-            APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
+            // _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
+            // APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
+            // APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
+            // APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
             APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
                 if (self.isSaved.call(self)) {
                     self.clear({silent: true});
@@ -46,7 +46,7 @@ define([
         getProductByID: function (productID) {
             return this.get('items')[productID] || null;
         },
-        setProductQuantity:  function (event, productID, quantity, isNew) {
+        setProductQuantity:  function (productID, quantity, isNew) {
             var self = this;
             this.sync("patch", this, {
                 attrs: {
@@ -61,33 +61,33 @@ define([
                     } else {
                         BSAlert.warning(lang.list_cart_alert_updated);
                     }
-                    APP.Sandbox.eventNotify('plugin:shop:order:changed', event);
+                    // APP.Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });
         },
-        productAdd: function (event) {
+        productAdd: function (id) {
             // debugger;
-            var product = this.getProductByID(event.id);
+            var product = this.getProductByID(id);
             if (product)
-                this.setProductQuantity(event, event.id, product._orderQuantity + 1);
+                this.setProductQuantity(id, product._orderQuantity + 1);
             else
-                this.setProductQuantity(event, event.id, 1, true);
+                this.setProductQuantity(id, 1, true);
         },
-        productRemove: function (event) {
+        productRemove: function (id) {
             var self = this;
             BootstrapDialog.confirm('Видалити цей товар?', function (result) {
                 if (result) {
-                    var product = self.getProductByID(event.id);
+                    var product = self.getProductByID(id);
                     if (product)
-                        self.setProductQuantity(event, event.id, 0);
+                        self.setProductQuantity(id, 0);
                 }
             });
         },
-        productRemoveAll: function (event) {
+        productRemoveAll: function (id) {
             var self = this;
             BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
                 if (result)
-                    self.setProductQuantity(event, event.id, 0);
+                    self.setProductQuantity(id, 0);
             });
         },
         applyPromo: function (promo) {

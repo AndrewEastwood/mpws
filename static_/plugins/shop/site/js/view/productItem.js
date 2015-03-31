@@ -129,15 +129,19 @@ define([
         getProductUrl: function () {
             return this.model && Handlebars.helpers.bb_link(APP.instances.shop.urls.shopProduct, {asRoot: true, product: this.model.get('ExternalKey')});
         },
+        getSelectedQuantity: function () {
+            var $qInput = this.$('input[name="quantity"]');
+            return parseInt($qInput.val(), 10);
+        },
         updateQuantity: function (e) {
             // Quantity Spinner
             e.preventDefault();
             var $targetBtn = $(e.target),
                 $qInput = this.$('input[name="quantity"]'),
                 currentQty = parseInt($qInput.val(), 10);
-            if ($targetBtn.hasClass('minus') && currentQty > 0){
+            if ($targetBtn.hasClass('minus') && currentQty > 1) {
                 $qInput.val(currentQty - 1);
-            } else if($targetBtn.hasClass('plus')) {
+            } else if($targetBtn.hasClass('plus') && currentQty < 99) {
                 $qInput.val(currentQty + 1);
             }
         },
