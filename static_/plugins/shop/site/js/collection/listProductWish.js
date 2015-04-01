@@ -7,6 +7,8 @@ define([
     'i18n!plugins/shop/site/nls/translation',
 ], function (_, Backbone, ModelProduct, BSAlert, lang) {
 
+    var instance = null;
+
     var ListProductWish = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
@@ -15,13 +17,13 @@ define([
                 source: 'shop',
                 fn: 'wishlists'}));
         },
-        initialize: function () {
-            // listProductWish = this;
-            _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
-            APP.Sandbox.eventSubscribe('plugin:shop:list_wish:add', this.addNew);
-            APP.Sandbox.eventSubscribe('plugin:shop:list_wish:remove', this.removeProductByID);
-            APP.Sandbox.eventSubscribe('plugin:shop:list_wish:clear', this.removeAll);
-        },
+        // initialize: function () {
+        //     // listProductWish = this;
+        //     _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
+        //     APP.Sandbox.eventSubscribe('plugin:shop:list_wish:add', this.addNew);
+        //     APP.Sandbox.eventSubscribe('plugin:shop:list_wish:remove', this.removeProductByID);
+        //     APP.Sandbox.eventSubscribe('plugin:shop:list_wish:clear', this.removeAll);
+        // },
         removeProductByID:  function (data) {
             // debugger;
             var self = this;
@@ -64,7 +66,16 @@ define([
                 }
             });
         }
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new ListProductWish(options);
+                return instance;
+            }
+        }
     });
 
-    return new ListProductWish();
+    return ListProductWish;
 });

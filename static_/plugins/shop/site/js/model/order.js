@@ -7,28 +7,30 @@ define([
     'i18n!plugins/shop/site/nls/translation',
 ], function (Backbone, _, BSAlert, BootstrapDialog, lang) {
 
+    var instance = null;
     // debugger;
-    var model = Backbone.Model.extend({
-        idAttribute: "ID",
+    var Order = Backbone.Model.extend({
+        idAttribute: 'ID',
+        url: APP.getApiLink('shop', 'orders'),
         defaults: {
             items: {},
             info: {},
             promo: {},
             account: {}
         },
-        initialize: function () {
-            var self = this;
-            // _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
-            // APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
-            // APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
-            // APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
-            APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
-                if (self.isSaved.call(self)) {
-                    self.clear({silent: true});
-                    self.fetch();
-                }
-            }, this));
-        },
+        // initialize: function () {
+        //     var self = this;
+        //     // _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
+        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
+        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
+        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
+        //     // APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
+        //     //     if (self.isSaved.call(self)) {
+        //     //         self.clear({silent: true});
+        //     //         self.fetch();
+        //     //     }
+        //     // }, this));
+        // },
         isSaved: function () {
             return this.get('Hash') && this.get('success');
         },
@@ -46,8 +48,12 @@ define([
         getProductByID: function (productID) {
             return this.get('items')[productID] || null;
         },
-        setProductQuantity:  function (productID, quantity, isNew) {
-            var self = this;
+        setProduct:  function (productID, quantity) {
+            var self = this,
+                product = this.getProductByID(productID),
+                isNew = !!!product,
+                existentQ = !isNew && product._orderQuantity || 0,
+                quantity = quantity + existentQ;
             this.sync("patch", this, {
                 attrs: {
                     productID: productID,
@@ -56,38 +62,46 @@ define([
                 parse: true,
                 success: function (response) {
                     self.set(self.parse(response));
-                    if (isNew) {
-                        BSAlert.success(lang.list_cart_alert_add);
+                    if (quantity === 0) {
+                        self.trigger('product:removed');
                     } else {
-                        BSAlert.warning(lang.list_cart_alert_updated);
+                        self.trigger('product:' + (isNew ? 'added' : 'updated'));
                     }
+                    // if (isNew) {
+                    //     BSAlert.success(lang.list_cart_alert_add);
+                    // } else {
+                    //     BSAlert.warning(lang.list_cart_alert_updated);
+                    // }
                     // APP.Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });
         },
-        productAdd: function (id) {
-            // debugger;
-            var product = this.getProductByID(id);
-            if (product)
-                this.setProductQuantity(id, product._orderQuantity + 1);
-            else
-                this.setProductQuantity(id, 1, true);
-        },
-        productRemove: function (id) {
+        // addProduct: function (id) {
+        //     // debugger;
+        //     var product = this.getProductByID(id);
+        //     if (product) {
+        //         this.setProductQuantity(id, product._orderQuantity + 1);
+        //     } else {
+        //         this.setProductQuantity(id, 1);
+        //     }
+        // },
+        removeProduct: function (id) {
             var self = this;
             BootstrapDialog.confirm('Видалити цей товар?', function (result) {
                 if (result) {
                     var product = self.getProductByID(id);
-                    if (product)
+                    if (product) {
                         self.setProductQuantity(id, 0);
+                    }
                 }
             });
         },
-        productRemoveAll: function (id) {
+        clearAll: function (id) {
             var self = this;
             BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
-                if (result)
+                if (result) {
                     self.setProductQuantity(id, 0);
+                }
             });
         },
         applyPromo: function (promo) {
@@ -101,13 +115,16 @@ define([
                     self.set(self.parse(response));
                     if (!!promo) {
                         if (self.get('promo').Code)
-                            BSAlert.success(lang.list_cart_alert_promoAdded);
+                            self.trigger('promo:applied');
+                            // BSAlert.success(lang.list_cart_alert_promoAdded);
                         else
-                            BSAlert.danger(lang.list_cart_alert_promoRejected);
+                            self.trigger('promo:invalid');
+                            // BSAlert.danger(lang.list_cart_alert_promoRejected);
+                    } else {
+                        self.trigger('promo:cancelled');
+                        // BSAlert.danger(lang.list_cart_alert_promoRemoved);
                     }
-                    else
-                        BSAlert.danger(lang.list_cart_alert_promoRemoved);
-                    APP.Sandbox.eventNotify('plugin:shop:order:changed');
+                    // APP.Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });
         },
@@ -121,13 +138,22 @@ define([
                     // debugger;
                     self.set(self.parse(response));
                     self.trigger('change');
-                    APP.Sandbox.eventNotify('plugin:shop:order:changed');
+                    // APP.Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });
         }
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new Order(options);
+                return instance;
+            }
+        }
     });
 
-    // order = new model();
-    return model;
+    // order = new Order();
+    return Order;
 
 });

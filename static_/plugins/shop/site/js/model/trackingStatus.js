@@ -3,14 +3,14 @@ define([
 ], function (Backbone) {
 
     var TrackingSystem = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         url: function () {
-            var _params =  {
+            var params =  {
                 source: 'shop',
                 fn: 'orders',
                 hash: this.get('Hash')
             };
-            return APP.getApiLink(_params);
+            return APP.getApiLink(params);
         }
     });
 

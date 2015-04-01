@@ -16,6 +16,7 @@ define([
 ], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItem, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
+        collection: CollListProductCatalog.getInstance(),
         className: 'shop-product-list shop-product-list-catalog',
         template: Handlebars.compile(tpl), // check
         lang: lang,
@@ -34,7 +35,7 @@ define([
         },
         initialize: function (options) {
             _.bindAll(this, 'render', 'switchCurrency');
-            this.collection = new CollListProductCatalog(options.categoryID);
+            this.collection.setCategoryID(options.categoryID);
             this.collection.on('sync', this.render, this);
             this.collection.on('reset', this.render, this);
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);

@@ -2,6 +2,7 @@ define([
     'underscore',
     'backbone',
     'handlebars',
+    'plugins/shop/site/js/model/order',
     'utils',
     'cachejs',
     'text!plugins/shop/site/hbs/cartStandalone.hbs',
@@ -17,9 +18,10 @@ define([
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength",
     'jquery.maskedinput'
-], function (_, Backbone, Handlebars, Utils, Cache, tpl, lang) {
+], function (_, Backbone, Handlebars, ModelOrder, Utils, Cache, tpl, lang) {
 
     var CartStandalone = Backbone.View.extend({
+        model: ModelOrder.getInstance(),
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
         template: Handlebars.compile(tpl), // check

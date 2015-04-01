@@ -7,6 +7,8 @@ define([
     'i18n!plugins/shop/site/nls/translation',
 ], function (_, Backbone, ModelProduct, BSAlert, lang) {
 
+    var instance = null;
+
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
@@ -66,7 +68,16 @@ define([
                 }
             });
         }
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new ListProductCompare(options);
+                return instance;
+            }
+        }
     });
 
-    return new ListProductCompare();
+    return ListProductCompare;
 });

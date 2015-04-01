@@ -2,13 +2,14 @@ define([
     'backbone',
     'handlebars',
     'utils',
-    // 'plugins/shop/site/js/collection/listProductCart',
+    'plugins/shop/site/js/model/order',
     'text!plugins/shop/site/hbs/menuCart.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (Backbone, Handlebars, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Utils, ModelOrder, tpl, lang) {
 
     var MenuCart = Backbone.View.extend({
+        model: ModelOrder.getInstance(),
         tagName: 'a',
         template: Handlebars.compile(tpl), // check
         lang: lang,

@@ -2,7 +2,9 @@ define([
     'backbone'
 ], function (Backbone) {
 
-    var CatalogStructure = Backbone.Model.extend({
+    var instance = null;
+
+    var CatalogNavigator = Backbone.Model.extend({
         url: function () {
             return APP.getApiLink({
                 source: 'shop',
@@ -12,6 +14,15 @@ define([
         },
         findCategoryItem: function (categoryID) {
             return deepFind(categoryID, this.toJSON());
+        }
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new CatalogNavigator(options);
+                return instance;
+            }
         }
     });
 
@@ -26,6 +37,6 @@ define([
         }
     }
 
-    return CatalogStructure;
+    return CatalogNavigator;
 
 });

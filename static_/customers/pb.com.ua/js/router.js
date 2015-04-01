@@ -148,10 +148,10 @@ define([
                     optionsCategoryMenu = {design: {className: 'nav navbar-nav'}},
                     optionsTopLevelList = {design: {style: 'toplevel', className: 'dropdown-menu'}};
 
-                that.views.categoryHomeMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
-                that.views.categoryRibbonMenu = that.plugins.shop.categoryList(optionsCategoryMenu);
-                that.views.categorySearchTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
-                that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.categoryList(optionsTopLevelList);
+                that.views.categoryHomeMenu = that.plugins.shop.categoryNavigator(optionsCategoryMenu);
+                that.views.categoryRibbonMenu = that.plugins.shop.categoryNavigator(optionsCategoryMenu);
+                that.views.categorySearchTopLevelList = that.plugins.shop.categoryNavigator(optionsTopLevelList);
+                that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.categoryNavigator(optionsTopLevelList);
 
                 $tplBreadcrumb.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
                 $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryRibbonMenu.render().$el);
@@ -159,8 +159,8 @@ define([
                 $('.mpws-js-breadcrumb').html($tplBreadcrumb);
                 $('.mpws-js-shop-categories-ribbon').html($tplCategoriesRibbon);
                     // categoryListOptions = {design: {className: 'nav'}},
-                    // categoryMenu = that.plugins.shop.categoryList(categoryListOptions)
-                    // categoryTopLevelList = that.plugins.shop.categoryList({design: {style: 'toplevel', className: 'dropdown-menu'}})
+                    // categoryMenu = that.plugins.shop.categoryNavigator(categoryListOptions)
+                    // categoryTopLevelList = that.plugins.shop.categoryNavigator({design: {style: 'toplevel', className: 'dropdown-menu'}})
                 // set top category list with banner
                 
                 // setup home fame
@@ -343,7 +343,7 @@ define([
                 var brItems = [],
                     productLocationPath = productView.getPathInCatalog();
                 _(productLocationPath).each(function (locItem) {
-                    var pathCategorySubList = that.plugins.shop.categoryList({design: {style: 'toplevel', parentID: locItem.ID}}),
+                    var pathCategorySubList = that.plugins.shop.categoryNavigator({design: {style: 'toplevel', parentID: locItem.ID}}),
                         subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
                     brItems.push([locItem.Name, locItem.url, subList]);
                 });
@@ -385,7 +385,7 @@ define([
 
             //     $tplCategoriesRibbon = $(Handlebars.compile(tplCategoriesRibbon)()),
             //     categoryOptions = {design: {className: 'nav navbar-nav'}},
-            //     categoryMenu = this.plugins.shop.categoryList(categoryOptions);
+            //     categoryMenu = this.plugins.shop.categoryNavigator(categoryOptions);
             // $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
 
             // $('.mpws-js-shop-categories-topnav').html($tplCategoriesRibbon);
@@ -402,7 +402,7 @@ define([
                 newProducts = this.plugins.shop.newProducts(productOptions),
                 onSaleProducts = this.plugins.shop.onSaleProducts(productOptions),
                 topProducts = this.plugins.shop.topProducts(productOptions),
-                categoryTopLevelList = this.plugins.shop.categoryList({design: {style: 'toplevel'}});
+                categoryTopLevelList = this.plugins.shop.categoryNavigator({design: {style: 'toplevel'}});
 
             $tplFooter.find('.mpws-js-shop-new-products-minimal-list').html(newProducts.$el);
             $tplFooter.find('.mpws-js-shop-onsale-products-minimal-list').html(onSaleProducts.$el);

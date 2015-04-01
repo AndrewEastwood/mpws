@@ -6,6 +6,8 @@ define([
     'jquery.cookie',
 ], function (_, Backbone, Cache, ModelProduct) {
 
+    var instance = null;
+
     var ListProductCatalog = Backbone.Collection.extend({
         model: ModelProduct,
         filter: {
@@ -15,6 +17,9 @@ define([
         },
         savedFilters: {},
         initialize: function (categoryID) {
+            this.setCategoryID(categoryID);
+        },
+        setCategoryID: function (categoryID) {
             this.categoryID = categoryID;
             this.filter.filterOptionsApplied = this.createFilter(false);
         },
@@ -165,6 +170,15 @@ define([
             this.filter.active = this.isFilterApplied(this.filter);
             // debugger;
             return productItems;
+        }
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new ListProductCatalog(options);
+                return instance;
+            }
         }
     });
 

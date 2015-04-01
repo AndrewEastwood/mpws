@@ -4,20 +4,20 @@ define([
     'plugins/shop/site/js/collection/listProductWish',
     'utils',
     'text!plugins/shop/site/hbs/menuWishList.hbs'
-], function (Backbone, Handlebars, wishCollectionInstance, Utils, tpl) {
+], function (Backbone, Handlebars, CollWishList, Utils, tpl) {
 
     var MenuWishList = Backbone.View.extend({
         tagName: 'a',
         template: Handlebars.compile(tpl), // check
-        collection: wishCollectionInstance,
+        collection: CollWishList.getInstance(),
         initialize: function () {
-            this.listenTo(wishCollectionInstance, 'reset', this.render);
-            this.listenTo(wishCollectionInstance, 'sync', this.render);
+            this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'sync', this.render);
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            if (wishCollectionInstance.length)
-                this.$('.counter').text(wishCollectionInstance.length);
+            if (this.collection.length)
+                this.$('.counter').text(this.collection.length);
             else
                 this.$('.counter').empty();
             this.$el.attr({

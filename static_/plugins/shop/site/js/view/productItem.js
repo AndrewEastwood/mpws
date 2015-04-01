@@ -19,7 +19,7 @@ define([
     // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
     //     return opts.fn(data._origin.Name + ' ' + data.Model);
     // });
-    var ProductItemShort = Backbone.View.extend({
+    var ProductItem = Backbone.View.extend({
         className: 'shop-product-item',// 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
         templates: {
             short: Handlebars.compile(tplShort), // check
@@ -28,9 +28,9 @@ define([
         },
         lang: lang,
         events: {
-            'click .add-to-cart': 'noop',
-            'click .add-to-wishlist': 'noop',
-            'click .add-to-compare': 'noop',
+            'click .add-to-cart': 'addToCart',
+            'click .add-to-wishlist': 'addToWishList',
+            'click .add-to-compare': 'addToCompareList',
             'click .open-popup-shipping': 'openPopupShipping',
             'click .open-popup-payments': 'openPopupPayments',
             'click .open-popup-openhours': 'openPopupOpenHours',
@@ -44,7 +44,7 @@ define([
             // set default style
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
             // bind context
-            _.bindAll(this, 'refresh', 'switchCurrency', 'updateQuantity');
+            _.bindAll(this, 'refresh', 'switchCurrency', 'updateQuantity', 'addToCart');
             // APP.Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             // APP.Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
             // APP.Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
@@ -60,6 +60,18 @@ define([
                 this.listenTo(this.model, 'change', this.render);
                 this.listenTo(this.model, 'sync', this.render);
             }
+        },
+        addToCart: function () {
+            ProductItem.plugin.order.setProduct(this.model.id, this.getSelectedQuantity());
+            // debugger
+        },
+        addToWishList: function () {
+            ProductItem;
+            debugger
+        },
+        addToCompareList: function () {
+            ProductItem;
+            debugger
         },
         refresh: function (data) {
             if (this.model) {
@@ -243,6 +255,6 @@ define([
         }
     });
 
-    return ProductItemShort;
+    return ProductItem;
 
 });

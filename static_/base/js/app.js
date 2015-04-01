@@ -358,8 +358,8 @@
                             plugin = new pluginClass(pluginsConfig[name] || {});
                             plugin.name = name;
                             APP.instances[name] = plugin;
-                            if (plugin.beforeInitialize) {
-                                plugin.beforeInitialize(callback, pluginsConfig[name] || {});
+                            if (plugin.dfdInitialize) {
+                                plugin.dfdInitialize(callback, pluginsConfig[name] || {});
                             } else {
                                 // console.log('finished loading ' + name);
                                 callback();

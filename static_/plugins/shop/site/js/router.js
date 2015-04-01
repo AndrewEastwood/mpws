@@ -11,7 +11,6 @@ define([
     'plugins/shop/site/js/view/listProductWish',
     'plugins/shop/site/js/view/trackingStatus',
     'plugins/shop/site/js/view/listProducts',
-    'plugins/shop/site/js/view/categoryNavigation',
     // 'plugins/shop/site/js/view/profileOrders',
 
     'plugins/shop/site/js/view/menuCart',
@@ -20,7 +19,6 @@ define([
     'plugins/shop/site/js/view/menuPayment',
     'plugins/shop/site/js/view/menuWarranty',
     'plugins/shop/site/js/view/menuShipping',
-    // 'plugins/shop/site/js/view/menuCatalog',
 
     'plugins/shop/site/js/view/widgetAddress',
     'plugins/shop/site/js/view/widgetExchangeRates',
@@ -28,15 +26,21 @@ define([
     'plugins/shop/site/js/view/cartEmbedded',
     'plugins/shop/site/js/view/categoryList',
 
+    'plugins/shop/site/js/collection/listProductWish',
+    'plugins/shop/site/js/collection/listProductCompare',
+
     'plugins/shop/site/js/model/order',
-    'plugins/shop/site/js/model/catalog',
+    'plugins/shop/site/js/model/catalogNavigator',
     'plugins/shop/common/js/model/setting'
 ], function ($, _, Backbone, Cache, Auth, 
-    /*PageHome,*/
-    ListProductCatalog, ViewProductItem,
-    ListProductCompare, CartStandalone, ListProductWish, TrackingStatus,
-    ListProducts, CategoryNavigation,
-/*    ProfileOrders, */
+    
+    // viewes
+    ViewListProductCatalog, ViewProductItem,
+    ViewListProductCompare, ViewCartStandalone,
+    ViewListProductWish, ViewTrackingStatus,
+    ViewListProducts,
+    /* ProfileOrders, */
+
     // menu views
     ViewMenuItemCart,
     ViewMenuItemWishList,
@@ -44,78 +48,73 @@ define([
     ViewMenuItemPopupInfoPayment,
     ViewMenuItemPopupInfoWarranty,
     ViewMenuItemPopupInfoShipping,
+
     // widgets
     ViewWidgetAddresses,
     ViewWidgetExchangeRates,
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
     ViewCategoryList,
-    SiteOrder, SiteCatalog, SiteSettings) {
 
-    var order = new SiteOrder({
-        ID: "temp"
-    });
+    // collections
+    CollectionWishList,
+    CollectionCompareList,
 
-    var modelCatalog = new SiteCatalog();
+    ModelOrder, ModelCatalogNavigator, SiteSettings) {
+
+    // permanent models and collections
+    var modOrder = ModelOrder.getInstance({
+            ID: 'temp'
+        }),
+        modCatalogNavigator = ModelCatalogNavigator.getInstance(),
+        collWithList = CollectionWishList.getInstance(),
+        collCompareList = CollectionCompareList.getInstance();
 
     // why it's here?
-    order.url = APP.getApiLink({
-        source: 'shop',
-        fn: 'orders'
-    });
+    // order.url = APP.getApiLink({
+    //     source: 'shop',
+    //     fn: 'orders'
+    // });
 
-    // var $dfdSettings = settings.fetch();
-
-    // var routes = {
-    //     "!/shop": "home",
-    //     "!/shop/catalog/:category": "shop_catalog_category",
-    //     "!/shop/catalog/:category/:page": "shop_catalog_category_page",
-    //     "!/shop/catalog/": "shop_catalog",
-    //     "!/shop/product/:product": "shop_product",
-    //     "!/shop/cart": "shop_cart",
-    //     "!/shop/wishlist": "shop_wishlist",
-    //     "!/shop/compare": "shop_compare",
-    //     "!/shop/tracking/(:id)": "shop_tracking"
-    //     // "!/shop/profile/orders": "shop_profile_orders"
-    // };
-
-    // var staticUrls = {};
-    // var staticSettings = {};
-
-    var Router = Backbone.View.extend({
+    var ShopPlugin = Backbone.View.extend({
 
         settings: null,
 
         // routes: routes,
         urls: {},
 
-        catalog: modelCatalog,
-        order: order,
+        catalogNavigator: modCatalogNavigator,
+        order: modOrder,
+        wishList: collWithList,
+        compareList: collCompareList,
 
         // urls: _(routes).invert(),
-        beforeInitialize: function (callback, options) {
-            var that = this;
+        dfdInitialize: function (callback, options) {
+            var that = this,
+                settings = new SiteSettings();
+
+            // attach plugin instance to views
+            ViewProductItem.plugin = this;
+
+            // configure plugin
             this.options = options || {};
             this.urls = options && options.urls || {};
-            var settings = new SiteSettings();
-            modelCatalog.fetch();
+
+            // fetch data
+            modCatalogNavigator.fetch();
+            modOrder.fetch();
+            collCompareList.fetch();
+            collWithList.fetch();
             settings.fetch().done(function () {
-                // debugger
                 that.settings = settings.toSettings();
-                // Router.prototype.settings = staticSettings;
-                // Router.prototype.settings._user = {
                 that.settings._user = {
                     activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
                         that.settings.MISC.SiteDefaultPriceCurrencyType && that.settings.MISC.SiteDefaultPriceCurrencyType,
                         !!that.settings.MISC.ShowSiteCurrencySelector)
                 }
-
-                order.fetch();
-
                 // console.log('shop settings ready: calling callback');
                 callback();
                 // console.log('finished loading shop');
-
                 Backbone.on('changed:plugin-shop-currency', function (currencyName) {
                     that.settings._user.activeCurrency = currencyName;
                 });
@@ -127,7 +126,7 @@ define([
         },
 
         newProducts: function (options) {
-            var listProductLatest = new ListProducts(_.extend({}, options, {type: 'new'}));
+            var listProductLatest = new ViewListProducts(_.extend({}, options, {type: 'new'}));
             listProductLatest.collection.fetch({
                 reset: true
             });
@@ -135,7 +134,7 @@ define([
         },
 
         viewedProducts: function (options) {
-            var listProductViewed = new ListProducts(_.extend({}, options, {type: 'viewed'}));
+            var listProductViewed = new ViewListProducts(_.extend({}, options, {type: 'viewed'}));
             listProductViewed.collection.fetch({
                 reset: true
             });
@@ -143,7 +142,7 @@ define([
         },
 
         topProducts: function (options) {
-            var listProductTop = new ListProducts(_.extend({}, options, {type: 'top'}));
+            var listProductTop = new ViewListProducts(_.extend({}, options, {type: 'top'}));
             listProductTop.collection.fetch({
                 reset: true
             });
@@ -151,7 +150,7 @@ define([
         },
 
         featuredProducts: function (options) {
-            var listProductFeatured = new ListProducts(_.extend({}, options, {type: 'featured'}));
+            var listProductFeatured = new ViewListProducts(_.extend({}, options, {type: 'featured'}));
             listProductFeatured.collection.fetch({
                 reset: true
             });
@@ -159,7 +158,7 @@ define([
         },
 
         hotOffers: function (options) {
-            var listProductOffers = new ListProducts(_.extend({}, options, {type: 'offers'}));
+            var listProductOffers = new ViewListProducts(_.extend({}, options, {type: 'offers'}));
             listProductOffers.collection.fetch({
                 reset: true
             });
@@ -167,7 +166,7 @@ define([
         },
 
         onSaleProducts: function (options) {
-            var listProductOffers = new ListProducts(_.extend({}, options, {type: 'onsale'}));
+            var listProductOffers = new ViewListProducts(_.extend({}, options, {type: 'onsale'}));
             listProductOffers.collection.fetch({
                 reset: true
             });
@@ -177,19 +176,18 @@ define([
         // menu items
 
         menuItemCart: function () {
-            var menuCart = new ViewMenuItemCart({
-                model: order
-            });
+            var menuCart = new ViewMenuItemCart();
+            menuCart.render();
             return menuCart;
         },
         menuItemWishList: function () {
             var menuWishList = new ViewMenuItemWishList();
-            menuWishList.collection.fetch();
+            menuWishList.render();
             return menuWishList;
         },
         menuItemCompareList: function () {
             var menuCompare = new ViewMenuItemCompareList();
-            menuCompare.collection.fetch();
+            menuCompare.render();
             return menuCompare;
         },
         menuItemPopupInfoPayment: function () {
@@ -234,47 +232,25 @@ define([
         },
         widgetCartButton: function () {
             // inject embedded shopping cart
-            var cartEmbedded = new ViewWidgetCartEmbedded({model: order});
+            var cartEmbedded = new ViewWidgetCartEmbedded();
             cartEmbedded.render();
             return cartEmbedded;
         },
-        categoryList: function (options) {
+        categoryNavigator: function (options) {
             // catalog navigation panel
-            var cBar = new ViewCategoryList(_.extend({}, {
-                model: modelCatalog
-            }, options || {}));
-            // cBar.model.fetch({reset: true});
+            var cBar = new ViewCategoryList(options || {});
             cBar.render();
             return cBar;
         },
-        // categoryNavigation: function () {
-        //     var categoryNav = new CategoryNavigation({
-        //         model: modelCatalog
-        //     });
-        //     categoryNav.render();
-        //     return categoryNav;
-        // },
-        categoryTopLebelItems: function () {
-            var categoryNav = new CategoryTopLevelList({
-                model: modelCatalog
-            });
-            categoryNav.render();
-            return categoryNav;
-        },
 
         promoBanners: function () {
-            var categoryNav = new CategoryNavigation({
-                model: modelCatalog
-            });
-            categoryNav.render();
-            return categoryNav;
         },
 
         // pages
 
         catalogCategory: function (categoryID) {
             // create new view
-            var listProductCatalog = new ListProductCatalog({
+            var listProductCatalog = new ViewListProductCatalog({
                 categoryID: categoryID
             });
             listProductCatalog.collection.fetch({
@@ -285,7 +261,7 @@ define([
 
         catalogCategoryPage: function (categoryID, pageNo) {
             // create new view
-            var listProductCatalog = new ListProductCatalog({
+            var listProductCatalog = new ViewListProductCatalog({
                 categoryID: categoryID
             });
             var _pageNo = parseInt(pageNo, 10);
@@ -312,7 +288,7 @@ define([
 
         compare: function () {
             // create new view
-            var listProductCompare = new ListProductCompare();
+            var listProductCompare = new ViewListProductCompare();
             listProductCompare.render();
             return listProductCompare;
         },
@@ -326,27 +302,25 @@ define([
                 accountModel.on('change', function () {
                     console.log('account model changed');
                     if (accountModel.has('ID'))
-                        order.set('account', accountModel.toJSON());
+                        modOrder.set('account', accountModel.toJSON());
                     else
-                        order.unset('account');
+                        modOrder.unset('account');
                 });
             }
             // var accountModel = Cache.getObject('account:model');
             // APP.Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
             //     // debugger;
             //     if (accountModel.has('ID'))
-            //         order.set('account', accountModel.toJSON());
+            //         modOrder.set('account', accountModel.toJSON());
             //     else
-            //         order.unset('account');
+            //         modOrder.unset('account');
             // });
             if (accountModel && accountModel.has('ID')) {
                 console.log('account model has data');
-                order.set('account', accountModel.toJSON());
+                modOrder.set('account', accountModel.toJSON());
             }
             // create new view
-            var cartStandalone = new CartStandalone({
-                model: order
-            });
+            var cartStandalone = new ViewCartStandalone();
             // cartStandalone.collection.fetch({merge:true});
             cartStandalone.render();
             return cartStandalone;
@@ -354,14 +328,14 @@ define([
 
         wishlist: function () {
             // create new view
-            var listProductWish = new ListProductWish();
+            var listProductWish = new ViewListProductWish();
             listProductWish.render();
             return listProductWish;
         },
 
         tracking: function (orderHash) {
             // create new view
-            var trackingStatus = new TrackingStatus();
+            var trackingStatus = new ViewTrackingStatus();
             trackingStatus.setOrderHash(orderHash);
             return trackingStatus;
         },
@@ -402,5 +376,5 @@ define([
 
     });
 
-    return Router;
+    return ShopPlugin;
 });

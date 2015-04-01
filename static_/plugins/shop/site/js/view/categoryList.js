@@ -1,12 +1,14 @@
 define([
     'backbone',
     'handlebars',
+    'plugins/shop/site/js/model/catalogNavigator',
     'utils',
     'text!plugins/shop/site/hbs/categoryList.hbs',
     'text!plugins/shop/site/hbs/categoryTopLevelList.hbs'
-], function (Backbone, Handlebars, Utils, tplList, tplTopLevel) {
+], function (Backbone, Handlebars, ModelCatalogNavigator, Utils, tplList, tplTopLevel) {
 
     var MenuCatalogBar = Backbone.View.extend({
+        model: ModelCatalogNavigator.getInstance(),
         tagName: 'ul',
         templates: {
             toplevel: Handlebars.compile(tplTopLevel),
@@ -16,12 +18,6 @@ define([
             this.options = options || {};
             // set default style
             this.options.design = _.extend({style: 'list'}, this.options.design || {});
-
-            // this.options = $.extend(true, {
-            //     design: {
-            //         style: 'list'
-            //     }
-            // }, options || {});
             this.model.on('change', this.render, this);
         },
         render: function () {

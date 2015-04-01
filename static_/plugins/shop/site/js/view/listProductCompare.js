@@ -7,10 +7,10 @@ define([
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, Handlebars, compareCollectionInstance, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollCompareList, Utils, tpl, lang) {
 
     var ListProductCompare = Backbone.View.extend({
-        collection: compareCollectionInstance,
+        collection: CollCompareList.getInstance(),
         className: 'row shop-products-compare clearfix',
         id: 'shop-products-compare-ID',
         template: Handlebars.compile(tpl), // check

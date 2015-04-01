@@ -2,15 +2,16 @@ define([
     'underscore',
     'backbone',
     'handlebars',
+    'plugins/shop/site/js/model/order',
     'utils',
     'bootstrap-dialog',
-    // 'plugins/shop/site/js/collection/listProductCart',
     'text!plugins/shop/site/hbs/cartEmbedded.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Handlebars, Utils, BootstrapDialog, tpl, lang) {
+], function (_, Backbone, Handlebars, ModelOrder, Utils, BootstrapDialog, tpl, lang) {
 
     var CartEmbedded = Backbone.View.extend({
+        model: ModelOrder.getInstance(),
         className: 'btn-group shop-cart-embedded',
         id: 'shop-cart-embedded-ID',
         template: Handlebars.compile(tpl), // check

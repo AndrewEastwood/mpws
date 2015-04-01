@@ -7,10 +7,10 @@ define([
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, Handlebars, wishCollectionInstance, Utils, tpl, lang) {
+], function (Backbone, Handlebars, CollWishList, Utils, tpl, lang) {
 
     var ListProductWish = Backbone.View.extend({
-        collection: wishCollectionInstance,
+        collection: CollWishList.getInstance(),
         className: 'row shop-wishlist-standalone clearfix',
         id: 'shop-cart-wishlist-ID',
         template: Handlebars.compile(tpl), // check
