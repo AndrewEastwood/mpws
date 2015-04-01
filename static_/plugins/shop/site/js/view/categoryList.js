@@ -9,6 +9,7 @@ define([
 
     var MenuCatalogBar = Backbone.View.extend({
         model: ModelCatalogNavigator.getInstance(),
+        className: 'shop-catalog-navigator',
         tagName: 'ul',
         templates: {
             toplevel: Handlebars.compile(tplTopLevel),

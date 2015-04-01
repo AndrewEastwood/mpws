@@ -10,7 +10,9 @@
     <div class="body">
         <div class="label-discount clear"></div>
         <div class="title">
-            <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-model">{{data.Model}}</span></a>
+            <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">
+                <span class="product-title-model">{{data.Model}}</span>
+            </a>
         </div>
         <div class="brand">{{data._origin.Name}}</div>
     </div>
@@ -29,7 +31,7 @@
         <div class="add-cart-button">
             <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="le-button">Придбати</a>
         </div>
-        <div class="wish-compare">
+        <div class="product-wishlist-compare-holder wish-compare">
             <a class="btn-add-to-wishlist{{#if data._viewExtras.InWish }} added{{/if}}" href="javascript://">до списку</a>
             <a class="btn-add-to-compare{{#if data._viewExtras.InCompare }} added{{/if}}" href="javascript://">порівняти</a>
         </div>

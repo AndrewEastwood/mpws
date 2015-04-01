@@ -3,6 +3,7 @@ define([
     'backbone',
     'handlebars',
     'utils',
+    'odometer',
     'bootstrap-dialog',
     'plugins/shop/site/js/model/product',
     'text!plugins/shop/site/hbs/productItemMinimal.hbs',
@@ -14,7 +15,7 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
+], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
 
     // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
     //     return opts.fn(data._origin.Name + ' ' + data.Model);
@@ -60,18 +61,24 @@ define([
                 this.listenTo(this.model, 'change', this.render);
                 this.listenTo(this.model, 'sync', this.render);
             }
+
+            var that = this;
+            ProductItem.plugin.order.on('product:quantity:updated', function (q) {
+                that.$('.add-to-cart').addClass('has-value');
+                that.$('.add-to-cart .in-cart-quantity').html(q);
+            });
+            ProductItem.plugin.order.on('product:removed', function (q) {
+                that.$('.add-to-cart').removeClass('has-value');
+            });
         },
         addToCart: function () {
             ProductItem.plugin.order.setProduct(this.model.id, this.getSelectedQuantity());
-            // debugger
         },
         addToWishList: function () {
-            ProductItem;
-            debugger
+            ProductItem.plugin.wishList.addProduct(this.model.id, this.getSelectedQuantity());
         },
         addToCompareList: function () {
-            ProductItem;
-            debugger
+            ProductItem.plugin.compareList.addProduct(this.model.id, this.getSelectedQuantity());
         },
         refresh: function (data) {
             if (this.model) {
@@ -81,7 +88,10 @@ define([
             }
         },
         render: function () {
-            var design = this.options.design,
+            // debugger
+            // Odometer;
+            var that = this,
+                design = this.options.design,
                 tpl = this.templates[design.style];
             this.$el.addClass('shop-product-item-' + design.style);
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
@@ -110,6 +120,20 @@ define([
                         drawNormalOnTop: true
                     });
                 }
+
+                ProductItem.plugin.order.dfdState.done(function () {
+                    var prodQ = ProductItem.plugin.order.getProductQunatity(that.model.id);
+                    var starsOdometer = new Odometer({
+                        el: that.$('.add-to-cart .odometer').get(0),
+                        theme: 'default',
+                        value: prodQ
+                    });
+                    starsOdometer.render();
+                    if (prodQ) {
+                        that.$('.add-to-cart').addClass('has-value');
+                    }
+                });
+
             }
 
             if (design.wrap) {

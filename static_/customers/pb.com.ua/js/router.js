@@ -172,17 +172,19 @@ define([
                 $('header li.mpws-js-shop-categories-toplist').append(that.views.categorySearchTopLevelList.$el);
 
                 // setup recently viewed products
-                var $tplViewedProducts = that.templates.viewedProducts(),
-                    optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
-                that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
+                if (false) {
+                    var $tplViewedProducts = that.templates.viewedProducts(),
+                        optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
+                    that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
 
-                $('div.mpws-js-shop-viewed-products', $tplViewedProducts).html(that.views.viewedProducts.$el);
-                $('section.mpws-js-shop-viewed-products').html($tplViewedProducts);
-                that.views.viewedProducts.$el.addClass('owl-carousel');
+                    $('div.mpws-js-shop-viewed-products', $tplViewedProducts).html(that.views.viewedProducts.$el);
+                    $('section.mpws-js-shop-viewed-products').html($tplViewedProducts);
+                    that.views.viewedProducts.$el.addClass('owl-carousel');
 
-                // $owlEl.html($tplViewedProducts);
-                var owl = that.views.viewedProducts.$el.data('owlCarousel');
-                that.views.viewedProducts.on('shop:rendered', function () {
+                    // $owlEl.html($tplViewedProducts);
+                    var owl = that.views.viewedProducts.$el.data('owlCarousel');
+                    that.views.viewedProducts.on('shop:rendered', function () {
+                    return;
                     // console.log('viewed rendering');
                     // $tplViewedProducts.removeClass('hidden');
                     // debugger
@@ -215,20 +217,21 @@ define([
                         });
                         // $owlEl.trigger('destroy.owl.carousel');
                     }, 1000);
-                });
-                // that.views.viewedProducts.on('shop:emptylist', function () {
-                //     $tplViewedProducts.addClass('hidden');
-                // });
-                $(".slider-next", $tplViewedProducts).click(function () {
-                    that.views.viewedProducts.$el.trigger('next.owl.carousel', [1500]);
-                });
-                $(".slider-prev", $tplViewedProducts).click(function () {
-                    that.views.viewedProducts.$el.trigger('prev.owl.carousel', [1500]);
-                });
+                    });
+                    // that.views.viewedProducts.on('shop:emptylist', function () {
+                    //     $tplViewedProducts.addClass('hidden');
+                    // });
+                    $(".slider-next", $tplViewedProducts).click(function () {
+                        that.views.viewedProducts.$el.trigger('next.owl.carousel', [1500]);
+                    });
+                    $(".slider-prev", $tplViewedProducts).click(function () {
+                        that.views.viewedProducts.$el.trigger('prev.owl.carousel', [1500]);
+                    });
+                }
             });
         },
         refreshViewedProducts: function () {
-            this.views.viewedProducts.collection.fetch({reset: true});
+            // this.views.viewedProducts.collection.fetch({reset: true});
         },
         updateBreadcrumb: function (items) {
             $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:not(.locked)').remove();
@@ -361,10 +364,15 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
+            var viewWishList = this.plugins.shop.wishlist();
+
             $('section.mpws-js-main-section').html(this.templates.productWishlist());
             // $('section.mpws-js-main-section').html(this.plugins.shop.wishlist().$el);
-            $('section.mpws-js-main-section').find('.mpws-js-products-wishlist').html(this.plugins.shop.wishlist().$el);
+            $('section.mpws-js-main-section').find('.mpws-js-products-wishlist').html(viewWishList.$el);
 
+            viewWishList.on('shop:rendered', function () {
+                initEchoJS();
+            });
         },
         shopCompare: function () {
             this.updateBreadcrumb('Порівняння');
@@ -373,8 +381,14 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
+            var viewWishList = this.plugins.shop.compare();
+
             $('section.mpws-js-main-section').html(this.templates.productComparisons());
-            $('section.mpws-js-main-section').find('.mpws-js-product-comparisons').html(this.plugins.shop.compare().$el);
+            $('section.mpws-js-main-section').find('.mpws-js-product-comparisons').html(viewWishList.$el);
+
+            viewWishList.on('shop:rendered', function () {
+                initEchoJS();
+            });
 
         },
         page404: function () {
@@ -425,6 +439,7 @@ define([
             offset: 100,
             throttle: 250,
             callback: function(element, op) {
+                console.log(op)
                 if(op === 'load') {
                     element.classList.add('loaded');
                 } else {

@@ -11,8 +11,7 @@ define([
 
     var ListProductCompare = Backbone.View.extend({
         collection: CollCompareList.getInstance(),
-        className: 'row shop-products-compare clearfix',
-        id: 'shop-products-compare-ID',
+        className: 'shop-products-compare clearfix',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
@@ -46,7 +45,7 @@ define([
             tplData.productIDs = productIDs;
             tplData.showCompareModeLink = this.collection.length > 1;
             this.$el.html(this.template(tplData));
-
+            this.trigger('shop:rendered');
             return this;
         },
         toggleCompareMode: function (event) {

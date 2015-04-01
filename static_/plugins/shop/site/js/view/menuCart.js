@@ -18,9 +18,11 @@ define([
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            this.$('.counter').empty();
-            if (this.model.getProductCount() && !this.model.isSaved())
-                this.$('.counter').text(this.model.get('info').productCount);
+            this.$('.counter').addClass('hidden');
+            if (this.model.getProductCount() && !this.model.isSaved()) {
+                this.$('.counter').removeClass('hidden');
+                this.$('.counter .value').text(this.model.getProductCount());
+            }
             this.$el.attr({
                 href: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopCart, {asRoot: true})
             });

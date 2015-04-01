@@ -18,7 +18,13 @@ define([
             promo: {},
             account: {}
         },
-        // initialize: function () {
+        initialize: function () {
+            var that = this;
+            this.dfdState = new $.Deferred(),
+            this.on('sync', function () {
+                that.dfdState.resolve();
+            });
+        },
         //     var self = this;
         //     // _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
         //     // APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
@@ -45,16 +51,20 @@ define([
         getProductCount: function () {
             return _(this.get('items') || {}).keys().length;
         },
+        getProductQunatity: function (productID) {
+            var product = this.getProductByID(productID);
+            return product && product._orderQuantity || 0;
+        },
         getProductByID: function (productID) {
             return this.get('items')[productID] || null;
         },
-        setProduct:  function (productID, quantity) {
+        setProduct:  function (productID, quantity, skipUpdate) {
             var self = this,
                 product = this.getProductByID(productID),
                 isNew = !!!product,
                 existentQ = !isNew && product._orderQuantity || 0,
-                quantity = quantity + existentQ;
-            this.sync("patch", this, {
+                quantity = !!skipUpdate ? quantity : quantity + existentQ;
+            this.sync('patch', this, {
                 attrs: {
                     productID: productID,
                     _orderQuantity: parseInt(quantity, 10),
@@ -65,7 +75,10 @@ define([
                     if (quantity === 0) {
                         self.trigger('product:removed');
                     } else {
-                        self.trigger('product:' + (isNew ? 'added' : 'updated'));
+                        self.trigger('product:quantity:updated', quantity);
+                        if (isNew) {
+                            self.trigger('product:added', quantity);
+                        }
                     }
                     // if (isNew) {
                     //     BSAlert.success(lang.list_cart_alert_add);
@@ -80,27 +93,31 @@ define([
         //     // debugger;
         //     var product = this.getProductByID(id);
         //     if (product) {
-        //         this.setProductQuantity(id, product._orderQuantity + 1);
+        //         this.setProduct(id, product._orderQuantity + 1);
         //     } else {
-        //         this.setProductQuantity(id, 1);
+        //         this.setProduct(id, 1);
         //     }
         // },
-        removeProduct: function (id) {
-            var self = this;
+        removeProduct: function (productID) {
+            var self = this,
+                product = this.getProductByID(productID);
+            if (!product) {
+                return;
+            }
             BootstrapDialog.confirm('Видалити цей товар?', function (result) {
                 if (result) {
-                    var product = self.getProductByID(id);
-                    if (product) {
-                        self.setProductQuantity(id, 0);
-                    }
+                    self.setProduct(productID, 0, true);
                 }
             });
         },
-        clearAll: function (id) {
+        clearAll: function () {
             var self = this;
+            if (!this.getProductCount()) {
+                return;
+            }
             BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
                 if (result) {
-                    self.setProductQuantity(id, 0);
+                    self.setProduct('*', 0, true);
                 }
             });
         },

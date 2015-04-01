@@ -55,6 +55,7 @@ define([
             // set active address
             // debugger
             APP.instances.shop.setActiveAddress(activeAddress);
+            Backbone.trigger('changed:plugin-shop-address', activeAddress);
             return this;
         },
         changeUserAddress: function (event) {

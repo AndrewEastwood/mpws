@@ -16,9 +16,11 @@ define([
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            this.$('.counter').empty();
-            if (this.collection.length)
-                this.$('.counter').text(this.collection.length);
+            this.$('.counter').addClass('hidden');
+            if (this.collection.length) {
+                this.$('.counter').removeClass('hidden');
+                this.$('.counter .value').text(this.collection.length);
+            }
             this.$el.attr({
                 href: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopCompare, {asRoot: true})
             });

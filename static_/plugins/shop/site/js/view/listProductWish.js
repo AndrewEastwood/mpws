@@ -11,7 +11,7 @@ define([
 
     var ListProductWish = Backbone.View.extend({
         collection: CollWishList.getInstance(),
-        className: 'row shop-wishlist-standalone clearfix',
+        className: 'shop-wishlist-standalone clearfix',
         id: 'shop-cart-wishlist-ID',
         template: Handlebars.compile(tpl), // check
         lang: lang,
@@ -22,6 +22,7 @@ define([
         },
         render: function() {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            this.trigger('shop:rendered');
             return this;
         },
         switchCurrency: function (visibleCurrencyName) {

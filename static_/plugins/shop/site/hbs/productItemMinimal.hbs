@@ -1,5 +1,7 @@
 <div class="col-xs-12 col-sm-9 no-margin">
-    <a title="{{data._origin.Name}} - {{data.Name}} ({{data.Model}})" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}"><span class="product-title-model">{{data.Model}}</span></a>
+    <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">
+        <span class="product-title-model">{{data.Model}}</span>
+    </a>
     <div class="price">
         {{#each data._prices.others}}
             <div class="price-current text-right moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>

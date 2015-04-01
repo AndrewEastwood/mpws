@@ -56,6 +56,7 @@ require.config({
         'echo': 'vendors/echojs/dist/echo',
         'asyncjs': 'vendors/async/lib/async',
         'owl.carousel': 'vendors/owl.carousel/dist/owl.carousel',
+        'odometer': 'vendors/odometer/odometer',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',

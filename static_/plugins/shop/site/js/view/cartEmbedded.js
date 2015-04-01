@@ -12,14 +12,15 @@ define([
 
     var CartEmbedded = Backbone.View.extend({
         model: ModelOrder.getInstance(),
-        className: 'btn-group shop-cart-embedded',
-        id: 'shop-cart-embedded-ID',
+        className: 'shop-cart-embedded',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
-            'click .open-shopping-cart-embedded': 'openShoppingCartModal'
+            'click .cart-product-remove': 'removeProduct'
+            // 'click .open-shopping-cart-embedded': 'openShoppingCartModal',
         },
         initialize: function () {
+            _.bindAll(this, 'removeProduct');
             this.listenTo(this.model, 'change', this.render);
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
         },
@@ -27,6 +28,11 @@ define([
             var tplData = Utils.getHBSTemplateData(this),
                 items = _(tplData.data.items).toArray();
             this.$el.html(this.template(tplData));
+        },
+        removeProduct: function (event) {
+            var $target = $(event.target),
+                productID = $target.data('id');
+            this.model.removeProduct(productID);
         },
         openShoppingCartModal: function () {
             BootstrapDialog.show({

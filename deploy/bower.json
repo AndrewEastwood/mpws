@@ -54,6 +54,7 @@
     "echojs": "~1.7.1",
     "bootstrap-wysiwyg": "*",
     "async": "~0.9.2",
-    "owl.carousel": "*"
+    "owl.carousel": "*",
+    "odometer": "~0.4.7"
   }
 }
