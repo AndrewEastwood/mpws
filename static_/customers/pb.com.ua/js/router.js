@@ -328,17 +328,18 @@ define([
             $tplCatalogBrowser.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
 
             catalogFilterView.on('render:complete', function () {
-                $tplCatalogBrowser.find('.mpws-js-category-filter .list-group-item input[type="checkbox"]').iCheck({
+                var $filterCheckBoxes = $tplCatalogBrowser.find('.mpws-js-category-filter .list-group-item input[type="checkbox"]');
+                $filterCheckBoxes.iCheck({
                     checkboxClass: 'icheckbox_minimal-red shop-filter-checkbox',
                     radioClass: 'iradio_minimal-red'
-                });
+                }).on('ifChanged', function (event) { $(event.target).trigger('change'); });
                 // update breadcrumb
                 var brItems = [],
                     productLocationPath = catalogFilterView.getPathInCatalog();
                 _(productLocationPath).each(function (locItem) {
                     var pathCategorySubList = that.plugins.shop.catalogNavigator({design: {style: 'sub', parentID: locItem.ID}}),
                         subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
-                    brItems.push([locItem.Name, locItem.url, subList]);
+                    brItems.push([locItem.Name, that.plugins.shop.getCatalogUrl(locItem.ExternalKey), subList]);
                 });
                 // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
                 that.updateBreadcrumb(brItems);

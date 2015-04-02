@@ -36,7 +36,9 @@
         {{/if}}
         
             <div class="body">
-
+                {{#if data._promoIsApplied }}
+                <div class="label-discount green">-{{../data._promo.Discount}}% знижка</div>
+                {{/if}}
                 <div class="availability" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <link itemprop="itemCondition" href="http://schema.org/NewCondition" />
                     <label>Наявність:</label>

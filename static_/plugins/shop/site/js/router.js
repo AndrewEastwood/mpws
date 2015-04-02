@@ -4,6 +4,7 @@ define([
     'backbone',
     'cachejs',
     'auth',
+    'handlebars',
     'plugins/shop/site/js/view/catalogFilterPanel',
     'plugins/shop/site/js/view/catalogBrowseContent',
     'plugins/shop/site/js/view/productItem',
@@ -34,7 +35,7 @@ define([
     'plugins/shop/site/js/model/order',
     'plugins/shop/site/js/model/catalogNavigator',
     'plugins/shop/common/js/model/setting'
-], function ($, _, Backbone, Cache, Auth, 
+], function ($, _, Backbone, Cache, Auth, Handlebars,
     
     // viewes
     ViewCatalogFilterPanel, ViewCatalogBrowseContent, ViewProductItem,
@@ -92,6 +93,18 @@ define([
         wishList: collWithList,
         compareList: collCompareList,
 
+        getCatalogUrl: function (externalKey, pageNo) {
+            var urlTemplate = null,
+                urlOptions = {asRoot: true, category: externalKey};
+            if (pageNo > 1) {
+                urlTemplate = this.urls.shopCatalogCategoryPage;
+                urlOptions.page = pageNo;
+            } else {
+                urlTemplate = this.urls.shopCatalogCategory;
+            }
+            return Handlebars.helpers.bb_link(urlTemplate, urlOptions);
+        },
+
         // urls: _(routes).invert(),
         dfdInitialize: function (callback, options) {
             var that = this,
@@ -99,7 +112,9 @@ define([
 
             // attach plugin instance to views
             ViewProductItem.plugin = this;
-
+            ViewCatalogFilterPanel.plugin = this;
+            ViewCatalogBrowseContent.plugin = this;
+            
             // configure plugin
             this.options = options || {};
             this.urls = options && options.urls || {};

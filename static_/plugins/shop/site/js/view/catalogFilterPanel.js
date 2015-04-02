@@ -33,18 +33,10 @@ define([
         getDisplayName: function () {
             return this.collection.category.Name;
         },
-        getCatalogUrl: function (withPage) {
+        getCatalogUrl: function () {
             var externalKey = this.collection.category.ExternalKey,
-                urlTemplate = null,
-                urlOptions = {asRoot: true, category: externalKey},
                 pageNo = this.collection.getFilter('filter_viewPageNum');
-            if (withPage && pageNo > 1) {
-                urlTemplate = APP.instances.shop.urls.shopCatalogCategoryPage;
-                urlOptions.page = pageNo;
-            } else {
-                urlTemplate = APP.instances.shop.urls.shopCatalogCategory;
-            }
-            return Handlebars.helpers.bb_link(urlTemplate, urlOptions);
+            return CatalogBrowse.plugin.getCatalogUrl(externalKey, pageNo);
         },
         resetFilter: function () {
             console.log('resetFilter');

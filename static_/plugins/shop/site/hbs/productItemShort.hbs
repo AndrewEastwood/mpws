@@ -8,7 +8,11 @@
         </a>
     </div>
     <div class="body">
+        {{#if data._promoIsApplied }}
+        <div class="label-discount green">-{{../data._promo.Discount}}% знижка</div>
+        {{else}}
         <div class="label-discount clear"></div>
+        {{/if}}
         <div class="title">
             <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">
                 <span class="product-title-model">{{data.Model}}</span>

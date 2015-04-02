@@ -104,7 +104,7 @@ define([
             Cache.set(filterKey, this.filter.filterOptionsApplied[filterKey]);
             // this.savedFilters[key] = value;
         },
-        rootUrl: function () {
+        url: function () {
             var _options = {};
             _(this.filter.filterOptionsApplied).each(function(item, key){
                 if (_.isEmpty(item))
@@ -115,7 +115,8 @@ define([
                     _options[key] = item;
             });
             // console.log(_options);
-            return APP.getApiLink('shop', 'catalog', this.categoryID, _options);
+            // debugger
+            return APP.getApiLink('shop', 'catalog', this.categoryID, _(_options).omit('id'));
         },
         parse: function (data) {
             // adjust products
