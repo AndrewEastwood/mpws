@@ -1,0 +1,51 @@
+                        <div class="wrapper">
+                            <div class="product-row">
+                                {{#if ../data.info.hasPromo}}
+                                    {{#unless ../../data.info.allProductsWithPromo}}
+                                        {{#if ../../IsPromo }}
+                                            <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                                        {{else}}
+                                            <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                                        {{/if}}
+                                    {{/unless}}
+                                {{/if}}
+                                <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                                <div class="shop-product-image shop-product-image-main">
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                                        <div class="image productimage noimage image_{{ID}}">
+                                            {{#if Images.[0].xs}}
+                                            {{>animSpinnerFB}}
+                                            {{/if}}
+                                        </div>
+                                        {{#if Images.[0].xs}}
+                                        <script>
+                                        (function() {
+                                            require(["image!{{Images.[0].xs}}"], function(img){
+                                                img.title = "{{Name}}";
+                                                img.className = "image img-responsive";
+                                                $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                            }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                                        })();
+                                        </script>
+                                        {{/if}}
+                                    </a>
+                                </div>
+                                <span class="product-name">
+                                    <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                                </span>
+                                {{#each _prices.others}}
+                                    <strong class="label label-warning shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                                {{#if _promoIsApplied}}
+                                <span class="label label-success">- {{_promo.Discount}}%</span>
+                                {{/if}}
+                                <span class="label label-default">x</span>
+                                <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{_orderQuantity}}">
+                                <span class="label label-default">=</span>
+                                {{#each _totalSummary._totals}}
+                                    <strong class="product-total shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                {{/each}}
+                            </div>
+                        </div>

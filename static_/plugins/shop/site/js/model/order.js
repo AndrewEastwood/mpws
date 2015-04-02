@@ -64,30 +64,25 @@ define([
                 isNew = !!!product,
                 existentQ = !isNew && product._orderQuantity || 0,
                 quantity = !!skipUpdate ? quantity : quantity + existentQ;
-            this.sync('patch', this, {
-                attrs: {
+            this.save({
                     productID: productID,
                     _orderQuantity: parseInt(quantity, 10),
-                },
-                parse: true,
-                success: function (response) {
-                    self.set(self.parse(response));
-                    if (quantity === 0) {
-                        self.trigger('product:removed');
-                    } else {
-                        self.trigger('product:quantity:updated', quantity);
-                        if (isNew) {
-                            self.trigger('product:added', quantity);
+                }, {
+                    patch: true,
+                    success: function (response) {
+                        // self.set(self.parse(response));
+                        self.trigger('change');
+                        if (quantity === 0) {
+                            self.trigger('product:removed');
+                        } else {
+                            self.trigger('product:quantity:updated', quantity);
+                            if (isNew) {
+                                self.trigger('product:added', quantity);
+                            }
                         }
                     }
-                    // if (isNew) {
-                    //     BSAlert.success(lang.list_cart_alert_add);
-                    // } else {
-                    //     BSAlert.warning(lang.list_cart_alert_updated);
-                    // }
-                    // APP.Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
-            });
+            );
         },
         // addProduct: function (id) {
         //     // debugger;
@@ -99,27 +94,18 @@ define([
         //     }
         // },
         removeProduct: function (productID) {
-            var self = this,
-                product = this.getProductByID(productID);
+            var product = this.getProductByID(productID);
             if (!product) {
                 return;
             }
-            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
-                if (result) {
-                    self.setProduct(productID, 0, true);
-                }
-            });
+            this.setProduct(productID, 0, true);
         },
         clearAll: function () {
             var self = this;
             if (!this.getProductCount()) {
                 return;
             }
-            BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
-                if (result) {
-                    self.setProduct('*', 0, true);
-                }
-            });
+            self.setProduct('*', 0, true);
         },
         applyPromo: function (promo) {
             var self = this;

@@ -60,7 +60,7 @@
         <td class="product-param">
         {{#unless _archived}}
             {{#each _prices.others}}
-                <strong class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                <strong class="shop-price-value {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
             {{/each}}
             {{#if _promoIsApplied }}
             <div class="promocode label label-success">(Знижка: {{../_promo.Discount}}%)</div>

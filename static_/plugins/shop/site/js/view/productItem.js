@@ -7,6 +7,7 @@ define([
     'bootstrap-dialog',
     'plugins/shop/site/js/model/product',
     'text!plugins/shop/site/hbs/productItemMinimal.hbs',
+    'text!plugins/shop/site/hbs/productItemMinimal2.hbs',
     'text!plugins/shop/site/hbs/productItemShort.hbs',
     'text!plugins/shop/site/hbs/productItemFull.hbs',
     /* lang */
@@ -15,16 +16,14 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplShort, tplFull, lang) {
+], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, lang) {
 
-    // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
-    //     return opts.fn(data._origin.Name + ' ' + data.Model);
-    // });
     var ProductItem = Backbone.View.extend({
-        className: 'shop-product-item',// 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',
+        className: 'shop-product-item',
         templates: {
             short: Handlebars.compile(tplShort), // check
             minimal: Handlebars.compile(tplMinimal), // check
+            minimal2: Handlebars.compile(tplMinimal2), // check
             full: Handlebars.compile(tplFull), // check
         },
         lang: lang,
@@ -41,14 +40,13 @@ define([
         },
         noop: $.noop,
         initialize: function (options) {
+            var that = this;
+
             this.options = options || {};
             // set default style
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
             // bind context
-            _.bindAll(this, 'refresh', 'switchCurrency', 'updateQuantity', 'addToCart');
-            // APP.Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
-            // APP.Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
-            // APP.Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
+            _.bindAll(this, 'switchCurrency', 'updateQuantity', 'addToCart');
 
             // refresh price when currency widget is changed
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
@@ -62,7 +60,6 @@ define([
                 this.listenTo(this.model, 'sync', this.render);
             }
 
-            var that = this;
             ProductItem.plugin.order.on('product:quantity:updated', function (q) {
                 that.$('.add-to-cart').addClass('has-value');
                 that.$('.add-to-cart .in-cart-quantity').html(q);
@@ -70,36 +67,40 @@ define([
             ProductItem.plugin.order.on('product:removed', function (q) {
                 that.$('.add-to-cart').removeClass('has-value');
             });
+            this.listenTo(ProductItem.plugin.order, 'sync', function () {
+                this.model.fetch();
+            });
         },
         addToCart: function () {
             ProductItem.plugin.order.setProduct(this.model.id, this.getSelectedQuantity());
         },
         addToWishList: function () {
             ProductItem.plugin.wishList.addProduct(this.model.id, this.getSelectedQuantity());
+            this.model.fetch();
         },
         addToCompareList: function () {
             ProductItem.plugin.compareList.addProduct(this.model.id, this.getSelectedQuantity());
+            this.model.fetch();
         },
-        refresh: function (data) {
-            if (this.model) {
-                if (data && data.id && (data.id === this.model.id || data.id === "*")) {
-                    this.model.fetch();
-                }
-            }
-        },
+        // refresh: function (data) {
+        //     if (this.model) {
+        //         if (data && data.id && (data.id === this.model.id || data.id === "*")) {
+        //             this.model.fetch();
+        //         }
+        //     }
+        // },
         render: function () {
             // debugger
-            // Odometer;
             var that = this,
                 design = this.options.design,
                 tpl = this.templates[design.style];
             this.$el.addClass('shop-product-item-' + design.style);
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             // shop pulse animation for cart button badge
-            if (this.model.hasChanged('_viewExtras') && this.model.previous('_viewExtras') && this.model.get('_viewExtras').InCartCount !== this.model.previous('_viewExtras').InCartCount)
-                this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
-                    $(this).removeClass("pulse").dequeue();
-                });
+            // if (this.model.hasChanged('_viewExtras') && this.model.previous('_viewExtras') && this.model.get('_viewExtras').InCartCount !== this.model.previous('_viewExtras').InCartCount)
+            //     this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
+            //         $(this).removeClass("pulse").dequeue();
+            //     });
             this.$('[data-toggle="tooltip"]').tooltip();
             this.$('.product-availability .fa').popover({trigger: 'hover'});
 
@@ -141,6 +142,7 @@ define([
             }
 
             this.trigger('render:complete');
+            this.delegateEvents();
             return this;
         },
         getPathInCatalog: function () {
@@ -211,8 +213,8 @@ define([
             // seo end
         },
         switchCurrency: function (visibleCurrencyName) {
-            this.$('.moneyValue').addClass('hidden');
-            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
+            this.$('.shop-price-value').addClass('hidden');
+            this.$('.shop-price-value.' + visibleCurrencyName).removeClass('hidden');
         },
         openPopupShipping: function (event) {
             BootstrapDialog.show({

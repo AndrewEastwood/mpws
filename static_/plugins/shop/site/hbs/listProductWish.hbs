@@ -32,7 +32,7 @@
     <div class="col-xs-12 col-sm-3 no-margin">
         <div class="price">
             {{#each _prices.others}}
-                <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
             {{/each}}
             {{#if _promoIsApplied }}
             <sub class="promocode label label-success">(Знижка: {{../_promo.Discount}}%)</sub>
@@ -100,7 +100,7 @@
                 <div class="shop-component shop-product-attr shop-product-attr-price label-warning product-price">
                     <div class="value-prefix">Ціна:</div>
                     {{#each _prices.others}}
-                        <strong class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                        <strong class="shop-price-value {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                     {{/each}}
                     {{#if _promoIsApplied }}
                     <sub class="promocode label label-success">(Знижка: {{../_promo.Discount}}%)</sub>

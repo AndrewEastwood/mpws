@@ -4,26 +4,41 @@ define([
     'backbone',
     'handlebars',
     'echo',
+    'bootstrap-dialog',
     // page templates
     'text!./../hbs/breadcrumb.hbs',
     'text!./../hbs/homeFrame.hbs',
     'text!./../hbs/productsTab.hbs',
     'text!./../hbs/viewedProducts.hbs',
     'text!./../hbs/page404.hbs',
+    'text!./../hbs/catalogBrowser.hbs',
     'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
     'text!./../hbs/productWishlist.hbs',
     'owl.carousel',
-    'bootstrap'
-], function ($, _, Backbone, Handlebars, echo,
+    'bootstrap',
+    'icheck'
+], function ($, _, Backbone, Handlebars, echo, BootstrapDialog,
      tplBreadcrumb,
      tplHomeFrame,
      tplProductsTab,
      tplViewedProducts,
      tplPage404,
+     tplCatalogBrowser,
      tplCategoriesRibbon,
      tplProductComparisons,
      tplProductWishlist) {
+
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DEFAULT] = 'Повідомлення';
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_INFO] = 'Повідомлення';
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = 'Повідомлення';
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_SUCCESS] = 'Успішно';
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_WARNING] = 'Увага';
+        BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DANGER] = 'Помилка';
+        BootstrapDialog.DEFAULT_TEXTS['OK'] = 'Добре';
+        BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = 'Скасувати';
+        BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = 'Підтвердити';
+
 
     // var _customerOptions = {};
 
@@ -64,7 +79,8 @@ define([
         productComparisons: $(Handlebars.compile(tplProductComparisons)()),
         productsTab: $(Handlebars.compile(tplProductsTab)()),
         productWishlist: $(Handlebars.compile(tplProductWishlist)()),
-        page404: $(Handlebars.compile(tplPage404)())
+        page404: $(Handlebars.compile(tplPage404)()),
+        catalogBrowser: $(Handlebars.compile(tplCatalogBrowser)()),
     };
 
     function getTemplate (key) {
@@ -105,6 +121,7 @@ define([
             productComparisons: getTemplate('productComparisons'),
             productWishlist: getTemplate('productWishlist'),
             page404: getTemplate('page404'),
+            catalogBrowser: getTemplate('catalogBrowser'),
         },
 
         views: {},
@@ -295,9 +312,29 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
+            var $tplCatalogBrowser = this.templates.catalogBrowser(),
+                productOptions = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item', wrap: '<div class="row"></div>'}},
+                featuredProducts = this.plugins.shop.featuredProducts(productOptions);
+
             var view = this.plugins.shop.catalogCategory(category);
-            view.$el.addClass('container');
-            $('section.mpws-js-main-section').html(view.$el);
+
+            $tplCatalogBrowser.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
+
+            view.on('render:complete', function () {
+                $tplCatalogBrowser.find('.mpws-js-category-filter').html(view.getFilterPanel());
+                $tplCatalogBrowser.find('.mpws-ja-catalog-products').html(view.getCatalogContent());
+
+                $tplCatalogBrowser.find('.mpws-js-category-filter .list-group-item input[type="checkbox"]').iCheck({
+                    checkboxClass: 'icheckbox_minimal-red shop-filter-checkbox',
+                    radioClass: 'iradio_minimal-red'
+                });
+            });
+
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-warranty').html(this.plugins.shop.menuItemPopupInfoWarranty().$el);
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-shipping').html(this.plugins.shop.menuItemPopupInfoShipping().$el);
+
+            $('section.mpws-js-main-section').html($tplCatalogBrowser);
         },
         shopCatalogCategoryPage: function (category, pageNo) {
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -319,7 +356,10 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-            $('section.mpws-js-main-section').html(this.plugins.shop.cart().$el);
+            var view = this.plugins.shop.cart();
+            view.$el.addClass('container');
+
+            $('section.mpws-js-main-section').html(view.$el);
 
         },
         // todo:

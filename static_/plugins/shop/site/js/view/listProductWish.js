@@ -26,8 +26,8 @@ define([
             return this;
         },
         switchCurrency: function (visibleCurrencyName) {
-            this.$('.moneyValue').addClass('hidden');
-            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
+            this.$('.shop-price-value').addClass('hidden');
+            this.$('.shop-price-value.' + visibleCurrencyName).removeClass('hidden');
         }
     });
 

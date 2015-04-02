@@ -3,6 +3,7 @@ define([
     'backbone',
     'handlebars',
     'plugins/shop/site/js/model/order',
+    'bootstrap-dialog',
     'utils',
     'cachejs',
     'text!plugins/shop/site/hbs/cartStandalone.hbs',
@@ -18,27 +19,72 @@ define([
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength",
     'jquery.maskedinput'
-], function (_, Backbone, Handlebars, ModelOrder, Utils, Cache, tpl, lang) {
+], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, Cache, tpl, lang) {
 
     var CartStandalone = Backbone.View.extend({
-        model: ModelOrder.getInstance(),
-        className: 'row shop-cart-standalone',
-        id: 'shop-cart-standalone-ID',
+        className: 'shop-cart-standalone',
         template: Handlebars.compile(tpl), // check
         lang: lang,
+        events: {
+            'click .shop-cart-product-quantity a': 'updateQuantity',
+            'click .shop-cart-checkout': 'showPageCheckout',
+            'click .shop-cart-product-remove': 'removeProduct',
+            'click .shop-cart-clear': 'clearAll',
+        },
+        removeProduct: function (event) {
+            var that = this,
+                $target = $(event.target).parents('a'),
+                productID = $target.data('id');
+            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
+                if (result) {
+                    that.model.removeProduct(productID);
+                }
+            });
+        },
+        clearAll: function () {
+            var that = this;
+            BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
+                if (result) {
+                    that.model.setProduct('*', 0, true);
+                }
+            });
+        },
+        showPageCheckout: function () {
+            // debugger
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-checkout').removeClass('hidden');
+        },
+        updateQuantity: function (e) {
+            // Quantity Spinner
+            e.preventDefault();
+            var $targetBtn = $(e.target),
+                $qInput = $targetBtn.parent().find('input[name="quantity"]'),
+                productID = $qInput.data('id'),
+                currentQty = parseInt($qInput.val(), 10);
+            if ($targetBtn.hasClass('shop-cart-product-minus') && currentQty > 1) {
+                $qInput.val(--currentQty);
+            } else if($targetBtn.hasClass('shop-cart-product-plus') && currentQty < 99) {
+                $qInput.val(++currentQty);
+            }
+            this.updateModelQuantity(productID, currentQty);
+        },
+        updateModelQuantity: _.debounce(function (productID, currentQty) {
+            this.model.setProduct(productID, currentQty, true);
+        }, 250),
         initialize: function (options) {
+            this.model = ModelOrder.getInstance();
             this.modelSettings = options && options.settings || null;
             if (this.modelSettings) {
                 this.listenTo(this.modelSettings, 'change', this.render);
             }
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'sync', this.render);
         },
-        updateProductQuantity: function (event) {
-            var $input = this.$(event.target);
-            var elementData = $input.data();
-            if (this.model.getProductByID(elementData.id) && $input.val())
-                this.model.setProductQuantity(elementData, elementData.id, $input.val());
-        },
+        // updateProductQuantity: function (event) {
+        //     var $input = this.$(event.target);
+        //     var elementData = $input.data();
+        //     if (this.model.getProductByID(elementData.id) && $input.val())
+        //         this.model.setProductQuantity(elementData, elementData.id, $input.val());
+        // },
         collectUserInfo: function () {
             // collect user info
             // debugger;
@@ -57,6 +103,7 @@ define([
             Cache.set("shopUser", null);
         },
         render: function () {
+            console.log('rendering car standalone');
             var self = this;
             var data = Utils.getHBSTemplateData(this);
             var formValidator = null;
@@ -75,13 +122,13 @@ define([
             var _userInfoChanged = _.debounce(function () {
                 Cache.set("shopUser", self.collectUserInfo.call(self));
             }, 100);
-            var _productQunatityChanged = _.debounce(function (event) {
-                self.updateProductQuantity.call(self, event);
-            }, 300);
+            // var _productQunatityChanged = _.debounce(function (event) {
+            //     self.updateProductQuantity.call(self, event);
+            // }, 300);
             this.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
-            this.$el.on('change', 'input.quantity', _productQunatityChanged);
+            // this.$el.on('change', 'input.quantity', _productQunatityChanged);
             this.$el.on('click', '.btn-promo-submit', function () {
                 self.model.applyPromo(self.$('#shop-order-promo-ID').val());
             });
@@ -135,13 +182,13 @@ define([
                 return false;
             });
 
-            this.$('.button-order-back').click(function () {
-                self.$('.wizard').wizard('previous');
-            });
+            // this.$('.button-order-back').click(function () {
+            //     self.$('.wizard').wizard('previous');
+            // });
 
-            this.$('.steps > li').click(function () {
-                return false;
-            });
+            // this.$('.steps > li').click(function () {
+            //     return false;
+            // });
 
             this.$('.button-order-preview').click(function () {
                 // var formValidator = $form.data('bootstrapValidator');
@@ -246,8 +293,17 @@ define([
             //     formValidator.validate();
             // }
 
+            this.delegateEvents();
+
             return this;
         }
+        // showPageEdit: function () {
+
+        // },
+        // showPagePreview: function () {
+
+        // }
+
     });
 
     return CartStandalone;

@@ -75,8 +75,8 @@
                 {{/if}}
 
                 <div class="product-wishlist-compare-holder buttons-holder">
-                    <a class="btn-add-to-wishlist add-to-wishlist{{#if data._viewExtras.InWish }} added{{/if}}" href="javascript://">до списку</a>
-                    <a class="btn-add-to-compare add-to-compare{{#if data._viewExtras.InCompare }} added{{/if}}" href="javascript://">порівняти</a>
+                    <a class="btn-add-to-wishlist add-to-wishlist{{#if data.viewExtrasInWish }} added{{/if}}" href="javascript://">до списку</a>
+                    <a class="btn-add-to-compare add-to-compare{{#if data.viewExtrasInCompare }} added{{/if}}" href="javascript://">порівняти</a>
                 </div>
 
                 <div class="excerpt">
@@ -134,7 +134,7 @@
                     {{#each data._prices.others}}
                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="{{@key}}" />
-                            <span itemprop="price" content="{{this}}" class="price-current moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</span>
+                            <span itemprop="price" content="{{this}}" class="price-current shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</span>
                         </span>
                     {{/each}}
                     {{#if data._promoIsApplied }}
@@ -152,6 +152,9 @@
                         Додати в кошик
                         <div class="in-cart-quantity odometer"></div>
                     </a>
+                    {{#if data.viewExtrasInCartCount }}
+                    <a href="{{bb_link ../instances.shop.urls.shopCart asRoot=true}}">Перейти до кошика</a>
+                    {{/if}}
                 </div><!-- /.qnt-holder -->
             </div><!-- /.body -->
         </div><!-- /.body-holder -->

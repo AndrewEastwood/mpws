@@ -9,11 +9,11 @@ define([
 ], function (Backbone, Handlebars, Utils, ModelOrder, tpl, lang) {
 
     var MenuCart = Backbone.View.extend({
-        model: ModelOrder.getInstance(),
         tagName: 'a',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
+            this.model = ModelOrder.getInstance();
             this.model.on('change', this.render, this);
         },
         render: function () {

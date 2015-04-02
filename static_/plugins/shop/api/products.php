@@ -85,10 +85,9 @@ class products {
         $product['Videos'] = $this->getProductVideos($productID);
 
         // Utils
-        $product['_viewExtras'] = array();
-        $product['_viewExtras']['InWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
-        $product['_viewExtras']['InCompare'] = API::getAPI('shop:comparelists')->productIsInCompareList($productID);
-        $product['_viewExtras']['InCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
+        $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
+        $product['viewExtrasInCompare'] = API::getAPI('shop:comparelists')->productIsInCompareList($productID);
+        $product['viewExtrasInCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
 
         // is available
         $product['_available'] = in_array($product['Status'], $this->getProductStatusesWhenAvailable());
@@ -421,7 +420,7 @@ class products {
 
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['sort'] = 'shop_products.DateCreated';
         $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;

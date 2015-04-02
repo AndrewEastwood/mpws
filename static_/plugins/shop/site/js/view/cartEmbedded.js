@@ -3,23 +3,24 @@ define([
     'backbone',
     'handlebars',
     'plugins/shop/site/js/model/order',
+    'bootstrap-dialog',
     'utils',
     'bootstrap-dialog',
     'text!plugins/shop/site/hbs/cartEmbedded.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Handlebars, ModelOrder, Utils, BootstrapDialog, tpl, lang) {
+], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, BootstrapDialog, tpl, lang) {
 
     var CartEmbedded = Backbone.View.extend({
-        model: ModelOrder.getInstance(),
         className: 'shop-cart-embedded',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
-            'click .cart-product-remove': 'removeProduct'
+            'click .shop-cart-product-remove': 'removeProduct'
             // 'click .open-shopping-cart-embedded': 'openShoppingCartModal',
         },
         initialize: function () {
+            this.model = ModelOrder.getInstance();
             _.bindAll(this, 'removeProduct');
             this.listenTo(this.model, 'change', this.render);
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
@@ -28,11 +29,18 @@ define([
             var tplData = Utils.getHBSTemplateData(this),
                 items = _(tplData.data.items).toArray();
             this.$el.html(this.template(tplData));
+            this.delegateEvents();
+            return this;
         },
         removeProduct: function (event) {
-            var $target = $(event.target),
+            var that = this,
+                $target = $(event.target).parents('a'),
                 productID = $target.data('id');
-            this.model.removeProduct(productID);
+            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
+                if (result) {
+                    that.model.removeProduct(productID);
+                }
+            });
         },
         openShoppingCartModal: function () {
             BootstrapDialog.show({
@@ -58,8 +66,8 @@ define([
             });
         },
         switchCurrency: function (visibleCurrencyName) {
-            this.$('.moneyValue').addClass('hidden');
-            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
+            this.$('.shop-price-value').addClass('hidden');
+            this.$('.shop-price-value.' + visibleCurrencyName).removeClass('hidden');
         }
     });
 

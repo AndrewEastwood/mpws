@@ -57,6 +57,7 @@ require.config({
         'asyncjs': 'vendors/async/lib/async',
         'owl.carousel': 'vendors/owl.carousel/dist/owl.carousel',
         'odometer': 'vendors/odometer/odometer',
+        'icheck': 'vendors/iCheck/icheck',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
@@ -158,6 +159,9 @@ require.config({
             deps: ['jquery']
         },
         'owl.carousel': {
+            deps: ['jquery']
+        },
+        'icheck': {
             deps: ['jquery']
         }
     },

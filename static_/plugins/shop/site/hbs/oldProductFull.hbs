@@ -123,7 +123,7 @@
                     {{#each data._prices.others}}
                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="{{@key}}" />
-                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                            <strong itemprop="price" content="{{this}}" class="shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                         </span>
                     {{/each}}
                     {{#if data._promoIsApplied }}
@@ -342,7 +342,7 @@
                                 <div class="carousel-caption price">
                                     Всього за:
                                     {{#each _prices.others}}
-                                        <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                        <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                                     {{/each}}
                                     {{#if _promoIsApplied }}
                                         <span class="label label-success">(Знижка {{promo.Discount}}%)</span>

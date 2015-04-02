@@ -5,6 +5,13 @@ define([
 ], function (Backbone, CollListProducts, ProductItem, tplProductItemMinimal) {
 
     // debugger;
+    // options:
+    // asList
+    // pageSize
+    // listItemClassName
+    // type
+    // wrap
+    // style
     var ListProductLatest = Backbone.View.extend({
         className: 'shop-product-list clearfix',
         currentPage: 0,
@@ -41,7 +48,11 @@ define([
                     $productEl.addClass('hidden');
                 }
                 if (isList) {
-                    $list.append($('<li/>').html($productEl));
+                    var $listItem = $('<li/>');
+                    if (design.listItemClassName) {
+                        $listItem.addClass(design.listItemClassName);
+                    }
+                    $list.append($listItem.html($productEl));
                 } else {
                     that.$el.append($productEl);
                 }

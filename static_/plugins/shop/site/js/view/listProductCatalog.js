@@ -6,6 +6,7 @@ define([
     'plugins/shop/site/js/collection/listProductCatalog',
     'plugins/shop/site/js/view/productItem',
     'bootstrap-dialog',
+    'formatter-price',
     'text!plugins/shop/site/hbs/listProductCatalog.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
@@ -13,17 +14,17 @@ define([
     'bootstrap-select',
     'bootstrap-slider',
     'jquery.cookie'
-], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItem, dlg, tpl, lang) {
+], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItem, BootstrapDialog, priceFmt, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         collection: CollListProductCatalog.getInstance(),
-        className: 'shop-product-list shop-product-list-catalog',
+        className: 'shop-catalog-browse',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_InputChecked',
-            'click .shop-component-catalog-filtering.subcategories a.list-group-item': 'resetFilter',
+            'click .shop-catalog-filter-widget.subcategories a.list-group-item': 'resetFilter',
             // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_InputChecked',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
             "slideStop input.slider": 'filterProducts_PriceChanged',
@@ -69,10 +70,8 @@ define([
                 that.$('.displayItems').append(productView.$el);
             });
 
-            // // enhance ui components
-            // debugger;
+            // enhance ui components
             this.filterPrice = this.$('.slider').slider({
-                tooltip: 'always',
                 min: data.filter.filterOptionsAvailable.filter_commonPriceMin,
                 max: data.filter.filterOptionsAvailable.filter_commonPriceMax,
                 step: 1,
@@ -85,17 +84,25 @@ define([
                         var rate = APP.instances.shop.settings.CUSTOM.currencyList[activeCurr];
                         var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
                         var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
-                        var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.EXCHANAGERATESDISPLAY, currency: activeCurr}}));
-                        var $rightEdgeTooltip = $('<span>').addClass('right').text(Handlebars.helpers.currency(rightEdge, {hash:{display:APP.instances.shop.settings.EXCHANAGERATESDISPLAY, currency: activeCurr}}));
-                        var tooltip = [$leftEdgeTooltip, $rightEdgeTooltip];
-                        return tooltip;
+                        var leftFormattedValue = priceFmt(leftEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
+                        var rightFormattedValue = priceFmt(rightEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
+                        // debugger
+                        var tooltip = [leftFormattedValue, rightFormattedValue];
+                        return tooltip.join(':');
                     }
                     return val;
                 }
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
+            this.trigger('render:complete');
             return this;
+        },
+        getFilterPanel: function () {
+            return this.$('.shop-catalog-filter');
+        },
+        getCatalogContent: function () {
+            return this.$('.shop-catalog-products');
         },
         getPageAttributes: function () {
             // seo start

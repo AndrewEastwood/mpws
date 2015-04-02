@@ -1,23 +1,23 @@
-{{#unless data.info.productCount }}
-<a class="dropdown-toggle" href="javascript://" aria-expanded="true">
-    <div class="basket-item-count">
-        <span class="lbl">У кошику 0 товарів</span>
-    </div>
-</a>
-{{else}}
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
     <div class="basket-item-count">
+        <span class="lbl">У кошику</span>
+        {{#if data.info.productCount }}
         <span class="count">{{data.info.productUniqueCount}}</span>
-        <span class="lbl">Кошик:</span>
+        <span class="lbl">товар(ів)</span>
+        <span class="lbl">на суму:</span>
+        {{else}}
+        <span class="lbl">немає товарів</span>
+        {{/if}}
     </div>
-    <div class="total-price-basket"> 
+    <div class="total-price-basket">
         <span class="total-price">
         {{#each data.totalSummary._subs}}
-            <strong class="value moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+            <strong class="shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
         {{/each}}
         </span>
     </div>
 </a>
+{{#if data.info.productCount }}
 <ul class="dropdown-menu">
     {{#each data.items }}
     <li>
@@ -36,12 +36,12 @@
                     </div>
                     <div class="price">
                     {{#each _prices.others}}
-                        <strong class="product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                        <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
                     {{/each}}
                     </div>
                 </div>
             </div>
-            <a class="cart-product-remove" href="javascript://" data-id="{{ID}}"><i class="fa fa-fw fa-times"></i></a>
+            <a class="shop-cart-product-remove" href="javascript://" data-id="{{ID}}"><i class="fa fa-fw fa-times"></i></a>
         </div>
     </li>
     {{/each}}
@@ -55,4 +55,4 @@
         </div>
     </li>
 </ul>
-{{/unless}}
+{{/if}}
