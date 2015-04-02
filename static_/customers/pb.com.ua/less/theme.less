@@ -93,6 +93,11 @@ header {
     }
     .top-search-holder {
         margin: 0px;
+        .search-area {
+            .search-field {
+                width: 75%;
+            }
+        }
     }
     // .top-search-holder .contact-row {
     //     margin-top: -18px;
@@ -136,6 +141,12 @@ header {
     }
     // cart
     .shop-cart-embedded {
+        .shop-cart-product-remove {
+            display: inline-block;
+            position: absolute;
+            right: 5%;
+            top: 35%;
+        }
         .btn {
             margin-top: -5px;
             width: 150px;
@@ -245,22 +256,30 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
     .add-to-cart {
         .in-cart-quantity {
             display: none;
+            font-size: 3.3em;
+            background: #F27A24;
+            padding-right: 5px;
+            margin-left: 20px;
+            margin-right: -52px;
+            margin-top: -23px;
+            margin-bottom: -23px;
+            padding-right: 5px;
         }
-        &.has-value {
+    }
+    .shop-open-cart-link {
+        display: none;
+    }
+    &.shop-product-in-cart {
+        .add-to-cart {
             position: relative;
             overflow: hidden;
             padding-left: 30px;
             .in-cart-quantity {
-                font-size: 3.3em;
-                background: #F27A24;
-                padding-right: 5px;
                 display: inline-block;
-                margin-left: 20px;
-                margin-right: -52px;
-                margin-top: -23px;
-                margin-bottom: -23px;
-                padding-right: 5px;
             }
+        }
+        .shop-open-cart-link {
+            display: block;
         }
     }
 }
@@ -630,5 +649,30 @@ section.mpws-js-shop-viewed-products {
                 float: right;
             }
         }
+
+        &.shop-catalog-filter-subcategories {
+            .list-group-item {
+                position: relative;
+                label {
+                    cursor: pointer;
+                }
+                .product-count {
+                    position: absolute;
+                    top: 15%;
+                    right: 2%;
+                }
+            }
+        }
     }
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    color: #f27a24 !important;
+    border-color: #f27a24;
+    background-color: #fff;
 }

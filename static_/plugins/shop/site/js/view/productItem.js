@@ -61,14 +61,12 @@ define([
             }
 
             ProductItem.plugin.order.on('product:quantity:updated', function (q) {
-                that.$('.add-to-cart').addClass('has-value');
+                that.$el.addClass('shop-product-in-cart');
                 that.$('.add-to-cart .in-cart-quantity').html(q);
             });
             ProductItem.plugin.order.on('product:removed', function (q) {
-                that.$('.add-to-cart').removeClass('has-value');
-            });
-            this.listenTo(ProductItem.plugin.order, 'sync', function () {
-                this.model.fetch();
+                that.$el.removeClass('shop-product-in-cart');
+                that.$('.add-to-cart .in-cart-quantity').html('');
             });
         },
         addToCart: function () {
@@ -131,7 +129,8 @@ define([
                     });
                     starsOdometer.render();
                     if (prodQ) {
-                        that.$('.add-to-cart').addClass('has-value');
+                        that.$el.addClass('shop-product-in-cart');
+                        // that.$('.add-to-cart').addClass('has-value');
                     }
                 });
 

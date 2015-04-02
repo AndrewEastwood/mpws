@@ -19,12 +19,12 @@
                 {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                     {{#if ProductCount }}
                     <a class="list-group-item" href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" rel="category" title="{{Name}}">
-                        <span class="category-name">{{Name}}</span>
+                        <label>{{Name}}</label>
                         <span class="product-count">({{ProductCount}})</span>
                     </a>
                     {{else}}
                     <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
-                        <span class="category-name">{{Name}}</span>
+                        <label>{{Name}}</label>
                         <span class="product-count">({{ProductCount}})</span>
                     </a>
                     {{/if}}
