@@ -26,7 +26,11 @@ define([
                 pageNo = this.collection.getFilter('filter_viewPageNum');
             return CatalogBrowse.plugin.getCatalogUrl(externalKey, pageNo);
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.options = options || {};
+            // set default style
+            this.options.design = _.extend({style: 'short'}, this.options.design || {});
+
             this.collection = CollListProductCatalog.getInstance();
             this.collection.on('sync', this.render, this);
             this.collection.on('reset', this.render, this);
@@ -39,9 +43,9 @@ define([
 
             this.$el.html(this.template(data));
             this.collection.each(function(model){
-                var productView = new ProductItem({model: model});
-                productView.render().$el.attr('class', 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4');
-                that.$('.displayItems').append(productView.$el);
+                var productView = new ProductItem(_.extend({}, that.options, {model: model}));
+                // productView.render().$el.attr('class', 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4');
+                that.$('.displayItems').append(productView.render().$el);
             });
             this.delegateEvents();
             this.trigger('render:complete');

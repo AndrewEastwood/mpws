@@ -114,7 +114,7 @@ define([
             ViewProductItem.plugin = this;
             ViewCatalogFilterPanel.plugin = this;
             ViewCatalogBrowseContent.plugin = this;
-            
+
             // configure plugin
             this.options = options || {};
             this.urls = options && options.urls || {};
@@ -282,9 +282,9 @@ define([
             });
             return view;
         },
-        catalogBrowseContent: function () {
+        catalogBrowseContent: function (options) {
             // create new view
-            var view = new ViewCatalogBrowseContent();
+            var view = new ViewCatalogBrowseContent(options || {});
             return view;
         },
 

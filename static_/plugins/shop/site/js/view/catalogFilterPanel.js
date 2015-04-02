@@ -92,7 +92,7 @@ define([
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
-            this.delegateEvents();
+            // this.delegateEvents();
             this.trigger('render:complete');
             return this;
         },

@@ -618,6 +618,7 @@ section.mpws-js-shop-viewed-products {
     }
     .sidebar-product-list-item {
         margin-top: 20px;
+        overflow: hidden;
         a {
             line-height: 20px;
             font-size: 14px;
@@ -638,6 +639,7 @@ section.mpws-js-shop-viewed-products {
 }
 
 .sidebar {
+    position: relative;
     margin-bottom: 20px;
     .widget {
         margin: 0px;
@@ -699,7 +701,6 @@ section.mpws-js-shop-viewed-products {
                 float: right;
             }
         }
-
         &.shop-catalog-filter-subcategories {
             .list-group-item {
                 position: relative;
@@ -727,14 +728,18 @@ section.mpws-js-shop-viewed-products {
     background-color: #fff;
 }
 
-
 .exchange-rates-widget {
     .btn:after {
         display: none;
     }
 }
 
-
 .shop-catalog-browse {
-
+    .product-item-holder .image {
+        width: 80%;
+        margin: 0px auto;
+    }
+    nav {
+        margin-left: -15px;
+    }
 }

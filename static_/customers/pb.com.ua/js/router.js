@@ -317,14 +317,15 @@ define([
 
             var that = this,
                 $tplCatalogBrowser = this.templates.catalogBrowser(),
-                productOptions = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item', wrap: '<div class="row"></div>'}},
-                featuredProducts = this.plugins.shop.featuredProducts(productOptions);
+                optionsFeaturedProducts = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item'}},
+                optionsCatalogProducts = {design: {className: 'col-xs-12 col-sm-4 no-margin product-item-holder hover'}},
+                featuredProducts = this.plugins.shop.featuredProducts(optionsFeaturedProducts);
 
             var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
-            var catalogBrowseView = this.plugins.shop.catalogBrowseContent();
+            var catalogBrowseView = this.plugins.shop.catalogBrowseContent(optionsCatalogProducts);
 
             $tplCatalogBrowser.find('.mpws-js-category-filter').html(catalogFilterView.$el);
-            $tplCatalogBrowser.find('.mpws-ja-catalog-products').html(catalogBrowseView.$el);
+            $tplCatalogBrowser.find('.mpws-ja-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
             $tplCatalogBrowser.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
 
             catalogFilterView.on('render:complete', function () {
@@ -343,7 +344,6 @@ define([
                 });
                 // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
                 that.updateBreadcrumb(brItems);
-
             });
 
             $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
