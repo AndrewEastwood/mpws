@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.40, for debian-linux-gnu (i686)
+-- MySQL dump 10.13  Distrib 5.5.41, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: mpws_light
 -- ------------------------------------------------------
--- Server version	5.5.40-0ubuntu0.12.04.1
+-- Server version	5.5.41-0ubuntu0.12.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -125,12 +125,12 @@ DROP TABLE IF EXISTS `mpws_permissions`;
 CREATE TABLE `mpws_permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` int(11) NOT NULL,
-  `CanAdmin` tinyint(1) NOT NULL,
-  `CanCreate` tinyint(1) NOT NULL,
-  `CanEdit` tinyint(1) NOT NULL,
+  `CanAdmin` tinyint(1) NOT NULL DEFAULT '0',
+  `CanCreate` tinyint(1) NOT NULL DEFAULT '0',
+  `CanEdit` tinyint(1) NOT NULL DEFAULT '0',
   `CanUpload` tinyint(1) NOT NULL DEFAULT '0',
-  `CanViewReports` tinyint(1) NOT NULL,
-  `CanAddUsers` tinyint(1) NOT NULL,
+  `CanViewReports` tinyint(1) NOT NULL DEFAULT '0',
+  `CanAddUsers` tinyint(1) NOT NULL DEFAULT '0',
   `CanMaintain` tinyint(1) NOT NULL DEFAULT '0',
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
@@ -635,11 +635,14 @@ CREATE TABLE `shop_products` (
   `OriginID` int(11) NOT NULL,
   `Name` varchar(300) COLLATE utf8_bin NOT NULL,
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Synopsis` varchar(350) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin,
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `IsPromo` tinyint(1) NOT NULL DEFAULT '0',
+  `IsOffer` tinyint(1) NOT NULL DEFAULT '0',
+  `IsFeatured` tinyint(1) NOT NULL DEFAULT '0',
   `Status` enum('DISCOUNT','ACTIVE','WAITING','PREORDER','DEFECT','ARCHIVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -776,10 +779,11 @@ CREATE TABLE `shop_settingsAddress` (
   `HoursFriday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursSaturday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursSunday` varchar(50) COLLATE utf8_bin NOT NULL,
+  `EmailSupport` varchar(200) COLLATE utf8_bin NOT NULL,
   `InfoPayment` text COLLATE utf8_bin NOT NULL,
   `InfoShipping` text COLLATE utf8_bin NOT NULL,
   `InfoWarranty` text COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','DISABLED','','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('ACTIVE','DISABLED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1095,4 +1099,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-25  2:51:36
+-- Dump completed on 2015-04-02  3:04:12
