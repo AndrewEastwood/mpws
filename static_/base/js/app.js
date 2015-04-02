@@ -79,17 +79,38 @@
         APP.Sandbox = Sandbox;
 
         APP.getApiLink = function (extraOptions /* or args */) {
-            var _url = new JSUrl('/api/');
-            if (typeof extraOptions === "object" && extraOptions.source && extraOptions.fn) {
-                // backward compatibility
-                _url.path += extraOptions.source + '/' + extraOptions.fn + '/';
-                var queryItems = _.omit(extraOptions, 'source', 'fn');
-                _(queryItems).each(function (v, k) {
-                    _url.query[k] = !!v ? v : "";
-                });
-            } else {
-                _url.path += [].slice.call(arguments).join('/') + '/';
-            }
+            var _url = new JSUrl('/api/'),
+                args = [].slice.call(arguments),
+                pathItems = [];
+
+            _(args).each(function (item) {
+                if (_.isString(item) || _.isNumber(item)) {
+                    pathItems.push(item);
+                    return;
+                }
+                if (_.isArray(item)) {
+                    return;
+                }
+                if (_.isObject(item)) {
+                    _(item).each(function (v, k) {
+                        _url.query[k] = !!v ? v : "";
+                    });
+                }
+            });
+
+
+            // if (typeof extraOptions === "object") {
+            //     // backward compatibility
+            //     if (extraOptions.source && extraOptions.fn) {
+            //         _url.path += extraOptions.source + '/' + extraOptions.fn + '/';
+            //     }
+            //     var queryItems = _.omit(extraOptions, 'source', 'fn');
+            //     _(queryItems).each(function (v, k) {
+            //         _url.query[k] = !!v ? v : "";
+            //     });
+            // } else {
+                _url.path += pathItems.join('/') + '/';
+            // }
             return _url.toString();
         }
         APP.getAuthLink = function (extraOptions) {
@@ -357,6 +378,7 @@
                         if (_.isFunction(pluginClass)) {
                             plugin = new pluginClass(pluginsConfig[name] || {});
                             plugin.name = name;
+                            APP.instances.customer.plugins[name] = plugin;
                             APP.instances[name] = plugin;
                             if (plugin.dfdInitialize) {
                                 plugin.dfdInitialize(callback, pluginsConfig[name] || {});
@@ -394,6 +416,7 @@
             if (_.isFunction(RouterCustomer)) {
                 var customer = new RouterCustomer();
                 APP.instances.customer = customer;
+                customer.plugins = {};
             }
             if (customer && _.isFunction(customer.releasePlugins)) {
                 customer.releasePlugins(releasePluginsFn);

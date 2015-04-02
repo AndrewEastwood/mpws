@@ -7,12 +7,10 @@ define([
     var ListProductLatest = Backbone.Collection.extend({
         model: ModelProduct,
         url: function () {
-            var options = this.getOptions();
-            return APP.getApiLink(_.extend({
-                source: 'shop',
-                fn: 'products',
+            var options = _.extend({
                 limit: 16
-            }, _(options).omit('design')));
+            }, _(this.getOptions() || {}).omit('design'));
+            return APP.getApiLink('shop', 'products', options);
         },
         setOptions: function (options) {
             this.options = options;

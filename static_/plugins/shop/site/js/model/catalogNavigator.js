@@ -6,11 +6,8 @@ define([
 
     var CatalogNavigator = Backbone.Model.extend({
         url: function () {
-            return APP.getApiLink({
-                source: 'shop',
-                fn: 'categories',
-                tree: true
-            })
+            var options = {tree: true};
+            return APP.getApiLink('shop', 'categories', options);
         },
         findCategoryItem: function (categoryID) {
             return deepFind(categoryID, this.toJSON());

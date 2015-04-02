@@ -3,22 +3,22 @@ define([
     'handlebars',
     'plugins/shop/site/js/model/catalogNavigator',
     'utils',
-    'text!plugins/shop/site/hbs/categoryList.hbs',
-    'text!plugins/shop/site/hbs/categoryTopLevelList.hbs'
+    'text!plugins/shop/site/hbs/catalogNavigator.hbs',
+    'text!plugins/shop/site/hbs/catalogNavigatorSubItemChildItems.hbs'
 ], function (Backbone, Handlebars, ModelCatalogNavigator, Utils, tplList, tplTopLevel) {
 
-    var MenuCatalogBar = Backbone.View.extend({
+    var CatalogNavigator = Backbone.View.extend({
         model: ModelCatalogNavigator.getInstance(),
         className: 'shop-catalog-navigator',
         tagName: 'ul',
         templates: {
-            toplevel: Handlebars.compile(tplTopLevel),
-            list: Handlebars.compile(tplList)
+            sub: Handlebars.compile(tplTopLevel),
+            all: Handlebars.compile(tplList)
         }, // check
         initialize: function (options) {
             this.options = options || {};
             // set default style
-            this.options.design = _.extend({style: 'list'}, this.options.design || {});
+            this.options.design = _.extend({style: 'all'}, this.options.design || {});
             this.model.on('change', this.render, this);
         },
         render: function () {
@@ -44,6 +44,6 @@ define([
         }
     });
 
-    return MenuCatalogBar;
+    return CatalogNavigator;
 
 });

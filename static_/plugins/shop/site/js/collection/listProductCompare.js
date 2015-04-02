@@ -12,10 +12,11 @@ define([
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
-            options = options || {};
-            return APP.getApiLink(_.extend({}, options, {
-                source: 'shop',
-                fn: 'comparelists'}));
+            return APP.getApiLink('shop', 'comparelists', options);
+            // options = options || {};
+            // return APP.getApiLink(_.extend({}, options, {
+            //     source: 'shop',
+            //     fn: 'comparelists'}));
         },
         // initialize: function () {
         //     listProductCompare = this;

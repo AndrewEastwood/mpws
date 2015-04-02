@@ -7,11 +7,8 @@ define([
     return Backbone.Collection.extend({
         model: ModelSetting,
         url: function () {
-            return APP.getApiLink({
-                source: 'shop',
-                fn: 'settings',
-                type: this.getType() || null
-            });
+            var options = {type: this.getType() || null};
+            return APP.getApiLink('shop', 'settings', options);
         },
         getType: function () {
             return this.sType;

@@ -9,11 +9,8 @@ define([
     return Backbone.Model.extend({
         idAttribute: 'ID',
         url: function () {
-            return APP.getApiLink({
-                source: 'shop',
-                fn: 'settings',
-                type: this.getType() || null
-            });
+            var options = {type: this.getType() || null};
+            return APP.getApiLink('shop', 'settings', options);
         },
         getType: function () {
             var type = null;

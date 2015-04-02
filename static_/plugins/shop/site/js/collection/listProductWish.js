@@ -12,10 +12,7 @@ define([
     var ListProductWish = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
-            options = options || {};
-            return APP.getApiLink(_.extend({}, options, {
-                source: 'shop',
-                fn: 'wishlists'}));
+            return APP.getApiLink('shop', 'wishlists', options);
         },
         // initialize: function () {
         //     // listProductWish = this;

@@ -401,12 +401,12 @@ class catalog {
     }
 
     public function get (&$resp, $req) {
-        if (isset($req->get['id'])) {
-            if (is_numeric($req->get['id'])) {
-                $CategoryID = intval($req->get['id']);
+        if (isset($req->get['params'])) {
+            if (is_numeric($req->get['params'])) {
+                $CategoryID = intval($req->get['params']);
                 $resp = $this->getCatalogBrowse($CategoryID);
             } else {
-                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['id']);
+                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['params']);
                 if (isset($category['ID'])) {
                     $resp = $this->getCatalogBrowse($category['ID']);
                 } else {
@@ -414,8 +414,24 @@ class catalog {
                 }
             }
         } else {
-            $resp['error'] = '"id" parameter is missed';
+            $resp['error'] = "WrongSettingsID";
         }
+
+        // if (isset($req->get['id'])) {
+        //     if (is_numeric($req->get['id'])) {
+        //         $CategoryID = intval($req->get['id']);
+        //         $resp = $this->getCatalogBrowse($CategoryID);
+        //     } else {
+        //         $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['id']);
+        //         if (isset($category['ID'])) {
+        //             $resp = $this->getCatalogBrowse($category['ID']);
+        //         } else {
+        //             $resp['error'] = 'UnknownCategory';
+        //         }
+        //     }
+        // } else {
+        //     $resp['error'] = '"id" parameter is missed';
+        // }
     }
 
 }

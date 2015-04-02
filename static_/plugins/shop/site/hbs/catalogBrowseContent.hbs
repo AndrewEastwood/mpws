@@ -1,0 +1,46 @@
+<div class="shop-catalog-products" itemtype="http://schema.org/ItemList">
+    <link itemprop="url" href="{{bb_link instances.shop.urls.shopCatalogCategory category=filter.info.category.ExternalKey asRoot=true fullUrl=true}}" />
+    <div class="alert alert-success hidden" role="alert">
+        В категорії <strong>{{filter.info.category.Name}}</strong> та у всіх її вкладених категоріях к-сть товарів: <strong itemprop="numberOfItems">{{filter.info.count}}</strong>
+    </div>
+    {{#gte pagination.pages 2}}
+    <nav>
+        <ul class="pagination">
+            <li><a href="{{bb_link instances.shop.urls.shopCatalogCategoryPage category=filter.info.category.ExternalKey page=1}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
+            {{#each pagination.items }}
+                {{#is ../pagination.current this }}
+                    <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
+                {{else}}
+                    <li ><a href="{{bb_link ../../instances.shop.urls.shopCatalogCategoryPage category=../../filter.info.category.ExternalKey page=this}}"><span>{{ this }}</span></a></li>
+                {{/is}}
+            {{/each}}
+            <li><a href="{{bb_link instances.shop.urls.shopCatalogCategoryPage category=filter.info.category.ExternalKey page=pagination.pages}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
+        </ul>
+    </nav>
+    {{/gte}}
+    <div class="row displayItems">
+        {{#unless filter.info.count }}
+        <div class="alert alert-warning">Немає товарів в цій категорії</div>
+        {{/unless}}
+    </div>
+    {{#gte pagination.pages 2}}
+    <nav>
+        <ul class="pagination">
+            <li><a href="{{bb_link instances.shop.urls.shopCatalogCategoryPage category=filter.info.category.ExternalKey page=1}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
+            {{#each pagination.items }}
+                {{#is ../pagination.current this }}
+                    <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
+                {{else}}
+                    <li ><a href="{{bb_link ../../instances.shop.urls.shopCatalogCategoryPage category=../../filter.info.category.ExternalKey page=this}}"><span>{{ this }}</span></a></li>
+                {{/is}}
+            {{/each}}
+            <li><a href="{{bb_link instances.shop.urls.shopCatalogCategoryPage category=filter.info.category.ExternalKey page=pagination.pages}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
+        </ul>
+    </nav>
+    {{/gte}}
+    {{#if filter.info.hasMoreProducts }}
+    <div class="row">
+        <button class="btn btn-success btn-block shop-load-more">Завантажити ще</button>
+    </div>
+    {{/if}}
+</div>

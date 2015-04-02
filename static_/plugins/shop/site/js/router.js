@@ -4,7 +4,8 @@ define([
     'backbone',
     'cachejs',
     'auth',
-    'plugins/shop/site/js/view/listProductCatalog',
+    'plugins/shop/site/js/view/catalogFilterPanel',
+    'plugins/shop/site/js/view/catalogBrowseContent',
     'plugins/shop/site/js/view/productItem',
     'plugins/shop/site/js/view/listProductCompare',
     'plugins/shop/site/js/view/cartStandalone',
@@ -24,8 +25,9 @@ define([
     'plugins/shop/site/js/view/widgetExchangeRates',
     'plugins/shop/site/js/view/orderTrackingButton',
     'plugins/shop/site/js/view/cartEmbedded',
-    'plugins/shop/site/js/view/categoryList',
+    'plugins/shop/site/js/view/catalogNavigator',
 
+    'plugins/shop/site/js/collection/listProductCatalog',
     'plugins/shop/site/js/collection/listProductWish',
     'plugins/shop/site/js/collection/listProductCompare',
 
@@ -35,7 +37,7 @@ define([
 ], function ($, _, Backbone, Cache, Auth, 
     
     // viewes
-    ViewListProductCatalog, ViewProductItem,
+    ViewCatalogFilterPanel, ViewCatalogBrowseContent, ViewProductItem,
     ViewListProductCompare, ViewCartStandalone,
     ViewListProductWish, ViewTrackingStatus,
     ViewListProducts,
@@ -54,9 +56,10 @@ define([
     ViewWidgetExchangeRates,
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
-    ViewCategoryList,
+    ViewCatalogNavigator,
 
     // collections
+    CollectionCatalog,
     CollectionWishList,
     CollectionCompareList,
 
@@ -67,6 +70,7 @@ define([
             ID: 'temp'
         }),
         modCatalogNavigator = ModelCatalogNavigator.getInstance(),
+        collCatalog = CollectionCatalog.getInstance(),
         collWithList = CollectionWishList.getInstance(),
         collCompareList = CollectionCompareList.getInstance();
 
@@ -236,9 +240,9 @@ define([
             cartEmbedded.render();
             return cartEmbedded;
         },
-        categoryNavigator: function (options) {
+        catalogNavigator: function (options) {
             // catalog navigation panel
-            var cBar = new ViewCategoryList(options || {});
+            var cBar = new ViewCatalogNavigator(options || {});
             cBar.render();
             return cBar;
         },
@@ -246,22 +250,43 @@ define([
         promoBanners: function () {
         },
 
-        // pages
 
-        catalogCategory: function (categoryID, pageNo) {
+        // pages
+        catalogFilterPanel: function (categoryID, pageNo) {
             // create new view
-            var listProductCatalog = new ViewListProductCatalog({
-                categoryID: categoryID
-            });
-            var _pageNo = parseInt(pageNo, 10);
-            if (_pageNo.toString() === pageNo) {
-                listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
+            var view = new ViewCatalogFilterPanel();
+            if (pageNo) {
+                var _pageNo = parseInt(pageNo, 10);
+                if (_pageNo.toString() === pageNo) {
+                    view.collection.setFilter('filter_viewPageNum', pageNo);
+                }
             }
-            listProductCatalog.collection.fetch({
+            collCatalog.setCategoryID(categoryID);
+            collCatalog.fetch({
                 reset: true
             });
-            return listProductCatalog;
+            return view;
         },
+        catalogBrowseContent: function () {
+            // create new view
+            var view = new ViewCatalogBrowseContent();
+            return view;
+        },
+
+        // catalogCategory: function (categoryID, pageNo) {
+        //     // create new view
+        //     var listProductCatalog = new ViewListProductCatalog({
+        //         categoryID: categoryID
+        //     });
+        //     var _pageNo = parseInt(pageNo, 10);
+        //     if (_pageNo.toString() === pageNo) {
+        //         listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
+        //     }
+        //     listProductCatalog.collection.fetch({
+        //         reset: true
+        //     });
+        //     return listProductCatalog;
+        // },
 
         product: function (productID) {
             // create new view

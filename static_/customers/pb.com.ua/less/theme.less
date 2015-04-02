@@ -21,6 +21,27 @@
     color: #fff;
 }
 
+button, .btn {
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: inline-block;
+    line-height: 20px;
+    border: none;
+    font-size: 15px;
+    color: #fff;
+    text-transform: capitalize;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    background-color: #f27a24;
+}
+button:hover, .btn:hover {
+    background-color: #f38332 !important;
+    color: #fff !important;
+}
+
 // customization
 .top-bar {
     .exchange-rates-widget {
@@ -363,7 +384,7 @@ section.mpws-js-shop-viewed-products {
     }
 }
 
-.shop-wishlist-standalone {
+.shop-productlist-wish {
     .close-btn {
         position: static;
     }
@@ -387,7 +408,7 @@ section.mpws-js-shop-viewed-products {
     }
 }
 
-.shop-products-compare {
+.shop-productlist-compare {
     .actions {
         background: none;
         border: 0px none;
@@ -598,6 +619,10 @@ section.mpws-js-shop-viewed-products {
 }
 
 .sidebar {
+    margin-bottom: 20px;
+    .widget {
+        margin: 0px;
+    }
     .widget-infolinks {
         li .fa {display: none;}
     }
@@ -609,6 +634,12 @@ section.mpws-js-shop-viewed-products {
         background-image: none;
     }
     .shop-catalog-filter-widget {
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
+        .list-group {
+            margin: 0px;
+        }
         .list-group-item {
             border-width: 0px 0px 1px 0px;
             border-style: solid;
@@ -675,4 +706,11 @@ section.mpws-js-shop-viewed-products {
     color: #f27a24 !important;
     border-color: #f27a24;
     background-color: #fff;
+}
+
+
+.exchange-rates-widget {
+    .btn:after {
+        display: none;
+    }
 }

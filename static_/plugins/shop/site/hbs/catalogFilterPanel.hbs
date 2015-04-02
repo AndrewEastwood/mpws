@@ -1,0 +1,162 @@
+<div class="shop-catalog-filter">
+
+    {{#if filter.active}}
+    <div class="shop-catalog-filter-widget">
+        <button class="btn btn-block shop-filter-cancel">Скасувати фільтр</button>
+    </div>
+    {{/if}}
+
+    {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categorySubCategories }}
+    <div class="shop-catalog-filter-widget shop-catalog-filter-subcategories subcategories">
+        <div class="title row">
+            <strong>Підкатегорії:</strong>
+        </div>
+        <div class="content row">
+            <div class="row">
+                <span class="helptext">К-ість товарів відповідно до фільтру у підкатегоріях <i class="fa fa-level-down"></i></span>
+                <div class="list-group">
+                {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
+                    {{#if ProductCount }}
+                    <a class="list-group-item" href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" rel="category" title="{{Name}}">
+                        <label>{{Name}}</label>
+                        <span class="product-count">({{ProductCount}})</span>
+                    </a>
+                    {{else}}
+                    <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
+                        <label>{{Name}}</label>
+                        <span class="product-count">({{ProductCount}})</span>
+                    </a>
+                    {{/if}}
+                {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/mpwsIsNotEmpty}}
+
+    {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categoryBrands }}
+    <div class="shop-catalog-filter-widget shop-catalog-filter-widget-brands{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_categoryBrands }} applied{{/mpwsIsNotEmpty}}">
+        <div class="title row">
+            <strong>Виробники:</strong>
+        </div>
+        <div class="content row">
+            <div class="row">
+                <span class="helptext">К-ість товарів у цього виробника <i class="fa fa-level-down"></i></span>
+                <div class="list-group list-group-category-brands">
+                {{#each filter.filterOptionsAvailable.filter_categoryBrands }}
+                    {{#in_array ../filter.filterOptionsApplied.filter_categoryBrands ID }}
+                    <a class="list-group-item active" href="javascript://" rel="brand" title="{{Name}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
+                            {{Name}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{else}}
+                    <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                            {{Name}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{/in_array}}
+                {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/mpwsIsNotEmpty}}
+
+    {{#isnt filter.filterOptionsAvailable.filter_commonPriceMax filter.filterOptionsAvailable.filter_commonPriceMin }}
+    <div class="shop-catalog-filter-widget shop-catalog-filter-widget-price">
+        <div class="title row">
+            <strong>Ціна:</strong>
+        </div>
+        <div class="content row">
+            <div class="subtitle row">
+                <span class="shop-filter-price shop-filter-price-start">
+                {{#each filter.info.priceEdgesAppliedConverted.min}}
+                    <strong class="shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+                </span>
+                <span class="shop-filter-price shop-filter-price-end">
+                {{#each filter.info.priceEdgesAppliedConverted.max}}
+                    <strong class="shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+                </span>
+            </div>
+            <div class="row">
+                <input type="text" class="form-control slider">
+            </div>
+        </div>
+    </div>
+    {{/isnt}}
+
+    {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
+    {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
+    <div class="shop-catalog-filter-widget shop-catalog-filter-widget-features{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonFeatures }} applied{{/mpwsIsNotEmpty}}">
+        <div class="title row">
+            <strong>{{@key}}</strong>
+        </div>
+        <div class="content row">
+            <div class="row">
+                <div class="list-group list-group-category-features">
+                {{#each this }}
+                    {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
+                    <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked">
+                            {{Name}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{else}}
+                    <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_commonFeatures">
+                            {{Name}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{/in_array}}
+                {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{/mpwsIsNotEmpty}}
+
+    <div class="shop-catalog-filter-widget shop-catalog-filter-widget-status{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonStatus }} applied{{/mpwsIsNotEmpty}}">
+        <div class="title row">
+            <strong>Наявність:</strong>
+        </div>
+        <div class="content row">
+            {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
+                <span class="helptext">К-ість товарів за типом продажу<i class="fa fa-level-down"></i></span>
+                <div class="list-group list-group-category-availability">
+                {{#each filter.filterOptionsAvailable.filter_commonStatus }}
+                    {{#in_array ../filter.filterOptionsApplied.filter_commonStatus ID }}
+                    <a class="list-group-item active" href="javascript://" rel="status" title="{{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}" for="{{ID}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
+                            {{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{else}}
+                    <a class="list-group-item" href="javascript://" rel="status" title="{{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}">
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
+                            {{mpwsGetValueByKey ../../../lang key=ID prefix="product_status_"}}
+                        </label>
+                        <span class="product-count">({{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}})</span>
+                    </a>
+                    {{/in_array}}
+                {{/each}}
+                </div>
+            {{/mpwsIsNotEmpty}}
+        </div>
+    </div>
+</div>

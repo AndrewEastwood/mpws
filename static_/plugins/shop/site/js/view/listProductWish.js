@@ -11,8 +11,7 @@ define([
 
     var ListProductWish = Backbone.View.extend({
         collection: CollWishList.getInstance(),
-        className: 'shop-wishlist-standalone clearfix',
-        id: 'shop-cart-wishlist-ID',
+        className: 'shop-productlist-wish',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {

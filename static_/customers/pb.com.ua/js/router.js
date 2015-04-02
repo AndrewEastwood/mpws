@@ -126,22 +126,22 @@ define([
 
         views: {},
 
-        getPlugin: function (name) {
-            return this.plugins[name] || null;
-        },
+        // getPlugin: function (name) {
+        //     return this.plugins[name] || null;
+        // },
 
-        setPlugin: function (plugin) {
-            if (!plugin || !plugin.name)
-                throw 'wrong plugin object. plugin is ' + (typeof plugin);
-            this.plugins[plugin.name] = plugin;
-        },
+        // setPlugin: function (plugin) {
+        //     if (!plugin || !plugin.name)
+        //         throw 'wrong plugin object. plugin is ' + (typeof plugin);
+        //     this.plugins[plugin.name] = plugin;
+        // },
         initialize: function () {
 
             var that = this;
 
             this.on('app:ready', function () {
 
-                that.setPlugin(APP.getPlugin('shop'));
+                // that.setPlugin(APP.getPlugin('shop'));
 
                 // menu items
                 $('.mpws-js-menu-cart').html(that.plugins.shop.menuItemCart().$el);
@@ -163,12 +163,12 @@ define([
                 var $tplBreadcrumb = that.templates.breadcrumb(),
                     $tplCategoriesRibbon = that.templates.categoriesRibbon(),
                     optionsCategoryMenu = {design: {className: 'nav navbar-nav'}},
-                    optionsTopLevelList = {design: {style: 'toplevel', className: 'dropdown-menu'}};
+                    optionsSubItemChildItems = {design: {style: 'sub', className: 'dropdown-menu'}};
 
-                that.views.categoryHomeMenu = that.plugins.shop.categoryNavigator(optionsCategoryMenu);
-                that.views.categoryRibbonMenu = that.plugins.shop.categoryNavigator(optionsCategoryMenu);
-                that.views.categorySearchTopLevelList = that.plugins.shop.categoryNavigator(optionsTopLevelList);
-                that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.categoryNavigator(optionsTopLevelList);
+                that.views.categoryHomeMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
+                that.views.categoryRibbonMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
+                that.views.categorySearchTopLevelList = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
+                that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
 
                 $tplBreadcrumb.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
                 $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(that.views.categoryRibbonMenu.render().$el);
@@ -176,8 +176,8 @@ define([
                 $('.mpws-js-breadcrumb').html($tplBreadcrumb);
                 $('.mpws-js-shop-categories-ribbon').html($tplCategoriesRibbon);
                     // categoryListOptions = {design: {className: 'nav'}},
-                    // categoryMenu = that.plugins.shop.categoryNavigator(categoryListOptions)
-                    // categoryTopLevelList = that.plugins.shop.categoryNavigator({design: {style: 'toplevel', className: 'dropdown-menu'}})
+                    // categoryMenu = that.plugins.shop.catalogNavigator(categoryListOptions)
+                    // categoryTopLevelList = that.plugins.shop.catalogNavigator({design: {style: 'sub', className: 'dropdown-menu'}})
                 // set top category list with banner
                 
                 // setup home fame
@@ -307,34 +307,7 @@ define([
             $('section.mpws-js-main-section').html($tplProductsTab);
         },
         shopCatalogCategory: function (category) {
-            this.toggleCategoryRibbonAndBreadcrumb(true);
-            this.toggleHomeFrame(false);
-            this.refreshViewedProducts();
-            this.updateFooter();
-
-            var $tplCatalogBrowser = this.templates.catalogBrowser(),
-                productOptions = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item', wrap: '<div class="row"></div>'}},
-                featuredProducts = this.plugins.shop.featuredProducts(productOptions);
-
-            var view = this.plugins.shop.catalogCategory(category);
-
-            $tplCatalogBrowser.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
-
-            view.on('render:complete', function () {
-                $tplCatalogBrowser.find('.mpws-js-category-filter').html(view.getFilterPanel());
-                $tplCatalogBrowser.find('.mpws-ja-catalog-products').html(view.getCatalogContent());
-
-                $tplCatalogBrowser.find('.mpws-js-category-filter .list-group-item input[type="checkbox"]').iCheck({
-                    checkboxClass: 'icheckbox_minimal-red shop-filter-checkbox',
-                    radioClass: 'iradio_minimal-red'
-                });
-            });
-
-            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
-            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-warranty').html(this.plugins.shop.menuItemPopupInfoWarranty().$el);
-            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-shipping').html(this.plugins.shop.menuItemPopupInfoShipping().$el);
-
-            $('section.mpws-js-main-section').html($tplCatalogBrowser);
+            this.shopCatalogCategoryPage(category);
         },
         shopCatalogCategoryPage: function (category, pageNo) {
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -342,9 +315,41 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-            var view = this.plugins.shop.catalogCategory(category, pageNo);
-            view.$el.addClass('container');
-            $('section.mpws-js-main-section').html(view.$el);
+            var that = this,
+                $tplCatalogBrowser = this.templates.catalogBrowser(),
+                productOptions = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item', wrap: '<div class="row"></div>'}},
+                featuredProducts = this.plugins.shop.featuredProducts(productOptions);
+
+            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
+            var catalogBrowseView = this.plugins.shop.catalogBrowseContent();
+
+            $tplCatalogBrowser.find('.mpws-js-category-filter').html(catalogFilterView.$el);
+            $tplCatalogBrowser.find('.mpws-ja-catalog-products').html(catalogBrowseView.$el);
+            $tplCatalogBrowser.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
+
+            catalogFilterView.on('render:complete', function () {
+                $tplCatalogBrowser.find('.mpws-js-category-filter .list-group-item input[type="checkbox"]').iCheck({
+                    checkboxClass: 'icheckbox_minimal-red shop-filter-checkbox',
+                    radioClass: 'iradio_minimal-red'
+                });
+                // update breadcrumb
+                var brItems = [],
+                    productLocationPath = catalogFilterView.getPathInCatalog();
+                _(productLocationPath).each(function (locItem) {
+                    var pathCategorySubList = that.plugins.shop.catalogNavigator({design: {style: 'sub', parentID: locItem.ID}}),
+                        subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
+                    brItems.push([locItem.Name, locItem.url, subList]);
+                });
+                // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
+                that.updateBreadcrumb(brItems);
+
+            });
+
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-warranty').html(this.plugins.shop.menuItemPopupInfoWarranty().$el);
+            $tplCatalogBrowser.find('.mpws-js-catalog-infolink-shipping').html(this.plugins.shop.menuItemPopupInfoShipping().$el);
+
+            $('section.mpws-js-main-section').html($tplCatalogBrowser);
         },
         // todo:
         // show last 3 products only
@@ -384,7 +389,7 @@ define([
                 var brItems = [],
                     productLocationPath = productView.getPathInCatalog();
                 _(productLocationPath).each(function (locItem) {
-                    var pathCategorySubList = that.plugins.shop.categoryNavigator({design: {style: 'toplevel', parentID: locItem.ID}}),
+                    var pathCategorySubList = that.plugins.shop.catalogNavigator({design: {style: 'sub', parentID: locItem.ID}}),
                         subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
                     brItems.push([locItem.Name, locItem.url, subList]);
                 });
@@ -485,7 +490,7 @@ define([
                 newProducts = this.plugins.shop.newProducts(productOptions),
                 onSaleProducts = this.plugins.shop.onSaleProducts(productOptions),
                 topProducts = this.plugins.shop.topProducts(productOptions),
-                categoryTopLevelList = this.plugins.shop.categoryNavigator({design: {style: 'toplevel'}});
+                categoryTopLevelList = this.plugins.shop.catalogNavigator({design: {style: 'sub'}});
 
             $tplFooter.find('.mpws-js-shop-new-products-minimal-list').html(newProducts.$el);
             $tplFooter.find('.mpws-js-shop-onsale-products-minimal-list').html(onSaleProducts.$el);

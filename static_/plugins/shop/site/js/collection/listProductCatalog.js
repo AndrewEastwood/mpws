@@ -17,11 +17,21 @@ define([
         },
         savedFilters: {},
         initialize: function (categoryID) {
-            this.setCategoryID(categoryID);
+            console.log('initialize');
+            console.log(categoryID);
+            if (categoryID) {
+                this.setCategoryID(categoryID);
+            }
         },
         setCategoryID: function (categoryID) {
+            console.log('setCategoryID');
+            console.log(categoryID);
+            var resetFilter = this.categoryID !== categoryID;
+            if (resetFilter) {
+                this.resetFilter();
+            }
             this.categoryID = categoryID;
-            this.filter.filterOptionsApplied = this.createFilter(false);
+            this.filter.filterOptionsApplied = this.createFilter(resetFilter);
         },
         createFilter: function (reset) {
             return {
@@ -56,6 +66,8 @@ define([
             _(this.filter.filterOptionsApplied).each(function (v, filterKey) {
                 Cache.set(filterKey, null);
             });
+            console.log('resetFilter');
+            console.log(JSON.stringify(this.filter.filterOptionsApplied));
             return this;
         },
         isFilterApplied: function (filter) {
@@ -86,14 +98,14 @@ define([
             return this.filter.filterOptionsApplied[filterKey];
         },
         setFilter: function (filterKey, value) {
+            console.log('setFilter   ' + filterKey + '   , ' + value);
             var key = this.generateFilterStorageKey(filterKey);
             this.filter.filterOptionsApplied[filterKey] = value;
             Cache.set(filterKey, this.filter.filterOptionsApplied[filterKey]);
             // this.savedFilters[key] = value;
         },
-        url: function () {
+        rootUrl: function () {
             var _options = {};
-            // debugger;
             _(this.filter.filterOptionsApplied).each(function(item, key){
                 if (_.isEmpty(item))
                     return;
@@ -103,10 +115,7 @@ define([
                     _options[key] = item;
             });
             // console.log(_options);
-            return APP.getApiLink(_.extend({}, _options, {
-                source: 'shop',
-                fn: 'catalog'
-            }));
+            return APP.getApiLink('shop', 'catalog', this.categoryID, _options);
         },
         parse: function (data) {
             // adjust products

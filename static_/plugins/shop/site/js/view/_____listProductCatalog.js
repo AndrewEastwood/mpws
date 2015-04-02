@@ -17,7 +17,6 @@ define([
 ], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItem, BootstrapDialog, priceFmt, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
-        collection: CollListProductCatalog.getInstance(),
         className: 'shop-catalog-browse',
         template: Handlebars.compile(tpl), // check
         lang: lang,
@@ -25,16 +24,36 @@ define([
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_InputChecked',
             'click .shop-catalog-filter-widget.subcategories a.list-group-item': 'resetFilter',
-            // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_InputChecked',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
             "slideStop input.slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter'
         },
+        getPathInCatalog: function () {
+            return this.collection._location;
+        },
+        getDisplayName: function () {
+            return this.collection.category.Name;
+        },
+        getCatalogUrl: function (withPage) {
+            var externalKey = this.collection.category.ExternalKey,
+                urlTemplate = null,
+                urlOptions = {asRoot: true, category: externalKey},
+                pageNo = this.collection.getFilter('filter_viewPageNum');
+            if (withPage && pageNo > 1) {
+                urlTemplate = APP.instances.shop.urls.shopCatalogCategoryPage;
+                urlOptions.page = pageNo;
+            } else {
+                urlTemplate = APP.instances.shop.urls.shopCatalogCategory;
+            }
+            return Handlebars.helpers.bb_link(urlTemplate, urlOptions);
+        },
         resetFilter: function () {
+            console.log('resetFilter');
             this.collection.resetFilter();
             return true;
         },
         initialize: function (options) {
+            this.collection = CollListProductCatalog.getInstance();
             _.bindAll(this, 'render', 'switchCurrency');
             this.collection.setCategoryID(options.categoryID);
             this.collection.on('sync', this.render, this);
@@ -47,11 +66,7 @@ define([
             }
         },
         render: function () {
-            // debugger;
             var that = this;
-            // var displayItems = [];
-            // var _filterData = ;
-            // debugger;
             var data = Utils.getHBSTemplateData(this);
             data.filter = this.collection.filter;
             data.pagination = this.collection.pagintaion;
@@ -95,6 +110,7 @@ define([
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
+            this.delegateEvents();
             this.trigger('render:complete');
             return this;
         },
@@ -212,11 +228,11 @@ define([
             return false;
         },
         filterProducts_CancelFilter: function () {
-            // console.log('cancel filtering');
+            console.log('cancel filtering');
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function (event) {
-            console.log('filterProducts_ListItemClicked');
+            // console.log('filterProducts_ListItemClicked');
             // debugger;
             var $el = $(event.target);
             if ($el.parents('a').attr('rel') === 'category' || $el.attr('rel') === 'category') {

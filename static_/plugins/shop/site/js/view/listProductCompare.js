@@ -11,7 +11,7 @@ define([
 
     var ListProductCompare = Backbone.View.extend({
         collection: CollCompareList.getInstance(),
-        className: 'shop-products-compare clearfix',
+        className: 'shop-productlist-compare',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {

@@ -1197,12 +1197,12 @@ class products {
     }
 
     public function get (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            if (is_numeric($req->get['id'])) {
-                $ProductID = intval($req->get['id']);
+        if (!empty($req->get['params'])) {
+            if (is_numeric($req->get['params'])) {
+                $ProductID = intval($req->get['params']);
                 $resp = $this->getProductByID($ProductID);
             } else {
-                $resp = $this->getProductByExternalKey($req->get['id']);
+                $resp = $this->getProductByExternalKey($req->get['params']);
             }
         } else {
             if (isset($req->get['type'])) {
@@ -1248,10 +1248,10 @@ class products {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $ProductID = intval($req->get['id']);
+            $ProductID = intval($req->get['params']);
             $resp = $this->updateProduct($ProductID, $req->data);
             // $this->_getOrSetCachedState('changed:product', true);
         }
