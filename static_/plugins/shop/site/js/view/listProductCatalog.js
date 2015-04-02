@@ -55,7 +55,8 @@ define([
             data.filter = this.collection.filter;
             data.pagination = this.collection.pagintaion;
             // unset current category in categories
-            data.filter.filterOptionsAvailable.filter_categorySubCategories = _(data.filter.filterOptionsAvailable.filter_categorySubCategories).omit(this.collection.filter.info.category.ExternalKey);
+            data.filter.filterOptionsAvailable.filter_categorySubCategories =
+                _(data.filter.filterOptionsAvailable.filter_categorySubCategories).omit(this.collection.filter.info.category.ExternalKey);
             // data.filter.active = this.collection.isFilterApplied();
 
             this.$el.html(this.template(data));
@@ -94,10 +95,9 @@ define([
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
-            APP.getCustomer().setBreadcrumb({
-                categories: this.collection._location
-            });
-
+            return this;
+        },
+        getPageAttributes: function () {
             // seo start
             var formatTitle = "",
                 formatKeywords = "",
@@ -135,10 +135,8 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            APP.setPageAttributes({title: title, keywords: keywords, description: description});
+            return {title: title, keywords: keywords, description: description};
             // seo end
-
-            return this;
         },
         filterProducts_InputChecked: function (event) {
             // console.log('filterProducts_InputChecked');

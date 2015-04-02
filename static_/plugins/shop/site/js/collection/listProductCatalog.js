@@ -105,7 +105,8 @@ define([
             // console.log(_options);
             return APP.getApiLink(_.extend({}, _options, {
                 source: 'shop',
-                fn: 'catalog'}));
+                fn: 'catalog'
+            }));
         },
         parse: function (data) {
             // adjust products

@@ -39,7 +39,7 @@ define([
         // '!/': 'home',
         '!/catalog/:category': 'shopCatalogCategory',
         '!/catalog/:category/:page': 'shopCatalogCategoryPage',
-        '!/catalog/': 'shopCatalog',
+        '!/catalog/': 'home', //catalog
         '!/product/:product': 'shopProduct',
         '!/cart': 'shopCart',
         '!/wishlist': 'shopWishlist',
@@ -230,41 +230,7 @@ define([
                 }
             });
         },
-        refreshViewedProducts: function () {
-            // this.views.viewedProducts.collection.fetch({reset: true});
-        },
-        updateBreadcrumb: function (items) {
-            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:not(.locked)').remove();
-            if (_.isString(items)) {
-                items = [[items, null]];
-            }
-            _(items).each(function (item) {
-                if (!item || !item[0]) {
-                    return;
-                }
-                var text = item[0] || null,
-                    url = item[1] || null,
-                    $bcItem = $('<li>')
-                    .addClass('breadcrumb-item'),
-                    $bcLink = $('<a>').attr('href', url || 'javascript://').text(text);
-                $bcItem.html($bcLink);
-                if (item[2]) {
-                    var $subMenu = $(item[2]);
-                    if ($subMenu.is('ul')) {
-                        $subMenu.addClass('dropdown-menu');
-                        $bcItem.append($subMenu);
-                        $bcLink.attr({
-                            'class': 'dropdown-toggle',
-                            'data-toggle': 'dropdown',
-                            'aria-expanded': 'true'
-                        });
-                        $bcItem.addClass('dropdown');
-                    }
-                }
-                $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list').append($bcItem);
-            });
-            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:last').addClass('current');
-        },
+        // routes
         home: function () {
             this.toggleCategoryRibbonAndBreadcrumb(false);
             this.toggleHomeFrame(true);
@@ -323,6 +289,29 @@ define([
 
             $('section.mpws-js-main-section').html($tplProductsTab);
         },
+        shopCatalogCategory: function (category) {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
+            var view = this.plugins.shop.catalogCategory(category);
+            view.$el.addClass('container');
+            $('section.mpws-js-main-section').html(view.$el);
+        },
+        shopCatalogCategoryPage: function (category, pageNo) {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+
+            var view = this.plugins.shop.catalogCategory(category, pageNo);
+            view.$el.addClass('container');
+            $('section.mpws-js-main-section').html(view.$el);
+        },
+        // todo:
+        // show last 3 products only
+        // attach promo section
         shopCart: function () {
             this.updateBreadcrumb('Кошик');
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -333,6 +322,15 @@ define([
             $('section.mpws-js-main-section').html(this.plugins.shop.cart().$el);
 
         },
+        // todo:
+        // add tabs for extra info
+        // add magnifier
+        // promo section
+        // relative products
+        // product families
+        // enable wish and compare list
+        // quick order (by name and phone only)
+        // recommended items
         shopProduct: function (id) {
             var that = this;
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -357,6 +355,9 @@ define([
             $('section.mpws-js-main-section').html(productView.$el);
 
         },
+
+        // under construction
+        // todo: implement events
         shopWishlist: function () {
             this.updateBreadcrumb('Мій список');
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -374,6 +375,8 @@ define([
                 initEchoJS();
             });
         },
+        // under construction
+        // todo: implement events
         shopCompare: function () {
             this.updateBreadcrumb('Порівняння');
             this.toggleCategoryRibbonAndBreadcrumb(true);
@@ -396,19 +399,45 @@ define([
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
             this.updateFooter();
-
-            //     $tplCategoriesRibbon = $(Handlebars.compile(tplCategoriesRibbon)()),
-            //     categoryOptions = {design: {className: 'nav navbar-nav'}},
-            //     categoryMenu = this.plugins.shop.categoryNavigator(categoryOptions);
-            // $tplCategoriesRibbon.find('.mpws-js-catalog-tree').html(categoryMenu.render().$el);
-
-            // $('.mpws-js-shop-categories-topnav').html($tplCategoriesRibbon);
             $('section.mpws-js-main-section').html(this.templates.page404());
-
         },
 
         // utils
-
+        refreshViewedProducts: function () {
+            // this.views.viewedProducts.collection.fetch({reset: true});
+        },
+        updateBreadcrumb: function (items) {
+            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:not(.locked)').remove();
+            if (_.isString(items)) {
+                items = [[items, null]];
+            }
+            _(items).each(function (item) {
+                if (!item || !item[0]) {
+                    return;
+                }
+                var text = item[0] || null,
+                    url = item[1] || null,
+                    $bcItem = $('<li>')
+                    .addClass('breadcrumb-item'),
+                    $bcLink = $('<a>').attr('href', url || 'javascript://').text(text);
+                $bcItem.html($bcLink);
+                if (item[2]) {
+                    var $subMenu = $(item[2]);
+                    if ($subMenu.is('ul')) {
+                        $subMenu.addClass('dropdown-menu');
+                        $bcItem.append($subMenu);
+                        $bcLink.attr({
+                            'class': 'dropdown-toggle',
+                            'data-toggle': 'dropdown',
+                            'aria-expanded': 'true'
+                        });
+                        $bcItem.addClass('dropdown');
+                    }
+                }
+                $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list').append($bcItem);
+            });
+            $('.mpws-js-breadcrumb ul.mpws-js-breadcrumb-list > li:last').addClass('current');
+        },
         updateFooter: function () {
             // adding footer
             var $tplFooter = $('footer.mpws-js-main-footer'),

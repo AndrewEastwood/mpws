@@ -248,18 +248,7 @@ define([
 
         // pages
 
-        catalogCategory: function (categoryID) {
-            // create new view
-            var listProductCatalog = new ViewListProductCatalog({
-                categoryID: categoryID
-            });
-            listProductCatalog.collection.fetch({
-                reset: true
-            });
-            return listProductCatalog;
-        },
-
-        catalogCategoryPage: function (categoryID, pageNo) {
+        catalogCategory: function (categoryID, pageNo) {
             // create new view
             var listProductCatalog = new ViewListProductCatalog({
                 categoryID: categoryID

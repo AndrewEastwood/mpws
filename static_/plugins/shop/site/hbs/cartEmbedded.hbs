@@ -29,7 +29,11 @@
                     </div>
                 </div>
                 <div class="col-xs-8 col-sm-8 no-margin">
-                    <div class="title">{{_displayName}}</div>
+                    <div class="title">
+                        <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_displayName}}">
+                            {{_displayName}}
+                        </a>
+                    </div>
                     <div class="price">
                     {{#each _prices.others}}
                         <strong class="product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
