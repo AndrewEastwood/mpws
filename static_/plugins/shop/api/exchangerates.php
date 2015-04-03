@@ -361,10 +361,10 @@ class exchangerates {
                     break;
                 }
             }
-        } elseif (empty($req->get['id'])) {
+        } elseif (empty($req->get['params'])) {
             $resp = $this->getExchangeRates_List($req->get);
         } else {
-            $agencyID = intval($req->get['id']);
+            $agencyID = intval($req->get['params']);
             $resp = $this->getExchangeRateByID($agencyID);
         }
     }
@@ -383,10 +383,10 @@ class exchangerates {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
+            $agencyID = intval($req->get['params']);
             $resp = $this->updateExchangeRate($agencyID, $req->data);
             // $this->_getOrSetCachedState('changed:agencies', true);
         }
@@ -397,10 +397,10 @@ class exchangerates {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
+            $agencyID = intval($req->get['params']);
             $resp = $this->deleteExchangeRate($agencyID);
             // $this->_getOrSetCachedState('changed:agencies', true);
         }

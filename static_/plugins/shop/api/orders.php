@@ -66,7 +66,7 @@ class orders {
         $config = dbquery::getShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         $self = $this;
         $callbacks = array(
@@ -87,7 +87,7 @@ class orders {
         $config = dbquery::getShopOrderList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         $self = $this;
         $callbacks = array(
@@ -108,7 +108,7 @@ class orders {
         $config = dbquery::getShopOrderList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         $self = $this;
         $callbacks = array(
@@ -129,7 +129,7 @@ class orders {
         $config = dbquery::getShopOrderList($options);
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         $self = $this;
         $callbacks = array(
@@ -757,9 +757,9 @@ class orders {
 
     public function get (&$resp, $req) {
         global $app;
-        if (isset($req->get['id']) && $req->get['id'] !== "temp") {
+        if (isset($req->get['params']) && $req->get['params'] !== "temp") {
             if (API::getAPI('system:auth')->ifYouCan('Admin'))
-                $resp = $this->getOrderByID($req->get['id']);
+                $resp = $this->getOrderByID($req->get['params']);
             else
                 $resp['error'] = 'AccessDenied';
             return;
@@ -789,7 +789,7 @@ class orders {
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
         // $options = array();
-        $isTemp = !isset($req->get['id']);
+        $isTemp = !isset($req->get['params']);
 
         if (!$isTemp && $app->isToolbox()) {
             // if (API::getAPI('system:auth')->ifYouCan('Admin')) {
@@ -798,7 +798,7 @@ class orders {
             if (!API::getAPI('system:auth')->ifYouCan('Edit')) {
                 $resp["error"] = "AccessDenied";
             } else {
-                $resp = $this->updateOrder($req->get['id'], $req->data);
+                $resp = $this->updateOrder($req->get['params'], $req->data);
             }
             // } else {
                 // $resp['error'] = 'AccessDenied';
@@ -842,8 +842,8 @@ class orders {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (!empty($req->get['id'])) {
-            $OrderID = intval($req->get['id']);
+        if (!empty($req->get['params'])) {
+            $OrderID = intval($req->get['params']);
             $resp = $this->disableOrderByID($OrderID);
             return;
         }

@@ -15,16 +15,16 @@ define([
         // },
         lang: lang,
         template: Handlebars.compile(tpl), // check
-        initialize: function () {
-            var self = this;
-            APP.Sandbox.eventSubscribe('global:auth:status:inactive', function () {
-                self.off();
-                self.remove();
-            });
-        },
+        // initialize: function () {
+        //     var self = this;
+        //     APP.Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+        //         self.off();
+        //         self.remove();
+        //     });
+        // },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            this.$el = $(this.$el.html());
+            // this.$el = $(this.$el.html());
             return this;
         }
     });

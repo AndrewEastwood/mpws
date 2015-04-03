@@ -311,14 +311,14 @@ class categories {
     public function get (&$resp, $req) {
         if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
-        } else if (empty($req->get['id'])) {
+        } else if (empty($req->get['params'])) {
             $resp = $this->getCategories_List($req->get);
         } else {
-            if (is_numeric($req->get['id'])) {
-                $CategoryID = intval($req->get['id']);
+            if (is_numeric($req->get['params'])) {
+                $CategoryID = intval($req->get['params']);
                 $resp = $this->getCategoryByID($CategoryID);
             } else {
-                $resp = $this->getCategoryByExternalKey($req->get['id']);
+                $resp = $this->getCategoryByExternalKey($req->get['params']);
             }
         }
     }

@@ -9,18 +9,13 @@ define([
 
     var Feeds = Backbone.Collection.extend({
         model: ModelFeed,
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'feeds'
-        }),
+        url: APP.getApiLink('shop', 'feeds'),
         comparator: function (model) {
             return -model.get('time');
         },
         generateNewProductFeed: function () {
             var that = this,
-                jobUrl = APP.getApiLink({
-                    source: 'shop',
-                    fn: 'feeds',
+                jobUrl = APP.getApiLink('shop','feeds',{
                     generate: true
                 });
             Backbone.$.get(jobUrl, function () {

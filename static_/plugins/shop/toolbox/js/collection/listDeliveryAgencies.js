@@ -9,10 +9,7 @@ define([
 
         model: ModelDeliveryAgency,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'delivery'
-        }),
+        url: APP.getApiLink('shop','delivery'),
 
         // Initial pagination states
         state: {

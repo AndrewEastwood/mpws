@@ -250,7 +250,7 @@ class feeds {
             // $imagesToDownload = array();
             $urls = $app->getSettings('urls');
             $options = array(
-                'script_url' =>  $urls->upload,
+                'script_url' =>  $urls['upload'],
                 'download_via_php' => true,
                 'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
                 'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
@@ -490,6 +490,9 @@ class feeds {
         $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(50);
         $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(50);
         $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(150);
+        if (!file_exists(Path::rootPath() . $this->getFeedsUploadDir())) {
+            mkdir(Path::rootPath() . $this->getFeedsUploadDir());
+        }
         $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls';
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         PHPExcel_Shared_File::setUseUploadTempDirectory(true);

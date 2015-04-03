@@ -5,11 +5,9 @@ define([
     return Backbone.Model.extend({
         url: function () {
             var _params = {
-                source: 'shop',
-                fn: 'exchangerates',
                 type: 'privatbank'
             };
-            return APP.getApiLink(_params);
+            return APP.getApiLink('shop', 'exchangerates', _params);
         }
     });
 

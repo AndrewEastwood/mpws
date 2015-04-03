@@ -12,12 +12,10 @@ define([
 
         url: function () {
             var urlOptions = {
-                source: 'shop',
-                fn: 'origins',
                 removed: !!this.queryParams.removed
             };
 
-            return APP.getApiLink(urlOptions);
+            return APP.getApiLink('shop','origins',urlOptions);
         },
 
         initialize: function () {

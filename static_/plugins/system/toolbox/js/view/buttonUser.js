@@ -21,6 +21,7 @@ define([
                 this.remove();
             else
                 this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            return this;
         }
     });
 

@@ -3,9 +3,7 @@ define([
 ], function (Backbone) {
 
     var Dashboard = Backbone.Model.extend({
-        url: APP.getApiLink({
-            source: 'system',
-            fn: 'stats',
+        url: APP.getApiLink('system','stats',{
             type: 'overview'
         })
     });

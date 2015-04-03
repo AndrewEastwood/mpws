@@ -39,17 +39,6 @@ define([
         BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = 'Скасувати';
         BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = 'Підтвердити';
 
-
-    // var _customerOptions = {};
-
-
-    // function CustomerClass () {}
-
-    // CustomerClass.prototype.renderProxy = function () {
-    //     // console.log('customer renderProxy');
-    //     // console.log(arguments);
-    //     return true;
-    // }
     var shopRoutes = {
         // '!/': 'home',
         '!/catalog/:category': 'shopCatalogCategory',
@@ -65,11 +54,10 @@ define([
 
     APP.configurePlugins({
         shop: {
-            urls: _(shopRoutes).invert(),
-            productShortClassNames: 'no-margin product-item-holder hover'
+            urls: _(shopRoutes).invert()//,
+            // productShortClassNames: 'no-margin product-item-holder hover'
         }
     });
-
 
     var templatesCompiled = {
         homeFrame: $(Handlebars.compile(tplHomeFrame)()),
@@ -344,6 +332,7 @@ define([
                 });
                 // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
                 that.updateBreadcrumb(brItems);
+                initEchoJS();
             });
 
             $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
@@ -366,6 +355,7 @@ define([
             view.$el.addClass('container');
 
             $('section.mpws-js-main-section').html(view.$el);
+            initEchoJS();
 
         },
         // todo:
@@ -396,6 +386,7 @@ define([
                 });
                 brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
                 that.updateBreadcrumb(brItems);
+                initEchoJS();
             });
 
             $('section.mpws-js-main-section').html(productView.$el);
@@ -525,20 +516,5 @@ define([
     }
 
     return Router;
-
-
-    // CustomerClass.prototype.setBreadcrumb = function (options) {
-        // breadcrumb.render(options);
-        // APP.Sandbox.eventNotify('global:content:render', {
-        //     name: 'CommonBreadcrumbTop',
-        //     el: breadcrumb.$el.clone()
-        // });
-        // APP.Sandbox.eventNotify('global:content:render', {
-        //     name: 'CommonBreadcrumbBottom',
-        //     el: breadcrumb.$el.clone()
-        // });
-    // }
-
-    // return CustomerClass;
 
 });

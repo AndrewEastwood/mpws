@@ -173,10 +173,10 @@ class delivery {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp = $this->getDeliveries_List($req->get);
         } else {
-            $agencyID = intval($req->get['id']);
+            $agencyID = intval($req->get['params']);
             $resp = $this->getDeliveryAgencyByID($agencyID);
         }
     }

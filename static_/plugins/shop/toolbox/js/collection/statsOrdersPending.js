@@ -5,9 +5,7 @@ define([
     var StatsListOrdersPending = ListOrders.extend({
         initialize: function () {
             ListOrders.prototype.initialize.apply(this);
-            this.url = APP.getApiLink({
-                source: 'shop',
-                fn: 'shopstats',
+            this.url = APP.getApiLink('shop','shopstats',{
                 type: 'orders_list_pending'
             });
         }

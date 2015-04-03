@@ -166,6 +166,7 @@ class dbquery {
     }
 
     public static function shopCreateProduct ($data) {
+        global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $ExternalKey = array();

@@ -4,16 +4,7 @@ define([
 
     var ExchangeRate = Backbone.Model.extend({
         idAttribute: "ID",
-        url: function () {
-            var _params = {
-                source: 'shop',
-                fn: 'exchangerates'
-            };
-            if (!this.isNew()) {
-                _params.id = this.id;
-            }
-            return APP.getApiLink(_params);
-        }
+        urlRoot: APP.getApiLink('shop', 'exchangerates')
     });
 
     return ExchangeRate;

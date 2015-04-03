@@ -4,16 +4,7 @@ define([
 
     var Promo = Backbone.Model.extend({
         idAttribute: "ID",
-        urlRoot: function () {
-            var _params = {
-                source: 'shop',
-                fn: 'promos'
-            };
-            if (!this.isNew()) {
-                _params.id = this.id;
-            }
-            return APP.getApiLink(_params);
-        }
+        urlRoot: APP.getApiLink('shop', 'promos')
     });
 
     return Promo;

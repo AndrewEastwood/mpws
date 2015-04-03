@@ -175,10 +175,10 @@ class origins {
     }
 
     public function get (&$resp, $req) {
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp = $this->getOrigins_List($req->get);
         } else {
-            $OriginID = intval($req->get['id']);
+            $OriginID = intval($req->get['params']);
             $resp = $this->getOriginByID($OriginID);
         }
     }
@@ -197,10 +197,10 @@ class origins {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $OriginID = intval($req->get['id']);
+            $OriginID = intval($req->get['params']);
             $resp = $this->updateOrigin($OriginID, $req->data);
             // $this->_getOrSetCachedState('changed:origin', true);
         }
@@ -211,10 +211,10 @@ class origins {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $OriginID = intval($req->get['id']);
+            $OriginID = intval($req->get['params']);
             $resp = $this->disableOrigin($OriginID);
             // $this->_getOrSetCachedState('changed:origin', true);
         }

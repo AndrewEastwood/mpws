@@ -5,14 +5,11 @@ define([
     var Stats = Backbone.Model.extend({
         type: false,
         url: function () {
-            var _params = {
-                source: 'shop',
-                fn: 'shopstats'
-            };
+            var _params = {};
             if (this.type) {
                 _params.type = this.type;
             }
-            return APP.getApiLink(_params);
+            return APP.getApiLink('shop', 'shopstats', _params);
         }
     });
 

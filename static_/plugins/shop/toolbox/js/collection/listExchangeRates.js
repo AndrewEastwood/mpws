@@ -9,10 +9,7 @@ define([
 
         model: ModelExchangeRate,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'exchangerates'
-        }),
+        url: APP.getApiLink('shop','exchangerates'),
 
         // Initial pagination states
         state: {

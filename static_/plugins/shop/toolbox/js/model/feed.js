@@ -6,15 +6,12 @@ define([
     var Feed = Backbone.Model.extend({
         idAttribute: "ID",
         url: function () {
-            var _params =  {
-                source: 'shop',
-                fn: 'feeds'
-            };
+            var _params =  {};
             if (!this.isNew()) {
                 _params['name'] = this.get('name');
                 _params['type'] = this.get('type');
             }
-            return APP.getApiLink(_params);
+            return APP.getApiLink('shop','feeds',_params);
         },
         parse: function (data) {
             moment.locale('uk');

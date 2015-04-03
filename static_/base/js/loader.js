@@ -58,6 +58,7 @@ require.config({
         'owl.carousel': 'vendors/owl.carousel/dist/owl.carousel',
         'odometer': 'vendors/odometer/odometer',
         'icheck': 'vendors/iCheck/icheck',
+        'routefilter': 'vendors/routefilter/dist/backbone.routefilter',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',

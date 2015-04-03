@@ -11,14 +11,11 @@ define([
         model: ModelOrigin,
 
         url: function () {
-            var urlOptions = {
-                source: 'shop',
-                fn: 'promos'
-            };
+            var urlOptions = {};
             if (this.queryParams.expired) {
                 urlOptions.expired = true;
             }
-            return APP.getApiLink(urlOptions);
+            return APP.getApiLink('shop','promos',urlOptions);
         },
 
         // Initial pagination states

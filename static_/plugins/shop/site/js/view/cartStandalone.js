@@ -151,7 +151,7 @@ define([
             }
 
             this.$('select').select2();
-            this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
+            // this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
 
             var account = APP.hasPlugin('account') && this.model.has('account') && this.model.get('account').ID;
             // if we have saved order we clear user data

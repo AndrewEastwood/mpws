@@ -13,13 +13,11 @@ define([
 
         url: function () {
             var urlOptions = {
-                source: 'shop',
-                fn: 'categories',
                 limit: null,
                 removed: !!this.queryParams.removed
             };
 
-            return APP.getApiLink(urlOptions);
+            return APP.getApiLink('shop','categories',urlOptions);
         },
 
         initialize: function () {

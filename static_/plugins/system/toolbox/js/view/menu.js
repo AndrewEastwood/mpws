@@ -15,7 +15,7 @@ define([
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            this.$el = $(this.$el.html());
+            // this.$el = $(this.$el.html());
             return this;
         }
     });

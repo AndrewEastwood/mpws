@@ -5,9 +5,7 @@ define([
     var StatsListProductsTodays = ListProducts.extend({
         initialize: function () {
             ListProducts.prototype.initialize.apply(this);
-            this.url = APP.getApiLink({
-                source: 'shop',
-                fn: 'shopstats',
+            this.url = APP.getApiLink('shop','shopstats',{
                 type: 'products_list_popular'
             });
         },

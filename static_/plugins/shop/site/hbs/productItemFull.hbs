@@ -3,14 +3,12 @@
 
         {{#if data.Images}}
          <div class="no-margin col-xs-12 col-sm-6 col-md-5 gallery-holder">
-            <div class="product-item-holder size-big single-product-gallery small-gallery">
-                <div id="owl-single-product" class="owl-carousel owl-theme">
-                    <div class="single-product-gallery-item" id="slide3">
-                        <a data-rel="prettyphoto" href="{{data.Images.[0].normal}}">
-                            <img class="img-responsive" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}">
-                        </a>
-                    </div><!-- /.single-product-gallery-item -->
-                </div><!-- /.single-product-slider -->
+            <div class="product-item-holder size-big single-product-gallery">
+                <div class="single-product-gallery-item">
+                    <a data-rel="prettyphoto" href="{{app.location.homepage}}{{data.Images.[0].normal}}">
+                        <img class="img-responsive" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}">
+                    </a>
+                </div><!-- /.single-product-gallery-item -->
                 {{#gt data.Images.length 1}}
                 <div class="single-product-gallery-thumbs gallery-thumbs">
                     <div id="owl-single-product-thumbnails" class="owl-carousel owl-theme">
