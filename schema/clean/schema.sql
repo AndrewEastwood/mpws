@@ -157,7 +157,7 @@ CREATE TABLE `mpws_tasks` (
   `PrcPath` varchar(300) COLLATE utf8_bin DEFAULT NULL,
   `Params` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
   `PID` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Result` text COLLATE utf8_bin,
+  `Result` blob,
   `Scheduled` tinyint(1) NOT NULL DEFAULT '0',
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
@@ -613,7 +613,7 @@ CREATE TABLE `shop_products` (
   `OriginID` int(11) NOT NULL,
   `Name` varchar(300) COLLATE utf8_bin NOT NULL,
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Synopsis` varchar(350) COLLATE utf8_bin NOT NULL,
+  `Synopsis` varchar(350) COLLATE utf8_bin DEFAULT NULL,
   `Description` text COLLATE utf8_bin,
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
@@ -1076,4 +1076,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-06  2:16:14
+-- Dump completed on 2015-04-06 11:33:05

@@ -71,7 +71,7 @@ class feeds {
             'running' => $task['IsRunning'],
             'complete' => $task['Complete'],
             'canceled' => $task['ManualCancel'],
-            'results' => !empty($task['Result']) ? gzuncompress($task['Result']) : '',
+            'results' => !empty($task['Result']) ? gzuncompress(stripcslashes($task['Result'])) : '',
             // 'canBeScheduled' => !$task['scheduled'],
             'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
             'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
@@ -273,7 +273,7 @@ class feeds {
                         // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
                         //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                         set_time_limit(120);
-                        echo '# ... importing image ' . $imgUrl . PHP_EOL;
+                        // echo '# ... importing image ' . $imgUrl . PHP_EOL;
                         $res = $upload_handler->importFromUrl($imgUrl, false);
                         foreach ($res['web'] as $impageUploadInfo) {
                             $images[] = $impageUploadInfo->name;
@@ -366,7 +366,7 @@ class feeds {
 
         // var_dump($task);
         // API::getAPI('system:tasks')->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
-        API::getAPI('system:tasks')->setTaskResult($task['ID'], gzcompress(print_r($res, true)));
+        API::getAPI('system:tasks')->setTaskResult($task['ID'], mysql_real_escape_string(gzcompress(print_r($res, true))));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
@@ -502,6 +502,9 @@ class feeds {
     }
 
     public function get (&$resp, $req) {
+        // $res = array('gdfgfdgdggd');
+        // echo gzcompress(print_r($res, true)) . PHP_EOL . PHP_EOL;
+        // echo mysql_real_escape_string(gzcompress(print_r($res, true))) . PHP_EOL . PHP_EOL;
         if (isset($req->get['generate'])) {
             $resp = $this->generateProductFeed();
         } else {
