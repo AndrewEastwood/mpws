@@ -262,10 +262,6 @@ define([
             return cBar;
         },
 
-        promoBanners: function () {
-        },
-
-
         // pages
         catalogFilterPanel: function (categoryID, pageNo) {
             // create new view

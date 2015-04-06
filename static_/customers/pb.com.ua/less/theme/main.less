@@ -1,9 +1,9 @@
 /*
-Template:       Media Center
-Description:    Responsive Electronics eCommerce Bootstrap 3 Template
-Version:        1.0
-Author:         Amin & Ibrahim
-Demo URI:       http://demo.transvelo.com/media-center
+Template:     Media Center
+Description:  Responsive Electronics eCommerce Bootstrap 3 Template
+Version:    1.0
+Author:     Amin & Ibrahim
+Demo URI:     http://demo.transvelo.com/media-center
 
 ===================================================================================
 Table of Contents
@@ -703,8 +703,8 @@ label.error {
   margin: 0;
   line-height: 15px;
 }
-img[src$="blank.gif"] {
-  background: url("../img/ajax.gif") no-repeat scroll center center #ffffff;
+img[src="assets/images/blank.gif"] {
+  background: url("../images/ajax.gif") no-repeat scroll center center #ffffff;
   width: 100%;
 }
 /*===================================================================================*/
@@ -1667,7 +1667,63 @@ header .top-cart-row .top-cart-holder .total-price-basket {
 .accordion-widget .accordion a {
   color: #636363;
 }
-
+.slider {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+.slider.slider-horizontal {
+  width: 100%!important;
+  height: 20px;
+}
+.slider.slider-horizontal .slider-track {
+  height: 6px;
+  width: 100%;
+  margin-top: -5px;
+  top: 50%;
+  left: 0;
+}
+.slider.slider-horizontal .slider-selection {
+  height: 100%;
+  top: 0;
+  bottom: 0;
+}
+.slider.slider-horizontal .slider-handle {
+  margin-top: -5px;
+}
+.slider input {
+  display: none;
+}
+.slider .tooltip-inner {
+  white-space: nowrap;
+}
+.slider-track {
+  position: absolute;
+  cursor: pointer;
+  background-color: #939393;
+  width: 94%!important;
+  margin: 0 auto;
+  background-repeat: repeat-x;
+}
+.slider-selection {
+  position: absolute;
+  background-repeat: repeat-x;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.slider-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 400px;
+  background-color: #fff;
+  top: -3px;
+  background-repeat: repeat-x;
+  margin-left: -3px !important;
+  opacity: 1;
+  border: 5px solid;
+}
 .star-holder .star {
   display: inline;
 }

@@ -9,8 +9,10 @@ define([
     'text!plugins/shop/site/hbs/catalogFilterPanel.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
+    'bootstrap',
     'bootstrap-select',
-    'bootstrap-slider'
+    'bootstrap-slider',
+    'jquery.cookie'
 ], function (_, Backbone, Handlebars, Utils, CollListProductCatalog, BootstrapDialog, priceFmt, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
@@ -67,32 +69,26 @@ define([
 
             // enhance ui components
             this.filterPrice = this.$('.slider').slider({
-                                min: 100,
-                max: 700,
-                step: 10,
-                value: [100, 400],
-                handle: "square"
-                
-                // min: data.filter.filterOptionsAvailable.filter_commonPriceMin,
-                // max: data.filter.filterOptionsAvailable.filter_commonPriceMax,
-                // step: 1,
-                // selection: 'after',
-                // value: [data.filter.filterOptionsApplied.filter_commonPriceMin, data.filter.filterOptionsApplied.filter_commonPriceMax],
-                // formatter: function (val) {
-                //     // debugger
-                //     if (val instanceof Array) {
-                //         var activeCurr = APP.instances.shop.settings._user.activeCurrency;
-                //         var rate = APP.instances.shop.settings.CUSTOM.currencyList[activeCurr];
-                //         var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
-                //         var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
-                //         var leftFormattedValue = priceFmt(leftEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
-                //         var rightFormattedValue = priceFmt(rightEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
-                //         // debugger
-                //         var tooltip = [leftFormattedValue, rightFormattedValue];
-                //         return tooltip.join(':');
-                //     }
-                //     return val;
-                // }
+                min: data.filter.filterOptionsAvailable.filter_commonPriceMin,
+                max: data.filter.filterOptionsAvailable.filter_commonPriceMax,
+                step: 1,
+                selection: 'after',
+                value: [data.filter.filterOptionsApplied.filter_commonPriceMin, data.filter.filterOptionsApplied.filter_commonPriceMax],
+                formatter: function (val) {
+                    // debugger
+                    if (val instanceof Array) {
+                        var activeCurr = APP.instances.shop.settings._user.activeCurrency;
+                        var rate = APP.instances.shop.settings.CUSTOM.currencyList[activeCurr];
+                        var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
+                        var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
+                        var leftFormattedValue = priceFmt(leftEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
+                        var rightFormattedValue = priceFmt(rightEdge, activeCurr, APP.instances.shop.settings.EXCHANAGERATESDISPLAY);
+                        // debugger
+                        var tooltip = [leftFormattedValue, rightFormattedValue];
+                        return tooltip.join(':');
+                    }
+                    return val;
+                }
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
@@ -187,25 +183,25 @@ define([
         filterProducts_PriceChanged: function (event) {
             // console.log(event);
             // debugger;
-            // if (event && event.stopPropagation)
-            //     event.stopPropagation();
-            // if (event && event.preventDefault)
-            //     event.preventDefault();
-            // // debugger;
-            // var _priceRange = this.filterPrice.slider('getValue');// $(event.target).slider('getValue');
+            if (event && event.stopPropagation)
+                event.stopPropagation();
+            if (event && event.preventDefault)
+                event.preventDefault();
+            // debugger;
+            var _priceRange = this.filterPrice.slider('getValue');// $(event.target).slider('getValue');
 
-            // var filter_commonPriceMin = _priceRange[0];
-            // var filter_commonPriceMax = _priceRange[1];
+            var filter_commonPriceMin = _priceRange[0];
+            var filter_commonPriceMax = _priceRange[1];
 
-            // this.collection.setFilter('filter_viewPageNum', 0);
-            // this.collection.setFilter('filter_commonPriceMin', filter_commonPriceMin);
-            // this.collection.setFilter('filter_commonPriceMax', filter_commonPriceMax);
+            this.collection.setFilter('filter_viewPageNum', 0);
+            this.collection.setFilter('filter_commonPriceMin', filter_commonPriceMin);
+            this.collection.setFilter('filter_commonPriceMax', filter_commonPriceMax);
 
-            // // this.$('.shop-filter-price-start').text(filter_commonPriceMin);
-            // // this.$('.shop-filter-price-end').text(filter_commonPriceMax);
+            // this.$('.shop-filter-price-start').text(filter_commonPriceMin);
+            // this.$('.shop-filter-price-end').text(filter_commonPriceMax);
 
-            // this.collection.fetch();
-            // return false;
+            this.collection.fetch();
+            return false;
         },
         filterProducts_CancelFilter: function () {
             console.log('cancel filtering');

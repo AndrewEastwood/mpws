@@ -182,13 +182,12 @@ define([
                     hotOffers.$el.owlCarousel({
                         loop: true,
                         autoplay: true,
-                        autoplayTimeout: 1000,
+                        autoplayTimeout: 5000,
                         autoplayHoverPause: true,
                         items: 1,
-                        animateOut: 'slideOutDown',
-                        animateIn: 'flipInX',
-                        margin:30,
-                        stagePadding:30,
+                        animateOut: 'slideOutLeft',
+                        animateIn: 'slideInRight',
+                        stagePadding:-30,
                         smartSpeed:450
                     });
                 });

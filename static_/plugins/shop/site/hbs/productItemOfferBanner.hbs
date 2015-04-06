@@ -6,7 +6,7 @@
                 Всього за <br/>
                 <span class="big">
                 {{#each data._prices.others}}
-                    <div class="price-current text-right shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+                    <div class="price-current shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
                 {{/each}}
                 </span>
             </div>
@@ -22,5 +22,6 @@
             </div>
         </div><!-- /.caption -->
         <img class="image img-responsive" src="{{data.Images.[0].md}}" alt="{{data._displayName}}">
+        <img class="image backimage" src="{{data.Images.[0].md}}" alt="{{data._displayName}}">
     </div><!-- /.container-fluid -->
 </div><!-- /.item -->
