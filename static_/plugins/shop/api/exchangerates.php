@@ -215,11 +215,14 @@ class exchangerates {
         if ($rate === null) {
             throw new Exception("#[ShopExRt0004] DefaultCurrencyNameIsMissingInDB_" . $currencyName, 1);
         }
+        // empty default rate
+        if (empty($rate)) {
+            $rate['Rate'] = 1;
+            $rate['CurrencyA'] = $prop['DBPriceCurrencyType'];
+            $rate['CurrencyB'] = $prop['DBPriceCurrencyType'];
+        }
         $this->__adjustExchangeRate($rate);
         return $rate;
-        // if ($returnFullRate) {
-        // }
-        // return $currencyName;
     }
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {

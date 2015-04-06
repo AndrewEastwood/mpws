@@ -124,7 +124,6 @@ define([
                 that.model.save({
                     Status: editData.newValue
                 }, {
-                    patch: true,
                     success: function (model, response) {
                         if (!response || !response.success) {
                             BSAlert.danger('Помилка під час оновлення замовлення');
@@ -140,7 +139,6 @@ define([
                 that.model.save({
                     InternalComment: $controlOrderInternalComment.val()
                 }, {
-                    patch: true,
                     success: function (model, response) {
                         if (!response || !response.success) {
                             BSAlert.danger('Помилка під час оновлення замовлення');

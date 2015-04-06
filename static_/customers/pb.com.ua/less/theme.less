@@ -625,7 +625,6 @@ section.mpws-js-shop-viewed-products {
         }
     }
 
-
     .shop-cart-preview {
         span.form-control {
             border: 0px none;
@@ -637,6 +636,19 @@ section.mpws-js-shop-viewed-products {
             .shop-cart-do-checkout {
                 margin-right: 30px;
             }
+        }
+    }
+
+    .shop-cart-success {
+        padding: 0px 0px 50px;
+        h4 {
+            margin: 10px 0px 20px;
+        }
+        sub {
+            line-height: normal;
+            display: block;
+            clear: both;
+            padding-left: 10px;
         }
     }
 
@@ -788,5 +800,74 @@ section.mpws-js-shop-viewed-products {
 .shop-cart-page {
     & > h1 {
         margin-bottom: 30px;
+    }
+}
+
+.shop-product-list-offers {
+    .caption {
+      letter-spacing: -3px;
+      color: #636363;
+      position: absolute;
+      z-index: 100;
+      top: 11%;
+      left: 5%;
+    }
+    .caption.right {
+      left: auto;
+      right: 2%;
+      top: 10%;
+    }
+    .caption .big-text {
+      text-transform: uppercase;
+      font-size: 50px;
+      line-height: 64px;
+      text-shadow: 1px 3px 1px #fff;
+    }
+    .caption .big-text .big {
+      display: block;
+      font-size: 90px;
+      font-weight: 800;
+      line-height: 70px;
+      top: -11px;
+      left: 9px;
+      position: relative;
+    }
+    .caption .big-text .big .sign {
+      font-size: 42px;
+      vertical-align: super;
+    }
+    .caption .excerpt {
+      text-transform: uppercase;
+      font-size: 28px;
+      letter-spacing: -1px;
+      margin-top: 15px;
+      line-height: 28px;
+      text-shadow: 1px 3px 1px #fff;
+    }
+    .caption .small {
+      text-transform: capitalize;
+      margin: 11px 0;
+      letter-spacing: -1px;
+      text-shadow: 1px 3px 1px #fff;
+    }
+    .caption .button-holder {
+      margin: 31px 0 0;
+    }
+    .caption .button-holder a {
+      letter-spacing: 0px;
+    }
+    .shop-product-item {
+        height: 525px;
+        background-color: #F5F5F5
+        position: relative;
+        .image {
+            top: 20px;
+            right: 20px;
+            position: absolute;
+            max-height: 450px;
+            height: 450px;
+            width: auto;
+            z-index: 50;
+        }
     }
 }

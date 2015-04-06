@@ -441,6 +441,24 @@ class products {
         return $dataList;
     }
 
+    public function getOffersProducts_List (array $options = array()) {
+        global $app;
+        $options['_fIsOffer'] = true;
+        $config = dbquery::shopGetProductList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        return $dataList;
+    }
+
     // public function getProducts_List_Latest () {
     //     global $app;
     //     $config = dbquery::shopGetLatestProductsList();
@@ -473,7 +491,9 @@ class products {
             'Model' => array('skipIfEmpty'),
             'SKU' => array('skipIfEmpty'),
             'Price' => array('numeric', 'notEmpty'),
-            'IsPromo' => array('bool', 'skipIfEmpty'),
+            'IsPromo' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsOffer' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsFeatured' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfEmpty'),
             'ISBN' => array('skipIfEmpty'),
@@ -715,7 +735,9 @@ class products {
             'Model' => array('skipIfUnset'),
             'SKU' => array('skipIfUnset'),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
-            'IsPromo' => array('bool', 'skipIfUnset'),
+            'IsPromo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsOffer' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsFeatured' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
@@ -737,6 +759,7 @@ class products {
                 $attributes["IMAGE"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
+
 
                 // $keyToStripQuotes = array('Name', 'Description', 'Model', 'SKU', 'ISBN');
                 // foreach ($keyToStripQuotes as $key) {
@@ -1240,6 +1263,10 @@ class products {
                     }
                     case 'featured': {
                         $resp = $this->getFeaturedProducts_List($req->get);
+                        break;
+                    }
+                    case 'offers': {
+                        $resp = $this->getOffersProducts_List($req->get);
                         break;
                     }
                 }

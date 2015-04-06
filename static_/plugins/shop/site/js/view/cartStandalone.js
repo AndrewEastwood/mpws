@@ -7,6 +7,7 @@ define([
     'utils',
     'cachejs',
     'text!plugins/shop/site/hbs/cartStandalone.hbs',
+    'text!plugins/shop/site/hbs/cartSuccess.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie',
@@ -18,16 +19,20 @@ define([
     "base/js/lib/bootstrapvalidator/validator/notEmpty",
     "base/js/lib/bootstrapvalidator/validator/stringLength",
     'jquery.maskedinput'
-], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, Cache, tpl, lang) {
+], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, Cache, tpl, tplSuccess, lang) {
 
     var CartStandalone = Backbone.View.extend({
         className: 'shop-cart-standalone',
-        template: Handlebars.compile(tpl), // check
+        templates: {
+            cart: Handlebars.compile(tpl), // check
+            success: Handlebars.compile(tplSuccess)
+        },
         lang: lang,
         events: {
             'click .shop-cart-product-quantity a': 'updateQuantity',
-            'click .shop-cart-do-checkout': 'showPageCheckout',
-            // 'click .shop-cart-preview': 'showPagePreview',
+            'click .shop-cart-do-checkout': 'doCheckout',
+            'click .shop-cart-do-preview': 'doPreview',
+            'click .shop-cart-do-save': 'doSave',
             'click .shop-cart-product-remove': 'removeProduct',
             'click .shop-cart-clear': 'clearAll',
         },
@@ -49,20 +54,39 @@ define([
                 }
             });
         },
-        showPageCheckout: function () {
+        doCheckout: function () {
             // debugger
             this.$('.shop-cart-page').addClass('hidden');
             this.$('.shop-cart-checkout').removeClass('hidden');
         },
-        showPagePreview: function () {
-            // debugger
-            this.$('.shop-cart-page').addClass('hidden');
-            this.$('.shop-cart-preview').removeClass('hidden');
+        doSave: function () {
+            var $form = this.$('.form-order-create');
+            var result = {},
+                formDataArray = $form.serializeArray();
+            _(formDataArray).each(function (item) {
+                result[item.name] = item.value;
+            });
+            result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
+            this.model.saveOrder(result);
         },
-        showPageSuccess: function () {
+        doPreview: function () {
             // debugger
-            this.$('.shop-cart-page').addClass('hidden');
-            this.$('.shop-cart-success').removeClass('hidden');
+            // var formValidator = $form.data('bootstrapValidator');
+            var that = this;
+            this.formValidator.validate();
+            if (this.formValidator.isValid()) {
+                that.$('form.form-order-create .form-control').each(function () {
+                    var fldName = $(this).attr('name');
+                    var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
+                    // console.log(fldName + ' = ' + value);
+                    if (fldName) {
+                        that.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
+                    }
+                });
+                // debugger
+                that.$('.shop-cart-page').addClass('hidden');
+                that.$('.shop-cart-preview').removeClass('hidden');
+            }
         },
         updateQuantity: function (e) {
             // Quantity Spinner
@@ -88,14 +112,9 @@ define([
                 this.listenTo(this.modelSettings, 'change', this.render);
             }
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'showPageCheckout', 'showPagePreview', 'showPageSuccess');
+            this.listenTo(this.model, 'saved', this.renderSuccess);
+            _.bindAll(this, 'doCheckout', 'doPreview', 'renderSuccess', 'saveUserInfo', 'clearUserInfo', 'collectUserInfo');
         },
-        // updateProductQuantity: function (event) {
-        //     var $input = this.$(event.target);
-        //     var elementData = $input.data();
-        //     if (this.model.getProductByID(elementData.id) && $input.val())
-        //         this.model.setProductQuantity(elementData, elementData.id, $input.val());
-        // },
         collectUserInfo: function () {
             // collect user info
             // debugger;
@@ -110,6 +129,9 @@ define([
             });
             return _userInfo;
         },
+        saveUserInfo: function () {
+            Cache.set("shopUser", this.collectUserInfo(this));
+        },
         clearUserInfo: function () {
             Cache.set("shopUser", null);
         },
@@ -123,16 +145,10 @@ define([
                 data.extras.settings = this.modelSettings.toSettings();
             }
 
-            this.$el.off().empty().html(this.template(data));
-
-            // debugger;
-            if (this.model.isSaved())
-                self.clearUserInfo();
+            this.$el.off().empty().html(this.templates.cart(data));
 
             // save user info
-            var _userInfoChanged = _.debounce(function () {
-                Cache.set("shopUser", self.collectUserInfo.call(self));
-            }, 100);
+            var _userInfoChanged = _.debounce(this.saveUserInfo, 100);
             // var _productQunatityChanged = _.debounce(function (event) {
             //     self.updateProductQuantity.call(self, event);
             // }, 300);
@@ -193,37 +209,11 @@ define([
                 return false;
             });
 
-            this.$('.shop-cart-do-preview').click(function () {
-                // var formValidator = $form.data('bootstrapValidator');
-                formValidator.validate();
-                if (formValidator.isValid()) {
-                    self.$('form.form-order-create .form-control').each(function () {
-                        var fldName = $(this).attr('name');
-                        var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
-                        console.log(fldName + ' = ' + value);
-                        if (fldName)
-                            self.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
-                    });
-                    // self.$('.wizard').wizard('next');
-                    // debugger
-                    self.showPagePreview();
-                }
-            });
+            // this.$('.shop-cart-do-preview').click(function () {
+            // });
 
-            this.$('.shop-cart-do-save').click(function () {
-                var result = {};
-                var formDataArray = $form.serializeArray();
-                _(formDataArray).each(function (item) {
-                    result[item.name] = item.value;
-                });
-                result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
-                self.model.saveOrder(result).done(function () {
-                    if (self.model.isSaved()) {
-                        self.clear();
-                        self.showPageSuccess();
-                    }
-                });
-            });
+            // this.$('.shop-cart-do-save').click(function () {
+            // });
 
             $form.bootstrapValidator({
                 message: 'Вказане значення є неправильне',
@@ -299,21 +289,25 @@ define([
                     }
                 }
             });
-            formValidator = $form.data('bootstrapValidator');
-            // if (_shopUser) {
-            //     formValidator.validate();
-            // }
+            this.formValidator = $form.data('bootstrapValidator');
 
             this.delegateEvents();
-
+            return this;
+        },
+        renderSuccess: function (modelData) {
+                // self.model.saveOrder(result).done(function () {
+                //     if (self.model.isSaved()) {
+                //         self.clearUserInfo();
+                //         self.renderSuccess(self.model.toJSON());
+                //         self.clear();
+                //     }
+                // });
+            var data = Utils.getHBSTemplateData(this);
+            this.clearUserInfo();
+            this.$el.off().empty().html(this.templates.success(data));
             return this;
         }
-        // showPageEdit: function () {
 
-        // },
-        // showPagePreview: function () {
-
-        // }
 
     });
 

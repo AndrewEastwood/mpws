@@ -24,6 +24,9 @@ define([
             _.bindAll(this, 'revealNextPage');
         },
         render: function () {
+            // if (this.options.design.style === 'offerbanner') {
+            //     debugger
+            // }
             if (this.collection.length === 0) {
                 this.trigger('shop:emptylist');
                 return this;

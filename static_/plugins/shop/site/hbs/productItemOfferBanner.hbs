@@ -1,0 +1,26 @@
+<div class="item">
+    <div class="container-fluid">
+        <div class="caption vertical-center text-left">
+            <div class="big-text fadeInDown-1">
+                {{data._origin.Name}} {{data.Model}} <br/>
+                Всього за <br/>
+                <span class="big">
+                {{#each data._prices.others}}
+                    <div class="price-current text-right shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+                {{/each}}
+                </span>
+            </div>
+
+            <div class="excerpt fadeInDown-2">
+                у розіділі {{data._category.Name}}
+            </div>
+            <div class="small fadeInDown-2 hidden">
+                terms and conditions apply
+            </div>
+            <div class="button-holder fadeInDown-3">
+                <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="big le-button ">Придбати</a>
+            </div>
+        </div><!-- /.caption -->
+        <img class="image img-responsive" src="{{data.Images.[0].md}}" alt="{{data._displayName}}">
+    </div><!-- /.container-fluid -->
+</div><!-- /.item -->

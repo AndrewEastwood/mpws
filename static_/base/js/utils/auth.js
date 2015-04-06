@@ -71,6 +71,9 @@ define([
         }
     }, Backbone.Events);
 
+    // init user data
+    Auth.user = Auth.getUserID()
+
     Backbone.on("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();
         // if (!data.isAuthRequest) {

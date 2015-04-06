@@ -205,13 +205,13 @@ class feeds {
             $productItem['Model'] = trim($rawProductData['Model']);
             $productItem['CategoryName'] = trim($rawProductData['CategoryName']) ?: 'noname';
             $productItem['OriginName'] = trim($rawProductData['OriginName']);
-            $productItem['Price'] = floatval($rawProductData['Price']);
+            $productItem['Price'] = floatval(trim($rawProductData['Price']));
             $productItem['Status'] = $rawProductData['Status'];
-            $productItem['IsPromo'] = $rawProductData['IsPromo'] === '+';
+            $productItem['IsPromo'] = trim($rawProductData['IsPromo']) === '+';
             $productItem['TAGS'] = $rawProductData['TAGS'];
             $productItem['Description'] = trim($rawProductData['Description']);
             $productItem['Features'] = null;
-            $productItem['WARRANTY'] = $rawProductData['WARRANTY'];
+            $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
 
 
             // $results[] = "[INFO] " . "set encoding";
@@ -230,7 +230,7 @@ class feeds {
 
             // $results[] = "[INFO] " . "adjusting features";
             //-- echo "[INFO] " . "adjusting features" . PHP_EOL;
-            $featureChunks = explode('|', $rawProductData['Features']);
+            $featureChunks = explode('|', trim($rawProductData['Features']));
             $features = array();
             foreach ($featureChunks as $featureChunkItem) {
                 $featureKeyValue = explode('=', $featureChunkItem);

@@ -63,14 +63,20 @@ server {
         include fastcgi_params;
     }
 
-    location /api {
-      rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&params=$3 last;
-      rewrite ^/api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 last;
-      rewrite ^/api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 last;
+    location /api/ {
+        rewrite ^/api/(\w+)/(\w+)/$ /engine/controllers/api.php?api=$1:$2&t=1 last;
+        rewrite ^/api/(\w+)/(\w+)/? /engine/controllers/api.php?api=$1:$2&t=2 last;
+        rewrite ^/api/(\w+)/(\w+)$ /engine/controllers/api.php?api=$1:$2&t=3 last;
+        rewrite ^/api/(\w+)/(\w+)/(.*)/$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p1 last;
+        rewrite ^/api/(\w+)/(\w+)/(.*)/? /engine/controllers/api.php?api=$1:$2&params=$3&t=p2 last;
+        rewrite ^/api/(\w+)/(\w+)/(.*)$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p3 last;
+        # rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&params=$3 last;
+        # rewrite ^/api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 last;
+        # rewrite ^/api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 last;
     }
 
     location /upload {
-      rewrite ^/upload/$ /engine/controllers/upload.php last;
+        rewrite ^/upload/$ /engine/controllers/upload.php last;
     }
 
 }

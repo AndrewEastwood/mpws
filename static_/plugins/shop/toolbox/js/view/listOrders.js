@@ -113,14 +113,21 @@ define([
                 // function to provide option values too.
                 optionValues: orderStatusValues,
                 initialize: function (options) {
+                    var skipSave = false;
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Status", function (model) {
-                        model.save(model.changed, {
-                            success: function () {
-                                model.collection.fetch({
-                                    reset: true
-                                });
-                            }
+                        if (skipSave) {
+                            return;
+                        }
+                        skipSave = true;
+                        model.save(model.changed).done(function () {
+                            model.collection.fetch({
+                                reset: true
+                            }, {
+                                success: function () {
+                                    skipSave = false;
+                                }
+                            });
                         });
                     });
                 }

@@ -196,9 +196,9 @@ class orders {
                 $new_password = Secure::generateStrongPassword();
 
                 $user = $apiAccountUser->createUser(array(
-                    "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $apiAccountUser->getEmptyUserName(),
-                    "EMail" => $formSettings['ShowEMail']['_isActive'] ? $reqData['form']['shopCartUserEmail'] : Validate::getEmptyEmail(),
-                    "Phone" => $formSettings['ShowPhone']['_isActive'] ? $reqData['form']['shopCartUserPhone'] : Validate::getEmptyPhoneNumber(),
+                    "FirstName" => $formSettings['ShowName'] ? $reqData['form']['shopCartUserName'] : $apiAccountUser->getEmptyUserName(),
+                    "EMail" => $formSettings['ShowEMail'] ? $reqData['form']['shopCartUserEmail'] : Validate::getEmptyEmail(),
+                    "Phone" => $formSettings['ShowPhone'] ? $reqData['form']['shopCartUserPhone'] : Validate::getEmptyPhoneNumber(),
                     "Password" => $new_password,
                     "ConfirmPassword" => $new_password
                 ));
@@ -239,10 +239,10 @@ class orders {
 
                 // create account address
                 $userAddress = $apiAccountAddr->createAddress($userID, array(
-                    "Address" => $formSettings['ShowAddress']['_isActive'] ? $reqData['form']['shopCartUserAddress'] : 'n/a',
-                    "POBox" => $formSettings['ShowPOBox']['_isActive'] ? $reqData['form']['shopCartUserPOBox'] : 'n/a',
-                    "Country" => $formSettings['ShowCountry']['_isActive'] ? $reqData['form']['shopCartUserCountry'] : 'n/a',
-                    "City" => $formSettings['ShowCity']['_isActive'] ? $reqData['form']['shopCartUserCity'] : 'n/a'
+                    "Address" => $formSettings['ShowAddress'] ? $reqData['form']['shopCartUserAddress'] : 'n/a',
+                    "POBox" => $formSettings['ShowPOBox'] ? $reqData['form']['shopCartUserPOBox'] : 'n/a',
+                    "Country" => $formSettings['ShowCountry'] ? $reqData['form']['shopCartUserCountry'] : 'n/a',
+                    "City" => $formSettings['ShowCity'] ? $reqData['form']['shopCartUserCity'] : 'n/a'
                 ), true); // <= this allows creating unliked addresses or add new address to account when it's possible
 
                 if (count($userAddress['errors']))
@@ -290,9 +290,9 @@ class orders {
             $dataOrder["UserID"] = $userID;
             $dataOrder["UserAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
-            $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
-            $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
-            $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
+            $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet'] ? $reqData['form']['shopCartLogistic'] : null;
+            $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet'] ? $reqData['form']['shopCartWarehouse'] : null;
+            $dataOrder["Comment"] = $formSettings['ShowComment'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
             $dataOrder["ExchangeRateID"] = $rateDefault['ID'];
             $dataOrder["CustomerCurrencyRate"] = $customerRate; // save rate value because we can change it any time in future
@@ -372,7 +372,7 @@ class orders {
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Status' => array('skipIfUnset', 'string', 'notEmpty'),
-            'InternalComment' => array('skipIfUnset', 'string')
+            'InternalComment' => array('skipIfUnset')
         ));
 
         // var_dump($validatedDataObj);
@@ -782,7 +782,7 @@ class orders {
     // modify existent order status or
     // product quantity in the shopping cart list of temporary order
     // both admin can update any order and public uses as well
-    public function patch (&$resp, $req) {
+    public function put (&$resp, $req) {
         global $app;
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
@@ -805,7 +805,10 @@ class orders {
             // }
             return;
         }
+    }
 
+    public function patch (&$resp, $req) {
+        $isTemp = !isset($req->get['params']);
         // for temp order (site side only)
         if ($isTemp) {
             if (isset($req->data['productID'])) {

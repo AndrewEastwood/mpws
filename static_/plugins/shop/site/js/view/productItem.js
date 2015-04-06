@@ -10,6 +10,7 @@ define([
     'text!plugins/shop/site/hbs/productItemMinimal2.hbs',
     'text!plugins/shop/site/hbs/productItemShort.hbs',
     'text!plugins/shop/site/hbs/productItemFull.hbs',
+    'text!plugins/shop/site/hbs/productItemOfferBanner.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     /* enhanced ui */
@@ -17,7 +18,7 @@ define([
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, lang, echo) {
+], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, tplOfferBanner, lang, echo) {
 
     var ProductItem = Backbone.View.extend({
         className: 'shop-product-item',
@@ -26,6 +27,7 @@ define([
             minimal: Handlebars.compile(tplMinimal), // check
             minimal2: Handlebars.compile(tplMinimal2), // check
             full: Handlebars.compile(tplFull), // check
+            offerbanner: Handlebars.compile(tplOfferBanner), // check
         },
         lang: lang,
         events: {
@@ -46,6 +48,7 @@ define([
             this.options = options || {};
             // set default style
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
+            this.options.templates = _.extend({}, this.options.templates, this.options.design.templates || {});
             // bind context
             _.bindAll(this, 'switchCurrency', 'updateQuantity', 'addToCart');
 

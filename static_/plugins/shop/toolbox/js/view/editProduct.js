@@ -80,6 +80,8 @@ define([
                             Price: parseFloat(that.$('#price').val().replace( /^\D+/g, ''), 10),
                             Description: that.$('#description').val(),
                             IsPromo: that.$('#ispromo').is(':checked'),
+                            IsOffer: that.$('#isoffer').is(':checked'),
+                            IsFeatured: that.$('#isfeatured').is(':checked'),
                             Tags: that.$('#tags').val(),
                             ISBN: that.$('#isbn').val(),
                             Warranty: that.$('#warranty').val(),

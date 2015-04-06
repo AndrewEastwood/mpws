@@ -25,29 +25,9 @@ define([
                 that.dfdState.resolve();
             });
         },
-        //     var self = this;
-        //     // _.bindAll(this, 'productAdd', 'productRemove', 'productRemoveAll');
-        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
-        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
-        //     // APP.Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
-        //     // APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
-        //     //     if (self.isSaved.call(self)) {
-        //     //         self.clear({silent: true});
-        //     //         self.fetch();
-        //     //     }
-        //     // }, this));
-        // },
         isSaved: function () {
             return this.get('Hash') && this.get('success');
         },
-        // parse: function (data) {
-        //     if (data && data.items)
-        //         data.items = _(data.items).reduce(function(target, productData){
-        //             target[productData.ID] = ShopUtils.adjustProductItem(productData);
-        //             return target;
-        //         }, {});
-        //     return data;
-        // },
         getProductCount: function () {
             return _(this.get('items') || {}).keys().length;
         },
@@ -59,7 +39,7 @@ define([
             return this.get('items')[productID] || null;
         },
         setProduct:  function (productID, quantity, skipUpdate) {
-            var self = this,
+            var that = this,
                 product = this.getProductByID(productID),
                 isNew = !!!product,
                 existentQ = !isNew && product._orderQuantity || 0,
@@ -70,29 +50,19 @@ define([
                 }, {
                     patch: true,
                     success: function (response) {
-                        // self.set(self.parse(response));
-                        self.trigger('change');
+                        that.trigger('change');
                         if (quantity === 0) {
-                            self.trigger('product:removed');
+                            that.trigger('product:removed');
                         } else {
-                            self.trigger('product:quantity:updated', quantity);
+                            that.trigger('product:quantity:updated', quantity);
                             if (isNew) {
-                                self.trigger('product:added', quantity);
+                                that.trigger('product:added', quantity);
                             }
                         }
                     }
                 }
             );
         },
-        // addProduct: function (id) {
-        //     // debugger;
-        //     var product = this.getProductByID(id);
-        //     if (product) {
-        //         this.setProduct(id, product._orderQuantity + 1);
-        //     } else {
-        //         this.setProduct(id, 1);
-        //     }
-        // },
         removeProduct: function (productID) {
             var product = this.getProductByID(productID);
             if (!product) {
@@ -101,52 +71,46 @@ define([
             this.setProduct(productID, 0, true);
         },
         clearAll: function () {
-            var self = this;
             if (!this.getProductCount()) {
                 return;
             }
-            self.setProduct('*', 0, true);
+            this.setProduct('*', 0, true);
         },
         applyPromo: function (promo) {
-            var self = this;
+            var that = this;
             this.sync("patch", this, {
                 attrs: {
                     promo: promo
                 },
                 parse: true,
                 success: function (response) {
-                    self.set(self.parse(response));
+                    that.set(that.parse(response));
                     if (!!promo) {
-                        if (self.get('promo').Code)
-                            self.trigger('promo:applied');
-                            // BSAlert.success(lang.list_cart_alert_promoAdded);
+                        if (that.get('promo').Code)
+                            that.trigger('promo:applied');
                         else
-                            self.trigger('promo:invalid');
-                            // BSAlert.danger(lang.list_cart_alert_promoRejected);
+                            that.trigger('promo:invalid');
                     } else {
-                        self.trigger('promo:cancelled');
-                        // BSAlert.danger(lang.list_cart_alert_promoRemoved);
+                        that.trigger('promo:cancelled');
                     }
-                    // APP.Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });
         },
         saveOrder: function (formData) {
-            var self = this;
+            var that = this;
             // debugger;
-            // return;
             this.set('form', formData, {silent: true});
-            return this.create();
-            // return this.sync("create", this, {
-            //     success: function (response) {
-            //         // debugger;
-            //         // self.set(self.parse(response));
-            //         // self.trigger('change');
-            //         self.clear();
-            //         self.set({ID: 'temp'}, {silent: true});
-            //         // APP.Sandbox.eventNotify('plugin:shop:order:changed');
-            //     }
-            // });
+            return this.sync("create", this, {
+                success: function (response) {
+                    that.set(that.parse(response));
+                    if (that.isSaved()) {
+                        that.trigger('saved');
+                        that.clear();
+                        that.set({ID: 'temp'});
+                        this.fetch({silent: true})
+                    }
+                }
+            });
         }
     }, {
         getInstance: function (options) {
@@ -159,7 +123,5 @@ define([
         }
     });
 
-    // order = new Order();
     return Order;
-
 });

@@ -284,7 +284,7 @@ class settings {
                         throw new Exception("AddressLimitReached", 1);
                     }
                     $dataRules = array(
-                        'ShopName' => array('string'),
+                        'ShopName' => array('string', 'defaultValueIfUnset' => 'noname shop'),
                         'Country' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'City' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'AddressLine1' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
@@ -409,6 +409,8 @@ class settings {
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
             }
+
+            // var_dump($validatedDataObj);
 
             if ($validatedDataObj["totalErrors"] == 0 && empty($errors)) {
                 try {
@@ -546,6 +548,19 @@ class settings {
         $defaultMisc['SiteDefaultPriceCurrencyType'] = 'USD';
         return $this->createOrUpdateSetting($this->SETTING_TYPE->MISC, $defaultMisc);
     }
+
+    public function createDefaultSettingsIfNotExist () {
+        foreach ($this->SETTING_TYPE_ARRAY as $type) {
+            $sqlTableName = dbquery::getSettingsDBTableNameByType($type);
+            if (!empty($sqlTableName)) {
+                $count = $this->getCustomerSettingsCount($type);
+                if ($count === 0) {
+                    // var_dump($type, 'sql table name = ',$sqlTableName);
+                    $this->createOrUpdateSetting($type, array());
+                }
+            }
+        }
+    }
     // public function getSettingsMapFormOrder () {
     //     $map = array();
     //     $items = $this->getSettingsFormOrder();
@@ -562,6 +577,7 @@ class settings {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
+        $this->createDefaultSettingsIfNotExist();
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
         if (empty($typeObj->type)) {
             $resp = $this->getSettings();

@@ -148,7 +148,6 @@ define([
 
                 // common elements
 
-
                 // setup ribbon nav and breadcrumb
                 var $tplBreadcrumb = that.templates.breadcrumb(),
                     $tplCategoriesRibbon = that.templates.categoriesRibbon(),
@@ -170,10 +169,105 @@ define([
                     // categoryTopLevelList = that.plugins.shop.catalogNavigator({design: {style: 'sub', className: 'dropdown-menu'}})
                 // set top category list with banner
                 
-                // setup home fame
-                var $tplHomeFrame = that.templates.homeFrame();
+                // setup home frame: category navbar and hot offers carousel
+                var $tplHomeFrame = that.templates.homeFrame(),
+                    hotOffers = this.plugins.shop.hotOffers({design: {style: 'offerbanner'}});
                 $tplHomeFrame.find('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
+                $tplHomeFrame.find('.mpws-js-shop-offers-carousel').html(hotOffers.$el);
+                hotOffers.$el.addClass('owl-carousel owl-inner-nav owl-ui-sm owl-theme');
+                hotOffers.$el.addClass('owl-carousel owl-inner-nav owl-ui-sm owl-theme');
                 $('.mpws-js-main-home-frame').html($tplHomeFrame);
+
+                hotOffers.on('shop:rendered', function () {
+                    var dragging = true;
+                    var owlElementClass = ".mpws-js-shop-offers-carousel";
+                    
+                    function fadeInReset() {
+                        if (!dragging) {
+                            $(owlElementClass + " .caption .fadeIn-1, " + owlElementClass + " .caption .fadeIn-2, " + owlElementClass + " .caption .fadeIn-3").stop().delay(800).animate({ opacity: 0 }, { duration: 400, easing: "easeInCubic" });
+                        }
+                        else {
+                            $(owlElementClass + " .caption .fadeIn-1, " + owlElementClass + " .caption .fadeIn-2, " + owlElementClass + " .caption .fadeIn-3").css({ opacity: 0 });
+                        }
+                    }
+                    
+                    function fadeInDownReset() {
+                        if (!dragging) {
+                            $(owlElementClass + " .caption .fadeInDown-1, " + owlElementClass + " .caption .fadeInDown-2, " + owlElementClass + " .caption .fadeInDown-3").stop().delay(800).animate({ opacity: 0, top: "-15px" }, { duration: 400, easing: "easeInCubic" });
+                        }
+                        else {
+                            $(owlElementClass + " .caption .fadeInDown-1, " + owlElementClass + " .caption .fadeInDown-2, " + owlElementClass + " .caption .fadeInDown-3").css({ opacity: 0, top: "-15px" });
+                        }
+                    }
+                    
+                    function fadeInUpReset() {
+                        if (!dragging) {
+                            $(owlElementClass + " .caption .fadeInUp-1, " + owlElementClass + " .caption .fadeInUp-2, " + owlElementClass + " .caption .fadeInUp-3").stop().delay(800).animate({ opacity: 0, top: "15px" }, { duration: 400, easing: "easeInCubic" });
+                        }
+                        else {
+                            $(owlElementClass + " .caption .fadeInUp-1, " + owlElementClass + " .caption .fadeInUp-2, " + owlElementClass + " .caption .fadeInUp-3").css({ opacity: 0, top: "15px" });
+                        }
+                    }
+                    
+                    function fadeInLeftReset() {
+                        if (!dragging) {
+                            $(owlElementClass + " .caption .fadeInLeft-1, " + owlElementClass + " .caption .fadeInLeft-2, " + owlElementClass + " .caption .fadeInLeft-3").stop().delay(800).animate({ opacity: 0, left: "15px" }, { duration: 400, easing: "easeInCubic" });
+                        }
+                        else {
+                            $(owlElementClass + " .caption .fadeInLeft-1, " + owlElementClass + " .caption .fadeInLeft-2, " + owlElementClass + " .caption .fadeInLeft-3").css({ opacity: 0, left: "15px" });
+                        }
+                    }
+                    
+                    function fadeInRightReset() {
+                        if (!dragging) {
+                            $(owlElementClass + " .caption .fadeInRight-1, " + owlElementClass + " .caption .fadeInRight-2, " + owlElementClass + " .caption .fadeInRight-3").stop().delay(800).animate({ opacity: 0, left: "-15px" }, { duration: 400, easing: "easeInCubic" });
+                        }
+                        else {
+                            $(owlElementClass + " .caption .fadeInRight-1, " + owlElementClass + " .caption .fadeInRight-2, " + owlElementClass + " .caption .fadeInRight-3").css({ opacity: 0, left: "-15px" });
+                        }
+                    }
+                    
+                    function fadeIn() {
+                        $(owlElementClass + " .active .caption .fadeIn-1").stop().delay(500).animate({ opacity: 1 }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeIn-2").stop().delay(700).animate({ opacity: 1 }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeIn-3").stop().delay(1000).animate({ opacity: 1 }, { duration: 800, easing: "easeOutCubic" });
+                    }
+                    
+                    function fadeInDown() {
+                        $(owlElementClass + " .active .caption .fadeInDown-1").stop().delay(500).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInDown-2").stop().delay(700).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInDown-3").stop().delay(1000).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                    }
+                    
+                    function fadeInUp() {
+                        $(owlElementClass + " .active .caption .fadeInUp-1").stop().delay(500).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInUp-2").stop().delay(700).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInUp-3").stop().delay(1000).animate({ opacity: 1, top: "0" }, { duration: 800, easing: "easeOutCubic" });
+                    }
+                    
+                    function fadeInLeft() {
+                        $(owlElementClass + " .active .caption .fadeInLeft-1").stop().delay(500).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInLeft-2").stop().delay(700).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInLeft-3").stop().delay(1000).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                    }
+                    
+                    function fadeInRight() {
+                        $(owlElementClass + " .active .caption .fadeInRight-1").stop().delay(500).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInRight-2").stop().delay(700).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                        $(owlElementClass + " .active .caption .fadeInRight-3").stop().delay(1000).animate({ opacity: 1, left: "0" }, { duration: 800, easing: "easeOutCubic" });
+                    }
+                    hotOffers.$el.owlCarousel({
+                        autoplay: true,
+                        autoplayTimeout: 1000,
+                        navigation: true,
+                        pagination: true,
+                        singleItem: true,
+                        stopOnHover: true,
+                        // addClassActive: true,
+                        items: 1,
+                        navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"]
+                    });
+                });
 
                 // update searchbox categories
                 $('header li.mpws-js-shop-categories-toplist').append(that.views.categorySearchTopLevelList.$el);
@@ -244,8 +338,8 @@ define([
             this.refreshViewedProducts();
             this.updateFooter();
 
-
-            var $tplProductsTab = this.templates.productsTab(),
+            var that = this,
+                $tplProductsTab = this.templates.productsTab(),
                 productOptions = {design: {className: 'col-sm-4 col-md-3 no-margin product-item-holder hover', pageSize: 4}},
                 featuredProducts = this.plugins.shop.featuredProducts(productOptions),
                 newProducts = this.plugins.shop.newProducts(productOptions),

@@ -16,28 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `__shop_settingsMisc`
---
-
-DROP TABLE IF EXISTS `__shop_settingsMisc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `__shop_settingsMisc` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `Property` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Label` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Value` text COLLATE utf8_bin,
-  `Status` enum('ACTIVE','DISABLED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `__shop_settingsMisc_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `mpws_customer`
 --
 
@@ -125,12 +103,12 @@ DROP TABLE IF EXISTS `mpws_permissions`;
 CREATE TABLE `mpws_permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` int(11) NOT NULL,
-  `CanAdmin` tinyint(1) NOT NULL DEFAULT '0',
-  `CanCreate` tinyint(1) NOT NULL DEFAULT '0',
-  `CanEdit` tinyint(1) NOT NULL DEFAULT '0',
+  `CanAdmin` tinyint(1) NOT NULL,
+  `CanCreate` tinyint(1) NOT NULL,
+  `CanEdit` tinyint(1) NOT NULL,
   `CanUpload` tinyint(1) NOT NULL DEFAULT '0',
-  `CanViewReports` tinyint(1) NOT NULL DEFAULT '0',
-  `CanAddUsers` tinyint(1) NOT NULL DEFAULT '0',
+  `CanViewReports` tinyint(1) NOT NULL,
+  `CanAddUsers` tinyint(1) NOT NULL,
   `CanMaintain` tinyint(1) NOT NULL DEFAULT '0',
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
@@ -779,11 +757,10 @@ CREATE TABLE `shop_settingsAddress` (
   `HoursFriday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursSaturday` varchar(50) COLLATE utf8_bin NOT NULL,
   `HoursSunday` varchar(50) COLLATE utf8_bin NOT NULL,
-  `EmailSupport` varchar(200) COLLATE utf8_bin NOT NULL,
   `InfoPayment` text COLLATE utf8_bin NOT NULL,
   `InfoShipping` text COLLATE utf8_bin NOT NULL,
   `InfoWarranty` text COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','DISABLED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('ACTIVE','DISABLED','','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1099,4 +1076,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-02  3:04:12
+-- Dump completed on 2015-04-06  2:16:14

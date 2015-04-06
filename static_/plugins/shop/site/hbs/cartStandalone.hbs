@@ -1,5 +1,4 @@
 {{#if data.info.productCount }}
-    {{#unless data.success }}
     <!--  edit page  -->
     <div class="shop-cart-page shop-cart-edit">
         <h4 class="hidden"><i class="icon-shopping-cart"></i>{{lang.shopping_cart_form_title}}</h4>
@@ -78,7 +77,6 @@
                 </div>
             </div><!-- /.widget -->
         </div>
-
     </div>
     <!--  checkout page  -->
     <div class="shop-cart-page shop-cart-checkout hidden">
@@ -489,33 +487,6 @@
             <a class="le-button shop-cart-do-save" href="javascript://">Оформити</a>
         </div>
     </div>
-    {{else}}
-    <div class="shop-cart-page shop-cart-success">
-        <h4>Дякуємо за Ваше замовлення!</h4>
-        <div class="panel panel-success">
-            <!-- List group -->
-            <div class="list-group">
-                <div class="list-group-item">
-                    Наш менеджер зателефонує Вам найближчим часом, якщо у нас виникнуть додаткові запимтання щодо Вашого замовлення.
-                </div>
-                <div class="list-group-item">
-                    Код замовлення: <span class="label label-info">{{data.Hash}}</span>
-                    <sub class="text-danger">Збережіть будьласка собі цей код. У разі виникнення запитань необхідно буде цей код нам повідомити.</sub>
-                </div>
-                <div class="list-group-item hidden">
-                    Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання: <a href="{{app.location.origin}}/#shop/tracking/{{data.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.Hash}}</a>
-                </div>
-                <div class="list-group-item hidden">
-                    Також Ви можете переглянути всі Ваші замовлення в особистому кабінеті.
-                </div>
-                <div class="list-group-item">
-                    Якщо у Вас виникли будь-які запитання то неодмінно подзвоніть нам.
-                </div>
-            </div>
-        </div>
-        <a class="le-button" href="/#!/">Продовжити закупи</a>
-    </div>
-    {{/unless}}
 {{else}}
     <div class="alert alert-warning">Ваш кошик порожній</div>
 {{/if}}
