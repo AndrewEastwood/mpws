@@ -46,6 +46,16 @@ class origins {
         return $this->__adjustOrigin($origin);
     }
 
+    public function getOriginByExternalKey ($externalKey) {
+        global $app;
+        $config = dbquery::shopGetOriginItem();
+        $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
+        $origin = $app->getDB()->query($config);
+        if (empty($origin))
+            return null;
+        return $this->__adjustOrigin($origin);
+    }
+
     public function getOrigins_List (array $options = array()) {
         global $app;
         $config = dbquery::shopGetOriginList($options);
@@ -178,8 +188,12 @@ class origins {
         if (empty($req->get['params'])) {
             $resp = $this->getOrigins_List($req->get);
         } else {
-            $OriginID = intval($req->get['params']);
-            $resp = $this->getOriginByID($OriginID);
+            if (is_numeric($req->get['params'])) {
+                $oringID = intval($req->get['params']);
+                $resp = $this->getOriginByID($oringID);
+            } else {
+                $resp = $this->getOriginByExternalKey($req->get['params']);
+            }
         }
     }
 

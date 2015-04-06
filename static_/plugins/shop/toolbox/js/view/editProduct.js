@@ -91,7 +91,6 @@ define([
                             file5: that.$('#file5').val()
                         }, {
                             silent: true,
-                            patch: true,
                             success: function (model, response) {
                                 if (!response || !response.success) {
                                     that.render();
@@ -121,16 +120,20 @@ define([
 
             this.$el.html($dialog.getModalContent());
 
-            var _initCategory = {};
-            var _initOrigin = {};
+            var _initCategory = {
+                category: this.model.get('_category') || {}
+            };
+            var _initOrigin = {
+                origin: this.model.get('_origin') || {}
+            };
             if (!this.model.isNew()) {
                 _initCategory = {
-                    ID: this.model.get('_category').ID,
-                    Text: this.model.get('_category').Name
+                    ID: _initCategory.category.ID || null,
+                    Text: _initCategory.category.Name || null
                 };
                 _initOrigin = {
-                    ID: this.model.get('_origin').ID,
-                    Text: this.model.get('_origin').Name
+                    ID: _initOrigin.origin.ID || null,
+                    Text: _initOrigin.origin.Name || null
                 };
             } else {
                 _initCategory = Cache.getOnce('mpwsShopPopupProductInitCategory') || _initCategory;
@@ -158,10 +161,7 @@ define([
             var _selectCategory = this.$('#category').select2({
                 placeholder: _initCategory.ID ? false : 'Виберіть категорію',
                 ajax: {
-                    url: APP.getApiLink({
-                        source: 'shop',
-                        fn: 'categories'
-                    }),
+                    url: APP.getApiLink('shop', 'categories'),
                     results: function (data, page) {
                         var _results = _(data.items).map(function (item) {
                             return {
@@ -186,10 +186,7 @@ define([
             var _selectOrigins = this.$('#origin').select2({
                 placeholder: _initOrigin.ID ? false : 'Виберіть виробника',
                 ajax: {
-                    url: APP.getApiLink({
-                        source: 'shop',
-                        fn: 'origins'
-                    }),
+                    url: APP.getApiLink('shop','origins'),
                     results: function (data, page) {
                         var _results = _(data.items).map(function (item) {
                             return {
@@ -226,7 +223,7 @@ define([
                 items = fmt.split('0.00');
                 // debugger
             var _options = {
-                thousands: ' ',
+                thousands: '',
                 decimal: '.',
                 precision: precision && precision.length === 2 ? precision[1].length : 2,
                 prefix: items && items[0] || '',
@@ -259,10 +256,7 @@ define([
             }
 
             // >> let's govnokod begin
-            $.get(APP.getApiLink({
-                source: 'shop',
-                fn: 'productfeatures'
-            }), function (allfeatures) {
+            $.get(APP.getApiLink('shop','productfeatures'), function (allfeatures) {
                 var featureTypes = _(allfeatures).keys();
                 // var featureItems = _(allfeatures).reduce(function (memo, list) { var items = _(list).values(); return _(memo.concat(items)).uniq(); }, []);
                 if (featureTypes && featureTypes.length) {

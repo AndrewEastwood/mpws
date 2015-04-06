@@ -234,8 +234,10 @@ class products {
                     $images[] = array(
                         'name' => $item['Value'],
                         'normal' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
+                        'md' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'md'),
                         'sm' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
-                        'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs')
+                        'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs'),
+                        'micro' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'micro')
                     );
                 }
             }
@@ -646,12 +648,16 @@ class products {
 
 
                             $newFileName = $ProductID . uniqid(time());
+                            $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
                             $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                            $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                             $normalImagePath = $fileName;
 
+                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
 
                             $attrData = $initAttrData->getArrayCopy();
@@ -784,7 +790,10 @@ class products {
 
                 // adjust features
                 foreach ($features as $groupName => $value) {
-                    $features[$groupName] = explode(',', $value);
+                    if (is_array($value))
+                        $features[$groupName] = array_values($value);
+                    else
+                        $features[$groupName] = explode(',', $value);
                 }
 
                 // add new features
@@ -888,12 +897,16 @@ class products {
                 foreach ($filesToUpload as $fileName) {
 
                     $newFileName = $ProductID . uniqid(time());
+                    $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
                     $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                    $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
 
+                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
 
                     // var_dump($uploadInfo);
@@ -911,8 +924,10 @@ class products {
                 }
                 foreach ($filesToDelete as $fileName) {
 
+                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
                     Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
                     Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
+                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
                     Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
 
                     // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
@@ -1243,7 +1258,7 @@ class products {
         // $this->_getOrSetCachedState('changed:product', true);
     }
 
-    public function patch (&$resp, $req) {
+    public function put (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;

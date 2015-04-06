@@ -3,7 +3,8 @@ define([
     'underscore',
     'auth',
     'cachejs',
-    'bootstrap'
+    'bootstrap',
+    'routefilter'
 ], function ($, _, Auth, Cache) {
 
 
@@ -30,7 +31,7 @@ define([
         "!/shop/feeds": "feeds"
     };
 
-    var systemUrls = {
+    var systemRoutes = {
         "!/system/customers": "customersList",
         "!/system/customers/:status": "customersListByStatus",
         "!/system/customer/edit/:id": "customerEdit",
@@ -47,7 +48,7 @@ define([
             urls: _(shopRoutes).invert()
         },
         system: {
-            urls: _(systemUrls).invert()
+            urls: _(systemRoutes).invert()
         }
     });
 
@@ -68,7 +69,8 @@ define([
                 '!/signin': 'signin',
                 '!/signout': 'signout'
             },
-            shopRoutes
+            shopRoutes,
+            systemRoutes
         ]),
 
         plugins: {},
@@ -78,6 +80,7 @@ define([
         views: {},
 
         before: function (route, params) {
+            // debugger
             if (!Auth.getUserID()) {
                 this.toggleMenu(false);
                 this.toggleWidgets(false);
@@ -91,9 +94,16 @@ define([
                 this.toggleMenu(true);
                 this.toggleWidgets(true);
                 if (/!\/signin/.test(Backbone.history.getHash())) {
-                    Backbone.history.navigate('!/', true);
+                    Backbone.history.navigate(Cache.get('location') || '!/', true);
                 }
             }
+        },
+
+        after: function (route) {
+            if (/signin|signout/.test(Backbone.history.getFragment())) {
+                return;
+            }
+            Cache.set('location', Backbone.history.getFragment());
         },
 
         signin: function () {
@@ -103,9 +113,10 @@ define([
 
         signout: function () {
             var that = this;
+            this.toggleMenu(false);
+            this.toggleWidgets(false);
+            $('section.mpws-js-main-section').empty();
             Auth.signout(function () {
-                that.toggleMenu(false);
-                that.toggleWidgets(false);
                 Backbone.history.navigate('!/signin', true);
             });
         },
@@ -145,24 +156,32 @@ define([
                 // $('.mpws-js-top-nav-right').html($('<li>').addClass('dropdown').html(that.plugins.shop.widgetExchangeRates().$el));
             });
 
-            this.on('route', function (routeFn) {
-                that.toggleMenu(true);
-                that.toggleWidgets(true);
+            this.on('route', function (routeFn, params) {
+                that.toggleMenu(Auth.getUserID());
+                that.toggleWidgets(Auth.getUserID());
                 if (_.isFunction(that[routeFn])) {
-                    return;
+                    return that[routeFn].apply(that, params);
                 }
                 var contentItems = [];
                 _(that.plugins).each(function (plg) {
+                    // console.log('routeFn ==== ' + routeFn);
+                    // console.log(params);
                     if (_.isFunction(plg[routeFn])) {
-                        var view = plg[routeFn]();
-                        contentItems.push(view.render().$el);
+                        var view = plg[routeFn].apply(plg, params);
+                        if (view && view.render) {
+                            contentItems.push(view.render().$el);
+                        }
                     }
                 });
-                $('section.mpws-js-main-section').empty().append(contentItems);
+                if (contentItems.length) {
+                    $('section.mpws-js-main-section').empty().append(contentItems);
+                } else {
+                    Backbone.history.navigate('!/', true);
+                }
             });
 
             Auth.on('registered', function () {
-                Backbone.history.navigate('!/', true);
+                Backbone.history.navigate(Cache.get('location') || '!/', true);
             });
         },
         // routes

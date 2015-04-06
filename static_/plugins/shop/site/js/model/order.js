@@ -136,14 +136,17 @@ define([
             // debugger;
             // return;
             this.set('form', formData, {silent: true});
-            this.sync("create", this, {
-                success: function (response) {
-                    // debugger;
-                    self.set(self.parse(response));
-                    self.trigger('change');
-                    // APP.Sandbox.eventNotify('plugin:shop:order:changed');
-                }
-            });
+            return this.create();
+            // return this.sync("create", this, {
+            //     success: function (response) {
+            //         // debugger;
+            //         // self.set(self.parse(response));
+            //         // self.trigger('change');
+            //         self.clear();
+            //         self.set({ID: 'temp'}, {silent: true});
+            //         // APP.Sandbox.eventNotify('plugin:shop:order:changed');
+            //     }
+            // });
         }
     }, {
         getInstance: function (options) {

@@ -63,9 +63,13 @@ define([
 
             _.bindAll(this, 'saveLayout');
 
-            APP.Sandbox.eventSubscribe('global:route', $.proxy(function () {
-                clearInterval(this.interval_saveLayout);
-            }, this));
+            var that = this;
+            Backbone.history.on('route', function() {
+                if (that.interval_saveLayout) {
+                    // debugger
+                    clearInterval(that.interval_saveLayout);
+                }
+            });
         },
         saveLayout: function () {
             // console.log('saving layout manager content');
@@ -79,6 +83,7 @@ define([
             layoutConfig = _.defaults({}, layoutConfig || {}, {
                 activeFilterTabID: 'tree'
             });
+            this.$('.nav > li').removeClass('active');
             this.$('.nav a[href="#' + layoutConfig.activeFilterTabID + '"]').parent().addClass('active');
             this.$('.tab-pane.' + layoutConfig.activeFilterTabID).addClass('in active');
             this.interval_saveLayout = setInterval(this.saveLayout, 800);
@@ -93,6 +98,7 @@ define([
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewOriginsList.$el);
+                this.$('.plugin-shop-content-filters').tab();
             }
             this.restoreLayout();
             return this;

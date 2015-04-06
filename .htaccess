@@ -17,9 +17,13 @@ RewriteRule ^(.*)$ /engine/controllers/snapshot.php?$1 [QSA,L]
 RewriteRule ^static/*.\.php /none [L]
 
 # API
-RewriteRule ^api/(\w+)/(\w+)/(.*)/ /engine/controllers/api.php?api=$1:$2&params=$3 [QSA,L]
-RewriteRule ^api/(\w+)/(\w+)/(.*)/? /engine/controllers/api.php?api=$1:$2&params=$3 [QSA,L]
-RewriteRule ^api/(\w+)/(\w+)/(.*) /engine/controllers/api.php?api=$1:$2&params=$3 [QSA,L]
-RewriteRule ^api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 [QSA,L]
-RewriteRule ^api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 [QSA,L]
+
+RewriteRule ^api/(\w+)/(\w+)/$ /engine/controllers/api.php?api=$1:$2&t=1 [QSA,L]
+RewriteRule ^api/(\w+)/(\w+)/\? /engine/controllers/api.php?api=$1:$2&t=2 [QSA,L]
+RewriteRule ^api/(\w+)/(\w+)$ /engine/controllers/api.php?api=$1:$2&t=3 [QSA,L]
+
+RewriteRule ^api/(\w+)/(\w+)/(.*)/$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p1 [QSA,L]
+RewriteRule ^api/(\w+)/(\w+)/(.*)/\? /engine/controllers/api.php?api=$1:$2&params=$3&t=p2 [QSA,L]
+RewriteRule ^api/(\w+)/(\w+)/(.*)$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p3 [QSA,L]
+
 RewriteRule ^upload/$ /engine/controllers/upload.php [QSA,L]

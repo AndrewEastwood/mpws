@@ -5,25 +5,19 @@
          <div class="no-margin col-xs-12 col-sm-6 col-md-5 gallery-holder">
             <div class="product-item-holder size-big single-product-gallery">
                 <div class="single-product-gallery-item">
-                    <a data-rel="prettyphoto" href="{{app.location.homepage}}{{data.Images.[0].normal}}">
-                        <img class="img-responsive" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}">
+                    <a data-lightbox="shop-product-image-main" href="{{app.location.homepage}}{{data.Images.[0].normal}}">
+                        <img class="image img-responsive" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}">
                     </a>
                 </div><!-- /.single-product-gallery-item -->
-                {{#gt data.Images.length 1}}
+                {{#gt ../data.Images.length 1}}
                 <div class="single-product-gallery-thumbs gallery-thumbs">
-                    <div id="owl-single-product-thumbnails" class="owl-carousel owl-theme">
-                        {{#each data.Images}}
-                        <a class="horizontal-thumb active" data-target="#owl-single-product" data-slide="0" href="{{normal}}" data-lightbox="shop-product-image-additional">
+                    <div class="shop-single-product-thumbnails owl-carousel owl-theme">
+                        {{#each ../data.Images}}
+                        <a class="horizontal-thumb active" href="{{normal}}" data-lightbox="shop-product-image-additional">
                             <img width="67" src="{{app.location.homepage}}{{xs}}" class="image img-responsive" alt="{{data._displayName}}" title="{{data.Name}}" />
                         </a>
                         {{/each}}
-                    </div><!-- /#owl-single-product-thumbnails -->
-                    <div class="nav-holder left hidden-xs">
-                        <a class="prev-btn slider-prev" data-target="#owl-single-product-thumbnails" href="#prev"></a>
-                    </div><!-- /.nav-holder -->
-                    <div class="nav-holder right hidden-xs">
-                        <a class="next-btn slider-next" data-target="#owl-single-product-thumbnails" href="#next"></a>
-                    </div><!-- /.nav-holder -->
+                    </div>
                 </div><!-- /.gallery-thumbs -->
                 {{/gt}}
             </div><!-- /.single-product-gallery -->
@@ -83,6 +77,7 @@
                     <p>{{data.Synopsis}}</p>
                 </div>
 
+                {{#unless data._archived}}
                 {{#if instances.shop.settings.ADDRESS.length }}
                 {{#ifAny instances.shop.settings.PRODUCT.ShowDeliveryInfo instances.shop.settings.PRODUCT.ShowPaymentInfo instances.shop.settings.PRODUCT.ShowOpenHours instances.shop.settings.PRODUCT.ShowDeliveryInfo instances.shop.settings.PRODUCT.ShowWarrantyInfo instances.shop.settings.PRODUCT.ShowContacts }}
                 <div class="list-group-item list-group-item-service-info">
@@ -156,6 +151,11 @@
                 <p class="shop-open-cart-link">
                     <a href="{{bb_link instances.shop.urls.shopCart asRoot=true}}">Перейти до кошика</a>
                 </p>
+                {{else}}
+                <p>
+                    <h3>Цей товар є архівний</h3>
+                </p>
+                {{/unless}}
             </div><!-- /.body -->
         </div><!-- /.body-holder -->
     </div><!-- /.container -->

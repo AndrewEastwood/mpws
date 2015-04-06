@@ -6,7 +6,7 @@ define([
     'bootstrap-dialog',
     'bootstrap-alert',
     /* template */
-    'text!plugins/shop/toolbox/hbs/popupPromo.hbs',
+    'text!plugins/shop/toolbox/hbs/editPromo.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
@@ -25,50 +25,54 @@ define([
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
-            var self = this;
             this.model = new ModelPromo();
-            this.listenTo(this.model, 'change', this.render);
-            this.$title = $('<span/>');
-            this.$dialog = new BootstrapDialog({
-                title: this.$title,
-                message: this.$el,
-                cssClass: 'popup-promo',
+            this.listenTo(this.model, 'sync', this.render);
+        },
+        render: function () {
+            var that = this;
+            var $dialog = new BootstrapDialog({
                 closable: false,
+                draggable: false,
+                title: _getTitle(that.model.id),
+                message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.popup_origin_button_Close,
                     cssClass: 'btn-default btn-link',
                     action: function (dialog) {
-                        dialog.close();
+                        Backbone.history.navigate(APP.instances.shop.urls.promo, true);
                     }
                 }, {
                     label: lang.popup_origin_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
                         // debugger;
-                        self.model.save({
-                            DateStart: self.$('#datestart').text(),
-                            DateExpire: self.$('#dateexpire').text(),
-                            Discount: self.$('#discount').val()
+                        that.model.save({
+                            DateStart: that.$('#datestart').text(),
+                            DateExpire: that.$('#dateexpire').text(),
+                            Discount: that.$('#discount').val()
                         }, {
                             wait: true,
                             patch: true,
                             success: function (model, response) {
                                 // debugger;
                                 if (!response || !response.success) {
-                                    self.render();
+                                    that.render();
                                 } else {
-                                    dialog.close();
+                                    Backbone.history.navigate(APP.instances.shop.urls.promo, true);
                                 }
                             }
                         });
                     }
                 }]
             });
-        },
-        render: function () {
-            // debugger;
-            this.$title.html(_getTitle(this.model.isNew()));
-            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+
+            $dialog.realize();
+            $dialog.updateTitle();
+            $dialog.updateMessage();
+            $dialog.updateClosable();
+
+            this.$el.html($dialog.getModalContent());
+
             this.$('.date').editable({
                 format: 'YYYY-MM-DD',
                 viewformat: 'YYYY-MM-DD',
@@ -81,9 +85,7 @@ define([
                     minuteStep: 1
                 }
             });
-            if (!this.$dialog.isOpened()) {
-                this.$dialog.open();
-            }
+            return this;
         }
     });
 

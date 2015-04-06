@@ -11,7 +11,6 @@ define([
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie',
     "select2",
-    "jquery.steps",
     "base/js/lib/bootstrapvalidator/bootstrapValidator",
     "base/js/lib/bootstrapvalidator/validator/emailAddress",
     "base/js/lib/bootstrapvalidator/validator/phone",
@@ -27,7 +26,8 @@ define([
         lang: lang,
         events: {
             'click .shop-cart-product-quantity a': 'updateQuantity',
-            'click .shop-cart-checkout': 'showPageCheckout',
+            'click .shop-cart-do-checkout': 'showPageCheckout',
+            // 'click .shop-cart-preview': 'showPagePreview',
             'click .shop-cart-product-remove': 'removeProduct',
             'click .shop-cart-clear': 'clearAll',
         },
@@ -54,6 +54,16 @@ define([
             this.$('.shop-cart-page').addClass('hidden');
             this.$('.shop-cart-checkout').removeClass('hidden');
         },
+        showPagePreview: function () {
+            // debugger
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-preview').removeClass('hidden');
+        },
+        showPageSuccess: function () {
+            // debugger
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-success').removeClass('hidden');
+        },
         updateQuantity: function (e) {
             // Quantity Spinner
             e.preventDefault();
@@ -78,6 +88,7 @@ define([
                 this.listenTo(this.modelSettings, 'change', this.render);
             }
             this.listenTo(this.model, 'sync', this.render);
+            _.bindAll(this, 'showPageCheckout', 'showPagePreview', 'showPageSuccess');
         },
         // updateProductQuantity: function (event) {
         //     var $input = this.$(event.target);
@@ -151,7 +162,7 @@ define([
             }
 
             this.$('select').select2();
-            // this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
+            this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
 
             var account = APP.hasPlugin('account') && this.model.has('account') && this.model.get('account').ID;
             // if we have saved order we clear user data
@@ -182,36 +193,36 @@ define([
                 return false;
             });
 
-            // this.$('.button-order-back').click(function () {
-            //     self.$('.wizard').wizard('previous');
-            // });
-
-            // this.$('.steps > li').click(function () {
-            //     return false;
-            // });
-
-            this.$('.button-order-preview').click(function () {
+            this.$('.shop-cart-do-preview').click(function () {
                 // var formValidator = $form.data('bootstrapValidator');
                 formValidator.validate();
                 if (formValidator.isValid()) {
                     self.$('form.form-order-create .form-control').each(function () {
                         var fldName = $(this).attr('name');
                         var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
+                        console.log(fldName + ' = ' + value);
                         if (fldName)
                             self.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
                     });
-                    self.$('.wizard').wizard('next');
+                    // self.$('.wizard').wizard('next');
+                    // debugger
+                    self.showPagePreview();
                 }
             });
 
-            this.$('.button-order-save').click(function () {
+            this.$('.shop-cart-do-save').click(function () {
                 var result = {};
                 var formDataArray = $form.serializeArray();
                 _(formDataArray).each(function (item) {
                     result[item.name] = item.value;
                 });
                 result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
-                self.model.saveOrder(result);
+                self.model.saveOrder(result).done(function () {
+                    if (self.model.isSaved()) {
+                        self.clear();
+                        self.showPageSuccess();
+                    }
+                });
             });
 
             $form.bootstrapValidator({

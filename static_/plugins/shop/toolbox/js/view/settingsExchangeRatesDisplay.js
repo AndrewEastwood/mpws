@@ -135,11 +135,7 @@ define([
             var that = this,
                 dfd = new $.Deferred();
             if (this.currencyList === null) {
-                $.get(APP.getApiLink({
-                    source: 'shop',
-                    fn: 'exchangerates',
-                    type: 'currencylist'
-                }), function (data) {
+                $.get(APP.getApiLink('shop','exchangerates', {type: 'currencylist'}), function (data) {
                     that.currencyList = data;
                     dfd.resolve(data);
                 });
@@ -151,11 +147,7 @@ define([
         refreshUserCurrencyList: function () {
             var that = this,
                 modelsToRemove = {};
-            $.get(APP.getApiLink({
-                source: 'shop',
-                fn: 'exchangerates',
-                type: 'userlist'
-            }), function (userCurrencyItems) {
+            $.get(APP.getApiLink('shop', 'exchangerates', {type: 'userlist'}), function (userCurrencyItems) {
                 that.$('.list-group .list-group-item').each(function () {
                     var id = $(this).data('id'),
                         model = that.collection.get(id);

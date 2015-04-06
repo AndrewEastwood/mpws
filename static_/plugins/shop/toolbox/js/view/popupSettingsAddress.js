@@ -9,7 +9,8 @@ define([
     'text!plugins/shop/toolbox/hbs/popupSettingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
-    'bootstrap-editable'
+    'bootstrap-editable',
+    'editable-wysihtml5'
 ], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     var PopupSettingsAddress = Backbone.View.extend({
@@ -90,7 +91,7 @@ define([
                             InfoPayment: that.$('#js-info-InfoPayment').editable('getValue', true),
                             InfoShipping: that.$('#js-info-InfoShipping').editable('getValue', true),
                             InfoWarranty: that.$('#js-info-InfoWarranty').editable('getValue', true),
-                            EmailSupport: that.$('#js-EmailSupport').editable('getValue', true),
+                            EmailSupport: that.$('#js-EmailSupport').val(),
                         });
                         that.model.save().then(function () {
                             BSAlerts.success(lang.settings_message_success);
@@ -127,10 +128,10 @@ define([
             }, this.options.editableOptions));
             // set up wyswig
             // dfdXEditWysi.done(function () {
-            //     that.$('.wysihtml5').editable(_.defaults({
-            //         mode: 'inline',
-            //         emptytext: 'введіть текст'
-            //     }, that.options.editableOptions));
+                that.$('.wysihtml5').editable(_.defaults({
+                    mode: 'inline',
+                    emptytext: 'введіть текст'
+                }, that.options.editableOptions));
             // });
             // that.$('.wysihtml5').wysiwyg();
             if (!this.$dialog.isOpened()) {

@@ -116,7 +116,6 @@ define([
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Status", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             success: function () {
                                 model.collection.fetch({
                                     reset: true

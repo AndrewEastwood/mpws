@@ -66,11 +66,14 @@ define([
                             // debugger;
                             var inst = $.jstree.reference(data.reference),
                                 parentNode = inst.get_node(data.reference),
+                                parentID = parseInt(parentNode.id, 10),
                                 nodeData = {
-                                    ParentID: parseInt(parentNode.id, 10) || null,
                                     Name: tmp.create.label,
                                     text: tmp.create.label
                                 };
+                            if (parentID >= 0) {
+                                nodeData.ParentID = parentID;
+                            }
                             inst.create_node(parentNode, nodeData, "last", function (new_node) {
                                 setTimeout(function () {
                                     inst.edit(new_node);
@@ -106,7 +109,6 @@ define([
                                     model.save({
                                         Status: "ACTIVE"
                                     }, {
-                                        patch: true,
                                         success: function (model, resp, options) {
                                             self.collection.fetch({
                                                 reset: true
@@ -158,7 +160,6 @@ define([
                     model.save({
                         Name: data.node.text.trim()
                     }, {
-                        patch: true,
                         success: function (model, resp, options) {
                             if (!resp || (resp.errors && resp.errors.length) || !resp.ID)
                                 data.instance.refresh();
@@ -199,7 +200,6 @@ define([
                     model.save({
                         ParentID: parentID >= 0 ? parentID : null
                     }, {
-                        patch: true,
                         success: function (model, resp, options) {
                             // data.instance.refresh();
                             self.collection.fetch({

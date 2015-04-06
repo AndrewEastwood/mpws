@@ -14,7 +14,7 @@ define([
     'plugins/shop/toolbox/js/view/editOrigin',
     'plugins/shop/toolbox/js/view/managerFeeds',
     'plugins/shop/toolbox/js/view/managerPromoCodes',
-    'plugins/shop/toolbox/js/view/popupPromo',
+    'plugins/shop/toolbox/js/view/editPromo',
     'plugins/shop/toolbox/js/view/settings',
     'plugins/shop/toolbox/js/view/menu',
 
@@ -30,7 +30,7 @@ define([
     ViewEditOrigin,
     ManagerFeeds,
     ManagerPromoCodes,
-    ViewPopupPromo,
+    ViewEditPromo,
     Settings,
     ViewMenu,
 
@@ -266,23 +266,23 @@ define([
 
         promoEdit: function (promoID) {
             // set active menu
-            var viewPopupPromo = new ViewPopupPromo();
-            viewPopupPromo.model.set('ID', promoID);
-            viewPopupPromo.model.fetch();
-            // viewPopupPromo.$dialog.onHide(function () {
+            var viewEditPromo = new ViewEditPromo();
+            viewEditPromo.model.set('ID', promoID);
+            viewEditPromo.model.fetch();
+            // viewEditPromo.$dialog.onHide(function () {
             //     Backbone.history.history.back();
             // });
-            return viewPopupPromo;
+            return viewEditPromo;
         },
 
         promoCreate: function () {
             // set active menu
-            var viewPopupPromo = new ViewPopupPromo();
-            viewPopupPromo.render();
-            // viewPopupPromo.$dialog.onHide(function () {
+            var viewEditPromo = new ViewEditPromo();
+            viewEditPromo.render();
+            // viewEditPromo.$dialog.onHide(function () {
             //     Backbone.history.history.back();
             // });
-            return viewPopupPromo;
+            return viewEditPromo;
         },
 
         shopSettings: function () {

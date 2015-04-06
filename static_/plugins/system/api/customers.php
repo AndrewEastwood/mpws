@@ -346,7 +346,7 @@ class customers {
                 }
 
                 // adjust fields
-                if (isset($validatedValues['file1'])) {
+                if (array_key_exists('file1', $validatedValues)) {
                     unset($validatedValues['file1']);
                 }
 

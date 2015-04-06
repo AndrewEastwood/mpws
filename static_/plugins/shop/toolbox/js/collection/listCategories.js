@@ -43,10 +43,11 @@ define([
         },
 
         parseState: function (resp, queryParams, state, options) {
-            var state = {
-                totalRecords: parseInt(resp && resp.info.total_entries || 0, 10),
-                currentPage: parseInt(resp && resp.info.page || 1, 10)
-            };
+            var info = resp && resp.info || {},
+                state = {
+                    totalRecords: parseInt(info.total_entries || 0, 10),
+                    currentPage: parseInt(info.page || 1, 10)
+                };
             return state;
         },
 

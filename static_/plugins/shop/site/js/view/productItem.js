@@ -13,10 +13,11 @@ define([
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     /* enhanced ui */
+    'echo',
     'bootstrap-magnify',
     'lightbox',
     'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, lang) {
+], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, lang, echo) {
 
     var ProductItem = Backbone.View.extend({
         className: 'shop-product-item',
@@ -134,12 +135,25 @@ define([
                     }
                 });
 
+                this.$('.shop-single-product-thumbnails').owlCarousel({items:5, dots:false})
             }
 
             if (design.wrap) {
                 this.$el = $(design.wrap).html(this.$el);
             }
 
+            echo.init({
+                offset: 100,
+                throttle: 250,
+                callback: function(element, op) {
+                    console.log(op)
+                    if(op === 'load') {
+                        element.classList.add('loaded');
+                    } else {
+                        element.classList.remove('loaded');
+                    }
+                }
+            });
             this.trigger('render:complete');
             this.delegateEvents();
             return this;

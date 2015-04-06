@@ -82,7 +82,6 @@ define([
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Name", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             silent: true,
                             success: function () {
                                 model.collection.fetch({
@@ -103,7 +102,6 @@ define([
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Model", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             silent: true,
                             success: function () {
                                 model.collection.fetch({
@@ -148,7 +146,6 @@ define([
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:SKU", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             silent: true,
                             success: function () {
                                 model.collection.fetch({
@@ -169,7 +166,6 @@ define([
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Price", function (model) {
                         model.save(model.changed, {
-                            patch: true,
                             silent: true,
                             success: function () {
                                 model.collection.fetch({

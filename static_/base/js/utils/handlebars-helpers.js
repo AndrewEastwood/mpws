@@ -423,10 +423,13 @@ define([
     helpers.mpwsGetValueByKey = function (dictionary, context) {
         // debugger;
         context = context || {hash: {}};
-        var key = context.hash.key || '',
-            prefix = context.hash.prefix || '',
-            suffix = context.hash.suffix || '';
-        return dictionary[prefix + key + suffix] || (prefix + key + suffix);
+        var key = context.hash.key || context.key || '',
+            prefix = context.hash.prefix || context.prefix || '',
+            suffix = context.hash.suffix || context.suffix || '',
+            empty = _.isUndefined(context.hash.empty) ? (prefix + key + suffix) : context.empty;
+        // console.log('helpers.mpwsGetValueByKey: empty=' + empty);
+        // console.log(context.hash);
+        return dictionary[prefix + key + suffix] || empty;
     }
     helpers.withItem = function(object, options) {
         // debugger;

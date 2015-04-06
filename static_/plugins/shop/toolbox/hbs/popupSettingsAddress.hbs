@@ -136,10 +136,10 @@
                                 <i class="fa fa-phone-square fa-fw"></i> #{{$indexPlus1}}
                             </label>
                             <div class="col-sm-4">
-                                <input type="text" id="js-Phone{{$indexPlus1}}Label" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Label"}}">
+                                <input type="text" id="js-Phone{{$indexPlus1}}Label" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Label" empty=""}}">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" id="js-Phone{{$indexPlus1}}Value" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Value"}}">
+                                <input type="text" id="js-Phone{{$indexPlus1}}Value" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Value" empty=""}}">
                             </div>
                         </div>
                     </a>
@@ -185,8 +185,8 @@
         </table>
     </div>
     <div class="tab-pane fade" id="payments">
-        <textarea cols="50" id="js-info-InfoPayment"></textarea>
-        {{!-- <div id="js-info-InfoPayment" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoPayment}}}</div> --}}
+        {{!-- <textarea cols="50" id="js-info-InfoPayment"></textarea> --}}
+        <div id="js-info-InfoPayment" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoPayment}}}</div>
     </div>
     <div class="tab-pane fade" id="shipping">
         <div id="js-info-InfoShipping" data-type="wysihtml5" class="setting wysihtml5">{{{data.InfoShipping}}}</div>

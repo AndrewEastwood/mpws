@@ -62,6 +62,9 @@ require.config({
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
+        'editable-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/wysihtml5',
+        'bootstrap-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2',
+        'wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/wysihtml5-0.3.0',
         // plugins
         'async': 'base/js/plugin/async',
         'css': 'base/js/plugin/css',
@@ -164,6 +167,12 @@ require.config({
         },
         'icheck': {
             deps: ['jquery']
+        },
+        'editable-wysihtml5': {
+            deps: ['bootstrap', 'bootstrap-editable', 'bootstrap-wysihtml5', 'wysihtml5']
+        },
+        'bootstrap-wysihtml5': {
+            deps: ['wysihtml5']
         }
     },
     waitSeconds: 30,

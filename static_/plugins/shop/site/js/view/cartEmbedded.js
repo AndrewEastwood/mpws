@@ -8,8 +8,9 @@ define([
     'bootstrap-dialog',
     'text!plugins/shop/site/hbs/cartEmbedded.hbs',
     /* lang */
-    'i18n!plugins/shop/site/nls/translation'
-], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, BootstrapDialog, tpl, lang) {
+    'i18n!plugins/shop/site/nls/translation',
+    'echo'
+], function (_, Backbone, Handlebars, ModelOrder, BootstrapDialog, Utils, BootstrapDialog, tpl, lang, echo) {
 
     var CartEmbedded = Backbone.View.extend({
         className: 'shop-cart-embedded',
@@ -30,6 +31,18 @@ define([
                 items = _(tplData.data.items).toArray();
             this.$el.html(this.template(tplData));
             this.delegateEvents();
+            echo.init({
+                offset: 100,
+                throttle: 250,
+                callback: function(element, op) {
+                    console.log(op)
+                    if(op === 'load') {
+                        element.classList.add('loaded');
+                    } else {
+                        element.classList.remove('loaded');
+                    }
+                }
+            });
             return this;
         },
         removeProduct: function (event) {

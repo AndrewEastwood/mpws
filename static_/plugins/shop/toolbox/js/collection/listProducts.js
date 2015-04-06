@@ -55,18 +55,12 @@ define([
         },
 
         parseState: function (resp, queryParams, state, options) {
-            var state = {
-                totalRecords: 0,
-                currentPage: 1
-            };
-
-            if (resp) {
-                if (resp.info) {
-                    state.totalRecords = parseInt(resp.info.total_entries, 10) || 0;
-                    state.currentPage = parseInt(resp.info.page, 10) || 1;
-                }
-                this.extras._category = resp._category || null;
-            }
+            var info = resp && resp.info || {},
+                state = {
+                    totalRecords: parseInt(info.total_entries || 0, 10),
+                    currentPage: parseInt(info.page || 1, 10)
+                };
+            this.extras._category = resp && resp._category || null;
             return state;
         },
 

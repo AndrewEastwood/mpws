@@ -49,3 +49,63 @@
                                 {{/each}}
                             </div>
                         </div>
+
+
+
+
+
+        <div class="well cartInfo hidden">
+            {{#if data.info.hasPromo }}
+            <div class="shopCartDiscount">
+                <span class="value-prefix">Знижка:</span>
+                <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+                <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+            </div>
+            {{/if}}
+            <div class="shopCartTotal">
+                <span class="value-prefix">До оплати:</span>
+                {{#each data.totalSummary._totals}}
+                    <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+            </div>
+        </div>
+
+
+        <div class="well cartInfo hidden">
+            {{#if data.info.hasPromo }}
+            <div class="shopCartDiscount">
+                <span class="value-prefix">Знижка:</span>
+                <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+                <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+            </div>
+            {{else }}
+            <div class="shopPropmoCode">
+                <form class="form-inline" role="form">
+                    <i class="fa fa-tag"></i> Для отримання знижки введіть промо-код:
+                    <input type="text" class="form-control" id="shop-order-promo-ID" placeholder="XXXXX-XXXXX-XXXXX">
+                    <button type="button" class="btn btn-default btn-promo-submit">Застосувати</button>
+                </form>
+            </div>
+            {{/if}}
+            <div class="shopCartTotal">
+                <span class="value-prefix">До оплати:</span>
+                {{#each data.totalSummary._totals}}
+                    <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                {{/each}}
+            </div>
+        </div>
+
+
+
+
+            <div id="cupon-widget" class="widget hidden">
+                <h1 class="border">use coupon</h1>
+                <div class="body">
+                    <form>
+                        <div class="inline-input">
+                            <input data-placeholder="enter coupon code" type="text" class="placeholder">
+                            <button class="le-button" type="submit">Apply</button>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.widget -->

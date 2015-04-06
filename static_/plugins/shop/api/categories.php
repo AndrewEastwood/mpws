@@ -43,8 +43,10 @@ class categories {
             $category['Image'] = array(
                 'name' => $category['Image'],
                 'normal' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image']),
+                'md' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'md'),
                 'sm' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'sm'),
-                'xs' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'xs')
+                'xs' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'xs'),
+                'micro' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'micro')
             );
         }
         return $category;
@@ -123,11 +125,15 @@ class categories {
                 if (!empty($validatedValues['file1'])) {
                     $newFileName = uniqid(time());
                     $fileName = $validatedValues['file1'];
+                    $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
                     $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                    $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
+                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getCategoryUploadInnerDir('md'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getCategoryUploadInnerDir('micro'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
                     $validatedValues['Image'] = $uploadInfo['filename'];
                 }
@@ -184,7 +190,6 @@ class categories {
 
                     if (!empty($validatedValues['file1'])) {
                         $newFileName = $validatedValues['file1'];
-                        unset($validatedValues['file1']);
                     }
 
                     if ($newFileName !== $currentFileName) {
@@ -197,15 +202,22 @@ class categories {
                         if (!empty($newFileName)) {
                             $currentFileName = $newFileName;
                             $newFileName = uniqid(time());
+                            $mdImagePath = 'md' . Path::getDirectorySeparator() . $currentFileName;
                             $smImagePath = 'sm' . Path::getDirectorySeparator() . $currentFileName;
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
+                            $microImagePath = 'micro' . Path::getDirectorySeparator() . $currentFileName;
                             $normalImagePath = $currentFileName;
+                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getCategoryUploadInnerDir('md'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getCategoryUploadInnerDir('micro'), $newFileName);
                             $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
                             $validatedValues['Image'] = $uploadInfo['filename'];
                         }
                     }
+                }
+                if (array_key_exists('file1', $validatedValues)) {
+                    unset($validatedValues['file1']);
                 }
 
                 $app->getDB()->beginTransaction();
@@ -337,10 +349,10 @@ class categories {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CategoryID = intval($req->get['id']);
+            $CategoryID = intval($req->get['params']);
             $resp = $this->updateCategory($CategoryID, $req->data);
             // $this->_getOrSetCachedState('changed:category', true);
         }
@@ -351,10 +363,10 @@ class categories {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
+        if (empty($req->get['params'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CategoryID = intval($req->get['id']);
+            $CategoryID = intval($req->get['params']);
             $resp = $this->disableCategory($CategoryID);
             // $this->_getOrSetCachedState('changed:category', true);
         }

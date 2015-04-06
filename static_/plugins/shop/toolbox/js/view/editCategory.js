@@ -77,10 +77,7 @@ define([
 
             this.$el.html($dialog.getModalContent());
 
-            var categoriesUrl = APP.getApiLink({
-                source: 'shop',
-                fn: 'categories'
-            });
+            var categoriesUrl = APP.getApiLink('shop', 'categories');
             $.get(categoriesUrl, function (data) {
                 var _results = _(data.items).map(function (item) {
                     return {
