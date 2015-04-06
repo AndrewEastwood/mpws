@@ -270,13 +270,13 @@ define([
         catalogFilterPanel: function (categoryID, pageNo) {
             // create new view
             var view = new ViewCatalogFilterPanel();
+            collCatalog.setCategoryID(categoryID);
             if (pageNo) {
                 var _pageNo = parseInt(pageNo, 10);
                 if (_pageNo.toString() === pageNo) {
                     view.collection.setFilter('filter_viewPageNum', pageNo);
                 }
             }
-            collCatalog.setCategoryID(categoryID);
             collCatalog.fetch({
                 reset: true
             });

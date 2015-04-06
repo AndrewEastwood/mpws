@@ -180,14 +180,16 @@ define([
 
                 hotOffers.on('shop:rendered', function () {
                     hotOffers.$el.owlCarousel({
-                        autoplaySpeed: 1000,
-                        autoplay: true,
-                        navigation: true,
-                        pagination: true,
-                        singleItem: true,
-                        stopOnHover: true,
                         loop: true,
-                        items: 1
+                        autoplay: true,
+                        autoplayTimeout: 1000,
+                        autoplayHoverPause: true,
+                        items: 1,
+                        animateOut: 'slideOutDown',
+                        animateIn: 'flipInX',
+                        margin:30,
+                        stagePadding:30,
+                        smartSpeed:450
                     });
                 });
 
@@ -473,12 +475,12 @@ define([
                 var text = item[0] || null,
                     url = item[1] || null,
                     $bcItem = $('<li>')
-                    .addClass('breadcrumb-item'),
+                        .addClass('breadcrumb-item'),
                     $bcLink = $('<a>').attr('href', url || 'javascript://').text(text);
                 $bcItem.html($bcLink);
-                if (item[2]) {
+                if (!!item[2]) {
                     var $subMenu = $(item[2]);
-                    if ($subMenu.is('ul')) {
+                    if ($subMenu.is('ul') && $subMenu.children().length) {
                         $subMenu.addClass('dropdown-menu');
                         $bcItem.append($subMenu);
                         $bcLink.attr({
