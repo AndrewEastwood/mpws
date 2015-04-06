@@ -71,7 +71,7 @@ class feeds {
             'running' => $task['IsRunning'],
             'complete' => $task['Complete'],
             'canceled' => $task['ManualCancel'],
-            'results' => !empty($task['Result']) ? gzuncompress(stripcslashes($task['Result'])) : '',
+            'results' => $task['Result'],
             // 'canBeScheduled' => !$task['scheduled'],
             'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
             'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
@@ -195,8 +195,9 @@ class feeds {
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
+            $currentImportResult = array();
             //-- echo "processing product " . $rawProductData['Name'] . PHP_EOL;
-            $results[] = $rawProductData['Name'];
+            $currentImportResult[] = $rawProductData['Model'];
             ob_flush();
             flush();
 
@@ -214,7 +215,7 @@ class feeds {
             $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
 
 
-            // $results[] = "[INFO] " . "set encoding";
+            // $currentImportResult[] = "[INFO] " . "set encoding";
             //-- echo "[INFO] " . "set encoding" . PHP_EOL;
             foreach ($keysToEncode as $key) {
                 $productItem[$key] = mb_convert_encoding((string)$productItem[$key], 'UTF-8', mb_list_encodings());
@@ -228,7 +229,7 @@ class feeds {
                 continue;
             }
 
-            // $results[] = "[INFO] " . "adjusting features";
+            // $currentImportResult[] = "[INFO] " . "adjusting features";
             //-- echo "[INFO] " . "adjusting features" . PHP_EOL;
             $featureChunks = explode('|', trim($rawProductData['Features']));
             $features = array();
@@ -242,7 +243,7 @@ class feeds {
             }
             $productItem['Features'] = $features;
 
-            // $results[] = "[INFO] " . "downloading images";
+            // $currentImportResult[] = "[INFO] " . "downloading images";
             //-- echo "[INFO] " . "downloading images" . PHP_EOL;
             // var_dump($rawProductData['Images']);
             $images = array();
@@ -270,10 +271,10 @@ class feeds {
                 if (!empty($urlInfo['host'])) {
                     if ($urlInfo['host'] !== $customer['HostName']) {
                         // $imagesToDownload[] = $imgUrl;
-                        // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
+                        // $currentImportResult[] = "[INFO] " . "downloading image: " . $imgUrl;
                         //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                         set_time_limit(120);
-                        // echo '# ... importing image ' . $imgUrl . PHP_EOL;
+                        echo '# ... importing image ' . $imgUrl . PHP_EOL;
                         $res = $upload_handler->importFromUrl($imgUrl, false);
                         foreach ($res['web'] as $impageUploadInfo) {
                             $images[] = $impageUploadInfo->name;
@@ -303,37 +304,37 @@ class feeds {
 
             // var_dump("[[[[[[[[[[[[[[ inpuda data >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             // var_dump($productItem);
-            // $results[] = "[INFO] " . "saving product";
+            // $currentImportResult[] = "[INFO] " . "saving product";
             // echo "[INFO] " . "saving product" . PHP_EOL;
             $res = API::getAPI('shop:products')->updateOrInsertProduct($productItem);
             // var_dump("***************** result *****************");
             // var_dump($res);
             if ($res['created']) {
                 //-- echo "[INFO] new product created" . PHP_EOL;
-                $results[] = "[I] cr";
+                $currentImportResult[] = "N";
                 $addedCount++;
             } elseif ($res['updated']) {
                 //-- echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
-                $results[] = "[I] up. " . $res['ID'];
+                $currentImportResult[] = "U" . $res['ID'];
                 $updatedCount++;
             } else {
                 $errorCount++;
             }
             if (!empty($res['errors'])) {
-                $results[] = "[F] " . $rawProductData['Name'];
-                $results[] = print_r($res['errors'], true);
-                //-- echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
+                $currentImportResult[] = "F";
+                $currentImportResult[] = str_replace('  ', ' ', implode(';',  $res['errors']));
+                //-- echo "[FAILED] " . PHP_EOL;
                 // var_dump($res['errors']);
                 ob_flush();
                 flush();
             }
             if ($res['success']) {
-                $results[] = "[S] " . $rawProductData['Name'];
-                //-- echo "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
+                $currentImportResult[] = "S";
+                //-- echo "[SUCCESS] " . PHP_EOL;
                 ob_flush();
                 flush();
             } else {
-                $results[] = "[E] " . $rawProductData['Name'];
+                $currentImportResult[] = "E";
                 //-- echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
@@ -347,6 +348,7 @@ class feeds {
             //-- echo "[INFO] " . "parsed products count " . $processed . " of " . $total . PHP_EOL;
             set_time_limit(60);
             // var_dump("********************************************");
+            $results[] = '[' . implode(' ', $currentImportResult) . ']';
         }
 
         // disable all products
@@ -355,18 +357,19 @@ class feeds {
         // var_dump($errors);
         $res = array(
             // 'parsedProducts' => $parsedProducts,
-            'total' => count($parsedProducts),
-            'productsAdded' => $addedCount,
-            'productsUpdated' => $updatedCount,
-            'productsInvalid' => $errorCount,
-            'success' => empty($errors),
+            'TOT' => 'TOT'.count($parsedProducts),
+            'ADD' => 'ADD'.$addedCount,
+            'UP' => 'UP'.$updatedCount,
+            'ERR' => 'ERR'.$errorCount,
+            'OK' => empty($errors) ? 'OK' : 'NO',
             // 'errors' => $errors,
-            'results' => $results
+            'I' => implode(';', $results)
         );
 
         // var_dump($task);
         // API::getAPI('system:tasks')->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
-        API::getAPI('system:tasks')->setTaskResult($task['ID'], mysql_real_escape_string(gzcompress(print_r($res, true))));
+        // var_dump($res);
+        API::getAPI('system:tasks')->setTaskResult($task['ID'], mysql_real_escape_string(implode('|', $res)));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
