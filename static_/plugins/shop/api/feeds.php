@@ -71,7 +71,7 @@ class feeds {
             'running' => $task['IsRunning'],
             'complete' => $task['Complete'],
             'canceled' => $task['ManualCancel'],
-            'results' => $task['Result'],
+            'results' => !empty($task['Result']) ? gzuncompress($task['Result']) : '',
             // 'canBeScheduled' => !$task['scheduled'],
             'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
             'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
@@ -196,7 +196,7 @@ class feeds {
         foreach ($namedDataArray as &$rawProductData) {
 
             //-- echo "processing product " . $rawProductData['Name'] . PHP_EOL;
-            $results[] .= $rawProductData['Name'];
+            $results[] = $rawProductData['Name'];
             ob_flush();
             flush();
 
@@ -366,7 +366,7 @@ class feeds {
 
         // var_dump($task);
         // API::getAPI('system:tasks')->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
-        API::getAPI('system:tasks')->setTaskResult($task['ID'], print_r($res, true));
+        API::getAPI('system:tasks')->setTaskResult($task['ID'], gzcompress(print_r($res, true)));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
