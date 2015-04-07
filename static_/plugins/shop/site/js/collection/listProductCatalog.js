@@ -107,10 +107,16 @@ define([
         url: function () {
             var _options = {};
             _(this.filter.filterOptionsApplied).each(function(item, key){
-                if (_.isEmpty(item))
+                // debugger
+                if (_.isUndefined(item) || _.isNull(item) || item === 0)
                     return;
-                if (_.isArray(item))
-                    _options[key] = item.join(',');
+                if (_.isArray(item)) {
+                    if (item.length) {
+                        _options[key] = item.join(',');
+                    } else {
+                        return
+                    }
+                }
                 else
                     _options[key] = item;
             });
