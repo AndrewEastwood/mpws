@@ -516,24 +516,34 @@ define([
         return _.isUndefined(value) || _.isNull(value) ? defaultValue : value;
     }
     helpers.bb_link = function (url, options) {
+        var config = options && options.hash || options || {};
         url = url || "";
-        url = "#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
-        if (options.asRoot || (options.hash && options.hash.asRoot)) {
+        url = url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
+        if (!config.skipHash) {
+            url = "#!" + url;
+        }
+        if (config.asRoot) {
             url = '/' + url;
         }
-        if (options.fullUrl || (options.hash && options.hash.fullUrl)) {
+        if (config.fullUrl) {
             if (url[0] !== '/') {
                 url = '/' + url;
             }
             url = location.protocol + '//' + location.hostname + url;
         }
-        _(options.hash || options).each(function (v, k) {
+        _(config).each(function (v, k) {
             if (/^_/.test(k))
                 url = url.replace("(:" + k.substr(1) + ")", v);
             else
                 url = url.replace(":" + k, v);
         });
+        if (config.encode) {
+            return encodeURIComponent(url);
+        }
         return url;
+    }
+    helpers.encodeURIComponent = function (val) {
+        return encodeURIComponent(val);
     }
     helpers.ifAny = function ( /* arg1, arg2, argn, options*/ ) {
         var rez = false,

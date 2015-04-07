@@ -235,5 +235,14 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
         products: {
             nodata: 'Немає товарів'
         }
+    },
+    popups: {
+        settingsAddress: {
+            errors: {
+                title: 'Неможливо зберегти адресу',
+                EmailSupport: 'Ел.адреса',
+                EmailSupportIsNotEmail: 'неправильна ел.адреса'
+            }
+        }
     }
 });

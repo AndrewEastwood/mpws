@@ -93,8 +93,12 @@ define([
                             InfoWarranty: that.$('#js-info-InfoWarranty').editable('getValue', true),
                             EmailSupport: that.$('#js-EmailSupport').val(),
                         });
-                        that.model.save().then(function () {
-                            BSAlerts.success(lang.settings_message_success);
+                        that.model.save().then(function (resp) {
+                            if (resp && resp.success) {
+                                BSAlerts.success(lang.settings_message_success);
+                            }
+                            if (resp.errors) {
+                            }
                         }, function () {
                             BSAlerts.danger(lang.settings_error_save);
                             that.model.set(that.model.previousAttributes());
@@ -119,7 +123,7 @@ define([
         render: function () {
             var that = this,
                 tplData = Utils.getHBSTemplateData(this);
-            tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
+            tplData.data = _(tplData.data).omit('ID');
             this.$el.html(this.template(tplData));
             // set up open hours editables
             this.$('#openhours .ediatble').editable(_.defaults({

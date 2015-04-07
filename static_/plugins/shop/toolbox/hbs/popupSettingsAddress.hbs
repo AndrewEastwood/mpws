@@ -1,3 +1,21 @@
+{{#mpwsIsNotEmpty data.errors }}
+<div class="alert alert-danger">
+    <ul class="errors">
+    {{#each data.errors}}
+        <li>
+            <strong>
+                {{mpwsGetValueByKey ../lang.popups.settingsAddress.errors key=@key}}
+            </strong>
+            <ul>
+            {{#each this}}
+                <li>{{mpwsGetValueByKey ../../lang.popups.settingsAddress.errors key=this}}</li>
+            {{/each}}
+            </ul>
+        </li>
+    {{/each}}
+    </ul>
+</div>
+{{/mpwsIsNotEmpty}}
 <ul class="nav nav-pills">
     <li class="tab tab-general active"><a href="#general" data-toggle="tab">Основні</a></li>
     <li class="tab tab-social"><a href="#social" data-toggle="tab">Соц.Мережі</a></li>

@@ -1,0 +1,1 @@
+ALTER TABLE `shop_settingsAddress` ADD `EmailSupport` VARCHAR(200) NOT NULL AFTER `AddressLine3`;

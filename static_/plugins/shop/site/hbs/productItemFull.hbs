@@ -63,8 +63,29 @@
 
                 {{#if instances.shop.settings.PRODUCT.ShowSocialSharing}}
                 <div class="social-row">
-                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=uaclientssupport" async="async"></script>
-                    <div class="addthis_native_toolbox"></div>
+                    <span class="product-share-button product-share-button-fb">
+                        <!-- facebook -->
+                        <div id="fb-root"></div>
+                        <script>(function(d, s, id) {
+                          var js, fjs = d.getElementsByTagName(s)[0];
+                          if (d.getElementById(id)) return;
+                          js = d.createElement(s); js.id = id;
+                          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.3";
+                          fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+                        <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}" data-layout="button_count"></div>
+                    </span>
+                    <span class="product-share-button product-share-button-tw">
+                        <!-- twitter -->
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="{{data._displayName}}">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </span>
+                    <span class="product-share-button product-share-button-pin">
+                        <!-- pinterest -->
+                        <a href="//www.pinterest.com/pin/create/button/?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&media={{bb_link data.Images.[0].normal asRoot=true fullUrl=true encode=true skipHash=true}}&description={{encodeURIComponent data._displayName}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a>
+                        <!-- Please call pinit.js only once per page -->
+                        <script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
+                    </span>
                 </div>
                 {{/if}}
 
