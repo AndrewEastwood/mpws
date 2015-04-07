@@ -2,10 +2,10 @@ Clone Project into /var/www/ directory
 
 Configure apache site /etc/apache2/sites-available/default:
 
-<VirtualHost *:80>
+<VirtualHost *:5001>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/mpws/
-    ServerName pb.com.ua
+    ServerName dev.leogroup.com.ua
     Options +FollowSymLinks
     <Directory />
         RewriteEngine On
@@ -20,10 +20,10 @@ Configure apache site /etc/apache2/sites-available/default:
         allow from all
     </Directory>
 </VirtualHost>
-<VirtualHost *:80>
+<VirtualHost *:5001>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/mpws/
-    ServerName toolbox.pb.com.ua
+    ServerName dev.toolbox.leogroup.com.ua
     Options +FollowSymLinks
     <Directory />
         RewriteEngine On
@@ -31,6 +31,42 @@ Configure apache site /etc/apache2/sites-available/default:
         AllowOverride All
     </Directory>
     <Directory /var/www/mpws/>
+        RewriteEngine On
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+</VirtualHost>
+<VirtualHost *:5555>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/mpws/_dist_/
+    ServerName dev.leogroup.com.ua
+    Options +FollowSymLinks
+    <Directory />
+        RewriteEngine On
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+    <Directory /var/www/mpws/_dist_/>
+        RewriteEngine On
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+</VirtualHost>
+<VirtualHost *:5555>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/mpws/_dist_/
+    ServerName dev.toolbox.leogroup.com.ua
+    Options +FollowSymLinks
+    <Directory />
+        RewriteEngine On
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+    <Directory /var/www/mpws/_dist_/>
         RewriteEngine On
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
@@ -41,7 +77,8 @@ Configure apache site /etc/apache2/sites-available/default:
 
 Updated /etc/hosts/
 
-127.0.0.1   toolbox.mpws.com
+127.0.0.1   dev.leogroup.com
+127.0.0.1   dev.toolbox.leogroup.com
 
 Then open a terminal and type the following command: sudo a2enmod rewrite
 This will enable rewrite module for apache
@@ -50,7 +87,7 @@ This will enable rewrite module for apache
 Change resource owner:
 sudo chown -R www-data *
 
-
+-------- skip further content -------
 
 Add Demo User:
 
