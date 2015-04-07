@@ -356,7 +356,7 @@ class feeds {
                 flush();
             }
             if ($res['success']) {
-                $currentImportResult[] = "SUCCES";
+                $currentImportResult[] = "SUCCESS";
                 //-- echo "[SUCCESS] " . PHP_EOL;
                 ob_flush();
                 flush();
