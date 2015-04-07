@@ -220,14 +220,16 @@ class feeds {
             $productItem['OriginName'] = trim($rawProductData['OriginName']);
             $productItem['Price'] = floatval(trim($rawProductData['Price']));
             $productItem['Status'] = $rawProductData['Status'];
-            $productItem['IsPromo'] = trim($rawProductData['IsPromo']) === '+';
-            $productItem['IsOffer'] = trim($rawProductData['IsOffer']) === '+';
-            $productItem['IsFeatured'] = trim($rawProductData['IsFeatured']) === '+';
+            $productItem['IsPromo'] = !empty($rawProductData['IsPromo']) && trim($rawProductData['IsPromo']) === '+';
+            $productItem['IsOffer'] = !empty($rawProductData['IsOffer']) && trim($rawProductData['IsOffer']) === '+';
+            $productItem['IsFeatured'] = !empty($rawProductData['IsFeatured']) && trim($rawProductData['IsFeatured']) === '+';
             $productItem['TAGS'] = $rawProductData['TAGS'];
             $productItem['Synopsis'] = trim($rawProductData['Synopsis']);
             $productItem['Description'] = trim($rawProductData['Description']);
             $productItem['Features'] = null;
             $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
+
+            $currentImportResult['product'] = $productItem;
 
 
             // $currentImportResult[] = "[INFO] " . "set encoding";

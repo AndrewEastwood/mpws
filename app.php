@@ -116,17 +116,25 @@ class app {
         $this->header = $header;
         // request type
         $this->runMode = empty($runMode) ? 'display' : $runMode;
-        // check whether we runt toolbox mode
-        $this->isToolbox = preg_match("/^" . 'toolbox' . "\./", $_SERVER['HTTP_HOST']) > 0;
         // get customer name
         $h = current(explode(':', $_SERVER['HTTP_HOST']));
         $h = strtolower($h);
         $host_parts = explode ('.', $h);
         $this->customerName = '';
-        if ($host_parts[0] === 'www' || $host_parts[0] === 'toolbox')
-            $this->customerName = implode('.', array_splice($host_parts, 1));
-        else
-            $this->customerName = $h;
+        if ($host_parts[0] === 'dev') {
+            $host_parts = array_slice($host_parts, 1);
+        }
+        if ($host_parts[0] === 'toolbox') {
+            $this->isToolbox = true;
+            $host_parts = array_slice($host_parts, 1);
+        }
+        $this->customerName = implode('.', $host_parts);
+        // if ($host_parts[0] === 'www' || $host_parts[0] === 'toolbox') {
+        // }
+        // else
+        //     $this->customerName = $h;
+        // check whether we runt toolbox mode
+        // $this->isToolbox = preg_match("/^" . 'toolbox' . "\./", $_SERVER['HTTP_HOST']) > 0;
         // $this->customerName = str_replace('.', '_', $this->customerName);
         // get display customer
         $this->displayCustomer = $this->isToolbox() ? 'toolbox' : $this->customerName();
