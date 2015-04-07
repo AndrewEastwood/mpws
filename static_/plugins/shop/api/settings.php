@@ -556,7 +556,10 @@ class settings {
                 $count = $this->getCustomerSettingsCount($type);
                 if ($count === 0) {
                     // var_dump($type, 'sql table name = ',$sqlTableName);
-                    $this->createOrUpdateSetting($type, array());
+                    if ($type === $this->SETTING_TYPE->MISC)
+                        $this->createDefaultSettingsMisc();
+                    else
+                        $this->createOrUpdateSetting($type, array());
                 }
             }
         }

@@ -1402,18 +1402,25 @@ class uploadHandler
             }
             $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($imgExtension);
             $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
-            $content = file_get_contents($fileUrl);
-            $size = file_put_contents($tmpFile, $content);
-            $files[] = $this->handle_file_upload(
-                $tmpFile,
-                $this->options['use_unique_hash_for_names'] ? $fileName : $pInfo['basename'],
-                $size,
-                $this->get_server_var('CONTENT_TYPE'),
-                null,
-                null,
-                $content_range,
-                true
-            );
+            try {
+                $content = @file_get_contents($fileUrl);
+                if (empty($content)) {
+                    continue;
+                }
+                $size = file_put_contents($tmpFile, $content);
+                $files[] = $this->handle_file_upload(
+                    $tmpFile,
+                    $this->options['use_unique_hash_for_names'] ? $fileName : $pInfo['basename'],
+                    $size,
+                    $this->get_server_var('CONTENT_TYPE'),
+                    null,
+                    null,
+                    $content_range,
+                    true
+                );
+            } catch (Exception $e) {
+                
+            }
         }
         $response = array('web' => $files);
         return $this->generate_response($response, $print_response);

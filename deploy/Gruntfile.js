@@ -108,7 +108,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= paths.app %>',
                     dest: '<%= paths.dist %>',
-                    src: ['engine/**/*', 'app.php', '.htaccess', 'env.txt', 'robots.txt', 'version.txt']
+                    src: ['engine/**/*', 'app.php', '.htaccess', 'robots.txt']
                 }]
             }
         },
@@ -165,5 +165,6 @@ module.exports = function (grunt) {
         grunt.log.writeln('Running deployment...');
         grunt.task.run([/*'jshint', */'requirejs', 'less', 'copy:dist']);
         grunt.file.write(distPath + 'version.txt', Date.now());
+        grunt.file.write(distPath + 'env.txt', 'production');
     });
 };

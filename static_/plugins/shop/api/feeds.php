@@ -40,6 +40,10 @@ class feeds {
         return $this->getFeedsUploadDir() . $feedName . '.xls';
     }
 
+    public function getFeedLogFilePathByName ($feedName) {
+        return $this->getFeedsUploadDir() . $feedName . '.log';
+    }
+
     public function getGeneratedFeedsFilesList () {
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*\.xls');
     }
@@ -52,6 +56,7 @@ class feeds {
         $pInfo = pathinfo($feedFilePath);
         $ftime = filectime($feedFilePath);
         $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
+        $feedLogPath = Path::rootPath() . $this->getFeedLogFilePathByName($pInfo['filename']);
         // $isActive = in_array($pInfo['filename'], $runningFeedNames);
         // $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
         // $isAdded = in_array($pInfo['filename'], $newFeedNames);
@@ -60,6 +65,7 @@ class feeds {
         $isRunning = $task['IsRunning'];
         $isCompleted = $task['Complete'];
         $isCanceled = $task['ManualCancel'];
+        $log = @file_get_contents($feedLogPath);
         return array(
             'ID' => md5($pInfo['filename']),
             'type' => 'uploaded',
@@ -71,7 +77,7 @@ class feeds {
             'running' => $task['IsRunning'],
             'complete' => $task['Complete'],
             'canceled' => $task['ManualCancel'],
-            'results' => $task['Result'],
+            'results' => $task['Result'] . PHP_EOL . $log,
             // 'canBeScheduled' => !$task['scheduled'],
             'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
             'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
@@ -159,6 +165,7 @@ class feeds {
 
         $customer = API::getApi('system:customers')->getRuntimeCustomer();
         $feedPath = Path::rootPath() . $this->getFeedFilePathByName($name);
+        $feedLogPath = Path::rootPath() . $this->getFeedLogFilePathByName($name);
         // $objPHPExcel = new PHPExcel();
         $objPHPExcel = new PHPExcel();
         $objPHPExcel = PHPExcel_IOFactory::load($feedPath);
@@ -274,11 +281,23 @@ class feeds {
                         // $currentImportResult[] = "[INFO] " . "downloading image: " . $imgUrl;
                         //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                         set_time_limit(120);
-                        echo '# ... importing image ' . $imgUrl . PHP_EOL;
-                        $res = $upload_handler->importFromUrl($imgUrl, false);
-                        foreach ($res['web'] as $impageUploadInfo) {
-                            $images[] = $impageUploadInfo->name;
+                        echo '# ... importing image ' . $imgUrl;
+                        $res = null;
+                        try {
+                            $res = $upload_handler->importFromUrl($imgUrl, false);
+                        } catch (Exception $e) {
+                            $errors[] = $e->getMessage();
+                            echo " [ERROR]";
                         }
+                        if (!empty($res['web'])) {
+                            foreach ($res['web'] as $impageUploadInfo) {
+                                $images[] = $impageUploadInfo->name;
+                            }
+                            echo " [OK]";
+                        } else {
+                            echo " [ERROR]";
+                        }
+                        echo PHP_EOL;
                     } else {
                         $images[] = $pInfo['basename'];
                     }
@@ -311,17 +330,17 @@ class feeds {
             // var_dump($res);
             if ($res['created']) {
                 //-- echo "[INFO] new product created" . PHP_EOL;
-                $currentImportResult[] = "N";
+                $currentImportResult[] = "NEW";
                 $addedCount++;
             } elseif ($res['updated']) {
                 //-- echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
-                $currentImportResult[] = "U" . $res['ID'];
+                $currentImportResult[] = "UPDATED BY ID " . $res['ID'];
                 $updatedCount++;
             } else {
                 $errorCount++;
             }
             if (!empty($res['errors'])) {
-                $currentImportResult[] = "F";
+                $currentImportResult[] = "FAILED:";
                 $currentImportResult[] = str_replace('  ', ' ', implode(';',  $res['errors']));
                 //-- echo "[FAILED] " . PHP_EOL;
                 // var_dump($res['errors']);
@@ -329,12 +348,12 @@ class feeds {
                 flush();
             }
             if ($res['success']) {
-                $currentImportResult[] = "S";
+                $currentImportResult[] = "SUCCES";
                 //-- echo "[SUCCESS] " . PHP_EOL;
                 ob_flush();
                 flush();
             } else {
-                $currentImportResult[] = "E";
+                $currentImportResult[] = "ERROR";
                 //-- echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
@@ -357,19 +376,22 @@ class feeds {
         // var_dump($errors);
         $res = array(
             // 'parsedProducts' => $parsedProducts,
-            'TOT' => 'TOT'.count($parsedProducts),
-            'ADD' => 'ADD'.$addedCount,
-            'UP' => 'UP'.$updatedCount,
-            'ERR' => 'ERR'.$errorCount,
-            'OK' => empty($errors) ? 'OK' : 'NO',
+            'TOTAL' => count($parsedProducts),
+            'ADDED' => $addedCount,
+            'UPDATED' => $updatedCount,
+            'ERROR_COUNT' => $errorCount,
+            'STATUS' => empty($errors) ? 'OK' : 'NO'
             // 'errors' => $errors,
-            'I' => implode(';', $results)
+            // 'I' => implode(';', $results)
         );
 
         // var_dump($task);
         // API::getAPI('system:tasks')->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
         // var_dump($res);
-        API::getAPI('system:tasks')->setTaskResult($task['ID'], mysql_real_escape_string(implode('|', $res)));
+        API::getAPI('system:tasks')->setTaskResult($task['ID'], print_r($res, true));
+
+        // save log file
+        file_put_contents($feedLogPath, implode(';', $results));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();

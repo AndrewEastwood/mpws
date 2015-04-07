@@ -19,3 +19,4 @@ uploads/
 .fuse_*
 vendors
 _dist_
+temp
