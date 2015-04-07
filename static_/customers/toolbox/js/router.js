@@ -180,7 +180,9 @@ define([
         toggleWidgets: function (show) {
             if (show) {
                 var viewUserButton = this.plugins.system.widgetUserButton();
-                $('.mpws-js-top-menu-right').html(viewUserButton.render().$el);
+                if (viewUserButton) {
+                    $('.mpws-js-top-menu-right').html(viewUserButton.render().$el);
+                }
             } else {
                 $('.mpws-js-top-menu-right').empty();
             }

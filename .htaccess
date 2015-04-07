@@ -2,6 +2,7 @@ Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
 DirectoryIndex /engine/controllers/display.php
+Header set Cache-Control "max-age=7200, must-revalidate"
 
 # SEO
 RewriteRule ^sitemap\.xml /engine/controllers/sitemap.php [L]

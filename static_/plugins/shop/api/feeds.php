@@ -92,10 +92,7 @@ class feeds {
         do {
             $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
             if (count($listFeedsGenerated) > 10) {
-                $pInfo = pathinfo($listFeedsGenerated[0]);
-                $success = unlink($listFeedsGenerated[0]);
-                if ($success)
-                    API::getAPI('system:tasks')->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
+                unlink($listFeedsGenerated[0]);
             }
             $attempts--;
         } while (count($listFeedsGenerated) > 10 && $attempts > 0);
@@ -104,7 +101,16 @@ class feeds {
         do {
             $listFeedsUploaded = $this->getUploadedFeedsFilesList();
             if (count($listFeedsUploaded) > 10) {
-                unlink($listFeedsUploaded[0]);
+                $pInfo = pathinfo($listFeedsGenerated[0]);
+                $success = unlink($listFeedsUploaded[0]);
+                if ($success) {
+                    API::getAPI('system:tasks')->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
+                }
+                // clear log
+                $feedLogPath = Path::rootPath() . $this->getFeedLogFilePathByName($pInfo['filename']);
+                if (file_exists($feedLogPath)) {
+                    unlink($feedLogPath);
+                }
             }
             $attempts--;
         } while (count($listFeedsUploaded) > 10 && $attempts > 0);
@@ -204,7 +210,6 @@ class feeds {
 
             $currentImportResult = array();
             //-- echo "processing product " . $rawProductData['Name'] . PHP_EOL;
-            $currentImportResult[] = $rawProductData['Model'];
             ob_flush();
             flush();
 
@@ -216,7 +221,10 @@ class feeds {
             $productItem['Price'] = floatval(trim($rawProductData['Price']));
             $productItem['Status'] = $rawProductData['Status'];
             $productItem['IsPromo'] = trim($rawProductData['IsPromo']) === '+';
+            $productItem['IsOffer'] = trim($rawProductData['IsOffer']) === '+';
+            $productItem['IsFeatured'] = trim($rawProductData['IsFeatured']) === '+';
             $productItem['TAGS'] = $rawProductData['TAGS'];
+            $productItem['Synopsis'] = trim($rawProductData['Synopsis']);
             $productItem['Description'] = trim($rawProductData['Description']);
             $productItem['Features'] = null;
             $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
@@ -341,7 +349,7 @@ class feeds {
             }
             if (!empty($res['errors'])) {
                 $currentImportResult[] = "FAILED:";
-                $currentImportResult[] = str_replace('  ', ' ', implode(';',  $res['errors']));
+                $currentImportResult[] = print_r($res['errors'], true);
                 //-- echo "[FAILED] " . PHP_EOL;
                 // var_dump($res['errors']);
                 ob_flush();
@@ -367,7 +375,7 @@ class feeds {
             //-- echo "[INFO] " . "parsed products count " . $processed . " of " . $total . PHP_EOL;
             set_time_limit(60);
             // var_dump("********************************************");
-            $results[] = '[' . implode(' ', $currentImportResult) . ']';
+            $results[$rawProductData['Name'] . ' ' . $rawProductData['Model']] = $currentImportResult;
         }
 
         // disable all products
@@ -391,7 +399,7 @@ class feeds {
         API::getAPI('system:tasks')->setTaskResult($task['ID'], print_r($res, true));
 
         // save log file
-        file_put_contents($feedLogPath, implode(';', $results));
+        file_put_contents($feedLogPath, print_r($results, true));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
@@ -438,12 +446,15 @@ class feeds {
             ->setCellValue('E1', 'Price')
             ->setCellValue('F1', 'Status')
             ->setCellValue('G1', 'IsPromo')
-            ->setCellValue('H1', 'WARRANTY')
-            ->setCellValue('I1', 'TAGS')
-            ->setCellValue('J1', 'Features')
-            ->setCellValue('K1', 'Description')
-            ->setCellValue('L1', 'Images');
-        $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
+            ->setCellValue('H1', 'IsFeatured')
+            ->setCellValue('I1', 'IsOffer')
+            ->setCellValue('J1', 'WARRANTY')
+            ->setCellValue('K1', 'TAGS')
+            ->setCellValue('L1', 'Features')
+            ->setCellValue('M1', 'Synopsis')
+            ->setCellValue('N1', 'Description')
+            ->setCellValue('O1', 'Images');
+        $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
         for ($i = 0, $j = 2, $len = count($dataList['items']); $i < $len; $i++, $j++) {
             $images = array();
             $features = array();
@@ -482,16 +493,19 @@ class feeds {
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['_prices']['price']);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo'] ? '+' : '');
-            $objPHPExcel->getActiveSheet()->setCellValueExplicit('H' . $j, $warranty);//$dataList['items'][$i]['Features']);
-            $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, $tags);
-            $objPHPExcel->getActiveSheet()->setCellValue('J' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, $dataList['items'][$i]['Description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('L' . $j, implode(PHP_EOL, $images));
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $j, $dataList['items'][$i]['IsFeatured'] ? '+' : '');
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, $dataList['items'][$i]['IsOffer'] ? '+' : '');
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('J' . $j, $warranty);//$dataList['items'][$i]['Features']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, $tags);
+            $objPHPExcel->getActiveSheet()->setCellValue('L' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
+            $objPHPExcel->getActiveSheet()->setCellValue('M' . $j, $dataList['items'][$i]['Description']);
+            $objPHPExcel->getActiveSheet()->setCellValue('N' . $j, $dataList['items'][$i]['Synopsis']);
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . $j, implode(PHP_EOL, $images));
 
             // add dropdown to status field
             $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $j)->getDataValidation();
-            $objValidation->setType( PHPExcel_Cell_DataValidation::TYPE_LIST );
-            $objValidation->setErrorStyle( PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+            $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+            $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation->setAllowBlank(false);
             $objValidation->setShowInputMessage(true);
             $objValidation->setShowErrorMessage(true);
@@ -511,10 +525,13 @@ class feeds {
         $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(12);
         $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
         $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(10);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
         $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(50);
         $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(50);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(150);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(100);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(100);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(150);
         if (!file_exists(Path::rootPath() . $this->getFeedsUploadDir())) {
             mkdir(Path::rootPath() . $this->getFeedsUploadDir());
         }

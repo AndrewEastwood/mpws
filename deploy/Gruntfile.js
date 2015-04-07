@@ -18,6 +18,7 @@ module.exports = function (grunt) {
             'auth',
             'jsurl',
             'cachejs',
+            'asyncjs',
             'handlebars-helpers',
             'handlebars-partials',
             // localizations
@@ -25,7 +26,7 @@ module.exports = function (grunt) {
             'vendors/select2/select2_locale_uk',
             'bootstrap'
         ],
-        customers = ['toolbox', 'pb.com.ua'],
+        customers = ['toolbox', 'leogroup.com.ua'],
         plugins = ['system', 'shop'],
         paths = {
             'app': appDir,
@@ -121,9 +122,11 @@ module.exports = function (grunt) {
                     mainConfigFile: paths.base + 'js/loader.js',
                     dir: paths.jsbuild,
                     findNestedDependencies: false,
-                    optimize: 'uglify2',
+                    optimize: 'none',
+                    // optimize: 'uglify2',
                     skipDirOptimize: true,
-                    modules: getModules()
+                    modules: getModules(),
+                    optimizeCss: 'none'
                 }
             }
         }
