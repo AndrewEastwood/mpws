@@ -624,6 +624,12 @@ class products {
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
+                if (isset($validatedValues["IsOffer"])) {
+                    $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
+                }
+                if (isset($validatedValues["IsFeatured"])) {
+                    $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
+                }
                 // var_dump($validatedValues);
                 $config = dbquery::shopCreateProduct($validatedValues);
                 // var_dump($config);
@@ -858,6 +864,12 @@ class products {
                 $validatedValues["CustomerID"] = $CustomerID;
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                }
+                if (isset($validatedValues["IsOffer"])) {
+                    $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
+                }
+                if (isset($validatedValues["IsFeatured"])) {
+                    $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
                 }
                 $config = dbquery::shopUpdateProduct($ProductID, $validatedValues);
                 try {

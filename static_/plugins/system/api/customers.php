@@ -44,7 +44,7 @@ class customers {
         if (!$this->switchToCustomerByID($this->getCustomerSessionID())) {
             // otherwise try to load default customer
             if (!$this->switchToDefaultCustomer()) {
-                throw new Exception("Unable to load default cusetomer", 1);
+                throw new Exception("Unable to load default customer", 1);
             }
         }
     }

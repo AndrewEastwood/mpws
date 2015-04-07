@@ -57,8 +57,9 @@ class shopstats {
         };
 
         $type = false;
-        if (!empty($req->get['type']))
+        if (!empty($req->get['type'])) {
             $type = $req->get['type'];
+        }
 
         if (isset($sources[$type]))
             $resp = $sources[$type]($req);

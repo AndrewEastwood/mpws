@@ -2,7 +2,8 @@ Clone Project into /var/www/ directory
 
 Configure apache site /etc/apache2/sites-available/default:
 
-<VirtualHost *:5001>
+ServerName localhost
+<VirtualHost *:80>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/mpws/
     ServerName dev.leogroup.com.ua
@@ -20,7 +21,7 @@ Configure apache site /etc/apache2/sites-available/default:
         allow from all
     </Directory>
 </VirtualHost>
-<VirtualHost *:5001>
+<VirtualHost *:80>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/mpws/
     ServerName dev.toolbox.leogroup.com.ua
@@ -77,8 +78,8 @@ Configure apache site /etc/apache2/sites-available/default:
 
 Updated /etc/hosts/
 
-127.0.0.1   dev.leogroup.com
-127.0.0.1   dev.toolbox.leogroup.com
+127.0.0.1   dev.leogroup.com.ua
+127.0.0.1   dev.toolbox.leogroup.com.ua
 
 Then open a terminal and type the following command: sudo a2enmod rewrite
 This will enable rewrite module for apache

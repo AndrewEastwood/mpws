@@ -507,12 +507,13 @@ define([
         }
     }
     helpers.array_length = function (value) {
-        if (_.isArray(value))
+        if (_.isArray(value)) {
             return value.length;
+        }
         return 0;
     }
     helpers.default_value = function (value, defaultValue) {
-        return _.isEmpty(value) ? defaultValue : value;
+        return _.isUndefined(value) || _.isNull(value) ? defaultValue : value;
     }
     helpers.bb_link = function (url, options) {
         url = url || "";
