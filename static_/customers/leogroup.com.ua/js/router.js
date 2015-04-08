@@ -266,17 +266,21 @@ define([
                 productOptions = {design: {className: 'col-sm-4 col-md-3 no-margin product-item-holder hover', pageSize: 4}},
                 featuredProducts = this.plugins.shop.featuredProducts(productOptions),
                 newProducts = this.plugins.shop.newProducts(productOptions),
-                topProducts = this.plugins.shop.topProducts(productOptions);
+                topProducts = this.plugins.shop.topProducts(productOptions),
+                onSaleProducts = this.plugins.shop.onSaleProducts(productOptions);
 
             // show more buttons selectors
             var $btnShowMoreFeatured = $tplProductsTab.find('#mpws-js-shop-tab-products-featured .btn-loadmore'),
                 $btnShowMoreNew = $tplProductsTab.find('#mpws-js-shop-tab-products-new .btn-loadmore'),
-                $btnShowMoreTop = $tplProductsTab.find('#mpws-js-shop-tab-products-top .btn-loadmore');
+                $btnShowMoreTop = $tplProductsTab.find('#mpws-js-shop-tab-products-top .btn-loadmore'),
+                $btnShowMoreOnSale = $tplProductsTab.find('#mpws-js-shop-tab-products-onsale .btn-loadmore');
+
             function hideShowMoreButton ($btn) {
                 return function () {
                     $($btn).addClass('hidden');
                 }
             }
+
             function displayShowMoreButton ($btn) {
                 return function () {
                     $($btn).removeClass('hidden');
@@ -287,29 +291,35 @@ define([
             displayShowMoreButton($btnShowMoreFeatured);
             displayShowMoreButton($btnShowMoreNew);
             displayShowMoreButton($btnShowMoreTop);
+            displayShowMoreButton($btnShowMoreOnSale);
 
             // init image loading
             featuredProducts.on('shop:rendered', initEchoJS);
             newProducts.on('shop:rendered', initEchoJS);
             topProducts.on('shop:rendered', initEchoJS);
+            onSaleProducts.on('shop:rendered', initEchoJS);
 
             // hide showmore button when all products are visible
             featuredProducts.on('shop:allvisible', hideShowMoreButton($btnShowMoreFeatured));
             newProducts.on('shop:allvisible', hideShowMoreButton($btnShowMoreNew));
             topProducts.on('shop:allvisible', hideShowMoreButton($btnShowMoreTop));
+            onSaleProducts.on('shop:allvisible', hideShowMoreButton($btnShowMoreOnSale));
 
             // hide showmore button when no products
             featuredProducts.on('shop:emptylist', hideShowMoreButton($btnShowMoreFeatured));
             newProducts.on('shop:emptylist', hideShowMoreButton($btnShowMoreNew));
             topProducts.on('shop:emptylist', hideShowMoreButton($btnShowMoreTop));
+            onSaleProducts.on('shop:emptylist', hideShowMoreButton($btnShowMoreOnSale));
 
             // append products tab
             $tplProductsTab.find('.mpws-js-shop-products-featured').html(featuredProducts.$el);
             $tplProductsTab.find('.mpws-js-shop-products-new').html(newProducts.$el);
             $tplProductsTab.find('.mpws-js-shop-products-top').html(topProducts.$el);
+            $tplProductsTab.find('.mpws-js-shop-products-onsale').html(onSaleProducts.$el);
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-featured .btn-loadmore', featuredProducts.revealNextPage);
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-new .btn-loadmore', newProducts.revealNextPage);
             $tplProductsTab.on('click', '#mpws-js-shop-tab-products-top .btn-loadmore', topProducts.revealNextPage);
+            $tplProductsTab.on('click', '#mpws-js-shop-tab-products-onsale .btn-loadmore', onSaleProducts.revealNextPage);
 
             $('section.mpws-js-main-section').html($tplProductsTab);
         },
