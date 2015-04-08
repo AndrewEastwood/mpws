@@ -10,13 +10,13 @@
                     <a href="{{bb_link ../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
                 </h4>
                 {{#each childNodes}}
-                <div class="col-md-4">
+                <div class="col-md-4 shop-category-block">
                     <ul class="list-unstyled">
                         <li>
                             <a href="{{bb_link ../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}"><b>{{Name}}</b></a>
                         </li>
                         {{#recursive childNodes}}
-                        <li>
+                        <li class="ship-category-child">
                             <a href="{{bb_link ../../../../instances.shop.urls.shopCatalogCategory category=ExternalKey}}" title="{{Name}}">{{Name}}</a>
                             {{#if childNodes}}
                             <ul class="list-unstyled">
@@ -29,7 +29,9 @@
                 </div>
                 {{/each}}
                 {{#if Image}}
-                <img src="{{Image.sm}}" class="category-image" alt="{{Name}}" onerror="$(this).remove();">
+                <div class="dropdown-banner-holder">
+                    <img src="{{Image.sm}}" class="category-image" alt="{{Name}}" onerror="$(this).remove();">
+                </div>
                 {{/if}}
             </div>
         </li>
