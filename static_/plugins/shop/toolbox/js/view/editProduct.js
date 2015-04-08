@@ -254,7 +254,6 @@ define([
                 priceHistoryMin = priceHistoryValuesChain.min().value(),
                 avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
             if (priceHistory.length) {
-                console.log(avgMaxMin);
                 this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
                     type: 'bar',
                     // width: '300px',

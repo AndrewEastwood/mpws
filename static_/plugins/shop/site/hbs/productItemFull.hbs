@@ -105,9 +105,9 @@
                     <a class="btn-add-to-compare add-to-compare{{#if data.viewExtrasInCompare }} added{{/if}}" href="javascript://">порівняти</a>
                 </div>
 
-                {{#if instances.shop.settings.ShowPriceChart._isActive}}
+                {{#if instances.shop.settings.PRODUCT.ShowPriceChart}}
                 {{#mpwsIsNotEmpty data._prices.history }}
-                <div class="excerpt">
+                <div class="shop-product-price-history">
                     <dvi class="value-prefix">Діаграма ціни:</dvi>
                     <div class="price-history-sparkline"></div>
                 </div>

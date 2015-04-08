@@ -51,7 +51,7 @@ define([
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
             this.options.templates = _.extend({}, this.options.templates, this.options.design.templates || {});
             // bind context
-            _.bindAll(this, 'switchCurrency', 'updateQuantity', 'addToCart');
+            _.bindAll(this, 'switchCurrency', 'updateQuantity', 'addToCart', 'isStyleFull');
 
             // refresh price when currency widget is changed
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
@@ -110,6 +110,7 @@ define([
             if (design.className) {
                 this.$el.addClass(design.className);
             }
+
             if (this.isStyleFull()) {
                 // show price chart (powered by http://omnipotent.net/jquery.sparkline)
                 var prices = this.model.get('_prices') || {},
@@ -120,7 +121,6 @@ define([
                     priceHistoryMin = priceHistoryValuesChain.min().value(),
                     avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
                 if (priceHistory.length) {
-                    console.log(avgMaxMin);
                     this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
                         type: 'bar',
                         // width: '300px',
