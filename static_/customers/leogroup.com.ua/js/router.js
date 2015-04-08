@@ -321,10 +321,10 @@ define([
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
             this.updateFooter();
-
+            console.log('category = ' + category);
             var that = this,
                 $tplCatalogBrowser = this.templates.catalogBrowser(),
-                optionsFeaturedProducts = {design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item'}},
+                optionsFeaturedProducts = {limit: 5, _pCategoryExternalKey: category, design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item'}},
                 optionsCatalogProducts = {design: {className: 'col-xs-12 col-sm-4 no-margin product-item-holder hover'}},
                 featuredProducts = this.plugins.shop.featuredProducts(optionsFeaturedProducts);
 

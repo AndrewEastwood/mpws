@@ -425,7 +425,7 @@ class products {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-                $_items = array();
+                $_itemsl = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], true);
                 }
@@ -442,6 +442,7 @@ class products {
         $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;
+        // var_dump($options);
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -460,6 +461,7 @@ class products {
     public function getOffersProducts_List (array $options = array()) {
         global $app;
         $options['_fIsOffer'] = true;
+        $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -930,7 +932,6 @@ class products {
                 $filesToDelete = array();
                 $filesToKeep = array();
                 $filesToUpload = array();
-
 
                 foreach ($currentImages as $currentImageItem) {
                     $filesUploaded[] = $currentImageItem['name'];

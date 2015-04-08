@@ -491,6 +491,10 @@ class database {
         // get data total records
         $configCount = $this->getTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
 
+        if (isset($dsConfig['additional'])) {
+            $configCount['additional'] = $dsConfig['additional'];
+        }
+
         $countData = $this->query($configCount, $useCustomerID);
         $count = intval($countData["ItemsCount"]);
 

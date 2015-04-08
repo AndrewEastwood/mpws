@@ -58,7 +58,7 @@ class dbquery {
         $config['additional'] = array(
             "shop_categories" => array(
                 "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
-                "fields" => array("@shop_categories.Status AS CategoryStatus")
+                "fields" => array("@shop_categories.Status AS CategoryStatus", "@shop_categories.ExternalKey AS CategoryExternalKey")
             ),
             "shop_origins" => array(
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
@@ -132,6 +132,10 @@ class dbquery {
 
         if (!empty($options['_pStatus'])) {
             $config['condition']["shop_products.Status"] = $app->getDB()->createCondition($options['_pStatus']);
+        }
+
+        if (!empty($options['_pCategoryExternalKey'])) {
+            $config['condition']["shop_categories.ExternalKey"] = $app->getDB()->createCondition($options['_pCategoryExternalKey']);
         }
 
         // var_dump($config['condition']);
