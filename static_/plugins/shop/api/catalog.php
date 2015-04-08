@@ -41,7 +41,7 @@ class catalog {
         $data = array();
         $filterOptions = array(
             /* common options */
-            "filter_viewSortBy" => null,
+            "filter_viewSortBy" => 'DateUpdated:desc',
             "filter_viewItemsOnPage" => 16,
             "filter_viewPageNum" => 1,
             "filter_commonPriceMax" => null,
@@ -57,6 +57,8 @@ class catalog {
         // filtering
         $filterOptionsApplied = new ArrayObject($filterOptions);
         $filterOptionsAvailable = new ArrayObject($filterOptions);
+
+        // var_dump($filterOptionsApplied);
 
         // get all product available statuses
         $filterOptionsAvailable['filter_commonStatus'] = API::getAPI('shop:products')->getProductStatuses();

@@ -28,6 +28,10 @@ class dbquery {
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis", "Description", "Model", "SKU", "Price", "PrevPrice", "IsPromo", "IsFeatured", "IsOffer", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
+            "order" => array(
+                "field" => "shop_products.DateUpdated",
+                "ordering" => "DESC"
+            ),
             "options" => array(
                 "expandSingleRecord" => true
             )

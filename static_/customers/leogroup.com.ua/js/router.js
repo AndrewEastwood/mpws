@@ -352,6 +352,8 @@ define([
                 // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
                 that.updateBreadcrumb(brItems);
                 initEchoJS();
+
+                APP.setPageAttributes(catalogFilterView.getPageAttributes());
             });
 
             $tplCatalogBrowser.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
@@ -406,6 +408,7 @@ define([
                 brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
                 that.updateBreadcrumb(brItems);
                 initEchoJS();
+                APP.setPageAttributes(productView.getPageAttributes());
             });
 
             $('section.mpws-js-main-section').html(productView.$el);

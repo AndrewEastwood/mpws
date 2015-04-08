@@ -237,10 +237,14 @@
             if (!attr) return;
             // set title
             if (attr.title) {
-                if (_.isArray(attr.title))
+                if (_.isArray(attr.title)) {
                     $('head title').text(attr.title.join(' - '));
-                else if (_.isString(attr.title))
+                    $('head meta[property="og:title"]').attr('content', attr.title.join(' - '));
+                }
+                if (_.isString(attr.title)) {
                     $('head title').text(attr.title);
+                    $('head meta[property="og:title"]').attr('content', attr.title);
+                }
             }
             // set keywords
             if (attr.keywords) {
@@ -249,6 +253,22 @@
             // set description
             if (attr.description) {
                 $('head meta[name="description"]').attr('content', attr.description);
+                $('head meta[property="og:description"]').attr('content', attr.description);
+            }
+            // set image
+            if (attr.image) {
+                $('head meta[name="image"]').attr('content', APP.config.URL_PUBLIC_HOMEPAGE + attr.image);
+                $('head meta[property="og:image"]').attr('content', APP.config.URL_PUBLIC_HOMEPAGE + attr.image);
+            }
+            // set url
+            if (attr.url) {
+                $('head meta[name="url"]').attr('content', APP.config.URL_PUBLIC_HOMEPAGE + attr.url);
+                $('head meta[property="og:url"]').attr('content', APP.config.URL_PUBLIC_HOMEPAGE + attr.url);
+            }
+            // set type
+            if (attr.type) {
+                $('head meta[name="type"]').attr('content', attr.type);
+                $('head meta[property="og:type"]').attr('content', attr.type);
             }
         }
 

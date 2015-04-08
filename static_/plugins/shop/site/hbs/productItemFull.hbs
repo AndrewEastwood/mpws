@@ -63,40 +63,48 @@
 
                 {{#if instances.shop.settings.PRODUCT.ShowSocialSharing}}
                 <div class="social-row">
-
                     <ul class="share-buttons">
-                      <li><a href="https://www.facebook.com/sharer/sharer.php?u=&t=" target="_blank" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&t=' + encodeURIComponent(document.URL)); return false;"><i class="fa fa-facebook-square fa-2x"></i></a></li>
-                      <li><a href="https://twitter.com/intent/tweet?source=&text=:%20" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20' + encodeURIComponent(document.URL)); return false;"><i class="fa fa-twitter-square fa-2x"></i></a></li>
-                      <li><a href="https://plus.google.com/share?url=" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;"><i class="fa fa-google-plus-square fa-2x"></i></a></li>
-                      <li><a href="http://pinterest.com/pin/create/button/?url=&description=" target="_blank" title="Pin it" onclick="window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(document.URL) + '&description=' +  encodeURIComponent(document.title)); return false;"><i class="fa fa-pinterest-square fa-2x"></i></a></li>
-                      <li><a href="mailto:?subject=&body=:%20" target="_blank" title="Email" onclick="window.open('mailto:?subject=' + encodeURIComponent(document.title) + '&body=' +  encodeURIComponent(document.URL)); return false;"><i class="fa fa-envelope fa-2x"></i></a></li>
+                        <li>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&t={{encodeURIComponent data._displayName}}"
+                            target="_blank"
+                            title="Share on Facebook"
+                            onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&t={{encodeURIComponent data._displayName}}'); return false;">
+                                <i class="fa fa-fw fa-facebook-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/intent/tweet?source={{app.location.homepage}}&text={{encodeURIComponent data._displayName}}:%20{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}"
+                            target="_blank"
+                            title="Tweet"
+                            onclick="window.open('https://twitter.com/intent/tweet?source={{encodeURIComponent app.location.homepage}}&text={{encodeURIComponent data._displayName}}:%20{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}'); return false;">
+                                <i class="fa fa-fw fa-twitter-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://plus.google.com/share?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}"
+                            target="_blank"
+                            title="Share on Google+"
+                            onclick="window.open('https://plus.google.com/share?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}'); return false;">
+                                <i class="fa fa-fw fa-google-plus-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://pinterest.com/pin/create/button/?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&media={{bb_link data.Images.[0].normal asRoot=true fullUrl=true encode=true skipHash=true}}&description={{encodeURIComponent data._displayName}}"
+                            target="_blank"
+                            title="Pin it"
+                            onclick="window.open('http://pinterest.com/pin/create/button/?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&media={{bb_link data.Images.[0].normal asRoot=true fullUrl=true encode=true skipHash=true}}&description={{encodeURIComponent data._displayName}}'); return false;">
+                                <i class="fa fa-fw fa-pinterest-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:?subject={{encodeURIComponent data._displayName}}&body={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}"
+                            target="_blank"
+                            title="Email"
+                            onclick="window.open('mailto:?subject={{encodeURIComponent data._displayName}}&body={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}'); return false;">
+                                <i class="fa fa-fw fa-envelope fa-2x"></i>
+                            </a>
+                        </li>
                     </ul>
-
-
-                
-                    <div class="product-share-button product-share-button-fb">
-                        <!-- facebook -->
-                        <div id="fb-root"></div>
-                        <script>(function(d, s, id) {
-                          var js, fjs = d.getElementsByTagName(s)[0];
-                          if (d.getElementById(id)) return;
-                          js = d.createElement(s); js.id = id;
-                          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.3";
-                          fjs.parentNode.insertBefore(js, fjs);
-                        }(document, 'script', 'facebook-jssdk'));</script>
-                        <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}" data-layout="button_count"></div>
-                    </div>
-                    <div class="product-share-button product-share-button-tw">
-                        <!-- twitter -->
-                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="{{data._displayName}}">Tweet</a>
-                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    </div>
-                    <div class="product-share-button product-share-button-pin">
-                        <!-- pinterest -->
-                        <a href="//www.pinterest.com/pin/create/button/?url={{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true encode=true}}&media={{bb_link data.Images.[0].normal asRoot=true fullUrl=true encode=true skipHash=true}}&description={{encodeURIComponent data._displayName}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a>
-                        <!-- Please call pinit.js only once per page -->
-                        <script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
-                    </div>
                 </div>
                 {{/if}}
 

@@ -36,7 +36,8 @@ define([
             return product && product._orderQuantity || 0;
         },
         getProductByID: function (productID) {
-            return this.get('items')[productID] || null;
+            var items = this.get('items') || {};
+            return items[productID] || null;
         },
         setProduct:  function (productID, quantity, skipUpdate) {
             var that = this,

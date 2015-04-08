@@ -3,19 +3,30 @@
         <div class="caption vertical-center text-left">
             <div class="big-text fadeInDown-1">
                 {{data._origin.Name}} {{data.Model}} <br/>
-                Всього за <br/>
+                {{#if data.IsBigSavings}}
                 <span class="big">
-                {{#each data._prices.others}}
-                    <div class="price-current shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
-                {{/each}}
+                    Супер <br/>
+                    знижка <br/>
+                    -{{data.ShopDiscount}}% OFF
                 </span>
+                {{else}}
+                <span class="big">
+                    Тільки за
+                    {{#each data._prices.others}}
+                        <div class="price-current shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+                    {{/each}}
+                </span>
+                {{#if data.GoodToShowPreviousPrice}}
+                <s class="small">
+                {{#each data._prices.previousothers}}
+                    <div class="price-current shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+                {{/each}}
+                {{/if}}
+                </s>
+                {{/if}}
             </div>
-
             <div class="excerpt fadeInDown-2">
                 у розіділі {{data._category.Name}}
-            </div>
-            <div class="small fadeInDown-2 hidden">
-                terms and conditions apply
             </div>
             <div class="button-holder fadeInDown-3">
                 <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="big le-button ">Придбати</a>

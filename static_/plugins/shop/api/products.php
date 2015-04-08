@@ -110,12 +110,14 @@ class products {
             $actualPrice = $price;
         }
         $actualPrice = floatval($actualPrice);
+        $savingValue = $prevprice - $actualPrice;
         unset($product['Price']);
         unset($product['PrevPrice']);
 
         // apply currencies
         $convertedPrices = API::getAPI('shop:exchangerates')->convertToRates($actualPrice);
         $convertedPrevPrices = API::getAPI('shop:exchangerates')->convertToRates($prevprice);
+        $convertedSavings = API::getAPI('shop:exchangerates')->convertToRates($savingValue);
 
         // create product prices object
         $product['_prices'] = array(
@@ -124,8 +126,14 @@ class products {
             'actual' => $actualPrice,
             'others' => $convertedPrices,
             'history' => $priceHistory,
-            'previousothers' => $convertedPrevPrices
+            'previousothers' => $convertedPrevPrices,
+            'savings' => $savingValue,
+            'savingsothers' => $convertedSavings
         );
+
+        $product['ShopDiscount'] = intval($savingValue * 100 / $actualPrice);
+        $product['IsBigSavings'] = $product['ShopDiscount'] > 3;
+        $product['GoodToShowPreviousPrice'] = $savingValue > 3;
 
         // save product into recently viewed list
         $isDirectRequestToProduct = Request::hasInGet('id');
@@ -900,6 +908,8 @@ class products {
                     // mark product as offer when new price is better than current
                     if ($newPrice < $oldPrice) {
                         $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(true);
+                    } else {
+                        $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(false);
                     }
                 }
 

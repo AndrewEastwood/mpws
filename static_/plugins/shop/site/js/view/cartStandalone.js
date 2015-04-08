@@ -72,8 +72,15 @@ define([
         doPreview: function () {
             // debugger
             // var formValidator = $form.data('bootstrapValidator');
-            var that = this;
-            this.formValidator.validate();
+            var that = this,
+                bvOptions = that.formValidator.getOptions() || {};
+            that.$('form.form-order-create .form-control').each(function () {
+                var fldName = $(this).attr('name');
+                if (fldName && bvOptions.fields && bvOptions.fields[fldName]) {
+                    that.formValidator.revalidateField(fldName);
+                }
+            });
+            // debugger
             if (this.formValidator.isValid()) {
                 that.$('form.form-order-create .form-control').each(function () {
                     var fldName = $(this).attr('name');
@@ -83,7 +90,6 @@ define([
                         that.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
                     }
                 });
-                // debugger
                 that.$('.shop-cart-page').addClass('hidden');
                 that.$('.shop-cart-preview').removeClass('hidden');
             }

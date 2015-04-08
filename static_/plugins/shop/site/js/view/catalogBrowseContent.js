@@ -89,7 +89,14 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            return {title: title, keywords: keywords, description: description};
+            return {
+                title: title,
+                keywords: keywords,
+                description: description,
+                type: 'catalog',
+                image: null,
+                url: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopCatalogCategory, {asRoot: true})
+            };
             // seo end
         }
     });

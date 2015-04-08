@@ -236,7 +236,19 @@ define([
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
-            return {title: title, keywords: keywords, description: description};
+            var image = null;
+            if (data.Images.length) {
+                image = data.Images[0].sm;
+            }
+
+            return {
+                title: title || data._displayName,
+                keywords: keywords || data.Synopsis,
+                description: description || data.Description || data.Synopsis,
+                type: 'product',
+                image: image,
+                url: Handlebars.helpers.bb_link(APP.instances.shop.urls.shopProduct, {asRoot: true, product: data.ExternalKey})
+            };
             // seo end
         },
         switchCurrency: function (visibleCurrencyName) {
