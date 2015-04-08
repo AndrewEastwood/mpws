@@ -157,9 +157,8 @@ define([
                 offset: 100,
                 throttle: 250,
                 callback: function(element, op) {
-                    console.log(op);
                     if (that.isStyleFull()) {
-                        that.$('.shop-product-image-main img').magnify();
+                        that.$('.single-product-gallery-item img').magnify();
                     }
                     if (op === 'load') {
                         element.classList.add('loaded');
