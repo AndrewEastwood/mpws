@@ -61,6 +61,16 @@
                         <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_field_Price}}</label>
                         <div class="col-md-8">
                             <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
+                            <div>current price is: <strong>{{data._prices.price}}</strong></div>
+                            {{#if data._prices.previous}}
+                            <div>previous price was: <strong>{{data._prices.previous}}</strong></div>
+                            {{/if}}
+                            {{#mpwsIsNotEmpty data._prices.history }}
+                            <div class="price-history">
+                                <div class="value-prefix">Діаграма ціни:</div>
+                                <div class="price-history-sparkline"></div>
+                            </div>
+                            {{/mpwsIsNotEmpty}}
                         </div>
                     </div>
                     <!-- Textarea -->

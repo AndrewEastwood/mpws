@@ -53,12 +53,43 @@ class validate {
         $values = array();
         $errors = array();
         $totalErrors = 0;
-        $dataTypes = array('string', 'int', 'float', 'null', 'bool', 'numeric', 'notNull');
+        $dataTypes = array('string', 'int', 'float', 'null', 'bool', 'sqlbool', 'numeric', 'notNull');
 
         foreach ($dataRules as $keyToValidate => $rules) {
 
             $values[$keyToValidate] = isset($dataArray[$keyToValidate]) ? $dataArray[$keyToValidate] : null;
             $errors[$keyToValidate] = array();
+
+            // exists
+            if (!array_key_exists($keyToValidate, $dataArray)) {
+                if (in_array("skipIfUnset", $rules, true)) {
+                    unset($errors[$keyToValidate]);
+                    if (isset($rules["defaultValueIfUnset"]))
+                        $values[$keyToValidate] = $rules["defaultValueIfUnset"];
+                    else {
+                        // var_dump('unset: '. $keyToValidate);
+                        unset($values[$keyToValidate]);
+                    }
+                } else {
+                    $errors[$keyToValidate][] = $keyToValidate . "IsNotExists";
+                }
+                continue;
+            }
+
+            if (in_array("skipIfNull", $rules, true) && is_null($values[$keyToValidate])) {
+                unset($errors[$keyToValidate]);
+                unset($values[$keyToValidate]);
+                continue;
+            }
+
+            if (in_array("skipIfEmpty", $rules, true) && empty($values[$keyToValidate])) {
+                if (isset($values[$keyToValidate]) && empty($values[$keyToValidate]) && isset($rules["defaultValueIfEmpty"])) {
+                    $values[$keyToValidate] = $rules["defaultValueIfEmpty"];
+                    continue;
+                }
+                unset($errors[$keyToValidate]);
+                continue;
+            }
 
             $wrongTypeCount = 0;
             $acceptedTypes = array_intersect($dataTypes, $rules);
@@ -102,6 +133,16 @@ class validate {
                 }
             }
 
+            // bool
+            if (in_array("sqlbool", $rules, true)) {
+                if (isset($dataArray[$keyToValidate])) {
+                    $values[$keyToValidate] = !empty($values[$keyToValidate]) ? 1 : 0;
+                } else {
+                    $errors[$keyToValidate][] = $keyToValidate . "IsNotSet";
+                    $wrongTypeCount++;
+                }
+            }
+
             // null
             if (in_array("null", $rules, true) && !is_null($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
@@ -112,21 +153,6 @@ class validate {
                 $wrongTypeCount++;
             }
 
-            if (in_array("skipIfNull", $rules, true) && is_null($values[$keyToValidate])) {
-                unset($errors[$keyToValidate]);
-                unset($values[$keyToValidate]);
-                continue;
-            }
-
-            if (in_array("skipIfEmpty", $rules, true) && empty($values[$keyToValidate])) {
-                if (isset($values[$keyToValidate]) && empty($values[$keyToValidate]) && isset($rules["defaultValueIfEmpty"])) {
-                    $values[$keyToValidate] = $rules["defaultValueIfEmpty"];
-                    continue;
-                }
-                unset($errors[$keyToValidate]);
-                // unset($values[$keyToValidate]);
-                continue;
-            }
             // var_dump($keyToValidate);
             // var_dump($values[$keyToValidate]);
             // var_dump($wrongTypeCount);
@@ -139,24 +165,6 @@ class validate {
             // var_dump($errors);
             // var_dump($dataArray);
             // var_dump('isset:'.$keyToValidate . ':' . (isset($dataArray[$keyToValidate]) ? 1:0));
-
-
-
-            // exists
-            if (!array_key_exists($keyToValidate, $dataArray)) {
-                if (in_array("skipIfUnset", $rules, true)) {
-                    unset($errors[$keyToValidate]);
-                    if (isset($rules["defaultValueIfUnset"]))
-                        $values[$keyToValidate] = $rules["defaultValueIfUnset"];
-                    else {
-                        // var_dump('unset: '. $keyToValidate);
-                        unset($values[$keyToValidate]);
-                    }
-                } else {
-                    $errors[$keyToValidate][] = $keyToValidate . "IsNotExists";
-                }
-                continue;
-            }
 
             // notEmpty
             if (in_array("notEmpty", $rules, true) && empty($dataArray[$keyToValidate])) {

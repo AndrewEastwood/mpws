@@ -110,7 +110,6 @@ define([
                 this.$el.addClass(design.className);
             }
             if (this.isStyleFull()) {
-                this.$('.shop-product-image-main img').magnify();
                 // show price chart (powered by http://omnipotent.net/jquery.sparkline)
                 var _prices = _(this.model.get('Prices') || {}).values();
                 if (_prices.length) {
@@ -149,8 +148,11 @@ define([
                 offset: 100,
                 throttle: 250,
                 callback: function(element, op) {
-                    console.log(op)
-                    if(op === 'load') {
+                    console.log(op);
+                    if (that.isStyleFull()) {
+                        that.$('.shop-product-image-main img').magnify();
+                    }
+                    if (op === 'load') {
                         element.classList.add('loaded');
                     } else {
                         element.classList.remove('loaded');

@@ -124,6 +124,10 @@ class database {
         return $this->_fetchData($config);
     }
 
+    public function getSqlBooleanValue ($boolval) {
+        return $boolval ? 1 : 0;
+    }
+
     private function _getDefaultObject () {
         return array("error" => null, "data" => null);
     }

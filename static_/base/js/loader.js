@@ -65,6 +65,7 @@ require.config({
         'editable-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/wysihtml5',
         'bootstrap-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2',
         'wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/wysihtml5-0.3.0',
+        'jquery.sparkline': 'base/js/lib/jquery.sparkline',
         // plugins
         'async': 'base/js/plugin/async',
         'css': 'base/js/plugin/css',

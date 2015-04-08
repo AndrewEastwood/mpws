@@ -1,4 +1,5 @@
 define([
+    'jquery',
     'backbone',
     'handlebars',
     'plugins/shop/toolbox/js/model/product',
@@ -16,8 +17,9 @@ define([
     // 'typeahead',
     'jquery.maskmoney',
     'bootstrap-tagsinput',
-    'bootstrap-editable'
-], function (Backbone, Handlebars, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
+    'bootstrap-editable',
+    'jquery.sparkline'
+], function ($, Backbone, Handlebars, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -219,18 +221,18 @@ define([
             }
 
             // configure price display
-            var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType,
-                fmt = priceFmt(0, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY),
-                precision = fmt.match(/\.(0+)/),
-                items = fmt.split('0.00');
+            // var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType,
+            //     fmt = priceFmt(0, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY),
+            //     precision = fmt.match(/\.(0+)/),
+            //     items = fmt.split('0.00');
                 // debugger
-            var _options = {
-                thousands: '',
-                decimal: '.',
-                precision: precision && precision.length === 2 ? precision[1].length : 2,
-                prefix: items && items[0] || '',
-                suffix: items && items.length > 1 && items[2] || ''
-            };
+            // var _options = {
+            //     thousands: '',
+            //     decimal: '.',
+            //     // precision: precision && precision.length === 2 ? precision[1].length : 2,
+            //     // prefix: items && items[0] || '',
+            //     // suffix: items && items.length > 1 && items[2] || ''
+            // };
             // debugger
             // var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType;
             // if (_currencyDisplay) {
@@ -241,9 +243,28 @@ define([
             //     }
             // }
 
-            this.$('#price').maskMoney(_options);
-            this.$('#price').maskMoney('mask');
+            // this.$('#price').maskMoney(_options);
+            // this.$('#price').maskMoney('mask');
 
+            var prices = this.model.get('_prices') || {},
+                priceHistory = _(prices.history || {}).values(),
+                priceHistoryValuesChain = _(priceHistory).chain().pluck(1),
+                priceHistoryValues = priceHistoryValuesChain.value(),
+                priceHistoryMax = priceHistoryValuesChain.max().value(),
+                priceHistoryMin = priceHistoryValuesChain.min().value(),
+                avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
+            if (priceHistory.length) {
+                console.log(avgMaxMin);
+                this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
+                    type: 'bar',
+                    // width: '300px',
+                    height: '30px',
+                    lineColor: '#cf7400',
+                    fillColor: false,
+                    chartRangeMin: priceHistoryMin - avgMaxMin,
+                    drawNormalOnTop: true
+                });
+            }
             this.$('#tags').tagsinput();
 
             var features = this.model.get('Features');

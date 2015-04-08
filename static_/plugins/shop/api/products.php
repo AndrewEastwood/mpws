@@ -99,6 +99,7 @@ class products {
 
         // prices and actual price
         $price = floatval($product['Price']);
+        $prevprice = floatval($product['PrevPrice']);
         $actualPrice = 0;
         $priceHistory = $this->getProductPriceHistory($productID);
         if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
@@ -110,16 +111,20 @@ class products {
         }
         $actualPrice = floatval($actualPrice);
         unset($product['Price']);
+        unset($product['PrevPrice']);
 
         // apply currencies
         $convertedPrices = API::getAPI('shop:exchangerates')->convertToRates($actualPrice);
+        $convertedPrevPrices = API::getAPI('shop:exchangerates')->convertToRates($prevprice);
 
         // create product prices object
         $product['_prices'] = array(
             'price' => $price,
+            'previous' => $prevprice,
             'actual' => $actualPrice,
             'others' => $convertedPrices,
-            'history' => $priceHistory
+            'history' => $priceHistory,
+            'previousothers' => $convertedPrevPrices
         );
 
         // save product into recently viewed list
@@ -290,6 +295,17 @@ class products {
         return $featuresGroups;
     }
 
+    public function getProductPrice ($productID) {
+        global $app;
+        $price = null;
+        $config = dbquery::shopGetProductPrice($productID);
+        $data = $app->getDB()->query($config);
+        if (isset($data['Price'])) {
+            $price = floatval($data['Price']);
+        }
+        return $price;
+    }
+
     public function getProductPriceHistory ($productID) {
         global $app;
         $prices = array();
@@ -297,7 +313,7 @@ class products {
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
-                $prices[$item['DateCreated']] = floatval($item['Price']);
+                $prices[] = array($item['DateCreated'], floatval($item['Price']));
             }
         }
         return $prices;
@@ -743,9 +759,9 @@ class products {
             'Model' => array('skipIfUnset'),
             'SKU' => array('skipIfUnset'),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
-            'IsPromo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'IsOffer' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'IsFeatured' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsPromo' => array('sqlbool', 'skipIfUnset'),
+            'IsOffer' => array('sqlbool', 'skipIfUnset'),
+            'IsFeatured' => array('sqlbool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
@@ -862,15 +878,29 @@ class products {
 
                 // update product
                 $validatedValues["CustomerID"] = $CustomerID;
-                if (isset($validatedValues["IsPromo"])) {
-                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                // if (isset($validatedValues["IsPromo"])) {
+                //     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                // }
+                // if (isset($validatedValues["IsOffer"])) {
+                //     $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
+                // }
+                // if (isset($validatedValues["IsFeatured"])) {
+                //     $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
+                // }
+
+                if (isset($validatedValues['Price'])) {
+                    $oldPrice = $this->getProductPrice($ProductID);
+                    $newPrice = floatval($validatedValues['Price']);
+                    // move current price into previous
+                    if ($oldPrice != $newPrice) {
+                        $validatedValues["PrevPrice"] = $oldPrice;
+                    }
+                    // mark product as offer when new price is better than current
+                    if ($newPrice < $oldPrice) {
+                        $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(true);
+                    }
                 }
-                if (isset($validatedValues["IsOffer"])) {
-                    $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
-                }
-                if (isset($validatedValues["IsFeatured"])) {
-                    $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
-                }
+
                 $config = dbquery::shopUpdateProduct($ProductID, $validatedValues);
                 try {
                     $app->getDB()->query($config);
