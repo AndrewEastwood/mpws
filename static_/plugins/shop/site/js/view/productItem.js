@@ -1,4 +1,5 @@
 define([
+    'jquery',
     'underscore',
     'backbone',
     'handlebars',
@@ -17,8 +18,8 @@ define([
     'echo',
     'bootstrap-magnify',
     'lightbox',
-    'base/js/lib/jquery.sparkline'
-], function (_, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, tplOfferBanner, lang, echo) {
+    'jquery.sparkline'
+], function ($, _, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, tplOfferBanner, lang, echo) {
 
     var ProductItem = Backbone.View.extend({
         className: 'shop-product-item',
@@ -111,14 +112,22 @@ define([
             }
             if (this.isStyleFull()) {
                 // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-                var _prices = _(this.model.get('Prices') || {}).values();
-                if (_prices.length) {
-                    this.$("#sparkline").sparkline(_prices, {
+                var prices = this.model.get('_prices') || {},
+                    priceHistory = _(prices.history || {}).values(),
+                    priceHistoryValuesChain = _(priceHistory).chain().pluck(1),
+                    priceHistoryValues = priceHistoryValuesChain.value(),
+                    priceHistoryMax = priceHistoryValuesChain.max().value(),
+                    priceHistoryMin = priceHistoryValuesChain.min().value(),
+                    avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
+                if (priceHistory.length) {
+                    console.log(avgMaxMin);
+                    this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
                         type: 'bar',
-                        width: '150px',
-                        height: '15px',
+                        // width: '300px',
+                        height: '30px',
                         lineColor: '#cf7400',
                         fillColor: false,
+                        chartRangeMin: priceHistoryMin - avgMaxMin,
                         drawNormalOnTop: true
                     });
                 }
