@@ -197,44 +197,46 @@ class database {
                 // var_dump($fieldsToSelectClear);
             }
 
-        $_fieldOptionsWorkerFn = function ($context, $fieldName, $fieldOptions) {
+        $_fieldOptionsWorkerFn = function ($context, $fieldName, $fieldOptions, $type = 'where') {
+            // var_dump($type . '_like');
+            // var_export($context->dbo->where_like);
             switch (strtolower($fieldOptions['comparator'])) {
                 case '>':
-                    $context->dbo->where_gt($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_gt'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '>=':
-                    $context->dbo->where_gte($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_gte'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '<':
-                    $context->dbo->where_lt($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_lt'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '<=':
-                    $context->dbo->where_lte($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_lte'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'is null':
-                    $context->dbo->where_null($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_null'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'is not null':
-                    $context->dbo->where_not_null($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_not_null'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '=':
-                    $context->dbo->where_equal($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_equal'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '!=':
-                    $context->dbo->where_not_equal($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_not_equal'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'like':
-                    $context->dbo->where_like($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_like'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'not like':
-                    $context->dbo->where_not_like($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
+                    $context->dbo->{$type . '_not_like'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'in':
                     // var_dump('using WHERE_IN', $fieldOptions['value']);
-                    $context->dbo->where_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                    $context->dbo->{$type . '_in'}($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
                     break;
                 case 'not in':
-                    $context->dbo->where_not_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                    $context->dbo->{$type . '_not_in'}($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
                     break;
                 default:
                     var_dump('Unknown condition statement occured');
@@ -254,6 +256,18 @@ class database {
                         $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption);
                 } else {
                     $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions);
+                }
+            }
+        }
+
+        if (!empty($config['having'])) {
+            // translate having filter string
+            foreach ($config['having'] as $fieldName => $fieldOptions) {
+                if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+                    foreach ($fieldOptions as $fieldOption)
+                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption, 'having');
+                } else {
+                    $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions, 'having');
                 }
             }
         }
@@ -491,9 +505,20 @@ class database {
         // get data total records
         $configCount = $this->getTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
 
+        // add missing fields
+        $configCount['fields'] = array_merge($configCount['fields'], $dsConfig['fields']);
+
+
+        // add additional
+        if (isset($dsConfig['having'])) {
+            $configCount['having'] = $dsConfig['having'];
+        }
+        // add additional
         if (isset($dsConfig['additional'])) {
             $configCount['additional'] = $dsConfig['additional'];
         }
+        // var_dump($configCount);
+
 
         $countData = $this->query($configCount, $useCustomerID);
         $count = intval($countData["ItemsCount"]);

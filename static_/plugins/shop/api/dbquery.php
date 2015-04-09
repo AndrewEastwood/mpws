@@ -116,6 +116,11 @@ class dbquery {
                                 $valToSearch = '%' . $valToSearch . '%';
                                 $conditionOp = 'like';
                                 break;
+                            case 'o':
+                                $conditionField = "shop_origins.Name";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
                         }
                         // var_dump($conditionField);
                         // var_dump($valToSearch);
@@ -132,6 +137,11 @@ class dbquery {
                     // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
                 }
             }
+        }
+
+        if (!empty($options['_pSearchText'])) {
+            $config['fields'][] = "@CONCAT(shop_origins.Name, ' ', shop_products.Model, ' ', shop_products.Name) AS DBDisplayName";
+            $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . $options['_pSearchText'] . '%', 'like');
         }
 
         if (!empty($options['_pStatus'])) {

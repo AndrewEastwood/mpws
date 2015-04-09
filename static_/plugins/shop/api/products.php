@@ -353,8 +353,11 @@ class products {
         $callbacks = array(
             "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
                 $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
+                foreach ($items as $key => $productRawItem) {
+                    $productItem = $self->getProductByID($productRawItem['ID'], $skipRelations);
+                    if (isset($productRawItem['DBDisplayName']))
+                        $productItem['_d'] = $productRawItem['DBDisplayName'];
+                    $_items[] = $productItem;
                 }
                 return $_items;
             }

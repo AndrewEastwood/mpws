@@ -1006,8 +1006,8 @@ use PDO;
         /**
          * Internal method to add a HAVING condition to the query
          */
-        protected function _add_simple_having($column_name, $separator, $value) {
-            return $this->_add_simple_condition('having', $column_name, $separator, $value);
+        protected function _add_simple_having($column_name, $separator, $value, $joinAs = 'AND') {
+            return $this->_add_simple_condition('having', $column_name, $separator, $value, $joinAs);
         }
 
         /**
@@ -1049,8 +1049,14 @@ use PDO;
          * of the call to _quote_identifier
          */
         protected function _add_simple_condition($type, $column_name, $separator, $value, $joinAs) {
+            $addTableName = true;
+            if ($column_name[0] === '@') {
+                $column_name = substr($column_name, 1);
+                $addTableName = false;
+            }
+
             // Add the table name in case of ambiguous columns
-            if (count($this->_join_sources) > 0 && strpos($column_name, '.') === false) {
+            if ($addTableName && count($this->_join_sources) > 0 && strpos($column_name, '.') === false) {
                 $table = $this->_table_name;
                 if (!is_null($this->_table_alias)) {
                     $table = $this->_table_alias;
