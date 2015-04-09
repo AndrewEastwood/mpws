@@ -133,7 +133,7 @@ class products {
 
         $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
         $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
-        $product['GoodToShowPreviousPrice'] = $savingValue > 3;
+        $product['GoodToShowPreviousPrice'] = $savingValue > 10;
 
         // save product into recently viewed list
         $isDirectRequestToProduct = Request::hasInGet('id');
