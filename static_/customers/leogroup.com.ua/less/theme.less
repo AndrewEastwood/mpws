@@ -2,6 +2,7 @@
 
 @import "vendors";
 @import "base/less/mpws-vars";
+@import "base/less/starburst";
 
 // theme by http://transvelo.in/demo/html/media-center/index.php?page=home&style=alt1&style=alt1
 @import (inline) "theme/bootstrap.min.css";
@@ -28,6 +29,11 @@ ul.share-buttons{
 
 ul.share-buttons li{
   display: inline;
+}
+
+.product-starburst {
+    position: relative;
+    .starburst();
 }
 
 button, .btn {
@@ -391,6 +397,17 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
             margin: 0;
             padding: 0;
         }
+        .body-holder {
+            s.price-prev {
+                line-height: normal;
+                margin-left: 30px;
+            }
+            .qnt-holder {
+                display: block;
+                clear: both;
+                padding: 0 37px;
+            }
+        }
     }
     .product-brand-and-id {
       line-height: 22px;
@@ -434,6 +451,27 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
     }
     #owl-single-product-thumbnails .owl-item .horizontal-thumb {
         border: 0px none;
+    }
+    .prices {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .shop-prices-previous {
+        margin-top: -10px;
+    }
+    .price-promo {
+        display: inline-block;
+        margin-right: 20px;
+        .product-starburst {
+            font-size: 1em;
+        }
+        .product-starburst-undertext {
+            margin-top: 10px;
+            width: 4em;
+            font-size: 0.8em;
+            display: inline-block;
+            line-height: 1em;
+        }
     }
 }
 

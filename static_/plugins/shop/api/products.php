@@ -131,8 +131,8 @@ class products {
             'savingsothers' => $convertedSavings
         );
 
-        $product['ShopDiscount'] = intval($savingValue * 100 / $actualPrice);
-        $product['IsBigSavings'] = $product['ShopDiscount'] > 3;
+        $product['ShopDiscount'] = 100 - intval($price * 100 / $prevprice);
+        $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
         $product['GoodToShowPreviousPrice'] = $savingValue > 3;
 
         // save product into recently viewed list
@@ -815,6 +815,10 @@ class products {
                 if (isset($validatedValues['Features'])) {
                     $features = $validatedValues['Features'];
                 }
+
+                $updateImages = isset($reqData['file1']) || isset($reqData['file2'])
+                    || isset($reqData['file3']) || isset($reqData['file4']) || isset($reqData['file5']);
+
                 // I don't think loop for 5 items is better for perfomance
                 if (!empty($validatedValues['file1'])) {
                     $attributes["IMAGE"][] = $validatedValues['file1'];
@@ -935,85 +939,89 @@ class products {
                     }
                 }
 
-                // get previous product data
-                // we need this to re-adjust images for the product
-                $currentImages = $this->getProductImages($ProductID);
-                $filesUploaded = array();
-                $filesToDelete = array();
-                $filesToKeep = array();
-                $filesToUpload = array();
+                if ($updateImages) {
+                    // get previous product data
+                    // we need this to re-adjust images for the product
+                    $currentImages = $this->getProductImages($ProductID);
+                    $filesUploaded = array();
+                    $filesToDelete = array();
+                    $filesToKeep = array();
+                    $filesToUpload = array();
 
-                foreach ($currentImages as $currentImageItem) {
-                    $filesUploaded[] = $currentImageItem['name'];
+                    foreach ($currentImages as $currentImageItem) {
+                        $filesUploaded[] = $currentImageItem['name'];
+                    }
+
+                    $filesToKeep = array_intersect($filesUploaded, $attributes["IMAGE"]);
+                    $filesToDelete = array_diff($filesUploaded, $attributes["IMAGE"]);
+                    $filesToUpload = array_diff($attributes["IMAGE"], $filesUploaded);
+
+                    // // var_dump($previousAttributesImages);
+                    // var_dump($attributes["IMAGE"]);
+
+                    // foreach ($currentImages as $currentImageItem) {
+                    //     if (in_array($currentImageItem['name'], $attributes["IMAGE"])) {
+                    //         $filesToKeep[] = $currentImageItem['name'];
+                    //     } else {
+                    //         $filesToDelete[] = $currentImageItem['name'];
+                    //     }
+                    // }
+
+                    // var_dump('current>>>>>>>');
+                    // var_dump($currentImages);
+                    // var_dump('delete>>>>>>>');
+                    // var_dump($filesToDelete);
+                    // var_dump('keep>>>>>>>');
+                    // var_dump($filesToKeep);
+                    // var_dump('upload>>>>>>>');
+                    // var_dump($filesToUpload);
+
+                    $uploadedFileNames = array();
+                    foreach ($filesToUpload as $fileName) {
+
+                        $newFileName = $ProductID . uniqid(time());
+                        $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
+                        $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
+                        $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                        $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
+                        $normalImagePath = $fileName;
+
+                        $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
+
+                        // var_dump($uploadInfo);
+                        // $attrData = $initAttrData->getArrayCopy();
+                        // $attrData['Attribute'] = 'IMAGE';
+                        // $attrData['Value'] = $uploadInfo['filename'];
+                        // $config = dbquery::shopAddAttributeToProduct($attrData);
+                        // $app->getDB()->query($config);
+
+                        // $newFileName = $ProductID . uniqid(time());
+                        // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                        $uploadedFileNames[] = $uploadInfo['filename'];
+                    }
+                    foreach ($filesToDelete as $fileName) {
+
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
+
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID));
+                    }
+
+                    $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
+                } else {
+                    unset($attributes["IMAGE"]);
                 }
-
-                $filesToKeep = array_intersect($filesUploaded, $attributes["IMAGE"]);
-                $filesToDelete = array_diff($filesUploaded, $attributes["IMAGE"]);
-                $filesToUpload = array_diff($attributes["IMAGE"], $filesUploaded);
-
-                // // var_dump($previousAttributesImages);
-                // var_dump($attributes["IMAGE"]);
-
-                // foreach ($currentImages as $currentImageItem) {
-                //     if (in_array($currentImageItem['name'], $attributes["IMAGE"])) {
-                //         $filesToKeep[] = $currentImageItem['name'];
-                //     } else {
-                //         $filesToDelete[] = $currentImageItem['name'];
-                //     }
-                // }
-
-                // var_dump('current>>>>>>>');
-                // var_dump($currentImages);
-                // var_dump('delete>>>>>>>');
-                // var_dump($filesToDelete);
-                // var_dump('keep>>>>>>>');
-                // var_dump($filesToKeep);
-                // var_dump('upload>>>>>>>');
-                // var_dump($filesToUpload);
-
-                $uploadedFileNames = array();
-                foreach ($filesToUpload as $fileName) {
-
-                    $newFileName = $ProductID . uniqid(time());
-                    $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
-                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
-                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
-                    $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
-                    $normalImagePath = $fileName;
-
-                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
-
-                    // var_dump($uploadInfo);
-                    // $attrData = $initAttrData->getArrayCopy();
-                    // $attrData['Attribute'] = 'IMAGE';
-                    // $attrData['Value'] = $uploadInfo['filename'];
-                    // $config = dbquery::shopAddAttributeToProduct($attrData);
-                    // $app->getDB()->query($config);
-
-                    // $newFileName = $ProductID . uniqid(time());
-                    // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
-                    $uploadedFileNames[] = $uploadInfo['filename'];
-                }
-                foreach ($filesToDelete as $fileName) {
-
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
-
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID));
-                }
-
-                $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
 
                 // var_dump($attributes["IMAGE"]);
 
@@ -1080,22 +1088,15 @@ class products {
         $category = null;
         $origin = null;
         $productID = null;
-        // get category by name
-        $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
         // get origin by name
         $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
-        // create non-existent category and/or origin
-        if ($category === null) {
-            $category = API::getAPI('shop:categories')->createCategory(array(
-                'Name' => $data['CategoryName']
-            ));
-        }
+        // create new origin
         if ($origin === null) {
             $origin = API::getAPI('shop:origins')->createOrigin(array(
                 'Name' => $data['OriginName']
             ));
         }
-        if (isset($category['ID']) && isset($origin['ID'])) {
+        if (isset($origin['ID'])) {
             // we have the product item already in db
             if (isset($data['ID'])) {
                 //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
@@ -1105,24 +1106,52 @@ class products {
                 //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
                 $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             }
+
+            // when new product and empty category name
+            if (empty($data['CategoryName']) && $productID === null) {
+                // then we create dummy category for this product
+                $category = API::getAPI('shop:categories')->createCategory(array(
+                    'Name' => 'Other'
+                ));
+            }
+
+            // if category name is set we check this category and create if it's new
+            if (!empty($data['CategoryName'])) {
+                // get category by name
+                $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
+                // create non-existent category and/or origin
+                if ($category === null) {
+                    $category = API::getAPI('shop:categories')->createCategory(array(
+                        'Name' => $data['CategoryName']
+                    ));
+                }
+            }
+
             // var_dump($category);
             // var_dump($origin);
             // set category
-            $data['CategoryID'] = $category['ID'];
-            // set origin
-            $data['OriginID'] = $origin['ID'];
-            // downlod images
-            // TODO: goes here :)
-            // parse other images and skip own using hostname
-            // var_dump($product);
-            unset($data['CategoryName']);
-            unset($data['OriginName']);
-            // var_dump($data);
-            // var_dump($productID);
-            if ($productID === null) {
-                $result = $this->createProduct($data);
+            if (empty($category) && empty($productID)) {
+                $errors[] = 'Cannot create/assign category for new product';
             } else {
-                $result = $this->updateProduct($productID, $data);
+                // if category is not empty we just set it's id for product
+                if (!empty($category)) {
+                    $data['CategoryID'] = $category['ID'];
+                    unset($data['CategoryName']);
+                }
+                // set origin
+                $data['OriginID'] = $origin['ID'];
+                unset($data['OriginName']);
+                // downlod images
+                // TODO: goes here :)
+                // parse other images and skip own using hostname
+                // var_dump($product);
+                // var_dump($data);
+                // var_dump($productID);
+                if ($productID === null) {
+                    $result = $this->createProduct($data);
+                } else {
+                    $result = $this->updateProduct($productID, $data);
+                }
             }
             $result['created'] = $result['success'] && $productID === null;
             $result['updated'] = $result['success'] && $productID !== null;

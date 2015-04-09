@@ -101,7 +101,7 @@ class feeds {
         do {
             $listFeedsUploaded = $this->getUploadedFeedsFilesList();
             if (count($listFeedsUploaded) > 10) {
-                $pInfo = pathinfo($listFeedsGenerated[0]);
+                $pInfo = pathinfo($listFeedsUploaded[0]);
                 $success = unlink($listFeedsUploaded[0]);
                 if ($success) {
                     API::getAPI('system:tasks')->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
@@ -205,6 +205,10 @@ class feeds {
 
         $keysToEncode = array('Name', 'Model', 'CategoryName', 'OriginName',
             'Description', 'Features', 'TAGS', 'WARRANTY');
+
+        // archive all products
+        API::getAPI('shop:products')->archiveAllProducts();
+
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
@@ -214,28 +218,48 @@ class feeds {
             flush();
 
             $productItem = array();
+            // required fileds
             $productItem['Name'] = trim($rawProductData['Name']);
             $productItem['Model'] = trim($rawProductData['Model']);
-            $productItem['CategoryName'] = trim($rawProductData['CategoryName']) ?: 'noname';
             $productItem['OriginName'] = trim($rawProductData['OriginName']);
-            $productItem['Price'] = floatval(trim($rawProductData['Price']));
             $productItem['Status'] = $rawProductData['Status'];
-            $productItem['IsPromo'] = !empty($rawProductData['IsPromo']) && trim($rawProductData['IsPromo']) === '+';
-            $productItem['IsOffer'] = !empty($rawProductData['IsOffer']) && trim($rawProductData['IsOffer']) === '+';
-            $productItem['IsFeatured'] = !empty($rawProductData['IsFeatured']) && trim($rawProductData['IsFeatured']) === '+';
-            $productItem['TAGS'] = $rawProductData['TAGS'];
-            $productItem['Synopsis'] = trim($rawProductData['Synopsis']);
-            $productItem['Description'] = trim($rawProductData['Description']);
-            $productItem['Features'] = null;
-            $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
+            // optional fields
+            if (isset($rawProductData['CategoryName'])) {
+                $productItem['CategoryName'] = trim($rawProductData['CategoryName']);
+            }
+            if (isset($rawProductData['Price'])) {
+                $productItem['Price'] = floatval(trim($rawProductData['Price']));
+            }
+            if (isset($rawProductData['IsPromo'])) {
+                $productItem['IsPromo'] = !empty($rawProductData['IsPromo']) && trim($rawProductData['IsPromo']) === '+';
+            }
+            if (isset($rawProductData['IsOffer'])) {
+                $productItem['IsOffer'] = !empty($rawProductData['IsOffer']) && trim($rawProductData['IsOffer']) === '+';
+            }
+            if (isset($rawProductData['IsFeatured'])) {
+                $productItem['IsFeatured'] = !empty($rawProductData['IsFeatured']) && trim($rawProductData['IsFeatured']) === '+';
+            }
+            if (isset($rawProductData['TAGS'])) {
+                $productItem['TAGS'] = $rawProductData['TAGS'];
+            }
+            if (isset($rawProductData['Synopsis'])) {
+                $productItem['Synopsis'] = trim($rawProductData['Synopsis']);
+            }
+            if (isset($rawProductData['Description'])) {
+                $productItem['Description'] = trim($rawProductData['Description']);
+            }
+            if (isset($rawProductData['WARRANTY'])) {
+                $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
+            }
 
             $currentImportResult['product'] = $productItem;
-
 
             // $currentImportResult[] = "[INFO] " . "set encoding";
             //-- echo "[INFO] " . "set encoding" . PHP_EOL;
             foreach ($keysToEncode as $key) {
-                $productItem[$key] = mb_convert_encoding((string)$productItem[$key], 'UTF-8', mb_list_encodings());
+                if (isset($productItem[$key])) {
+                    $productItem[$key] = mb_convert_encoding((string)$productItem[$key], 'UTF-8', mb_list_encodings());
+                }
             }
 
             // var_dump($productItem);
@@ -248,88 +272,91 @@ class feeds {
 
             // $currentImportResult[] = "[INFO] " . "adjusting features";
             //-- echo "[INFO] " . "adjusting features" . PHP_EOL;
-            $featureChunks = explode('|', trim($rawProductData['Features']));
-            $features = array();
-            foreach ($featureChunks as $featureChunkItem) {
-                $featureKeyValue = explode('=', $featureChunkItem);
-                if (count($featureKeyValue) !== 2) {
-                    $errors[] = 'Unable to parse feature chunk: ' . $featureChunkItem;
-                } else {
-                    $features[$featureKeyValue[0]] = $featureKeyValue[1];
-                }
-            }
-            $productItem['Features'] = $features;
-
-            // $currentImportResult[] = "[INFO] " . "downloading images";
-            //-- echo "[INFO] " . "downloading images" . PHP_EOL;
-            // var_dump($rawProductData['Images']);
-            $images = array();
-            $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
-            // $imagesToDownload = array();
-            $urls = $app->getSettings('urls');
-            $options = array(
-                'script_url' =>  $urls['upload'],
-                'download_via_php' => true,
-                'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
-                'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
-                'print_response' => false,
-                'use_unique_hash_for_names' => true,
-                'correct_image_extensions' => true,
-                'mkdir_mode' => 0777
-            );
-            $upload_handler = new JqUploadLib($options, false);
-            foreach ($imagesUrls as $imgUrl) {
-                if (empty($imgUrl)) {
-                    continue;
-                }
-                $urlInfo = parse_url($imgUrl);
-                $pInfo = pathinfo($urlInfo['path']);
-                // var_dump($urlInfo['host'], $customer['HostName']);
-                if (!empty($urlInfo['host'])) {
-                    if ($urlInfo['host'] !== $customer['HostName']) {
-                        // $imagesToDownload[] = $imgUrl;
-                        // $currentImportResult[] = "[INFO] " . "downloading image: " . $imgUrl;
-                        //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
-                        set_time_limit(120);
-                        echo '# ... importing image ' . $imgUrl;
-                        $res = null;
-                        try {
-                            $res = $upload_handler->importFromUrl($imgUrl, false);
-                        } catch (Exception $e) {
-                            $errors[] = $e->getMessage();
-                            echo " [ERROR]";
-                        }
-                        if (!empty($res['web'])) {
-                            foreach ($res['web'] as $impageUploadInfo) {
-                                $images[] = $impageUploadInfo->name;
-                            }
-                            echo " [OK]";
-                        } else {
-                            echo " [ERROR]";
-                        }
-                        echo PHP_EOL;
+            if (isset($rawProductData['Features'])) {
+                $featureChunks = explode('|', trim($rawProductData['Features']));
+                $features = array();
+                foreach ($featureChunks as $featureChunkItem) {
+                    $featureKeyValue = explode('=', $featureChunkItem);
+                    if (count($featureKeyValue) !== 2) {
+                        $errors[] = 'Unable to parse feature chunk: ' . $featureChunkItem;
                     } else {
-                        $images[] = $pInfo['basename'];
+                        $features[$featureKeyValue[0]] = $featureKeyValue[1];
                     }
                 }
-                // currently we support only 5 images
-                if (count($images) >= 5) {
-                    break;
+                $productItem['Features'] = $features;
+            }
+
+            if (isset($rawProductData['Images'])) {
+                // $currentImportResult[] = "[INFO] " . "downloading images";
+                //-- echo "[INFO] " . "downloading images" . PHP_EOL;
+                // var_dump($rawProductData['Images']);
+                $images = array();
+                $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
+                // $imagesToDownload = array();
+                $urls = $app->getSettings('urls');
+                $options = array(
+                    'script_url' =>  $urls['upload'],
+                    'download_via_php' => true,
+                    'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
+                    'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
+                    'print_response' => false,
+                    'use_unique_hash_for_names' => true,
+                    'correct_image_extensions' => true,
+                    'mkdir_mode' => 0777
+                );
+                $upload_handler = new JqUploadLib($options, false);
+                foreach ($imagesUrls as $imgUrl) {
+                    if (empty($imgUrl)) {
+                        continue;
+                    }
+                    $urlInfo = parse_url($imgUrl);
+                    $pInfo = pathinfo($urlInfo['path']);
+                    // var_dump($urlInfo['host'], $customer['HostName']);
+                    if (!empty($urlInfo['host'])) {
+                        if ($urlInfo['host'] !== $customer['HostName']) {
+                            // $imagesToDownload[] = $imgUrl;
+                            // $currentImportResult[] = "[INFO] " . "downloading image: " . $imgUrl;
+                            //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
+                            set_time_limit(120);
+                            echo '# ... importing image ' . $imgUrl;
+                            $res = null;
+                            try {
+                                $res = $upload_handler->importFromUrl($imgUrl, false);
+                            } catch (Exception $e) {
+                                $errors[] = $e->getMessage();
+                                echo " [ERROR]";
+                            }
+                            if (!empty($res['web'])) {
+                                foreach ($res['web'] as $impageUploadInfo) {
+                                    $images[] = $impageUploadInfo->name;
+                                }
+                                echo " [OK]";
+                            } else {
+                                echo " [ERROR]";
+                            }
+                            echo PHP_EOL;
+                        } else {
+                            $images[] = $pInfo['basename'];
+                        }
+                    }
+                    // currently we support only 5 images
+                    if (count($images) >= 5) {
+                        break;
+                    }
                 }
+                // var_dump($imagesToDownload);
+                // download image here
+                // $urls = array();
+                // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
+                // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
+                // var_dump($res);
+                for ($i = 0, $cnt = count($images); $i < $cnt; $i++) {
+                    $productItem['file' . ($i + 1)] = $images[$i];
+                }
+                // // $productItem['Images'] = $images;
+                // var_dump($productItem);
+                // return;
             }
-            // var_dump($imagesToDownload);
-            // download image here
-            // $urls = array();
-            // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
-            // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
-            // var_dump($res);
-            for ($i = 0, $cnt = count($images); $i < $cnt; $i++) {
-                $productItem['file' . ($i + 1)] = $images[$i];
-                
-            }
-            // // $productItem['Images'] = $images;
-            // var_dump($productItem);
-            // return;
 
             // var_dump("[[[[[[[[[[[[[[ inpuda data >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             // var_dump($productItem);
