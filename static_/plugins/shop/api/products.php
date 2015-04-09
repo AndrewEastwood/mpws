@@ -131,7 +131,7 @@ class products {
             'savingsothers' => $convertedSavings
         );
 
-        $product['ShopDiscount'] = 100 - intval($price * 100 / $prevprice);
+        $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
         $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
         $product['GoodToShowPreviousPrice'] = $savingValue > 3;
 
