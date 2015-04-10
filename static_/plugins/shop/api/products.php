@@ -37,6 +37,9 @@ class products {
     public function getProductStatusesWhenDisabled () {
         return array("ARCHIVED");
     }
+    public function getProductBannerTypes () {
+        return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
+    }
     // -----------------------------------------------
     // -----------------------------------------------
     // PRODUCTS
@@ -58,6 +61,7 @@ class products {
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
         $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
         $product['IsOffer'] = intval($product['IsOffer']) === 1;
+        $product['ShowBanner'] = intval($product['ShowBanner']) === 1;
 
         // create display product title
         $displayName = array();
@@ -83,6 +87,7 @@ class products {
         // media
         $product['Images'] = $this->getProductImages($productID);
         $product['Videos'] = $this->getProductVideos($productID);
+        $product['Banners'] = $this->getProductBanners($productID);
 
         // Utils
         $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
@@ -131,9 +136,9 @@ class products {
             'savingsothers' => $convertedSavings
         );
 
-        $product['ShopDiscount'] = intval($savingValue * 100 / $actualPrice);
-        $product['IsBigSavings'] = $product['ShopDiscount'] > 3;
-        $product['GoodToShowPreviousPrice'] = $savingValue > 3;
+        $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
+        $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
+        $product['GoodToShowPreviousPrice'] = $savingValue > 10;
 
         // save product into recently viewed list
         $isDirectRequestToProduct = Request::hasInGet('id');
@@ -256,6 +261,38 @@ class products {
             }
         }
         return $images;
+    }
+
+    public function getProductBanners ($productID) {
+        global $app;
+        $banners = array();
+        $config = dbquery::shopGetProductAttributes($productID, $this->getProductBannerTypes());
+        $data = $app->getDB()->query($config);
+        if (!empty($data)) {
+            foreach ($data as $item) {
+                if (!empty($item['Value'])) {
+                    $banners[$item['Attribute']] = array(
+                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Attribute'], $productID),
+                        'text1' => '',
+                        'text2' => ''
+                    );
+                }
+            }
+        }
+        // get banner texts
+        // $config = dbquery::shopGetProductAttributes($productID, array('BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2'));
+        // $config['options']['asDict'] = 'Attribute';
+        // $data = $app->getDB()->query($config);
+        // // var_dump($data);
+        // foreach ($banners as $type => $value) {
+        //     if (isset($data['BANNER_TEXT_LINE1'])) {
+        //         $banners[$type]['text1'] = $data['BANNER_TEXT_LINE1'];
+        //     }
+        //     if (isset($data['BANNER_TEXT_LINE2'])) {
+        //         $banners[$type]['text2'] = $data['BANNER_TEXT_LINE2'];
+        //     }
+        // }
+        return $banners;
     }
 
     public function getProductVideos ($productID) {
@@ -449,8 +486,8 @@ class products {
 
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'shop_products.DateCreated';
-        $options['order'] = 'DESC';
+        // $options['sort'] = 'shop_products.DateCreated';
+        // $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;
         // var_dump($options);
@@ -472,7 +509,7 @@ class products {
     public function getOffersProducts_List (array $options = array()) {
         global $app;
         $options['_fIsOffer'] = true;
-        $options['_fPrevPrice'] = 'Price:>';
+        // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -775,6 +812,7 @@ class products {
             'IsPromo' => array('sqlbool', 'skipIfUnset'),
             'IsOffer' => array('sqlbool', 'skipIfUnset'),
             'IsFeatured' => array('sqlbool', 'skipIfUnset'),
+            'ShowBanner' => array('sqlbool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
@@ -784,7 +822,14 @@ class products {
             'file2' => array('string', 'skipIfUnset'),
             'file3' => array('string', 'skipIfUnset'),
             'file4' => array('string', 'skipIfUnset'),
-            'file5' => array('string', 'skipIfUnset')
+            'file5' => array('string', 'skipIfUnset'),
+            'promoText' => array('skipIfUnset'),
+            'fileBannerLarge' => array('string', 'skipIfUnset'),
+            'fileBannerMedium' => array('string', 'skipIfUnset'),
+            'fileBannerSmall' => array('string', 'skipIfUnset'),
+            'fileBannerMicro' => array('string', 'skipIfUnset'),
+            'bannerTextLine1' => array('skipIfUnset'),
+            'bannerTextLine2' => array('skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -794,6 +839,7 @@ class products {
                 $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
+                $attributes["BANNER"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
 
@@ -814,10 +860,24 @@ class products {
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
                 }
+                // promo and banners
+                if (isset($validatedValues['promoText'])) {
+                    $attributes['PROMO_TEXT'] = $validatedValues['promoText'];
+                }
+                if (isset($validatedValues['bannerTextLine1'])) {
+                    $attributes['BANNER_TEXT_LINE1'] = $validatedValues['bannerTextLine1'];
+                }
+                if (isset($validatedValues['bannerTextLine2'])) {
+                    $attributes['BANNER_TEXT_LINE2'] = $validatedValues['bannerTextLine2'];
+                }
                 // extract features
                 if (isset($validatedValues['Features'])) {
                     $features = $validatedValues['Features'];
                 }
+
+                $updateImages = isset($reqData['file1']) || isset($reqData['file2'])
+                    || isset($reqData['file3']) || isset($reqData['file4']) || isset($reqData['file5']);
+
                 // I don't think loop for 5 items is better for perfomance
                 if (!empty($validatedValues['file1'])) {
                     $attributes["IMAGE"][] = $validatedValues['file1'];
@@ -835,6 +895,23 @@ class products {
                     $attributes["IMAGE"][] = $validatedValues['file5'];
                 }
 
+                $updateBanners = isset($reqData['fileBannerLarge']) || isset($reqData['fileBannerMedium'])
+                    || isset($reqData['fileBannerSmall']) || isset($reqData['fileBannerMicro']);
+
+                // I don't think loop for 5 items is better for perfomance
+                if (!empty($validatedValues['fileBannerLarge'])) {
+                    $attributes["BANNER"]["BANNER_LARGE"] = $validatedValues['fileBannerLarge'];
+                }
+                if (!empty($validatedValues['fileBannerMedium'])) {
+                    $attributes["BANNER"]["BANNER_MEDIUM"] = $validatedValues['fileBannerMedium'];
+                }
+                if (!empty($validatedValues['fileBannerSmall'])) {
+                    $attributes["BANNER"]["BANNER_SMALL"] = $validatedValues['fileBannerSmall'];
+                }
+                if (!empty($validatedValues['fileBannerMicro'])) {
+                    $attributes["BANNER"]["BANNER_MICRO"] = $validatedValues['fileBannerMicro'];
+                }
+
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
@@ -845,6 +922,13 @@ class products {
                 unset($validatedValues['file3']);
                 unset($validatedValues['file4']);
                 unset($validatedValues['file5']);
+                unset($validatedValues['promoText']);
+                unset($validatedValues['fileBannerLarge']);
+                unset($validatedValues['fileBannerMedium']);
+                unset($validatedValues['fileBannerSmall']);
+                unset($validatedValues['fileBannerMicro']);
+                unset($validatedValues['bannerTextLine1']);
+                unset($validatedValues['bannerTextLine2']);
 
                 $app->getDB()->beginTransaction();
 
@@ -938,85 +1022,129 @@ class products {
                     }
                 }
 
-                // get previous product data
-                // we need this to re-adjust images for the product
-                $currentImages = $this->getProductImages($ProductID);
-                $filesUploaded = array();
-                $filesToDelete = array();
-                $filesToKeep = array();
-                $filesToUpload = array();
+                if ($updateImages) {
+                    // get previous product data
+                    // we need this to re-adjust images for the product
+                    $currentImages = $this->getProductImages($ProductID);
+                    $filesUploaded = array();
+                    $filesToDelete = array();
+                    $filesToKeep = array();
+                    $filesToUpload = array();
 
-                foreach ($currentImages as $currentImageItem) {
-                    $filesUploaded[] = $currentImageItem['name'];
+                    foreach ($currentImages as $currentImageItem) {
+                        $filesUploaded[] = $currentImageItem['name'];
+                    }
+
+                    $filesToKeep = array_intersect($filesUploaded, $attributes["IMAGE"]);
+                    $filesToDelete = array_diff($filesUploaded, $attributes["IMAGE"]);
+                    $filesToUpload = array_diff($attributes["IMAGE"], $filesUploaded);
+
+                    // // var_dump($previousAttributesImages);
+                    // var_dump($attributes["IMAGE"]);
+
+                    // foreach ($currentImages as $currentImageItem) {
+                    //     if (in_array($currentImageItem['name'], $attributes["IMAGE"])) {
+                    //         $filesToKeep[] = $currentImageItem['name'];
+                    //     } else {
+                    //         $filesToDelete[] = $currentImageItem['name'];
+                    //     }
+                    // }
+
+                    // var_dump('current>>>>>>>');
+                    // var_dump($currentImages);
+                    // var_dump('delete>>>>>>>');
+                    // var_dump($filesToDelete);
+                    // var_dump('keep>>>>>>>');
+                    // var_dump($filesToKeep);
+                    // var_dump('upload>>>>>>>');
+                    // var_dump($filesToUpload);
+
+                    $uploadedFileNames = array();
+                    foreach ($filesToUpload as $fileName) {
+
+                        $newFileName = $ProductID . uniqid(time());
+                        $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
+                        $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
+                        $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                        $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
+                        $normalImagePath = $fileName;
+
+                        $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
+
+                        // var_dump($uploadInfo);
+                        // $attrData = $initAttrData->getArrayCopy();
+                        // $attrData['Attribute'] = 'IMAGE';
+                        // $attrData['Value'] = $uploadInfo['filename'];
+                        // $config = dbquery::shopAddAttributeToProduct($attrData);
+                        // $app->getDB()->query($config);
+
+                        // $newFileName = $ProductID . uniqid(time());
+                        // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                        $uploadedFileNames[] = $uploadInfo['filename'];
+                    }
+                    foreach ($filesToDelete as $fileName) {
+
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
+
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID));
+                    }
+
+                    $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
+                } else {
+                    unset($attributes["IMAGE"]);
                 }
 
-                $filesToKeep = array_intersect($filesUploaded, $attributes["IMAGE"]);
-                $filesToDelete = array_diff($filesUploaded, $attributes["IMAGE"]);
-                $filesToUpload = array_diff($attributes["IMAGE"], $filesUploaded);
+                // update product banners
+                if ($updateBanners) {
+                    $currentBanners = $this->getProductBanners($ProductID);
+                    $filesUploaded = array();
+                    $filesToDelete = array();
+                    $filesToKeep = array();
+                    $filesToUpload = array();
 
-                // // var_dump($previousAttributesImages);
-                // var_dump($attributes["IMAGE"]);
+                    foreach ($currentBanners as $bannerType => $currentImageItem) {
+                        $filesUploaded[$bannerType] = $currentImageItem['name'];
+                    }
 
-                // foreach ($currentImages as $currentImageItem) {
-                //     if (in_array($currentImageItem['name'], $attributes["IMAGE"])) {
-                //         $filesToKeep[] = $currentImageItem['name'];
-                //     } else {
-                //         $filesToDelete[] = $currentImageItem['name'];
-                //     }
-                // }
+                    $filesToKeep = array_intersect_assoc($filesUploaded, $attributes["BANNER"]);
+                    $filesToDelete = array_diff_assoc($filesUploaded, $attributes["BANNER"]);
+                    $filesToUpload = array_diff_assoc($attributes["BANNER"], $filesUploaded);
 
-                // var_dump('current>>>>>>>');
-                // var_dump($currentImages);
-                // var_dump('delete>>>>>>>');
-                // var_dump($filesToDelete);
-                // var_dump('keep>>>>>>>');
-                // var_dump($filesToKeep);
-                // var_dump('upload>>>>>>>');
-                // var_dump($filesToUpload);
+                    // var_dump('current>>>>>>>');
+                    // var_dump($currentBanners);
+                    // var_dump('delete>>>>>>>');
+                    // var_dump($filesToDelete);
+                    // var_dump('keep>>>>>>>');
+                    // var_dump($filesToKeep);
+                    // var_dump('upload>>>>>>>');
+                    // var_dump($filesToUpload);
 
-                $uploadedFileNames = array();
-                foreach ($filesToUpload as $fileName) {
+                    $uploadedFileNames = array();
+                    foreach ($filesToUpload as $bannerType => $fileName) {
+                        $newFileName = strtolower($bannerType);
+                        $uploadInfo = Path::moveTemporaryFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                        $uploadedFileNames[$bannerType] = $uploadInfo['filename'];
+                    }
+                    foreach ($filesToDelete as $bannerType => $fileName) {
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($bannerType, $ProductID));
+                    }
 
-                    $newFileName = $ProductID . uniqid(time());
-                    $mdImagePath = 'md' . Path::getDirectorySeparator() . $fileName;
-                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
-                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
-                    $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
-                    $normalImagePath = $fileName;
-
-                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
-
-                    // var_dump($uploadInfo);
-                    // $attrData = $initAttrData->getArrayCopy();
-                    // $attrData['Attribute'] = 'IMAGE';
-                    // $attrData['Value'] = $uploadInfo['filename'];
-                    // $config = dbquery::shopAddAttributeToProduct($attrData);
-                    // $app->getDB()->query($config);
-
-                    // $newFileName = $ProductID . uniqid(time());
-                    // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
-                    $uploadedFileNames[] = $uploadInfo['filename'];
+                    $attributes["BANNER"] = array_merge($filesToKeep, $uploadedFileNames);
+                } else {
+                    unset($attributes["BANNER"]);
                 }
-                foreach ($filesToDelete as $fileName) {
-
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
-                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
-
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID));
-                }
-
-                $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
 
                 // var_dump($attributes["IMAGE"]);
 
@@ -1039,10 +1167,24 @@ class products {
                             $app->getDB()->query($config);
                         }
                     }
+                    // -- BANNER_XXXX
+                    $bannerTypes = $this->getProductBannerTypes();
+                    foreach ($bannerTypes as $bannerType) {
+                        if (isset($attributes[$bannerType])) {
+                            $config = dbquery::shopClearProductAttributes($ProductID, $bannerType);
+                            $app->getDB()->query($config);
+                            $attrData = $initAttrData->getArrayCopy();
+                            $attrData['Attribute'] = $bannerType;
+                            $attrData['Value'] = $attributes["BANNER"][$bannerType];
+                            $config = dbquery::shopAddAttributeToProduct($attrData);
+                            $app->getDB()->query($config);
+                        }
+                    }
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY',
+                        'BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2', 'PROMO_TEXT');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
@@ -1083,22 +1225,15 @@ class products {
         $category = null;
         $origin = null;
         $productID = null;
-        // get category by name
-        $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
         // get origin by name
         $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
-        // create non-existent category and/or origin
-        if ($category === null) {
-            $category = API::getAPI('shop:categories')->createCategory(array(
-                'Name' => $data['CategoryName']
-            ));
-        }
+        // create new origin
         if ($origin === null) {
             $origin = API::getAPI('shop:origins')->createOrigin(array(
                 'Name' => $data['OriginName']
             ));
         }
-        if (isset($category['ID']) && isset($origin['ID'])) {
+        if (isset($origin['ID'])) {
             // we have the product item already in db
             if (isset($data['ID'])) {
                 //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
@@ -1108,24 +1243,52 @@ class products {
                 //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
                 $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             }
+
+            // when new product and empty category name
+            if (empty($data['CategoryName']) && $productID === null) {
+                // then we create dummy category for this product
+                $category = API::getAPI('shop:categories')->createCategory(array(
+                    'Name' => 'Other'
+                ));
+            }
+
+            // if category name is set we check this category and create if it's new
+            if (!empty($data['CategoryName'])) {
+                // get category by name
+                $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
+                // create non-existent category and/or origin
+                if ($category === null) {
+                    $category = API::getAPI('shop:categories')->createCategory(array(
+                        'Name' => $data['CategoryName']
+                    ));
+                }
+            }
+
             // var_dump($category);
             // var_dump($origin);
             // set category
-            $data['CategoryID'] = $category['ID'];
-            // set origin
-            $data['OriginID'] = $origin['ID'];
-            // downlod images
-            // TODO: goes here :)
-            // parse other images and skip own using hostname
-            // var_dump($product);
-            unset($data['CategoryName']);
-            unset($data['OriginName']);
-            // var_dump($data);
-            // var_dump($productID);
-            if ($productID === null) {
-                $result = $this->createProduct($data);
+            if (empty($category) && empty($productID)) {
+                $errors[] = 'Cannot create/assign category for new product';
             } else {
-                $result = $this->updateProduct($productID, $data);
+                // if category is not empty we just set it's id for product
+                if (!empty($category)) {
+                    $data['CategoryID'] = $category['ID'];
+                    unset($data['CategoryName']);
+                }
+                // set origin
+                $data['OriginID'] = $origin['ID'];
+                unset($data['OriginName']);
+                // downlod images
+                // TODO: goes here :)
+                // parse other images and skip own using hostname
+                // var_dump($product);
+                // var_dump($data);
+                // var_dump($productID);
+                if ($productID === null) {
+                    $result = $this->createProduct($data);
+                } else {
+                    $result = $this->updateProduct($productID, $data);
+                }
             }
             $result['created'] = $result['success'] && $productID === null;
             $result['updated'] = $result['success'] && $productID !== null;

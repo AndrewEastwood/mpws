@@ -21,13 +21,11 @@
         </ul>
     </div>
     {{/mpwsIsNotEmpty}}
-    {{#if data.ID }}
-    <input name="ID" type="hidden" value="{{data.ID}}">
-    {{/if}}
     <div class="row">
         <div class="col-md-6">
-            <form class="form-horizontal">
+            <div class="form-horizontal">
                 <fieldset>
+                    <legend>{{lang.popup_product_section_details_fieldset_General}}</legend>
                     <!-- Select Basic -->
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="category">{{lang.popup_product_section_details_field_CategoryID}}</label>
@@ -61,30 +59,38 @@
                         <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_field_Price}}</label>
                         <div class="col-md-8">
                             <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
-                            <div>current price is: <strong>{{data._prices.price}}</strong></div>
-                            {{#if data._prices.previous}}
-                            <div>previous price was: <strong>{{data._prices.previous}}</strong></div>
-                            {{/if}}
-                            {{#mpwsIsNotEmpty data._prices.history }}
-                            <div class="price-history">
-                                <div class="value-prefix">Діаграма ціни:</div>
-                                <div class="price-history-sparkline"></div>
-                            </div>
-                            {{/mpwsIsNotEmpty}}
+                            <ul class="list-group shop-product-price-stats">
+                                <li class="list-group-item">
+                                    <span class="badge">{{data._prices.price}}</span>
+                                    {{lang.popup_product_section_details_label_currentPrice}}
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{data._prices.previous}}</span>
+                                    {{lang.popup_product_section_details_label_previousPrice}}
+                                </li>
+                                {{#mpwsIsNotEmpty data._prices.history }}
+                                <li class="list-group-item">
+                                    <span class="badge price-chart-wrapper">
+                                        <div class="price-history-sparkline"></div>
+                                    </span>
+                                    {{lang.popup_product_section_details_label_chartPriceHistory}}
+                                </li>
+                                {{/mpwsIsNotEmpty}}
+                            </ul>
                         </div>
                     </div>
                     <!-- Textarea -->
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="synopsis">{{lang.popup_product_section_details_field_Synopsis}}</label>
                         <div class="col-md-8">
-                            <textarea class="form-control" id="synopsis" name="Description">{{data.Synopsis}}</textarea>
+                            <textarea class="form-control" id="synopsis" name="Synopsis">{{data.Synopsis}}</textarea>
                         </div>
                     </div>
                     <!-- Textarea -->
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="description">{{lang.popup_product_section_details_field_Description}}</label>
                         <div class="col-md-8">
-                            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+                            <textarea class="form-control" rows="6" id="description" name="Description">{{data.Description}}</textarea>
                         </div>
                     </div>
                     <!-- Is Promo-->
@@ -105,6 +111,8 @@
                                 <input type="checkbox" name="IsOffer" id="isoffer" {{#if data.IsOffer}}checked="checked"{{/if}}>
                                 {{lang.popup_product_section_details_field_IsOffer}}
                             </label>
+                            <span class="help-block"><i class="fa fa-fw fa-life-ring"></i>{{lang.popup_product_section_details_field_IsFeaturedTextHelper}}</span>
+                        
                         </div>
                     </div>
                     <!-- Is Featured-->
@@ -118,11 +126,12 @@
                         </div>
                     </div>
                 </fieldset>
-            </form>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="form-horizontal">
                 <fieldset>
+                    <legend>{{lang.popup_product_section_details_fieldset_Attributes}}</legend>
                     <!-- Select Basic -->
                     <div class="form-group">
                         <div class="col-md-12 uploads">
@@ -246,6 +255,108 @@
                             </fieldset>
                         </div>
                     </div>
+                </fieldset>
+                <!-- promo area -->
+                <fieldset>
+                    <legend>
+                        {{lang.popup_product_section_details_fieldset_PromoArea}}
+                    </legend>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_field_PromoText}}</span>
+                                <input id="promotext" type="text" class="form-control" value="{{data.Attributes.PROMO_TEXT}}">
+                            </div>
+                            <span class="help-block"><i class="fa fa-fw fa-life-ring"></i>{{lang.popup_product_section_details_field_PromoTextHelper}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <!-- product banners -->
+                <fieldset>
+                    <legend>
+                        {{lang.popup_product_section_details_fieldset_Banners}}
+                        <input type="checkbox" id="showBanners" {{#if data.ShowBanner}}checked="checked"{{/if}}>
+                    </legend>
+                    <!-- Banners -->
+                    <div class="form-group">
+                        <div class="col-md-12 uploads">
+                            <div class="upload-errors"></div>
+                            <div class="upload-wrapper shop-banner-upload shop-banner-upload-large">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="bannerLarge" type="hidden" class="file-name" value="{{data.Banners.Large.name}}" data-original="{{data.Banners.Large.name}}">
+                                    <input id="product-banner-large" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Banners.Large}}<img src="{{data.Banners.Large.xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <div class="shop-product-banner-title">{{lang.popup_product_section_details_field_BannerLarge}}</div>
+                            </div>
+                            <div class="upload-wrapper shop-banner-upload shop-banner-upload-medium">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="bannerMedium" type="hidden" class="file-name" value="{{data.Banners.Medium.name}}" data-original="{{data.Banners.Medium.name}}">
+                                    <input id="product-banner-medium" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Banners.Medium}}<img src="{{data.Banners.Medium.xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <div class="shop-product-banner-title">{{lang.popup_product_section_details_field_BannerMedium}}</div>
+                            </div>
+                            <div class="upload-wrapper shop-banner-upload shop-banner-upload-small">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="bannerSmall" type="hidden" class="file-name" value="{{data.Banners.Medium.name}}" data-original="{{data.Banners.Medium.name}}">
+                                    <input id="product-banner-small" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Banners.Medium}}<img src="{{data.Banners.Medium.xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <div class="shop-product-banner-title">{{lang.popup_product_section_details_field_BannerSmall}}</div>
+                            </div>
+                            <div class="upload-wrapper shop-banner-upload shop-banner-upload-micro">
+                                <span class="btn fileinput-button">
+                                    <i class="fa fa-upload text-success"></i>
+                                    <i class="fa fa-warning text-danger"></i>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="bannerMicro" type="hidden" class="file-name" value="{{data.Banners.Micro.name}}" data-original="{{data.Banners.Micro.name}}">
+                                    <input id="product-banner-micro" class="temp-upload-image" type="file" name="files">
+                                    {{#if data.Banners.Micro}}<img src="{{data.Banners.Micro.xs}}" class="uploaded-image" alt="{{Name}}">{{/if}}
+                                    <span class="preview-image"></span>
+                                </span>
+                                <i class="fa fa-times fa-fw text-danger del-image"></i>
+                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <div class="shop-product-banner-title">{{lang.popup_product_section_details_field_BannerMicro}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Banner texts -->
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_field_BannerTextLine1}}</span>
+                                <input id="bannerTextLine1" type="text" class="form-control" value="{{data.Attributes.BANNER_TEXT_LINE1}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_field_BannerTextLine2}}</span>
+                                <input id="bannerTextLine2" type="text" class="form-control" value="{{data.Attributes.BANNER_TEXT_LINE2}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="help-block"><i class="fa fa-fw fa-life-ring"></i>{{lang.popup_product_section_details_field_BannerTextsHelper}}</div>
                 </fieldset>
             </div>
         </div>

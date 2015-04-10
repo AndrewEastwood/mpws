@@ -1,0 +1,56 @@
+@import url(http://fonts.googleapis.com/css?family=Lobster);
+.starburst() {
+  font: 4em/1.4 'Lobster', georgia, serif;
+  background: #202020;  
+  /* 
+  Uncomment this to tart them up..
+  background: radial-gradient(circle, #e00000 20%, #990000 80%); 
+  text-shadow: 0 .05em .05em rgba(0,0,0,.5);
+  */ 
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  color: #fff;
+  line-height: 1em;
+
+  &, span {
+    display: -webkit-box;
+    box-align: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+  }
+
+  span {
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    .rotate(45deg);
+  }
+
+  &:before,
+  &:after ,
+  & span:before,
+  & span:after {
+     content: "";
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: inherit;
+     z-index: -1;
+    .rotate(30deg);
+  }
+
+  &:after {
+    .rotate(-30deg);
+  }
+
+  & span:after {
+    .rotate(30deg);
+  }
+  & span:before {
+    .rotate(-30deg);
+  }
+}

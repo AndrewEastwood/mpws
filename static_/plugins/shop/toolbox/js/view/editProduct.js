@@ -80,6 +80,7 @@ define([
                             Name: that.$('#name').val(),
                             Model: that.$('#model').val(),
                             Price: parseFloat(that.$('#price').val().replace( /^\D+/g, ''), 10),
+                            Synopsis: that.$('#synopsis').val(),
                             Description: that.$('#description').val(),
                             IsPromo: that.$('#ispromo').is(':checked'),
                             IsOffer: that.$('#isoffer').is(':checked'),
@@ -88,11 +89,19 @@ define([
                             ISBN: that.$('#isbn').val(),
                             Warranty: that.$('#warranty').val(),
                             Features: that.getFeaturesMap(),
+                            ShowBanner: that.$('#showBanners').is(':checked'),
                             file1: that.$('#file1').val(),
                             file2: that.$('#file2').val(),
                             file3: that.$('#file3').val(),
                             file4: that.$('#file4').val(),
-                            file5: that.$('#file5').val()
+                            file5: that.$('#file5').val(),
+                            promoText: that.$('#promotext').val(),
+                            fileBannerLarge: that.$('#bannerLarge').val(),
+                            fileBannerMedium: that.$('#bannerMedium').val(),
+                            fileBannerSmall: that.$('#bannerSmall').val(),
+                            fileBannerMicro: that.$('#bannerMicro').val(),
+                            bannerTextLine1: that.$('#bannerTextLine1').val(),
+                            bannerTextLine2: that.$('#bannerTextLine2').val(),
                         }, {
                             silent: true,
                             success: function (model, response) {
