@@ -79,6 +79,7 @@ define([
         views: {},
 
         before: function (route, params) {
+            console.log('on route before ' + route);
             this.toggleMenu(Auth.getUserID());
             this.toggleWidgets(Auth.getUserID());
             if (Auth.getUserID()) {
@@ -94,6 +95,7 @@ define([
         },
 
         after: function (route) {
+            console.log('on route after ' + route);
             if (/signin|signout/.test(Backbone.history.getFragment())) {
                 return;
             }
@@ -102,7 +104,7 @@ define([
 
         signin: function () {
             var signin = this.plugins.system.signin();
-            $('section.mpws-js-main-section').html(signin.$el);
+            $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
         signout: function () {
@@ -137,6 +139,7 @@ define([
             });
 
             this.on('route', function (routeFn, params) {
+                console.log('on route ' + routeFn);
                 that.toggleMenu(Auth.getUserID());
                 that.toggleWidgets(Auth.getUserID());
                 if (_.isFunction(that[routeFn])) {

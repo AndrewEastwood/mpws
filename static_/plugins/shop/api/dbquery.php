@@ -25,7 +25,9 @@ class dbquery {
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis", "Description", "Model", "SKU", "Price", "PrevPrice", "IsPromo", "IsFeatured", "IsOffer", "Status", "DateUpdated", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis",
+                "Description", "Model", "SKU", "Price", "PrevPrice",
+                "IsPromo", "IsFeatured", "IsOffer", "ShowBanner", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "order" => array(
@@ -74,7 +76,7 @@ class dbquery {
             )
         );
         $config['order'] = array(
-            "expr" => "shop_products.Status"
+            "expr" => "shop_products.DateUpdated DESC, shop_products.Status"
         );
         unset($config['options']);
 
@@ -404,7 +406,11 @@ class dbquery {
             $config['condition']['ProductID'] = $app->getDB()->createCondition($id);
         }
         if (!empty($type)) {
-            $config['condition']['Attribute'] = $app->getDB()->createCondition($type);
+            if (is_array($type)) {
+                $config['condition']['Attribute'] = $app->getDB()->createCondition($type, 'IN');
+            } else {
+                $config['condition']['Attribute'] = $app->getDB()->createCondition($type);
+            }
         }
 
         return $config;

@@ -37,6 +37,9 @@ class products {
     public function getProductStatusesWhenDisabled () {
         return array("ARCHIVED");
     }
+    public function getProductBannerTypes () {
+        return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
+    }
     // -----------------------------------------------
     // -----------------------------------------------
     // PRODUCTS
@@ -58,6 +61,7 @@ class products {
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
         $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
         $product['IsOffer'] = intval($product['IsOffer']) === 1;
+        $product['ShowBanner'] = intval($product['ShowBanner']) === 1;
 
         // create display product title
         $displayName = array();
@@ -83,6 +87,7 @@ class products {
         // media
         $product['Images'] = $this->getProductImages($productID);
         $product['Videos'] = $this->getProductVideos($productID);
+        $product['Banners'] = $this->getProductBanners($productID);
 
         // Utils
         $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
@@ -256,6 +261,38 @@ class products {
             }
         }
         return $images;
+    }
+
+    public function getProductBanners ($productID) {
+        global $app;
+        $banners = array();
+        $config = dbquery::shopGetProductAttributes($productID, $this->getProductBannerTypes());
+        $data = $app->getDB()->query($config);
+        if (!empty($data)) {
+            foreach ($data as $item) {
+                if (!empty($item['Value'])) {
+                    $banners[$item['Attribute']] = array(
+                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Attribute'], $productID),
+                        'text1' => '',
+                        'text2' => ''
+                    );
+                }
+            }
+        }
+        // get banner texts
+        // $config = dbquery::shopGetProductAttributes($productID, array('BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2'));
+        // $config['options']['asDict'] = 'Attribute';
+        // $data = $app->getDB()->query($config);
+        // // var_dump($data);
+        // foreach ($banners as $type => $value) {
+        //     if (isset($data['BANNER_TEXT_LINE1'])) {
+        //         $banners[$type]['text1'] = $data['BANNER_TEXT_LINE1'];
+        //     }
+        //     if (isset($data['BANNER_TEXT_LINE2'])) {
+        //         $banners[$type]['text2'] = $data['BANNER_TEXT_LINE2'];
+        //     }
+        // }
+        return $banners;
     }
 
     public function getProductVideos ($productID) {
@@ -446,8 +483,8 @@ class products {
 
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'shop_products.DateCreated';
-        $options['order'] = 'DESC';
+        // $options['sort'] = 'shop_products.DateCreated';
+        // $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;
         // var_dump($options);
@@ -469,7 +506,7 @@ class products {
     public function getOffersProducts_List (array $options = array()) {
         global $app;
         $options['_fIsOffer'] = true;
-        $options['_fPrevPrice'] = 'Price:>';
+        // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
@@ -772,6 +809,7 @@ class products {
             'IsPromo' => array('sqlbool', 'skipIfUnset'),
             'IsOffer' => array('sqlbool', 'skipIfUnset'),
             'IsFeatured' => array('sqlbool', 'skipIfUnset'),
+            'ShowBanner' => array('sqlbool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
@@ -781,7 +819,14 @@ class products {
             'file2' => array('string', 'skipIfUnset'),
             'file3' => array('string', 'skipIfUnset'),
             'file4' => array('string', 'skipIfUnset'),
-            'file5' => array('string', 'skipIfUnset')
+            'file5' => array('string', 'skipIfUnset'),
+            'promoText' => array('skipIfUnset'),
+            'fileBannerLarge' => array('string', 'skipIfUnset'),
+            'fileBannerMedium' => array('string', 'skipIfUnset'),
+            'fileBannerSmall' => array('string', 'skipIfUnset'),
+            'fileBannerMicro' => array('string', 'skipIfUnset'),
+            'bannerTextLine1' => array('skipIfUnset'),
+            'bannerTextLine2' => array('skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -791,6 +836,7 @@ class products {
                 $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
+                $attributes["BANNER"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
 
@@ -810,6 +856,16 @@ class products {
                 }
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
+                }
+                // promo and banners
+                if (isset($validatedValues['promoText'])) {
+                    $attributes['PROMO_TEXT'] = $validatedValues['promoText'];
+                }
+                if (isset($validatedValues['bannerTextLine1'])) {
+                    $attributes['BANNER_TEXT_LINE1'] = $validatedValues['bannerTextLine1'];
+                }
+                if (isset($validatedValues['bannerTextLine2'])) {
+                    $attributes['BANNER_TEXT_LINE2'] = $validatedValues['bannerTextLine2'];
                 }
                 // extract features
                 if (isset($validatedValues['Features'])) {
@@ -836,6 +892,23 @@ class products {
                     $attributes["IMAGE"][] = $validatedValues['file5'];
                 }
 
+                $updateBanners = isset($reqData['fileBannerLarge']) || isset($reqData['fileBannerMedium'])
+                    || isset($reqData['fileBannerSmall']) || isset($reqData['fileBannerMicro']);
+
+                // I don't think loop for 5 items is better for perfomance
+                if (!empty($validatedValues['fileBannerLarge'])) {
+                    $attributes["BANNER"]["BANNER_LARGE"] = $validatedValues['fileBannerLarge'];
+                }
+                if (!empty($validatedValues['fileBannerMedium'])) {
+                    $attributes["BANNER"]["BANNER_MEDIUM"] = $validatedValues['fileBannerMedium'];
+                }
+                if (!empty($validatedValues['fileBannerSmall'])) {
+                    $attributes["BANNER"]["BANNER_SMALL"] = $validatedValues['fileBannerSmall'];
+                }
+                if (!empty($validatedValues['fileBannerMicro'])) {
+                    $attributes["BANNER"]["BANNER_MICRO"] = $validatedValues['fileBannerMicro'];
+                }
+
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
@@ -846,6 +919,13 @@ class products {
                 unset($validatedValues['file3']);
                 unset($validatedValues['file4']);
                 unset($validatedValues['file5']);
+                unset($validatedValues['promoText']);
+                unset($validatedValues['fileBannerLarge']);
+                unset($validatedValues['fileBannerMedium']);
+                unset($validatedValues['fileBannerSmall']);
+                unset($validatedValues['fileBannerMicro']);
+                unset($validatedValues['bannerTextLine1']);
+                unset($validatedValues['bannerTextLine2']);
 
                 $app->getDB()->beginTransaction();
 
@@ -1023,6 +1103,46 @@ class products {
                     unset($attributes["IMAGE"]);
                 }
 
+                // update product banners
+                if ($updateBanners) {
+                    $currentBanners = $this->getProductBanners($ProductID);
+                    $filesUploaded = array();
+                    $filesToDelete = array();
+                    $filesToKeep = array();
+                    $filesToUpload = array();
+
+                    foreach ($currentBanners as $bannerType => $currentImageItem) {
+                        $filesUploaded[$bannerType] = $currentImageItem['name'];
+                    }
+
+                    $filesToKeep = array_intersect_assoc($filesUploaded, $attributes["BANNER"]);
+                    $filesToDelete = array_diff_assoc($filesUploaded, $attributes["BANNER"]);
+                    $filesToUpload = array_diff_assoc($attributes["BANNER"], $filesUploaded);
+
+                    // var_dump('current>>>>>>>');
+                    // var_dump($currentBanners);
+                    // var_dump('delete>>>>>>>');
+                    // var_dump($filesToDelete);
+                    // var_dump('keep>>>>>>>');
+                    // var_dump($filesToKeep);
+                    // var_dump('upload>>>>>>>');
+                    // var_dump($filesToUpload);
+
+                    $uploadedFileNames = array();
+                    foreach ($filesToUpload as $bannerType => $fileName) {
+                        $newFileName = strtolower($bannerType);
+                        $uploadInfo = Path::moveTemporaryFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                        $uploadedFileNames[$bannerType] = $uploadInfo['filename'];
+                    }
+                    foreach ($filesToDelete as $bannerType => $fileName) {
+                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($bannerType, $ProductID));
+                    }
+
+                    $attributes["BANNER"] = array_merge($filesToKeep, $uploadedFileNames);
+                } else {
+                    unset($attributes["BANNER"]);
+                }
+
                 // var_dump($attributes["IMAGE"]);
 
                 // throw new Exception("Error Processing Request", 1);
@@ -1044,10 +1164,24 @@ class products {
                             $app->getDB()->query($config);
                         }
                     }
+                    // -- BANNER_XXXX
+                    $bannerTypes = $this->getProductBannerTypes();
+                    foreach ($bannerTypes as $bannerType) {
+                        if (isset($attributes[$bannerType])) {
+                            $config = dbquery::shopClearProductAttributes($ProductID, $bannerType);
+                            $app->getDB()->query($config);
+                            $attrData = $initAttrData->getArrayCopy();
+                            $attrData['Attribute'] = $bannerType;
+                            $attrData['Value'] = $attributes["BANNER"][$bannerType];
+                            $config = dbquery::shopAddAttributeToProduct($attrData);
+                            $app->getDB()->query($config);
+                        }
+                    }
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY',
+                        'BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2', 'PROMO_TEXT');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
