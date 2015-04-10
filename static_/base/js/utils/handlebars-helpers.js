@@ -567,6 +567,9 @@ define([
             return opt.inverse(this);
         }
     }
+    helpers.nocacheurl = function (url) {
+        return url + (url.indexOf('?') > 0 ? '&' : '?') + 'bust=' + Date.now();
+    }
 
     // Export helpers
     for (var helper in helpers)

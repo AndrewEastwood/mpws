@@ -96,7 +96,8 @@ define([
 
                 var chart = new google.visualization.LineChart(this.$('.chart-users-lastmonth').get(0));
                 chart.draw(google.visualization.arrayToDataTable(dataOrders), {
-                    curveType: 'function'
+                    curveType: 'function',
+                    crosshair: { trigger: 'vertical' }
                 });
             }
             return this;

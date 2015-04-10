@@ -54,7 +54,8 @@ define([
                 var options = {
                     title: 'Статистика замовлень',
                     curveType: 'function',
-                    legend: { position: 'bottom' }
+                    legend: { position: 'bottom' },
+                    crosshair: { trigger: 'vertical' }
                 };
 
                 var chart = new google.visualization.LineChart(this.$('.panel-body').get(0));

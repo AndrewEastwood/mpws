@@ -508,7 +508,6 @@ class database {
         // add missing fields
         $configCount['fields'] = array_merge($configCount['fields'], $dsConfig['fields']);
 
-
         // add additional
         if (isset($dsConfig['having'])) {
             $configCount['having'] = $dsConfig['having'];

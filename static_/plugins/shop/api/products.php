@@ -24,7 +24,7 @@ class products {
             $path = Path::createDirPath('shop', 'products', $productID, $subDir);
         return $path;
     }
-    public function getProductUploadInnerImagePath ($name,$productID, $subDir = false) {
+    public function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {
         $path = $this->getProductUploadInnerDir($productID, $subDir);
         return $path . $name;
     }
@@ -272,7 +272,8 @@ class products {
             foreach ($data as $item) {
                 if (!empty($item['Value'])) {
                     $banners[$item['Attribute']] = array(
-                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Attribute'], $productID),
+                        'name' => $item['Value'],
+                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
                         'text1' => '',
                         'text2' => ''
                     );
@@ -993,10 +994,12 @@ class products {
                         $validatedValues["PrevPrice"] = $oldPrice;
                     }
                     // mark product as offer when new price is better than current
-                    if ($newPrice < $oldPrice) {
-                        $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(true);
-                    } else {
-                        $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(false);
+                    if (!isset($validatedValues['IsOffer'])) {
+                        if ($newPrice < $oldPrice) {
+                            $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(true);
+                        } else {
+                            $validatedValues['IsOffer'] = $app->getDB()->getSqlBooleanValue(false);
+                        }
                     }
                 }
 
@@ -1109,18 +1112,42 @@ class products {
                 // update product banners
                 if ($updateBanners) {
                     $currentBanners = $this->getProductBanners($ProductID);
-                    $filesUploaded = array();
-                    $filesToDelete = array();
-                    $filesToKeep = array();
-                    $filesToUpload = array();
+                    $bannerTypes = $this->getProductBannerTypes();
 
-                    foreach ($currentBanners as $bannerType => $currentImageItem) {
-                        $filesUploaded[$bannerType] = $currentImageItem['name'];
+                    foreach ($bannerTypes as $bannerType) {
+                        // if current typ is already set for product
+                        if (isset($currentBanners[$bannerType])) {
+                            $currentBannerFileName = $currentBanners[$bannerType];
+                            // if new on si empty we just delete existent
+                            if (empty($attributes["BANNER"][$bannerType])) {
+                                Path::deleteUploadedFile($this->getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
+                                $attributes["BANNER"][$bannerType] = null;
+                            } elseif ($currentBanners[$bannerType]['name'] != $attributes["BANNER"][$bannerType]) {
+                                Path::deleteUploadedFile($this->getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
+                                $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
+                                    $this->getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                                $attributes["BANNER"][$bannerType] = $uploadInfo['filename'];
+                            }
+                        } elseif (!empty($attributes["BANNER"][$bannerType])) {
+                            $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
+                                $this->getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                            $attributes["BANNER"][$bannerType] = $uploadInfo['filename'];
+                        }
                     }
 
-                    $filesToKeep = array_intersect_assoc($filesUploaded, $attributes["BANNER"]);
-                    $filesToDelete = array_diff_assoc($filesUploaded, $attributes["BANNER"]);
-                    $filesToUpload = array_diff_assoc($attributes["BANNER"], $filesUploaded);
+
+                    // $filesUploaded = array();
+                    // $filesToDelete = array();
+                    // $filesToKeep = array();
+                    // $filesToUpload = array();
+
+                    // foreach ($currentBanners as $bannerType => $currentImageItem) {
+                    //     $filesUploaded[$bannerType] = $currentImageItem['name'];
+                    // }
+
+                    // $filesToKeep = array_intersect_assoc($filesUploaded, $attributes["BANNER"]);
+                    // $filesToDelete = array_diff_assoc($filesUploaded, $attributes["BANNER"]);
+                    // $filesToUpload = array_diff_assoc($attributes["BANNER"], $filesUploaded);
 
                     // var_dump('current>>>>>>>');
                     // var_dump($currentBanners);
@@ -1131,22 +1158,22 @@ class products {
                     // var_dump('upload>>>>>>>');
                     // var_dump($filesToUpload);
 
-                    $uploadedFileNames = array();
-                    foreach ($filesToUpload as $bannerType => $fileName) {
-                        $newFileName = strtolower($bannerType);
-                        $uploadInfo = Path::moveTemporaryFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
-                        $uploadedFileNames[$bannerType] = $uploadInfo['filename'];
-                    }
-                    foreach ($filesToDelete as $bannerType => $fileName) {
-                        Path::deleteUploadedFile($this->getProductUploadInnerImagePath($bannerType, $ProductID));
-                    }
+                    // $uploadedFileNames = array();
+                    // foreach ($filesToUpload as $bannerType => $fileName) {
+                    //     $newFileName = strtolower($bannerType);
+                    //     $uploadInfo = Path::moveTemporaryFile($fileName, $this->getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                    //     $uploadedFileNames[$bannerType] = $uploadInfo['filename'];
+                    // }
+                    // foreach ($filesToDelete as $bannerType => $fileName) {
+                    //     Path::deleteUploadedFile($this->getProductUploadInnerImagePath($bannerType, $ProductID));
+                    // }
 
-                    $attributes["BANNER"] = array_merge($filesToKeep, $uploadedFileNames);
+                    // $attributes["BANNER"] = array_merge($filesToKeep, $uploadedFileNames);
+                    // var_dump($attributes["BANNER"]);
                 } else {
                     unset($attributes["BANNER"]);
                 }
 
-                // var_dump($attributes["IMAGE"]);
 
                 // throw new Exception("Error Processing Request", 1);
                 // set new attributes
@@ -1170,9 +1197,9 @@ class products {
                     // -- BANNER_XXXX
                     $bannerTypes = $this->getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
-                        if (isset($attributes[$bannerType])) {
-                            $config = dbquery::shopClearProductAttributes($ProductID, $bannerType);
-                            $app->getDB()->query($config);
+                        $config = dbquery::shopClearProductAttributes($ProductID, $bannerType);
+                        $app->getDB()->query($config);
+                        if (!empty($attributes["BANNER"][$bannerType])) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = $bannerType;
                             $attrData['Value'] = $attributes["BANNER"][$bannerType];
