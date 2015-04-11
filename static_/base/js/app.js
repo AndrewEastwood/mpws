@@ -426,6 +426,17 @@
                     }
                     Backbone.history.start({hashChange: true});
                     updatePageBodyClassNameFn();
+
+                    // init some handy actions
+                    $('body').on('click', '.mpws-js-dropdown-toggle-inner', function () {
+                        $(this).toggleClass('open');
+                    });
+                    $('body').on('click', '.mpws-js-insertable', function () {
+                        var $forEl = $($(this).data('for'));
+                        if ($forEl.length) {
+                            $forEl.val($forEl.val() + ' ' + $(this).text());
+                        }
+                    });
                 });
 
             });

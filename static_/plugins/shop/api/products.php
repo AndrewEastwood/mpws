@@ -65,16 +65,17 @@ class products {
 
         // create display product title
         $displayName = array();
-        if (!empty($product['_origin'])) {
-            $displayName[] = $product['_origin']['Name'];
-        }
         if (!empty($product['Name'])) {
             $displayName[] = $product['Name'];
         }
-        if (!empty($product['Model'])) {
-            $displayName[] = '(' . $product['Model'] . ')';
+        if (!empty($product['_origin'])) {
+            $displayName[] = $product['_origin']['Name'];
         }
-        $product['_displayName'] = implode(' ', $displayName);
+        if (!empty($product['Model'])) {
+            $displayName[] = $product['Model'];
+        }
+        $product['_displayNameFull'] = implode(' ', $displayName);
+        $product['_displayName'] = implode(' ', array_slice($displayName, 1));
 
         // misc data
         if (!$skipRelations) {
@@ -139,6 +140,10 @@ class products {
         $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
         $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
         $product['GoodToShowPreviousPrice'] = $savingValue > 10;
+
+        if (!empty($product['Attributes']['PROMO_TEXT'])) {
+            $product['Attributes']['PROMO_TEXT'] = str_replace('[DisplayName]', $product['_displayName'], $product['Attributes']['PROMO_TEXT']);
+        }
 
         // save product into recently viewed list
         $isDirectRequestToProduct = Request::hasInGet('id');
@@ -273,9 +278,7 @@ class products {
                 if (!empty($item['Value'])) {
                     $banners[$item['Attribute']] = array(
                         'name' => $item['Value'],
-                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
-                        'text1' => '',
-                        'text2' => ''
+                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID)
                     );
                 }
             }

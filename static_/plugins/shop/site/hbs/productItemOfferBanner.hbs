@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="caption vertical-center text-left">
             <div class="big-text fadeInDown-1">
-                {{data._origin.Name}} {{data.Model}} <br/>
+                {{data._displayName}} <br/>
                 {{#if data.IsBigSavings}}
                 <span class="big">
                     Супер <br/>
@@ -29,10 +29,10 @@
                 у розіділі {{data._category.Name}}
             </div>
             <div class="button-holder fadeInDown-3">
-                <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="big le-button ">Придбати</a>
+                <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="big le-button">Придбати</a>
             </div>
         </div><!-- /.caption -->
-        <img class="image img-responsive" src="{{data.Images.[0].md}}" alt="{{data._displayName}}">
-        <img class="image backimage" src="{{data.Images.[0].md}}" alt="{{data._displayName}}">
+        <img class="image img-responsive" src="{{data.Images.[0].md}}" alt="{{data._displayNameFull}}">
+        <img class="image backimage" src="{{data.Images.[0].md}}" alt="{{data._displayNameFull}}">
     </div><!-- /.container-fluid -->
 </div><!-- /.item -->

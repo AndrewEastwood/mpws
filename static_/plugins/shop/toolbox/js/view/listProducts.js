@@ -77,6 +77,7 @@ define([
         var columnName = {
             name: "Name",
             label: lang.pluginMenu_Products_Grid_Column_Name,
+            width: '100px',
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -242,8 +243,8 @@ define([
             columnActions: columnActions,
             columnID: columnID,
             columnName: columnName,
-            columnModel: columnModel,
             columnOriginName: columnOriginName,
+            columnModel: columnModel,
             columnCategoryName: columnCategoryName,
             columnSKU: columnSKU,
             columnPrice: columnPrice,

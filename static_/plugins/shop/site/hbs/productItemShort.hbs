@@ -2,9 +2,43 @@
     <div class="ribbon blue mpws-shop-product-badge-{{data.Status}}">
         <span>{{mpwsGetValueByKey lang.product.badge key=data.Status}}</span>
     </div>
+    {{#and data.ShowBanner data.Banners.BANNER_LARGE.banner}}
+    <div class="banner">
+        {{#if data.Attributes.PROMO_TEXT}}
+        <div class="promo-text">{{data.Attributes.PROMO_TEXT}}</div>
+        {{/if}}
+        <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayNameFull}}" data-echo="{{data.Banners.BANNER_LARGE.banner}}" class="img img-responsive">
+        </a>
+    </div>
+    {{#if data.Attributes.BANNER_TEXT_LINE1}}
+    <div class="banner-text banner-text-1">{{data.Attributes.BANNER_TEXT_LINE1}}</div>
+    {{/if}}
+    {{#if data.Attributes.BANNER_TEXT_LINE2}}
+    <div class="banner-text banner-text-2">{{data.Attributes.BANNER_TEXT_LINE2}}</div>
+    {{/if}}
+    <div class="hover-area">
+        <div class="add-cart-button">
+            <a href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="le-button">
+                {{#if data._archived}}
+                Відкрити
+                {{else}}
+                Детальніше
+                {{/if}}
+            </a>
+        </div>
+        <div class="product-wishlist-compare-holder wish-compare">
+            <a class="btn-add-to-wishlist{{#if data._viewExtras.InWish }} added{{/if}}" href="javascript://">до списку</a>
+            <a class="btn-add-to-compare{{#if data._viewExtras.InCompare }} added{{/if}}" href="javascript://">порівняти</a>
+        </div>
+    </div>
+    {{else}}
+    {{#if data.Attributes.PROMO_TEXT}}
+    <div class="promo-text">{{data.Attributes.PROMO_TEXT}}</div>
+    {{/if}}
     <div class="image">
-        <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
-            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayName}}" data-echo="{{data.Images.[0].sm}}" class="img img-responsive">
+        <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayNameFull}}" data-echo="{{data.Images.[0].sm}}" class="img img-responsive">
         </a>
     </div>
     <div class="body">
@@ -14,7 +48,7 @@
         <div class="label-discount clear"></div>
         {{/if}}
         <div class="title">
-            <a title="{{data._displayName}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">
+            <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">
                 <span class="product-title-model">{{data.Model}}</span>
             </a>
         </div>
@@ -46,4 +80,5 @@
             <a class="btn-add-to-compare{{#if data._viewExtras.InCompare }} added{{/if}}" href="javascript://">порівняти</a>
         </div>
     </div>
+    {{/and}}
 </div>

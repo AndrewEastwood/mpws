@@ -247,15 +247,19 @@ class database {
         // condition
         // var_dump($fieldsToSelectFromDBClear);
         if (!empty($config['condition'])) {
-            // var_dump($config['condition']);
-            // translate condition filter string
-            foreach ($config['condition'] as $fieldName => $fieldOptions) {
-                if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
-                    // var_dump($fieldOptions);
-                    foreach ($fieldOptions as $fieldOption)
-                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption);
-                } else {
-                    $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions);
+            if (is_string($config['condition'])) {
+                $context->dbo->where_raw($config['condition']);
+            } else {
+                // var_dump($config['condition']);
+                // translate condition filter string
+                foreach ($config['condition'] as $fieldName => $fieldOptions) {
+                    if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+                        // var_dump($fieldOptions);
+                        foreach ($fieldOptions as $fieldOption)
+                            $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption);
+                    } else {
+                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions);
+                    }
                 }
             }
         }

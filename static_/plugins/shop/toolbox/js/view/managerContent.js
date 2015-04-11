@@ -25,7 +25,7 @@ define([
                 adjustColumns: function (columns) {
                     return _(columns).omit(
                        'columnID', 'columnDateUpdated', 'columnDateCreated',
-                       'columnSKU', 'columnModel');
+                       'columnSKU');
                 }
             });
 

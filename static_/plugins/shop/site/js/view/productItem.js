@@ -153,6 +153,11 @@ define([
                 this.$el = $(design.wrap).html(this.$el);
             }
 
+            if (this.model.get('ShowBanner') && !_.isEmpty(this.model.get('Banners'))) {
+                this.$el.addClass('shop-product-banner');
+            }
+
+
             echo.init({
                 offset: 100,
                 throttle: 250,

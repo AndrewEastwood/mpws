@@ -142,7 +142,7 @@ class dbquery {
         }
 
         if (!empty($options['_pSearchText'])) {
-            $config['fields'][] = "@CONCAT(shop_origins.Name, ' ', shop_products.Model, ' ', shop_products.Name) AS DBDisplayName";
+            $config['fields'][] = "@CONCAT(shop_products.Name, ' ', shop_origins.Name, ' ', shop_products.Model) AS DBDisplayName";
             $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . $options['_pSearchText'] . '%', 'like');
         }
 
