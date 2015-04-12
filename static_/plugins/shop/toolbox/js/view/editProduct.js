@@ -90,6 +90,7 @@ define([
                             Warranty: that.$('#warranty').val(),
                             Features: that.getFeaturesMap(),
                             ShowBanner: that.$('#showBanners').is(':checked'),
+                            Status: that.$('input[name="Status"]:checked').val(),
                             file1: that.$('#file1').val(),
                             file2: that.$('#file2').val(),
                             file3: that.$('#file3').val(),

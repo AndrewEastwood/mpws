@@ -421,7 +421,7 @@ class products {
 
     public function getNewProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         // var_dump($options);
@@ -470,14 +470,14 @@ class products {
 
     public function getOnSaleProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'DATE(shop_products.DateCreated)';
+        $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-                $_itemsl = array();
+                $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], true);
                 }
@@ -490,8 +490,8 @@ class products {
 
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
-        // $options['sort'] = 'shop_products.DateCreated';
-        // $options['order'] = 'DESC';
+        $options['sort'] = 'shop_products.DateUpdated';
+        $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'ACTIVE';
         $options['_fIsFeatured'] = true;
         // var_dump($options);
@@ -512,6 +512,8 @@ class products {
 
     public function getOffersProducts_List (array $options = array()) {
         global $app;
+        $options['sort'] = 'shop_products.DateUpdated';
+        $options['order'] = 'DESC';
         $options['_fIsOffer'] = true;
         // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);

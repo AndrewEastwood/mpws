@@ -482,8 +482,9 @@ class database {
         // grab other fields
         foreach ($options as $key => $value) {
             $matches = array();
-            if (preg_match("/^_f(\w+)$/", $key, $matches)) {
+            if (preg_match("/^_f([a-zA-Z\._]+)$/", $key, $matches)) {
                 // $matches
+                // echo $key;
                 $field = $matches[1];
                 // parse value
                 $parsedValue = array();
@@ -527,10 +528,14 @@ class database {
         $count = intval($countData["ItemsCount"]);
 
         if (!empty($options)) {
-            if (isset($options['sort']))
-                $dsConfig['order']['field'] = $options['sort'];
-            if (isset($options['order']))
-                $dsConfig['order']['ordering'] = $options['order'];
+
+            if (isset($options['sort']) || isset($options['order'])) {
+                $dsConfig['order'] = array();
+                if (isset($options['sort']))
+                    $dsConfig['order']['field'] = $options['sort'];
+                if (isset($options['order']))
+                    $dsConfig['order']['ordering'] = $options['order'];
+            }
 
             if (isset($options['page']))
                 $page = intval($options['page']);

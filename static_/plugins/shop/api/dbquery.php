@@ -30,10 +30,6 @@ class dbquery {
                 "IsPromo", "IsFeatured", "IsOffer", "ShowBanner", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
-            "order" => array(
-                "field" => "shop_products.DateUpdated",
-                "ordering" => "DESC"
-            ),
             "options" => array(
                 "expandSingleRecord" => true
             )
@@ -58,7 +54,7 @@ class dbquery {
         global $app;
         $config = self::shopGetProductItem();
         $config['condition'] = array();
-        $config["fields"] = array("ID");
+        $config["fields"] = array("ID", "DateUpdated");
         $config['limit'] = 64;
         $config['group'] = 'shop_products.ID';
         $config['additional'] = array(
@@ -158,32 +154,32 @@ class dbquery {
         return $config;
     }
 
-    public static function shopGetLatestProductsList () {
-        $config = self::shopGetProductItem();
-        $config['condition'] = array();
-        $config["fields"] = array("ID");
-        $config['limit'] = 64;
-        $config['group'] = 'shop_products.ID';
-        $config['additional'] = array(
-            "shop_categories" => array(
-                "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
-                "fields" => array("@shop_categories.Status AS CategoryStatus")
-            ),
-            "shop_origins" => array(
-                "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
-                "fields" => array("@shop_origins.Status AS OriginStatus")
-            ),
-            "shop_productFeatures" => array(
-                "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
-                "fields" => array("FeatureID")
-            )
-        );
-        $config['order'] = array(
-            "expr" => "shop_products.Status, shop_products.DateCreated DESC"
-        );
-        unset($config['options']);
-        return $config;
-    }
+    // public static function shopGetLatestProductsList () {
+    //     $config = self::shopGetProductItem();
+    //     $config['condition'] = array();
+    //     $config["fields"] = array("ID");
+    //     $config['limit'] = 64;
+    //     $config['group'] = 'shop_products.ID';
+    //     $config['additional'] = array(
+    //         "shop_categories" => array(
+    //             "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
+    //             "fields" => array("@shop_categories.Status AS CategoryStatus")
+    //         ),
+    //         "shop_origins" => array(
+    //             "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+    //             "fields" => array("@shop_origins.Status AS OriginStatus")
+    //         ),
+    //         "shop_productFeatures" => array(
+    //             "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
+    //             "fields" => array("FeatureID")
+    //         )
+    //     );
+    //     $config['order'] = array(
+    //         "expr" => "shop_products.Status, shop_products.DateCreated DESC"
+    //     );
+    //     unset($config['options']);
+    //     return $config;
+    // }
 
     public static function shopCreateProduct ($data) {
         global $app;

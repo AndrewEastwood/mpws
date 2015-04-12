@@ -25,6 +25,49 @@
         <div class="col-md-6">
             <div class="form-horizontal">
                 <fieldset>
+                    <legend>{{lang.popup_product_section_details_fieldset_Status}}</legend>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="category">{{lang.popup_product_section_details_field_Status}}</label>
+                        <div class="col-md-8">
+                            <div class="btn-group mpws-js-logvalueintoel" data-for=".mpws-js-productstatus" data-toggle="buttons">
+                                <label class="btn btn-success">
+                                    <input type="radio" name="Status" value="ACTIVE" data-dispval="{{lang.product_status_ACTIVE}}" autocomplete="off" checked>
+                                    <i class="fa fa-fw fa-bolt"></i>
+                                </label>
+                                <label class="btn btn-warning">
+                                    <input type="radio" name="Status" value="WAITING" data-dispval="{{lang.product_status_WAITING}}" autocomplete="off">
+                                    <i class="fa fa-fw fa-truck"></i>
+                                </label>
+                                <label class="btn btn-info">
+                                    <input type="radio" name="Status" value="PREORDER" data-dispval="{{lang.product_status_PREORDER}}" autocomplete="off">
+                                    <i class="fa fa-fw fa-phone"></i>
+                                </label>
+                                <label class="btn btn-success">
+                                    <input type="radio" name="Status" value="DISCOUNT" data-dispval="{{lang.product_status_DISCOUNT}}" autocomplete="off">
+                                    <i class="fa fa-fw fa-tag"></i>
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="Status" value="DEFECT" data-dispval="{{lang.product_status_DEFECT}}" autocomplete="off">
+                                    <i class="fa fa-fw fa-tags"></i>
+                                </label>
+                                <label class="btn btn-danger">
+                                    <input type="radio" name="Status" value="ARCHIVED" data-dispval="{{lang.product_status_ARCHIVED}}" autocomplete="off">
+                                    <i class="fa fa-fw fa-archive"></i>
+                                </label>
+                            </div>
+                            <div class="mpws-js-productstatus">{{mpwsGetValueByKey lang key=data.Status prefix="product_status_"}}</div>
+                            <ul class="list-group shop-product-price-stats">
+                                <li class="list-group-item">
+                                    <span class="badge">{{mpwsGetValueByKey lang key=data.Status prefix="product_status_"}}</span>
+                                    {{lang.popup_product_section_details_label_currentStatus}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-horizontal">
+                <fieldset>
                     <legend>{{lang.popup_product_section_details_fieldset_General}}</legend>
                     <!-- Select Basic -->
                     <div class="form-group">

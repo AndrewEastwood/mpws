@@ -437,6 +437,16 @@
                             $forEl.val($forEl.val() + ' ' + $(this).text());
                         }
                     });
+                    _(['click', 'mouseover']).each(function (evType) {
+                        $('body').on(evType, '.btn-group.mpws-js-logvalueintoel', function (event) {
+                            // console.log(evType);
+                            var $btn = evType === 'click' || evType === 'mouseout' ? $(this).find('input:checked') : $(event.target).parents('.btn').find('input'),
+                                $forEl = $($(this).data('for'));
+                            if ($btn.length && $forEl.length) {
+                                $forEl.text($btn.data('dispval') || $btn.val());
+                            }
+                        });
+                    })
                 });
 
             });
