@@ -275,6 +275,7 @@ define([
                 });
             }
             this.$('#tags').tagsinput();
+            this.$('[data-toggle="tooltip"]').tooltip()
 
             var features = this.model.get('Features');
             if (features) {

@@ -437,11 +437,13 @@
                             $forEl.val($forEl.val() + ' ' + $(this).text());
                         }
                     });
-                    _(['click', 'mouseover']).each(function (evType) {
+                    _(['click', 'mouseover', 'mouseout']).each(function (evType) {
                         $('body').on(evType, '.btn-group.mpws-js-logvalueintoel', function (event) {
                             // console.log(evType);
-                            var $btn = evType === 'click' || evType === 'mouseout' ? $(this).find('input:checked') : $(event.target).parents('.btn').find('input'),
+                            var $btn = evType === 'click' || evType === 'mouseout' ? $(this).find('input:checked') : ($(event.target).hasClass('btn') ? $(event.target) : $(event.target).parents('.btn')).find('input'),
                                 $forEl = $($(this).data('for'));
+                            // console.log(event.target);
+                            // console.log($btn);
                             if ($btn.length && $forEl.length) {
                                 $forEl.text($btn.data('dispval') || $btn.val());
                             }
