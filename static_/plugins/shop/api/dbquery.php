@@ -54,7 +54,7 @@ class dbquery {
         global $app;
         $config = self::shopGetProductItem();
         $config['condition'] = array();
-        $config["fields"] = array("ID", "DateUpdated");
+        $config["fields"] = array("ID");
         $config['limit'] = 64;
         $config['group'] = 'shop_products.ID';
         $config['additional'] = array(
@@ -138,8 +138,14 @@ class dbquery {
         }
 
         if (!empty($options['_pSearchText'])) {
-            $config['fields'][] = "@CONCAT(shop_products.Name, ' ', shop_origins.Name, ' ', shop_products.Model) AS DBDisplayName";
-            $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . $options['_pSearchText'] . '%', 'like');
+            if (strlen($options['_pSearchText']) < 5) {
+                return null;
+            }
+            $config['fields'][] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model)) AS DBDisplayName";
+            $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
+            // $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+            // $config['condition']["shop_origins.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+            // $config['condition']["shop_products.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
         }
 
         if (!empty($options['_pStatus'])) {

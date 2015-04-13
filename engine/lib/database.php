@@ -523,7 +523,6 @@ class database {
         }
         // var_dump($configCount);
 
-
         $countData = $this->query($configCount, $useCustomerID);
         $count = intval($countData["ItemsCount"]);
 

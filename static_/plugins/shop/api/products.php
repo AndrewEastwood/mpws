@@ -389,6 +389,8 @@ class products {
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
         global $app;
         $config = dbquery::shopGetProductList($options);
+        if (empty($config))
+            return null;
         $self = $this;
 
         $callbacks = array(
@@ -426,6 +428,8 @@ class products {
         $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         // var_dump($options);
         $config = dbquery::shopGetProductList($options);
+        if (empty($config))
+            return null;
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -443,6 +447,8 @@ class products {
     public function getTopProducts_List (array $options = array()) {
         global $app;
         $config = dbquery::shopStat_PopularProducts();
+        if (empty($config))
+            return null;
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -474,6 +480,8 @@ class products {
         $options['order'] = 'DESC';
         $options['_fshop_products.Status'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
+        if (empty($config))
+            return null;
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -496,6 +504,8 @@ class products {
         $options['_fIsFeatured'] = true;
         // var_dump($options);
         $config = dbquery::shopGetProductList($options);
+        if (empty($config))
+            return null;
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -517,6 +527,8 @@ class products {
         $options['_fIsOffer'] = true;
         // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
+        if (empty($config))
+            return null;
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
