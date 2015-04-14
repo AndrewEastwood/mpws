@@ -27,7 +27,7 @@ class dbquery {
             "source" => "shop_products",
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis",
                 "Description", "Model", "SKU", "Price", "PrevPrice",
-                "IsPromo", "IsFeatured", "IsOffer", "ShowBanner", "Status", "DateUpdated", "DateCreated"),
+                "IsPromo", "IsFeatured", "IsOffer", "ShowBanner", "Status", "SearchText", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "options" => array(
@@ -141,11 +141,7 @@ class dbquery {
             if (strlen($options['_pSearchText']) < 5) {
                 return null;
             }
-            // $config['fields'][] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model)) AS DBDisplayName";
-            // $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
-            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-            // $config['condition']["shop_origins.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-            // $config['condition']["shop_products.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . $options['_pSearchText'] . '%', 'like');
         }
 
         if (!empty($options['_pStatus'])) {

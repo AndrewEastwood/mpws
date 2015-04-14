@@ -392,32 +392,16 @@ class products {
         if (empty($config))
             return null;
         $self = $this;
-
         $callbacks = array(
             "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
                 $_items = array();
                 foreach ($items as $key => $productRawItem) {
-                    $productItem = $self->getProductByID($productRawItem['ID'], $skipRelations);
-                    if (isset($productRawItem['DBDisplayName']))
-                        $productItem['_d'] = $productRawItem['DBDisplayName'];
-                    $_items[] = $productItem;
+                    $_items[] = $self->getProductByID($productRawItem['ID'], $skipRelations);
                 }
                 return $_items;
             }
         );
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
-
-        // $dataList['_category'] = null;
-
-        // if (isset($options['_pStats'])) {
-        //     $filter = array();
-        //     if (isset($options['_fCategoryID'])) {
-        //         $filter['_fCategoryID'] = $options['_fCategoryID'];
-        //         $dataList['_category'] = API::getAPI('shop:categories')->getCategoryByID($options['_fCategoryID']);
-        //     }
-        //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
-        // }
-
         return $dataList;
     }
 
@@ -541,6 +525,10 @@ class products {
         );
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
+    }
+
+    public function getSearchProducts_List ($text) {
+        return API::getAPI('shop:search')->search($text);
     }
 
     // public function getProducts_List_Latest () {
@@ -1589,6 +1577,10 @@ class products {
                     }
                     case 'offers': {
                         $resp = $this->getOffersProducts_List($req->get);
+                        break;
+                    }
+                    case 'search': {
+                        $resp = $this->getSearchProducts_List($req->get['text']);
                         break;
                     }
                 }

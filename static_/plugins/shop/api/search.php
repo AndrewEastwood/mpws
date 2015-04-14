@@ -12,7 +12,16 @@ use ArrayObject;
 
 class search {
 
+    public function get (&$resp, $req) {
+        if (isset($req->get['text'])) {
+            $resp = $this->search($req->get['text']);
+        }
+    }
+
     public function search ($text) {
+        if (empty($text)) {
+            return null;
+        }
         $searchOptions['_pSearchText'] = $text;
         return API::getAPI('shop:products')->getProducts_List($searchOptions);
     }

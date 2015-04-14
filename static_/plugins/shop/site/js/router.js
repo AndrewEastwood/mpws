@@ -192,6 +192,13 @@ define([
             return listProductOffers;
         },
 
+        searchProducts: function (options) {
+            var listProductSearch = new ViewListProducts(_.extend({}, options, {type: 'search'}));
+            listProductSearch.collection.fetch({
+                reset: true
+            });
+            return listProductSearch;
+        },
         // menu items
 
         menuItemCart: function () {
@@ -365,7 +372,6 @@ define([
             return trackingStatus;
         },
 
-
         // utils 
         setActiveAddress: function (addr) {
             this.settings._activeAddress = addr;
@@ -377,7 +383,7 @@ define([
         //         Backbone.history.navigate("", true);
         //         return;
         //     }
-            // require([''], function () {
+            // re quire([''], function () {
         //         // Cache.withObject('ProfileOrders', function (cachedView) {
         //         // debugger;
         //         // remove previous view

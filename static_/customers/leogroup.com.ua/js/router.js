@@ -15,6 +15,7 @@ define([
     'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
     'text!./../hbs/productWishlist.hbs',
+    'text!./../hbs/search.hbs',
     'owl.carousel',
     'bootstrap',
     'icheck'
@@ -27,7 +28,8 @@ define([
      tplCatalogBrowser,
      tplCategoriesRibbon,
      tplProductComparisons,
-     tplProductWishlist) {
+     tplProductWishlist,
+     tplSearch) {
 
         BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DEFAULT] = 'Повідомлення';
         BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_INFO] = 'Повідомлення';
@@ -48,7 +50,8 @@ define([
         '!/cart': 'shopCart',
         '!/wishlist': 'shopWishlist',
         '!/compare': 'shopCompare',
-        '!/tracking/(:id)': 'shopTracking'
+        '!/tracking/(:id)': 'shopTracking',
+        '!/search/:text': 'shopSearch'
         // "!/shop/profile/orders": "shop_profile_orders"
     };
 
@@ -69,6 +72,7 @@ define([
         productWishlist: $(Handlebars.compile(tplProductWishlist)()),
         page404: $(Handlebars.compile(tplPage404)()),
         catalogBrowser: $(Handlebars.compile(tplCatalogBrowser)()),
+        search: $(Handlebars.compile(tplSearch)()),
     };
 
     function getTemplate (key) {
@@ -110,6 +114,7 @@ define([
             productWishlist: getTemplate('productWishlist'),
             page404: getTemplate('page404'),
             catalogBrowser: getTemplate('catalogBrowser'),
+            search: getTemplate('search'),
         },
 
         views: {},
@@ -194,6 +199,19 @@ define([
 
                 // update searchbox categories
                 $('header li.mpws-js-shop-categories-toplist').append(that.views.categorySearchTopLevelList.$el);
+
+                $('body').on('click', 'header a.search-button', function () {
+                    Backbone.history.navigate('!/search/' + $('header input.search-field').val(), true);
+                    return false;
+                });
+
+                $('body').on('keypress', 'header input.search-field', function (event) {
+                    if (event.which === 13) {
+                        Backbone.history.navigate('!/search/' + $('header input.search-field').val(), true);
+                        return false;
+                    }
+                });
+
 
                 // setup recently viewed products
                 if (false) {
@@ -331,7 +349,7 @@ define([
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
             this.updateFooter();
-            console.log('category = ' + category);
+            // console.log('category = ' + category);
             var that = this,
                 $tplCatalogBrowser = this.templates.catalogBrowser(),
                 optionsFeaturedProducts = {limit: 5, _pCategoryExternalKey: category, design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item'}},
@@ -371,6 +389,29 @@ define([
             $tplCatalogBrowser.find('.mpws-js-catalog-infolink-shipping').html(this.plugins.shop.menuItemPopupInfoShipping().$el);
 
             $('section.mpws-js-main-section').html($tplCatalogBrowser);
+        },
+        shopSearch: function (text) {
+            this.updateBreadcrumb('Пошук: ' + text);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+
+            var that = this,
+                $tplSearch = this.templates.search(),
+                optionsSearchProducts = {text: text, design: {className: 'col-xs-12 col-sm-4 no-margin product-item-holder hover'}},
+                searchProducts = this.plugins.shop.searchProducts(optionsSearchProducts),
+                optionsFeaturedProducts = {limit: 10, design: {asList: true, style: 'minimal2', listItemClassName: 'sidebar-product-list-item'}},
+                featuredProducts = this.plugins.shop.featuredProducts(optionsFeaturedProducts);
+            // $('section.mpws-js-main-section').html($('<div>').addClass('grid-list-products').html(searchProducts.$el));
+            $tplSearch.find('.mpws-ja-catalog-products').addClass('product-grid-holder').html(searchProducts.$el);
+
+            $tplSearch.find('.mpws-js-category-featured-products').html(featuredProducts.render().$el);
+            $tplSearch.find('.mpws-js-catalog-infolink-payment').html(this.plugins.shop.menuItemPopupInfoPayment().$el);
+            $tplSearch.find('.mpws-js-catalog-infolink-warranty').html(this.plugins.shop.menuItemPopupInfoWarranty().$el);
+            $tplSearch.find('.mpws-js-catalog-infolink-shipping').html(this.plugins.shop.menuItemPopupInfoShipping().$el);
+            $('section.mpws-js-main-section').html($tplSearch);
+            $('header input.search-field').val(text);
         },
         // todo:
         // show last 3 products only
