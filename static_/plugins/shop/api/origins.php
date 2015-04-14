@@ -156,6 +156,8 @@ class origins {
         $result['errors'] = $errors;
         $result['success'] = $success;
 
+        API::getAPI('shop:products')->updateProductSearchTextByOriginID($OriginID);
+
         return $result;
     }
 

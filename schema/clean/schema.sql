@@ -157,7 +157,7 @@ CREATE TABLE `mpws_tasks` (
   `PrcPath` varchar(300) COLLATE utf8_bin DEFAULT NULL,
   `Params` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
   `PID` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Result` mediumtext COLLATE utf8_bin,
+  `Result` varchar(400) COLLATE utf8_bin DEFAULT NULL,
   `Scheduled` tinyint(1) NOT NULL DEFAULT '0',
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
@@ -543,7 +543,7 @@ CREATE TABLE `shop_productAttributes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
-  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY') COLLATE utf8_bin NOT NULL,
+  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY','BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO','BANNER_TEXT_LINE1','BANNER_TEXT_LINE2','PROMO_TEXT') COLLATE utf8_bin NOT NULL,
   `Value` text COLLATE utf8_bin,
   PRIMARY KEY (`ID`),
   KEY `ProductID` (`ProductID`),
@@ -618,10 +618,13 @@ CREATE TABLE `shop_products` (
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `PrevPrice` decimal(10,2) DEFAULT NULL,
   `IsPromo` tinyint(1) NOT NULL DEFAULT '0',
   `IsOffer` tinyint(1) NOT NULL DEFAULT '0',
   `IsFeatured` tinyint(1) NOT NULL DEFAULT '0',
+  `ShowBanner` tinyint(1) NOT NULL DEFAULT '0',
   `Status` enum('DISCOUNT','ACTIVE','WAITING','PREORDER','DEFECT','ARCHIVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `SearchText` varchar(300) COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -636,15 +639,14 @@ CREATE TABLE `shop_products` (
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=CURRENT_USER*/ /*!50003 TRIGGER `backupProductPrice` BEFORE UPDATE ON `shop_products`
- FOR EACH ROW IF NEW.Price != OLD.Price THEN
-    INSERT INTO shop_productPrices SET CustomerID = NEW.CustomerID, ProductID = NEW.ID, Price = OLD.Price, DateCreated = NOW();
+/*!50003 CREATE*/ /*!50017 DEFINER=CURRENT_USER*/ /*!50003 TRIGGER `backupProductPrice` BEFORE UPDATE ON `shop_products` FOR EACH ROW IF (NEW.PrevPrice != OLD.PrevPrice) THEN
+   	INSERT INTO shop_productPrices SET CustomerID = NEW.CustomerID, ProductID = NEW.ID, Price = OLD.PrevPrice, DateCreated = NOW();
 END IF */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1076,4 +1078,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-06 15:23:31
+-- Dump completed on 2015-04-14  8:54:36

@@ -416,14 +416,39 @@ use PDO;
         */
         protected static function _execute($query, $parameters = array(), $connection_name = self::DEFAULT_CONNECTION) {
             self::_log_query($query, $parameters, $connection_name);
-            $statement = self::$_db[$connection_name]->prepare($query);
-            // echo "/*" . self::get_last_query() . "*/" . PHP_EOL;
-            // var_dump($parameters);
-            self::$_last_statement = $statement;
-            // var_dump($statement);
-            $rez = $statement->execute($parameters);
-            // var_dump($statement->debugDumpParams());
-            // var_dump($rez);
+
+            $useQueryFn = false;
+            $rez = null;
+            foreach ($parameters as $key => $param) {
+                if (!empty($param) && isset($param[0]) && $param[0] === '@' && is_string($param) && strlen($param) > 1) {
+                    $useQueryFn = true;
+                }
+            }
+
+            if ($useQueryFn) {
+                // var_dump(array_fill(0, count($parameters), '?'));
+                // var_dump($parameters);
+                $combQuery = $query;
+                foreach ($parameters as $param) {
+                    if (!empty($param) && isset($param[0]) && $param[0] === '@' && is_string($param) && strlen($param) > 1) {
+                        $combQuery = preg_replace('/\?/', substr($param, 1), $combQuery, 1);
+                    } else {
+                        $combQuery = preg_replace('/\?/', self::$_db[$connection_name]->quote($param), $combQuery, 1);
+                    }
+                }
+                // echo $combQuery;
+                $rez = self::$_db[$connection_name]->query($combQuery);
+                // var_dump($rez);
+            } else {
+                $statement = self::$_db[$connection_name]->prepare($query);
+                // echo "/*" . self::get_last_query() . "*/" . PHP_EOL;
+                // var_dump($parameters);
+                self::$_last_statement = $statement;
+                // var_dump($statement);
+                $rez = $statement->execute($parameters);
+                // var_dump($statement->debugDumpParams());
+                // var_dump($rez);
+            }
             return $rez;
         }
 
@@ -1839,7 +1864,9 @@ use PDO;
          */
         protected function _build_update($options = array()) {
             $query = array();
-            $query[] = "UPDATE {$this->_quote_identifier($this->_table_name)} SET";
+            $query[] = "UPDATE {$this->_quote_identifier($this->_table_name)}";
+            $query[] = $this->_build_join();
+            $query[] = "SET";
 
             $field_list = array();
             foreach ($this->_dirty_fields as $key => $value) {
@@ -1848,6 +1875,7 @@ use PDO;
                 }
                 $field_list[] = "{$this->_quote_identifier($key)} = $value";
             }
+            // var_dump($field_list);
             $query[] = join(", ", $field_list);
             $query[] = $this->_build_where();
             // $query[] = "WHERE";

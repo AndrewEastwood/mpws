@@ -176,6 +176,7 @@ class database {
             foreach ($config['additional'] as $addSource => $addConfig) {
                 if (empty($addConfig['fields']))
                     continue;
+
                 $this->dbo->join($addSource, $addConfig['constraint']);
 
                 if (!empty($addConfig['fields'])) {

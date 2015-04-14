@@ -6,3 +6,9 @@ ALTER TABLE `shop_productAttributes`
 
 ALTER TABLE `shop_products`
   ADD `ShowBanner` BOOLEAN NOT NULL DEFAULT false after `IsFeatured`; 
+
+ALTER TABLE `shop_products` ADD `SearchText` VARCHAR(300) NOT NULL AFTER `Status`;
+
+UPDATE `shop_products`
+LEFT JOIN `shop_origins` ON `shop_products`.`OriginID` = `shop_origins`.`ID`
+SET `SearchText` = LOWER(CONCAT_WS(' ', `shop_products`.`Name`, `shop_origins`.`Name`, `shop_products`.`Model`));

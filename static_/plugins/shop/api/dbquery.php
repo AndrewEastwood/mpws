@@ -141,9 +141,9 @@ class dbquery {
             if (strlen($options['_pSearchText']) < 5) {
                 return null;
             }
-            $config['fields'][] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model)) AS DBDisplayName";
-            $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
-            // $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+            // $config['fields'][] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model)) AS DBDisplayName";
+            // $config['having']["@DBDisplayName"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
+            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
             // $config['condition']["shop_origins.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
             // $config['condition']["shop_products.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
         }
@@ -157,6 +157,41 @@ class dbquery {
         }
 
         // var_dump($config['condition']);
+        return $config;
+    }
+
+    public static function updateProductSearchTextByID ($ProductID) {
+        return self::updateProductSearchText($ProductID, null);
+    }
+
+    public static function updateProductSearchTextByOriginID ($OriginID) {
+        return self::updateProductSearchText(null, $OriginID);
+    }
+
+    public static function updateProductSearchText ($ProductID, $OriginID) {
+        global $app;
+        $data["shop_products.DateUpdated"] = $app->getDB()->getDate();
+        $data["SearchText"] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model))";
+
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "shop_products",
+            "action" => "update",
+            "data" => $data,
+            "options" => null
+        ));
+        $config['additional'] = array(
+            "shop_origins" => array(
+                "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+                "fields" => array('ID')
+            )
+        );
+        if (isset($ProductID)) {
+            $config['condition']["shop_products.ID"] = $app->getDB()->createCondition($ProductID);
+        }
+        if (isset($OriginID)) {
+            $config['condition']["shop_products.OriginID"] = $app->getDB()->createCondition($OriginID);
+        }
+        // var_dump($config);
         return $config;
     }
 

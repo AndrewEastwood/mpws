@@ -804,10 +804,13 @@ class products {
         else
             $errors = $validatedDataObj["errors"];
 
-        if ($success && !empty($ProductID))
+        if ($success && !empty($ProductID)) {
             $result = $this->getProductByID($ProductID);
+        }
         $result['errors'] = $errors;
         $result['success'] = $success;
+
+        $this->updateProductSearchTextByID($ProductID);
 
         return $result;
     }
@@ -1258,6 +1261,8 @@ class products {
         $result['errors'] = $errors;
         $result['success'] = $success;
 
+        $this->updateProductSearchTextByID($ProductID);
+
         return $result;
     }
 
@@ -1346,6 +1351,58 @@ class products {
             // var_dump($category);
         }
         $result['errors'] = $errors;
+        return $result;
+    }
+
+    public function updateProductSearchTextByID ($productID) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::updateProductSearchTextByID($productID);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function updateProductSearchTextByOriginID ($originID) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::updateProductSearchTextByOriginID($originID);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
         return $result;
     }
 
