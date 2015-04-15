@@ -157,7 +157,7 @@ CREATE TABLE `mpws_tasks` (
   `PrcPath` varchar(300) COLLATE utf8_bin DEFAULT NULL,
   `Params` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
   `PID` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Result` varchar(400) COLLATE utf8_bin DEFAULT NULL,
+  `Result` mediumtext COLLATE utf8_bin,
   `Scheduled` tinyint(1) NOT NULL DEFAULT '0',
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
@@ -645,8 +645,9 @@ CREATE TABLE `shop_products` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=CURRENT_USER*/ /*!50003 TRIGGER `backupProductPrice` BEFORE UPDATE ON `shop_products` FOR EACH ROW IF (NEW.PrevPrice != OLD.PrevPrice) THEN
-   	INSERT INTO shop_productPrices SET CustomerID = NEW.CustomerID, ProductID = NEW.ID, Price = OLD.PrevPrice, DateCreated = NOW();
+/*!50003 CREATE*/ /*!50017 DEFINER=CURRENT_USER*/ /*!50003 TRIGGER `backupProductPrevPrice` BEFORE UPDATE ON `shop_products`
+ FOR EACH ROW IF NEW.PrevPrice != OLD.PrevPrice THEN
+    INSERT INTO shop_productPrices SET CustomerID = NEW.CustomerID, ProductID = NEW.ID, Price = OLD.PrevPrice, DateCreated = NOW();
 END IF */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -736,6 +737,7 @@ CREATE TABLE `shop_settingsAddress` (
   `AddressLine1` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine2` varchar(200) COLLATE utf8_bin NOT NULL,
   `AddressLine3` varchar(200) COLLATE utf8_bin NOT NULL,
+  `EmailSupport` varchar(200) COLLATE utf8_bin NOT NULL,
   `MapUrl` varchar(255) COLLATE utf8_bin NOT NULL,
   `SocialFacebook` varchar(150) COLLATE utf8_bin NOT NULL,
   `SocialTwitter` varchar(150) COLLATE utf8_bin NOT NULL,
@@ -1068,6 +1070,33 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `searchProducts` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=CURRENT_USER PROCEDURE `searchProducts`(IN `searchText` TEXT, IN `cid` INT)
+BEGIN
+SELECT shop_products.ID, `shop_products`.`CustomerID`, CONCAT(shop_products.Name, ' ', shop_origins.Name, ' ', shop_products.Model) AS DBDisplayName
+FROM `shop_products`
+JOIN `shop_categories` ON `shop_products`.`CategoryID` = `shop_categories`.`ID`
+JOIN `shop_origins` ON `shop_products`.`OriginID` = `shop_origins`.`ID`
+JOIN `shop_productFeatures` ON `shop_products`.`ID` = `shop_productFeatures`.`ProductID`
+GROUP BY shop_products.ID
+HAVING `shop_products`.`CustomerID` = @cid AND `DBDisplayName` LIKE CONCAT('%', @searchText, '%')
+ORDER BY shop_products.DateUpdated DESC,
+         shop_products.Status LIMIT 64;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1078,4 +1107,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-14  8:54:36
+-- Dump completed on 2015-04-16  0:43:12

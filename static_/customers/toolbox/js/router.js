@@ -145,19 +145,21 @@ define([
                 if (_.isFunction(that[routeFn])) {
                     return that[routeFn].apply(that, params);
                 }
-                var contentItems = [];
-                _(that.plugins).each(function (plg) {
-                    if (_.isFunction(plg[routeFn])) {
-                        var view = plg[routeFn].apply(plg, params);
-                        if (view && view.render) {
-                            contentItems.push(view.render().$el);
+                if (Auth.getUserID()) {
+                    var contentItems = [];
+                    _(that.plugins).each(function (plg) {
+                        if (_.isFunction(plg[routeFn])) {
+                            var view = plg[routeFn].apply(plg, params);
+                            if (view && view.render) {
+                                contentItems.push(view.render().$el);
+                            }
                         }
+                    });
+                    if (contentItems.length) {
+                        $('section.mpws-js-main-section').empty().append(contentItems);
+                    } else {
+                        Backbone.history.navigate('!/', true);
                     }
-                });
-                if (contentItems.length) {
-                    $('section.mpws-js-main-section').empty().append(contentItems);
-                } else {
-                    Backbone.history.navigate('!/', true);
                 }
             });
 

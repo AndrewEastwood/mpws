@@ -462,7 +462,9 @@ class products {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = 'DISCOUNT';
+        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fshop_products.Price'] = 'PrevPrice:>';
+        // $options['_fshop_products.Status'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
         if (empty($config))
             return null;
@@ -509,6 +511,7 @@ class products {
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
         $options['_fIsOffer'] = true;
+        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
         if (empty($config))
@@ -530,23 +533,6 @@ class products {
     public function getSearchProducts_List ($text) {
         return API::getAPI('shop:search')->search($text);
     }
-
-    // public function getProducts_List_Latest () {
-    //     global $app;
-    //     $config = dbquery::shopGetLatestProductsList();
-    //     $self = $this;
-    //     $callbacks = array(
-    //         "parse" => function ($items) use($self) {
-    //             $_items = array();
-    //             foreach ($items as $key => $orderRawItem) {
-    //                 $_items[] = $self->getProductByID($orderRawItem['ID'], true);
-    //             }
-    //             return $_items;
-    //         }
-    //     );
-    //     $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
-    //     return $dataList;
-    // }
 
     public function createProduct ($reqData) {
         global $app;

@@ -488,6 +488,32 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
     #top-megamenu-nav {
         margin-top: 0;
     }
+    .dropdown-menu {
+        min-height: 260px;
+        overflow: hidden;
+        div.row {
+            // padding-right: 100px;
+            position: relative;
+            .shop-category-block {
+                z-index: 9999;
+                position: relative;
+            }
+            div.dropdown-banner-holder {
+                right: 10%;
+                top: -25%;
+                left: -10%;
+                .category-image {
+                    opacity: 0.3;
+                    z-index: 1;
+                    height: 250%;
+                    width: 250%;
+                    max-width: 250%;
+                    -webkit-filter: blur(5px);
+                    filter: blur(80px);
+                }
+            }
+        }
+    }
 }
 
 .modal.in .modal-dialog {
@@ -495,6 +521,9 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
 }
 
 .shop-catalog-navigator {
+    .menu-item .caret {
+        display: none;
+    }
     .dropdown-menu {
         .catalog-title {
             padding: 0px 15px 5px;

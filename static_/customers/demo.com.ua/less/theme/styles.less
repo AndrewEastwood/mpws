@@ -1,0 +1,266 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*------------------------------------------------------------------
+[Table of contents]
+1. Clearfix
+2. Preloader
+3. Typography
+4. Headings
+5. Main Nav
+6. Main Content
+7. Column Grid
+8. Google Maps
+9. Icons
+10. Image Hover
+11. Lists
+12. Footer
+13. Social
+14. Isotope
+-------------------------------------------------------------------*/
+
+
+/* =1. Clearfix
+--------------------------------------------------------------------------------------------------------*/
+.clear { clear: both; }
+.clearfix:after { content: "."; display:block; height:0; clear:both; visibility:hidden; }/* ----- clear fix for floats ----- */
+.clearfix { display:inline-block; }
+* html .clearfix { height:1%; }/* hides clearfix from IE-mac */
+.clearfix { display:block; }/* end hide from IE-mac */
+.alignleft { float:left; }
+.alignright { float:right; }
+.aligncenter { margin:auto; display:block; }
+.alignnone { clear:both; font-size:0; line-height:0; margin:0; padding:0; border:0; height:0; width:0; }
+.centered { text-align:center; }
+/* End Clearfix
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =2. Preloader
+--------------------------------------------------------------------------------------------------------*/
+#preloader { position:absolute; top:0; left:0; right:0; bottom:0; background:#000; z-index:9999; }
+#status { z-index:28; position:absolute; color:#fff; top:50%; height:280px; width:100%; margin-top:-140px; }
+/* horizontal centering */
+.parent {width:280px; margin:0px auto; position:relative; height:280px; z-index:11}
+.child {text-align:center;}
+/* vertical centering */
+.parent {display: table}
+.child {display: table-cell; vertical-align: middle; padding:0 50px; }
+.child span { text-transform:uppercase; }
+/* End Preloader
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =3. Typography
+--------------------------------------------------------------------------------------------------------*/
+html {overflow: -moz-scrollbars-vertical; overflow-y: scroll; -webkit-font-smoothing: antialiased; height:100% }
+body { font: 15px Georgia, "Times New Roman", Times, serif; color:#555; background:#000; height:100%  }
+strong { font-weight:600; }
+em {font-size:17px; }
+a, a > * {-webkit-transition: all 0.2s ease 0s; -moz-transition: all 0.2s ease 0s; -o-transition: all 0.2s ease 0s; transition: all 0.2s ease 0s; }
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0; margin: 0; }
+p { line-height:21px; padding:13px 0px 0 0px; font-style:italic; }
+.col2-3 p { text-align:left } 
+/* update 1.3 */ .col2-3 .small, .col2-3 .big {text-align:center !important; }
+/* update 1.3 */ .small {font-size:12px; line-height:21px; font-style:normal; text-transform:uppercase; font-family:'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;}
+#preloader p.small {font-size:11px; display:block; text-transform:uppercase; font-style:normal; font-weight:700;  letter-spacing:1px; margin-top:3px; font-family: "Open Sans", Arial, Helvetica, sans-serif; -o-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); -moz-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); -webkit-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); text-shadow:1px 1px 0px rgba(0, 0, 0, 0.25);}
+p.big {font-size:50px; line-height:68px; color:#303030; letter-spacing:-3px; font-style:normal;  font-weight:400}
+blockquote { line-height:23px; padding:70px 10px 25px 10px; margin:25px 0px 12px 0px; border-bottom:1px solid #d3d3d3; border-top:1px solid #d3d3d3; color:#333; text-align:center; font-size:17px; font-style:italic; background:url(http://ppp-templates.de/bc/images/bg-quote.png) center 25px no-repeat; background-size:30px 30px;}
+blockquote span {font-size:14px; display:block; margin-top:15px; color:#999}
+/* update 1.3 */ blockquote.no-border {border:0; padding-top:48px; background:url(http://ppp-templates.de/bc/images/bg-quote.png) center top no-repeat; margin-top:15px; }
+.uppercase {text-transform:uppercase }
+p.small.uppercase {font-size:11px; }
+p a { color:#555; text-decoration:none; border-bottom:1px solid #555; }
+a p {color:#555; }
+p a:hover { color:#555; }
+.no-underline a {border:0 }
+code {font:13px 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif; font-style:normal; line-height:1.5; display:block; }
+pre { padding:13px 40px 0 40px; }
+span.arrow {font:13px 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif; }
+/* End Typography
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =4. Headings
+--------------------------------------------------------------------------------------------------------*/
+h1#logo { position:relative; text-align:center; width:280px; padding:45px 0 15px 0; margin:0 auto; z-index:1; }
+h1#logo a { display:inline-block; background:url(http://ppp-templates.de/bc/images/bg-logo.png) no-repeat; background-size:137px 76px; width:137px; height:76px; text-indent:-9999px; }
+.hentry h1, h2, h3, h4, h5 { line-height:1.2; font-family: Georgia, "Times New Roman", Times, serif; font-size:36px; color:#303030; padding-top:26px; display:block; position:relative }
+h2 {font-size:16px; text-transform:uppercase; font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif; font-weight:600; color:#555; }
+h3 {font-size:24px; font-weight:400; padding-top:18px; }
+h4 {font-size:18px; padding-top:24px; line-height:24px; font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif; text-transform:uppercase; letter-spacing:2px; font-weight:600; color:#333; /*padding-bottom:4px;*/}
+h5 {font-size:16px; padding-top:22px; line-height:24px; font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif; text-transform:uppercase; letter-spacing:2px; font-weight:600; color:#333; padding-bottom:4px; }
+.align-top {padding-top:0 !important }
+/* End Headings
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =5. Main Nav
+--------------------------------------------------------------------------------------------------------*/
+#options { width:auto; /*height:100px;*/ z-index:300; text-align:center; white-space: nowrap;}
+#options ul { position:relative; padding:0; border:0; font-size: 0; display:inline-block }
+#options ul li {display:inline-block; height:100%; width:auto; }
+#options ul li a { color:#888; font-family: "Open Sans", Arial, Helvetica, sans-serif; display:inline-block; padding:5px 15px; text-decoration:none; text-transform:uppercase; height:100%; font-size:12px; line-height:19px; letter-spacing:2px; font-weight:400; margin:0 }
+#options li a:hover, #options li a.current, #options li a.selected { color:#fff;}
+.dead-link {cursor:default !important }
+/* End Main Nav
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =6. Main Content
+--------------------------------------------------------------------------------------------------------*/
+header { position:relative; z-index:55; width:100%}
+#content {width:100%; position:relative; z-index:56; height:auto}
+.container { padding:0px; width:1160px; position:relative; margin:0 auto; padding-top:30px; }
+/* =End Main Content
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =7. Column Grid
+--------------------------------------------------------------------------------------------------------*/
+.col3-3 { width:860px; height:570px; margin:5px; position:relative }
+.col1-3 { width:280px; height:280px; margin:5px; float:left; position:relative }
+.col2-3 { width:570px; height:570px; margin:5px; float:left; position:relative }
+/* update 1.3 */ .col4-3 {width:1150px; height:auto; margin:5px; float:left; position:relative }
+.col1-3.double { height:570px; }
+.col2-3.auto, .col1-3.auto, .col3-3.auto {height:auto; padding-bottom:35px; }
+.col1-3.auto {padding-bottom:30px; }
+.col2-3.auto.post {padding-bottom:0 }
+.auto.no-padding {padding-top:0 !important; padding-bottom:0 !important; }
+.column-count2 {-webkit-column-count:2; -moz-column-count:2; column-count:2; -webkit-column-gap:35px; -moz-column-gap:35px; column-gap:35px; }
+.break { height:20px; position:relative; display:block }
+p .break {height:13px; }
+.overflow, .element {overflow:hidden; }
+.borderline {background:#d3d3d3; height:1px; position:relative; display:block; margin:19px 0px 5px 0px; width:100%; }
+.white {padding:35px; background:#fff; text-align:center}
+.col1-3.white {padding:20px 35px 50px 35px !important; }
+/* update 1.3 */ .col2-3.white, .col3-3.white {padding:25px 45px 35px 45px; }
+.element .col1-3, .element .col2-3 {margin:0 }
+.white-bottom {height:auto; }
+.white-bottom:before {content:''; height:0; width:0; border-width:12px 12px 12px 12px; border-style:solid; border-color:rgba(251,251,251,0) rgba(255,255,255,0)  rgba(255,255,255,1) rgba(255,255,255,0); position:absolute; top:-24px; margin-left:-12px; left:50%; border-top-style:inset; }
+.margin {margin:20px; }
+.full {position:absolute; z-index:100; width:100%; height:100%; display:block; top:0; left:0; }
+/* =End Main Content
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =8. Google Maps
+--------------------------------------------------------------------------------------------------------*/
+#map {width:860px; height:570px; margin:0; border:0}
+#map:before, #map:after {background:none; content: ''; left:0; position:absolute; top: 0; width: 100%; }
+#map:after {bottom:0; top:auto; }
+/* End Google Maps
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =9. Icons
+--------------------------------------------------------------------------------------------------------*/
+.icons { display:inline-block; height:30px; width:30px; z-index:100; margin-top:20px; margin-bottom:10px; }
+/* Main Icons */
+.trophy { background:url(http://ppp-templates.de/bc/images/bg-trophy.png) center no-repeat; background-size:30px 30px; }
+.quote { background:url(http://ppp-templates.de/bc/images/bg-quote.png) center no-repeat; background-size:30px 30px; }
+.like { background:url(http://ppp-templates.de/bc/images/bg-like.png) center no-repeat; background-size:30px 30px; }
+.share { background:url(http://ppp-templates.de/bc/images/bg-share.png) center no-repeat; background-size:30px 30px; }
+.stationery { background:url(http://ppp-templates.de/bc/images/bg-stationery.png) center no-repeat; background-size:30px 30px; }
+.camera {background:url(http://ppp-templates.de/bc/images/bg-camera.png) center no-repeat; background-size:30px 30px; }
+.books {background:url(http://ppp-templates.de/bc/images/bg-books.png) center no-repeat; background-size:30px 30px; }
+.network {background:url(http://ppp-templates.de/bc/images/bg-network.png) center no-repeat; background-size:30px 30px; }
+.tape {background:url(http://ppp-templates.de/bc/images/bg-tape.png) center no-repeat; background-size:30px 30px; }
+.recorder {background:url(http://ppp-templates.de/bc/images/bg-recorder.png) center no-repeat; background-size:30px 30px; }
+.oldradio {background:url(http://ppp-templates.de/bc/images/bg-oldradio.png) center no-repeat; background-size:30px 30px; }
+.microphone1 {background:url(http://ppp-templates.de/bc/images/bg-microphone1.png) center no-repeat; background-size:30px 30px; }
+.microphone2 {background:url(http://ppp-templates.de/bc/images/bg-microphone2.png) center no-repeat; background-size:30px 30px; }
+.microphone3 {background:url(http://ppp-templates.de/bc/images/bg-microphone3.png) center no-repeat; background-size:30px 30px; }
+.headphone1 {background:url(http://ppp-templates.de/bc/images/bg-headphone1.png) center no-repeat; background-size:30px 30px; }
+.headphone2 {background:url(http://ppp-templates.de/bc/images/bg-headphone2.png) center no-repeat; background-size:30px 30px; }
+.record {background:url(http://ppp-templates.de/bc/images/bg-record.png) center no-repeat; background-size:30px 30px; }
+.gramophone {background:url(http://ppp-templates.de/bc/images/bg-gramophone.png) center no-repeat; background-size:30px 30px; }
+.videocam {background:url(http://ppp-templates.de/bc/images/bg-videocam.png) center no-repeat; background-size:30px 30px; }
+.television {background:url(http://ppp-templates.de/bc/images/bg-television.png) center no-repeat; background-size:30px 30px; }
+.player {background:url(http://ppp-templates.de/bc/images/bg-player.png) center no-repeat; background-size:30px 30px; }
+.playmovie {background:url(http://ppp-templates.de/bc/images/bg-playmovie.png) center no-repeat; background-size:30px 30px; }
+.film {background:url(http://ppp-templates.de/bc/images/bg-film.png) center no-repeat; background-size:30px 30px; }
+.dvd {background:url(http://ppp-templates.de/bc/images/bg-dvd.png) center no-repeat; background-size:30px 30px; }
+.photograph {background:url(http://ppp-templates.de/bc/images/bg-photograph.png) center no-repeat; background-size:30px 30px; }
+.polaroid {background:url(http://ppp-templates.de/bc/images/bg-polaroid.png) center no-repeat; background-size:30px 30px; }
+.photos {background:url(http://ppp-templates.de/bc/images/bg-photos.png) center no-repeat; background-size:30px 30px; }
+.frame {background:url(http://ppp-templates.de/bc/images/bg-frame.png) center no-repeat; background-size:30px 30px; }
+.film2 {background:url(http://ppp-templates.de/bc/images/bg-film2.png) center no-repeat; background-size:30px 30px; }
+.camera2 {background:url(http://ppp-templates.de/bc/images/bg-camera2.png) center no-repeat; background-size:30px 30px; }
+.scissor {background:url(http://ppp-templates.de/bc/images/bg-scissor.png) center no-repeat; background-size:30px 30px; }
+.edit {background:url(http://ppp-templates.de/bc/images/bg-edit.png) center no-repeat; background-size:30px 30px; }
+.select {background:url(http://ppp-templates.de/bc/images/bg-select.png) center no-repeat; background-size:30px 30px; }
+.walkman {background:url(http://ppp-templates.de/bc/images/bg-walkman.png) center no-repeat; background-size:30px 30px; }
+.close { background:url(http://ppp-templates.de/bc/images/bg-close.png) center no-repeat; background-size:48px 48px; position:absolute; right:35px; top:35px; z-index:28; width:48px; height:48px; display:block }
+/* Social Icons */
+.linkedin {background:url(http://ppp-templates.de/bc/images/bg-linkedin.png) center no-repeat; background-size:50px 50px; }
+.dribbble {background:url(http://ppp-templates.de/bc/images/bg-dribbble.png) center no-repeat; background-size:50px 51px; }
+.googleplus {background:url(http://ppp-templates.de/bc/images/bg-googleplus.png) center no-repeat; background-size:50px 50px; }
+.twitter {background:url(http://ppp-templates.de/bc/images/bg-twitter.png) center no-repeat; background-size:50px 51px; } 
+.facebook {background:url(http://ppp-templates.de/bc/images/bg-facebook.png) center no-repeat; background-size:50px 51px; }
+.behance {background:url(http://ppp-templates.de/bc/images/bg-behance.png) center no-repeat; background-size:50px 50px; }
+.skype {background:url(http://ppp-templates.de/bc/images/bg-skype.png) center no-repeat; background-size:50px 51px; }
+.vimeo {background:url(http://ppp-templates.de/bc/images/bg-vimeo.png) center no-repeat; background-size:50px 50px; }
+/* End Icons
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =10. Image Hover
+--------------------------------------------------------------------------------------------------------*/
+.images { display:block; position:relative; }
+.images img {width:100%; display: block; max-width: 100% !important; z-index:9 }
+img{box-shadow: #000 0 0 0}
+.sliphoveritemTitle { font-size:24px; font-weight:400; letter-spacing:0px; -o-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); -moz-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); -webkit-text-shadow:-1px -1px 0px rgba(0, 0, 0, 0.25); text-shadow:1px 1px 0px rgba(0, 0, 0, 0.25); font-family:Georgia, "Times New Roman", Times, serif;  }
+.sliphoveritemTitle span {font-size:11px; display:block; text-transform:uppercase; font-style:normal; font-weight:700; letter-spacing:1px; margin-top:3px; font-family: "Open Sans", Arial, Helvetica, sans-serif; }
+/* End Image Hover
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =11. Lists
+--------------------------------------------------------------------------------------------------------*/
+ul.unordered-list, .hentry ul { list-style: disc; line-height:21px; padding:13px 0px 0 0px; margin-left:24px; font-style:italic }
+ul.list {line-height:21px; padding-top:13px; font-style:italic }
+ol { list-style: decimal; line-height:21px; padding:13px 0px 0 0px; margin-left:24px; font-style:italic }
+.col2-3 ul.unordered-list, .col2-3 .hentry ul, .col2-3 ul.list, .col2-3 ol {text-align:left }
+ul.unordered-list a, .hentry ul a, ul.list a, ol a { color:#555; text-decoration:none; border-bottom:1px solid #555; }
+/* =End Lists
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =12. Footer
+--------------------------------------------------------------------------------------------------------*/
+footer { height:auto; position:relative; padding:0px 35px 95px 35px; text-align:center; }
+footer p {display:inline-block; margin:0 10px; font-family: "Open Sans", Arial, Helvetica, sans-serif; font-size:14px; letter-spacing:2px; font-style:normal; text-transform:uppercase; color:#888; }
+footer p a { color:#888; border:0 }
+footer p span { font-family:Georgia, "Times New Roman", Times, serif; text-transform:none; letter-spacing:0; color:#333; font-style:italic }
+footer p a:hover { color:#888; }
+/* End Footer
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =13. Social
+--------------------------------------------------------------------------------------------------------*/
+ul.social { letter-spacing:0; margin-top:20px; margin-bottom:30px; }
+.social li { display:inline-block; margin:0px 2px;}
+.social li a { display:block; }
+ul.social a {text-indent:-9000px; text-decoration:none; height:52px; width:52px;}
+/* End Social
+--------------------------------------------------------------------------------------------------------*/
+
+
+/* =14. Isotope
+--------------------------------------------------------------------------------------------------------*/
+.isotope-item { z-index: 2; overflow:hidden }
+.isotope-hidden.isotope-item { pointer-events: none; z-index: 1; }
+/**** Isotope CSS3 transitions ****/
+.isotope, .isotope .isotope-item { -webkit-transition-duration: 0.4s; -moz-transition-duration: 0.4s; -ms-transition-duration: 0.4s; -o-transition-duration: 0.4s; transition-duration: 0.4s; }
+.isotope { -webkit-transition-property: height, width; -moz-transition-property: height, width; -ms-transition-property: height, width; -o-transition-property: height, width; transition-property: height, width; }
+.isotope .isotope-item { -webkit-transition-property: -webkit-transform, opacity; -moz-transition-property:    -moz-transform, opacity; -ms-transition-property:     -ms-transform, opacity; -o-transition-property:         top, left, opacity; transition-property:         transform, opacity; }
+/**** disabling Isotope CSS3 transitions ****/
+.isotope.no-transition, .isotope.no-transition .isotope-item, .isotope .isotope-item.no-transition { -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -ms-transition-duration: 0s; -o-transition-duration: 0s; transition-duration: 0s; }
+/* End: Recommended Isotope styles */
+
+/* disable CSS transitions for containers with infinite scrolling*/
+.isotope.infinite-scrolling { -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none; transition: none; }
+/* End Isotope
+--------------------------------------------------------------------------------------------------------*/

@@ -57,6 +57,7 @@
     "odometer": "~0.4.7",
     "iCheck": "~1.0.2",
     "routefilter": "~0.2.1",
-    "seiyria-bootstrap-slider": "~4.7.4"
+    "seiyria-bootstrap-slider": "~4.7.4",
+    "isotope": "~2.2.0"
   }
 }

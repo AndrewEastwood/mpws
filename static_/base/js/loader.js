@@ -59,6 +59,7 @@ require.config({
         'odometer': 'vendors/odometer/odometer',
         'icheck': 'vendors/iCheck/icheck',
         'routefilter': 'vendors/routefilter/dist/backbone.routefilter',
+        'isotope': 'vendors/isotope/dist/isotope.pkgd',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
@@ -174,6 +175,9 @@ require.config({
         },
         'bootstrap-wysihtml5': {
             deps: ['wysihtml5']
+        },
+        'isotope': {
+            deps: ['jquery']
         }
     },
     waitSeconds: 30,

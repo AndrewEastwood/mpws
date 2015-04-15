@@ -312,8 +312,9 @@ class categories {
         $config = dbquery::shopCatalogTree($selectedCategoryID);
         $categories = $app->getDB()->query($config);
         $map = array();
-        foreach ($categories as $key => $value)
-            $map[$value['ID']] = $this->__adjustCategory($value);
+        if (!empty($categories))
+            foreach ($categories as $key => $value)
+                $map[$value['ID']] = $this->__adjustCategory($value);
 
         $tree = getTree($map);
 
