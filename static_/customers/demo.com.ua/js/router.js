@@ -60,6 +60,7 @@ define([
             caption: 'alt'
         });
         var iso = new Isotope($container.get(0) , defaultOptions);
+        window.c_iso = iso;
     }
 
 
@@ -81,6 +82,8 @@ define([
 
         views: {},
 
+        address: {},
+
         initialize: function () {
             var that = this;
             this.on('app:ready', function () {
@@ -97,8 +100,28 @@ define([
                 var optionsCategoryMenu = {design: {className: 'nav navbar-nav'}};
                 that.views.categoryHomeMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
 
+                that.address = that.plugins.shop.widgetAddresses();
+
+                $('.mpws-js-info-shipping').text(that.address.getInfoShipping());
+                $('.mpws-js-info-payment').text(that.address.getInfoPayment());
+                $('.mpws-js-info-warranty').text(that.address.getInfoWarranty());
+                $('.mpws-js-info-contacts').html(that.address.render().$el);
+
+                // footer
+                $('a.mpws-js-link-social-twitter').attr('href', that.address.getSocialLinks().twitter);
+                $('a.mpws-js-link-social-facebook').attr('href', that.address.getSocialLinks().facebook);
+                $('a.mpws-js-link-social-googleplus').attr('href', that.address.getSocialLinks().googleplus);
+
+                $('.mpws-js-addressline-footer').html(that.address.getInfoAddressLine(true));
+                $('.mpws-js-copyright').html(that.address.getCopyright());
+
+                // widgets
+
 
                 $('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
+                $('.mpws-js-widget-cart').html(that.plugins.shop.cart().$el);
+
+
             });
         },
 

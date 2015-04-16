@@ -48,6 +48,55 @@ define([
         changeUserAddress: function (event) {
             Cache.set('userAddrID', $(event.target).parents('li').data('ref'));
             this.render();
+        },
+        getInfoPayment: function () {
+            var addr = WidgetAddress.getActiveAddress();
+            return addr && addr.InfoPayment || '';
+        },
+        getInfoShipping: function () {
+            var addr = WidgetAddress.getActiveAddress();
+            return addr && addr.InfoShipping || '';
+        },
+        getInfoWarranty: function () {
+            var addr = WidgetAddress.getActiveAddress();
+            return addr && addr.InfoWarranty || '';
+        },
+        getInfoAddressLine: function (asHtml) {
+            var addr = WidgetAddress.getActiveAddress(),
+                addrLine = $('<span>');
+            if (addr) {
+                addrLine.append($('<span>').text((addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3) + ','));
+                addrLine.append($('<span>').text(addr.City));
+                addrLine.append('&nbsp;');
+                addrLine.append($('<span>').text(addr.PhoneHotline || addr.Phone1Value
+                    || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value));
+                addrLine.append('&nbsp;');
+                addrLine.append($('<a>').attr('href', 'mailto:' + addr.EmailSupport).text(addr.EmailSupport));
+            }
+            if (asHtml) {
+                return addrLine;
+            }
+            return addrLine.text();
+        },
+        getCopyright: function () {
+            var addr = WidgetAddress.getActiveAddress(),
+                cp = '&copy; ' + new Date().getFullYear();
+            if (addr) {
+                cp += ' ,' + addr.ShopName;
+            }
+            return cp;
+        },
+        getSocialLinks: function () {
+            var addr = WidgetAddress.getActiveAddress(),
+                links = {};
+            if (addr) {
+                _(addr).each(function (v, k) {
+                    if (/^Social/.test(k)) {
+                        links[k.match(/^Social(.*)/)[1].toLowerCase()] = v;
+                    }
+                });
+            }
+            return links;
         }
     }, {
         setActiveAddressID: function (activeID) {

@@ -18,6 +18,10 @@ body {
     background: url('@{imgPath}bg.jpg') repeat;
 }
 
+h1#logo a {
+    background: none;
+}
+
 #options ul li a {
     color: #D7D7D7;
     .fa {
@@ -35,6 +39,25 @@ body {
         text-align: center;
         a {
             padding: 0px;
+        }
+    }
+}
+
+.element p {
+    word-break: break-all;
+}
+
+footer ul.social a {
+    text-indent: 0;
+    color: #fff;
+    border: 1px solid #fff;
+    display: inline-block;
+    border-radius: 2em;
+    padding: 10px 6px;
+    &:hover {
+        background-color: #fff;
+        .fa {
+            color: #A57350;
         }
     }
 }

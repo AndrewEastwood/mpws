@@ -275,7 +275,7 @@ define([
                 });
             }
             this.$('#tags').tagsinput();
-            this.$('[data-toggle="tooltip"]').tooltip()
+            this.$('[data-toggle="tooltip"]').tooltip();
 
             var features = this.model.get('Features');
             if (features) {
@@ -308,10 +308,7 @@ define([
                 selector: '.temp-upload-image'
             });
             logoUpload.render();
-
-
             // this.setupFileUploadItem(this.$('.temp-upload-image'));
-
             return this;
         },
         getFeaturesMap: function () {

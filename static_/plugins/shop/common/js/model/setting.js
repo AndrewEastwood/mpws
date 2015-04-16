@@ -10,7 +10,7 @@ define([
         idAttribute: 'ID',
         url: function () {
             var options = {type: this.getType() || null};
-            return APP.getApiLink('shop', 'settings', options);
+            return APP.getApiLink('shop', 'settings', this.id, options);
         },
         getType: function () {
             var type = null;

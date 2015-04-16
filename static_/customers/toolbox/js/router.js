@@ -103,6 +103,9 @@ define([
         },
 
         signin: function () {
+            if (Auth.getUserID()) {
+                return false;
+            }
             var signin = this.plugins.system.signin();
             $('section.mpws-js-main-section').html(signin.render().$el);
         },
@@ -190,7 +193,7 @@ define([
                 }
                 var customerSwitcher = this.plugins.system.widgetCustomerSwitcher();
                 if (customerSwitcher) {
-                    $('.mpws-js-top-menu-right').html(customerSwitcher.render().$el);
+                    $('.mpws-js-top-menu-right').prepend(customerSwitcher.render().$el);
                 }
             } else {
                 $('.mpws-js-top-menu-right').empty();

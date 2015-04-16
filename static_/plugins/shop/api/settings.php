@@ -284,7 +284,7 @@ class settings {
                         throw new Exception("AddressLimitReached", 1);
                     }
                     $dataRules = array(
-                        'ShopName' => array('string', 'defaultValueIfUnset' => 'noname shop'),
+                        'ShopName' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => 'NoName'),
                         'Country' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'City' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
                         'AddressLine1' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
@@ -652,8 +652,8 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            if (isset($req->data['ID']) && is_numeric($req->data['ID'])) {
-                $settingID = intval($req->data['ID']);
+            if (isset($req->get['params']) && is_numeric($req->get['params'])) {
+                $settingID = intval($req->get['params']);
                 $resp = $this->createOrUpdateSetting($typeObj->type, $req->data, $settingID);
             } else {
                 $resp['error'] = "WrongSettingsID";
@@ -670,8 +670,8 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            if (isset($req->data['ID']) && is_numeric($req->data['ID'])) {
-                $settingID = intval($req->data['ID']);
+            if (isset($req->get['params']) && is_numeric($req->get['params'])) {
+                $settingID = intval($req->get['params']);
                 $resp = $this->removeSetting($typeObj->type, $settingID);
             } else {
                 $resp['error'] = "WrongSettingsID";

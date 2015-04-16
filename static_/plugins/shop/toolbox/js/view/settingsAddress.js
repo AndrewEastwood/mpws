@@ -79,21 +79,10 @@ define([
                     model.destroy().fail(function () {
                         BSAlerts.danger(lang.settings_error_save);
                     }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
-                    // self.collection.each(function (collectionModel) {
-                    //     if (collectionModel.getAddressUID() === addressUID) {
-                    //         collectionModel.destroy({
-                    //             wait: true
-                    //         });
-                    //     }
-                    // });
-                    // self.collection.fetch({reset: true});
                 }
             });
         },
         setSettingState: function (event, state) {
-            // if (skip === true) {
-            //     return;
-            // }
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
@@ -104,12 +93,6 @@ define([
                 model.save().fail(function () {
                     BSAlerts.danger(lang.settings_error_save);
                 }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
-                // if (allSuccess) {
-                //     $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                // } else {
-                //     BSAlerts.danger(lang.settings_error_save);
-                //     $item.find('.switcher').bootstrapSwitch('state', !state, true);
-                // }
             }
         }
     });

@@ -107,7 +107,7 @@ define([
     var View = Backbone.View.extend({
         // routes: routes,
         urls: {},
-        initialize: function (/*options, callback*/) {
+        initialize: function (options, callback) {
             // configure plugin
             this.options = options || {};
             this.urls = options && options.urls || {};

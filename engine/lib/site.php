@@ -95,6 +95,7 @@ class site {
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
         $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
         $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);
+        $html = str_replace("{{URL_PUBLIC_LOGO}}", $logoUrl, $html);
         $html = str_replace("{{BUILD}}", $build, $html);
 
         return $html;
