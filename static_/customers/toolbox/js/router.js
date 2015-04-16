@@ -188,6 +188,10 @@ define([
                 if (viewUserButton) {
                     $('.mpws-js-top-menu-right').html(viewUserButton.render().$el);
                 }
+                var customerSwitcher = this.plugins.system.widgetCustomerSwitcher();
+                if (customerSwitcher) {
+                    $('.mpws-js-top-menu-right').html(customerSwitcher.render().$el);
+                }
             } else {
                 $('.mpws-js-top-menu-right').empty();
             }

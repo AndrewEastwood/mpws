@@ -181,10 +181,6 @@ class dbquery {
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_customer",
             "fields" => array("*"),
-            // "condition" => array(
-            //     "Name" => $app->getDB()->createCondition($Name),
-            //     "Status" => $app->getDB()->createCondition("ACTIVE")
-            // ),
             "limit" => 1,
             "options" => array(
                 "expandSingleRecord" => true
@@ -208,8 +204,6 @@ class dbquery {
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
                 $config['condition']["mpws_customer.HostName"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
                     $chunks = explode('=', $value);
@@ -229,30 +223,15 @@ class dbquery {
                                 $valToSearch = '%' . $valToSearch . '%';
                                 $conditionOp = 'like';
                                 break;
-                            // case 'd':
-                            //     $conditionField = "mpws_customer.Description";
-                            //     $valToSearch = '%' . $valToSearch . '%';
-                            //     $conditionOp = 'like';
-                            //     break;
                         }
-                        // var_dump($conditionField);
-                        // var_dump($valToSearch);
-                        // var_dump($conditionOp);
                         if (!empty($conditionField)) {
                             $config['condition'][$conditionField] = $app->getDB()->createCondition($valToSearch, $conditionOp);
                         }
                     }
-                    // $config['condition']["mpws_customer.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["mpws_customer.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["mpws_customer.Description"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["mpws_customer.SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
                 }
             }
         }
 
-        // var_dump($config['condition']);
         return $config;
     }
 
@@ -296,61 +275,6 @@ class dbquery {
             "options" => null
         ));
     }
-
-
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // CUSTOMERS SETTINGS
-    // -----------------------------------------------
-    // -----------------------------------------------
-
-/*    public static function getCustomerSettingsByCustomerID ($CustomerID = null) {
-        global $app;
-        $config = self::getCustomerSettingsByID();
-        $config['condition'] = array (
-            'CustomerID' => $app->getDB()->createCondition($CustomerID)
-        );
-        return $config;
-    }
-
-    public static function getCustomerSettingsByID ($SettingID = null) {
-        global $app;
-        $config = $app->getDB()->createDBQuery(array(
-            "source" => "mpws_customerSettings",
-            "action" => "select",
-            "fields" => array("*"),
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($SettingID)
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-        return $config;
-    }
-
-    public static function createCustomerSettings ($data) {
-        global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_customerSettings",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
-
-    public static function updateCustomerSettings ($data) {
-        global $app;
-        return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_customerSettings",
-            "action" => "update",
-            "data" => $data,
-            "options" => null
-        ));
-    }*/
-
-
 
 
     // -----------------------------------------------

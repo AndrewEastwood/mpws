@@ -60,13 +60,14 @@ require.config({
         'icheck': 'vendors/iCheck/icheck',
         'routefilter': 'vendors/routefilter/dist/backbone.routefilter',
         'isotope': 'vendors/isotope/dist/isotope.pkgd',
+        'jquery.sparkline': 'vendors/jquery-sparkline/dist/jquery.sparkline',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
         'editable-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/wysihtml5',
         'bootstrap-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2',
         'wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/wysihtml5-0.3.0',
-        'jquery.sparkline': 'base/js/lib/jquery.sparkline',
+        'jquery.sliphover': 'base/js/lib/jquery.sliphover',
         // plugins
         'async': 'base/js/plugin/async',
         'css': 'base/js/plugin/css',
@@ -146,6 +147,9 @@ require.config({
         'jquery.maskmoney': {
             deps: ['jquery']
         },
+        'jquery.sliphover': {
+            deps: ['jquery']
+        },
         'jquery.fileupload': {
             deps: [
                 'jquery',
@@ -177,6 +181,7 @@ require.config({
             deps: ['wysihtml5']
         },
         'isotope': {
+            exports: 'Isotope',
             deps: ['jquery']
         }
     },

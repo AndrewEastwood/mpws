@@ -201,12 +201,12 @@
         var updatePageBodyClassNameFn = function () {
             // set page name
             // debugger
-            var fragment = Backbone.history.getFragment();
-            var _hashTags = fragment && fragment.replace(/#!\/|#|!\//g, '').split('/');
-            $('body').attr('class', "MPWSPage");
-            if (_hashTags && _hashTags[0]) {
-                $('body').addClass("Page" + _hashTags[0].ucWords());
-            }
+            // var fragment = Backbone.history.getFragment();
+            // var _hashTags = fragment && fragment.replace(/#!\/|#|!\//g, '').split('/');
+            // $('body').attr('class', "MPWSPage");
+            // if (_hashTags && _hashTags[0]) {
+            //     $('body').addClass("Page" + _hashTags[0].ucWords());
+            // }
         }
 
         $(document).ajaxComplete(function (event, jqXHR, ajaxOptions) {
@@ -396,14 +396,11 @@
                         var name = pluginNames[key],
                             plugin = null;
                         if (_.isFunction(pluginClass)) {
-                            plugin = new pluginClass(pluginsConfig[name] || {});
+                            plugin = new pluginClass(pluginsConfig[name] || {}, callback);
                             plugin.name = name;
                             APP.instances.customer.plugins[name] = plugin;
                             APP.instances[name] = plugin;
-                            if (plugin.dfdInitialize) {
-                                plugin.dfdInitialize(callback, pluginsConfig[name] || {});
-                            } else {
-                                // console.log('finished loading ' + name);
+                            if (!plugin.pending) {
                                 callback();
                             }
                         } else {

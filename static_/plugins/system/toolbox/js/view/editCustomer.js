@@ -63,6 +63,8 @@ define([
                             Lang: that.$('.js-lang').val(),
                             Locale: that.$('.js-locale').val(),
                             Protocol: that.$('.js-protocol').val(),
+                            SnapshotURL: that.$('.js-snapshopturl').val(),
+                            SitemapURL: that.$('.js-sitemapurl').val(),
                             Plugins: that.getSelectedPlugins().join(',')
                         }, {
                             wait: true,

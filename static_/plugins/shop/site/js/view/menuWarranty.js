@@ -25,7 +25,7 @@ define([
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.InfoWarranty
+                message: APP.instances.shop.settings._user.activeAddress.InfoWarranty
             });
         }
     });

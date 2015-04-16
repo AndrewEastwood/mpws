@@ -122,10 +122,12 @@ class site {
 
     public function runAsSNAPSHOT () {
         global $app;
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
         $ch = curl_init();
-        $url = $app->getSettings('SeoSnapshotURL') . $_GET['_escaped_fragment_'];
+        $url = $customer['SnapshotURL'];
         if (empty($url)) {
-            Response::setResponse('empty SeoSnapshotURL occured');
+            Response::setResponse('Empty SnapshotURL');
             return;
         }
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -138,10 +140,12 @@ class site {
 
     public function runAsSITEMAP () {
         global $app;
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
         $ch = curl_init();
-        $url = $app->getSettings('SeoSiteMapUrl');
+        $url = $customer['SitemapURL'];
         if (empty($url)) {
-            Response::setResponse('empty SeoSiteMapUrl occured');
+            Response::setResponse('Empty SitemapURL');
             return;
         }
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -155,7 +159,6 @@ class site {
     public function runAsAPI () {
         global $app;
         // refresh auth
-        // $this->updateSessionAuth();
         API::getAPI('system:auth')->updateSessionAuth();
         API::execAPI();
     }
@@ -181,9 +184,7 @@ class site {
         );
         $upload_handler = new JqUploadLib($options);
         Response::setResponse($upload_handler->get_response());
-        // refresh auth
         API::getAPI('system:auth')->updateSessionAuth();
-        // API::execAPI();
     }
 
 }

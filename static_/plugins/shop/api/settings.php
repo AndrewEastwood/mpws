@@ -412,7 +412,7 @@ class settings {
 
             // var_dump($validatedDataObj);
 
-            if ($validatedDataObj["totalErrors"] == 0 && empty($errors)) {
+            if (!empty($validatedDataObj) && $validatedDataObj["totalErrors"] == 0 && empty($errors)) {
                 try {
 
                     $validatedValues = $validatedDataObj['values'];

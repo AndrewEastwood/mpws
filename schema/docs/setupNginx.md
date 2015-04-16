@@ -72,6 +72,10 @@ server {
         include fastcgi_params;
     }
 
+    if ($args ~* _escaped_fragment_=) {
+       rewrite  ^(.*)$ /engine/controllers/snapshot.php?$1  last;
+    }
+
     location /api/ {
         rewrite ^/api/(\w+)/(\w+)/$ /engine/controllers/api.php?api=$1:$2&t=1 last;
         rewrite ^/api/(\w+)/(\w+)/\? /engine/controllers/api.php?api=$1:$2&t=2 last;
@@ -114,6 +118,10 @@ server {
         include fastcgi_params;
     }
 
+    if ($args ~* _escaped_fragment_=) {
+       rewrite  ^(.*)$ /engine/controllers/snapshot.php?$1  last;
+    }
+
     location /api/ {
         rewrite ^/api/(\w+)/(\w+)/$ /engine/controllers/api.php?api=$1:$2&t=1 last;
         rewrite ^/api/(\w+)/(\w+)/\? /engine/controllers/api.php?api=$1:$2&t=2 last;
@@ -131,7 +139,6 @@ server {
     }
 
 }
-
 
 ```
 You may change paths to log files according to your project's location.

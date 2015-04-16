@@ -107,12 +107,12 @@ define([
     var View = Backbone.View.extend({
         // routes: routes,
         urls: {},
-        dfdInitialize: function (callback, options) {
+        initialize: function (/*options, callback*/) {
             // configure plugin
             this.options = options || {};
             this.urls = options && options.urls || {};
             // fetch data
-            callback();
+            // callback();
         },
 
         // urls: _(routes).invert(),

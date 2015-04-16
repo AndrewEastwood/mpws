@@ -7,25 +7,19 @@ SetOutputFilter DEFLATE
 
 # SEO
 RewriteRule ^sitemap\.xml /engine/controllers/sitemap.php [L]
-# RewriteRule ^\?_escaped_fragment_=(.*)$ /engine/controllers/snapshot.php?params=$1 [L]
-# RequestHeader set Host "api.seo4ajax.com"
-### If a bot requests an escaped URL then proxify the request to SEO4Ajax
-#RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$ [NC]
-#RewriteRule ^(.*?)_escaped_fragment_=(.*)$ /engine/controllers/snapshot.php?params=$1 [QSA,L]
 RewriteCond %{QUERY_STRING} ^_escaped_fragment_= [NC]
-RewriteRule ^(.*)$ /engine/controllers/snapshot.php?$1 [QSA,L]
+    RewriteRule ^(.*)$ /engine/controllers/snapshot.php?$1 [QSA,L]
 
 # STATIC:
 RewriteRule ^static/*.\.php /none [L]
 
 # API
-
 RewriteRule ^api/(\w+)/(\w+)/$ /engine/controllers/api.php?api=$1:$2&t=1 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/\? /engine/controllers/api.php?api=$1:$2&t=2 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)$ /engine/controllers/api.php?api=$1:$2&t=3 [QSA,L]
-
 RewriteRule ^api/(\w+)/(\w+)/(.*)/$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p1 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/(.*)/\? /engine/controllers/api.php?api=$1:$2&params=$3&t=p2 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/(.*)$ /engine/controllers/api.php?api=$1:$2&params=$3&t=p3 [QSA,L]
 
+# FILE UPLOAD
 RewriteRule ^upload/$ /engine/controllers/upload.php [QSA,L]

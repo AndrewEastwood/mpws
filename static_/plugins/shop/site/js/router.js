@@ -105,8 +105,9 @@ define([
             return Handlebars.helpers.bb_link(urlTemplate, urlOptions);
         },
 
-        // urls: _(routes).invert(),
-        dfdInitialize: function (callback, options) {
+        initialize: function (options, callback) {
+            this.pending = true;
+
             var that = this,
                 settings = new SiteSettings();
 
@@ -114,6 +115,8 @@ define([
             ViewProductItem.plugin = this;
             ViewCatalogFilterPanel.plugin = this;
             ViewCatalogBrowseContent.plugin = this;
+            ViewWidgetExchangeRates.plugin = this;
+            ViewWidgetAddresses.plugin = this;
 
             // configure plugin
             this.options = options || {};
@@ -129,7 +132,8 @@ define([
                 that.settings._user = {
                     activeCurrency: ViewWidgetExchangeRates.getActiveCurrencyName(
                         that.settings.MISC.SiteDefaultPriceCurrencyType && that.settings.MISC.SiteDefaultPriceCurrencyType,
-                        !!that.settings.MISC.ShowSiteCurrencySelector)
+                        !!that.settings.MISC.ShowSiteCurrencySelector),
+                    activeAddress: ViewWidgetAddresses.getActiveAddress()
                 }
                 // console.log('shop settings ready: calling callback');
                 callback();
@@ -138,9 +142,6 @@ define([
                     that.settings._user.activeCurrency = currencyName;
                 });
             });
-        },
-
-        initialize: function () {
             _.bindAll(this, 'setActiveAddress');
         },
 

@@ -173,7 +173,6 @@ define([
                     // categoryMenu = that.plugins.shop.catalogNavigator(categoryListOptions)
                     // categoryTopLevelList = that.plugins.shop.catalogNavigator({design: {style: 'sub', className: 'dropdown-menu'}})
                 // set top category list with banner
-                
                 // setup home frame: category navbar and hot offers carousel
                 var $tplHomeFrame = that.templates.homeFrame(),
                     hotOffers = this.plugins.shop.hotOffers({design: {style: 'offerbanner'}});

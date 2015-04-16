@@ -100,7 +100,9 @@ define([
         //     //     self.dashboard();
         //     // });
         // },
-        dfdInitialize: function (callback, options) {
+        initialize: function (options, callback) {
+            this.pending = true;
+            
             var that = this,
                 settings = new SiteSettings();
 

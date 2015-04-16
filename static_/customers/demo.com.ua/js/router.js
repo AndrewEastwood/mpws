@@ -19,7 +19,7 @@ define([
     // 'owl.carousel',
     'bootstrap',
     'icheck',
-    'isotope'
+    'jquery.sliphover'
 ], function ($, _, Backbone, Handlebars, echo, BootstrapDialog
 
 
@@ -47,85 +47,19 @@ define([
     });
 
     function onAppReady () {
-        function eborLoadIsotope(){
-            var $container = $('#container'),
-                isotopeOptions = {},
-                defaultOptions = {
-                   filter: '.home',
-                   sortBy: 'original-order',
-                   sortAscending: true,
-                   layoutMode: 'masonry'
-                };
-            $container.isotope({
+        var $container = $('#container'),
+            defaultOptions = {
                 itemSelector : '.element',
-                resizable: false,
-                masonry: { columnWidth: $container.width() / 12 }
-            });
-            $(window).smartresize(function(){
-                $container.isotope({
-                    masonry: { columnWidth: $container.width() / 12 }
-                });
-            });
-         
-            var $optionSets = $('#options').find('.option-set'),
-                isOptionLinkClicked = false;
-            function changeSelectedLink( $elem ) {
-                $elem.parents('.option-set').find('.selected').removeClass('selected');
-                $elem.addClass('selected');
-            }
-         
-            $optionSets.find('a[href^="#filter"]').click(function(){
-                var $this = $(this);
-                if ( $this.hasClass('selected') ) {
-                    return;
-                }
-                changeSelectedLink( $this );
-                var href = $this.attr('href').replace( /^#/, '' ),
-                    option = jQuery.deparam( href, true );
-                jQuery.extend( isotopeOptions, option );
-                jQuery.bbq.pushState( isotopeOptions );
-                isOptionLinkClicked = true;
-                return false;
-            });
-           var hashChanged = false;
-            $(window).bind( 'hashchange', function( event ){
-                var hashOptions = window.location.hash ? jQuery.deparam.fragment( window.location.hash, true ) : {},
-                   aniEngine = hashChanged ? 'best-available' : 'none',
-                   options = jQuery.extend( {}, defaultOptions, hashOptions, { animationEngine: aniEngine } );
-                $container.isotope( options );
-                isotopeOptions = hashOptions;
-                if ( !isOptionLinkClicked ) {
-                    var hrefObj, hrefValue, $selectedLink;
-                    for ( var key in options ) {
-                        hrefObj = {};
-                        hrefObj[ key ] = options[ key ];
-                        hrefValue = jQuery.param( hrefObj );
-                        $selectedLink = $optionSets.find('a[href="#' + hrefValue + '"]');
-                        changeSelectedLink( $selectedLink );
-                    }
-                }
-                isOptionLinkClicked = false;
-                hashChanged = true;
-            }).trigger('hashchange');
-        }
-        /**
-        * CALL ISOTOPE DEPENDING ON FLEXSLIDER Existance
-        */
-        if ( $('.flexslider')[0] ) {
-            $('.flexslider').flexslider({
-                animation: "slide",
-                start: function(slider){
-                    eborLoadIsotope();
-                }
-            });
-        } else {
-            eborLoadIsotope();
-        }
-        // $('form').submit(function(){
-        setTimeout(function(){
-        //$('#container').isotope('reLayout');
-        }, 1000);
-        // });
+                filter: '.element',
+                sortBy: 'original-order',
+                sortAscending: true,
+                layoutMode: 'masonry'
+            };
+        $container.sliphover({
+            target: '.slip',
+            caption: 'alt'
+        });
+        var iso = new Isotope($container.get(0) , defaultOptions);
     }
 
 
@@ -145,8 +79,27 @@ define([
 
         plugins: {},
 
+        views: {},
+
         initialize: function () {
-            this.on('app:ready', onAppReady);
+            var that = this;
+            this.on('app:ready', function () {
+                onAppReady();
+                // menu items
+                $('.mpws-js-menu-cart').html(that.plugins.shop.menuItemCart().$el);
+                $('.mpws-js-menu-payment').html(that.plugins.shop.menuItemPopupInfoPayment().$el);
+                $('.mpws-js-menu-warranty').html(that.plugins.shop.menuItemPopupInfoWarranty().$el);
+                $('.mpws-js-menu-shipping').html(that.plugins.shop.menuItemPopupInfoShipping().$el);
+                $('.mpws-js-menu-compare').html(that.plugins.shop.menuItemCompareList().$el);
+                $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
+
+
+                var optionsCategoryMenu = {design: {className: 'nav navbar-nav'}};
+                that.views.categoryHomeMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
+
+
+                $('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
+            });
         },
 
         home: function () {},

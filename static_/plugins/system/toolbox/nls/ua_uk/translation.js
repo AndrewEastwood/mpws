@@ -77,6 +77,8 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
             labelLang: 'Мова',
             labelLocale: 'Локалізація',
             labelProtocol: 'Протокол',
+            labelSnapshotURL: 'URL СЕО (Seo4Ajax)',
+            labelSitemapURL: 'URL сайтмапи',
             buttonSave: 'Зберегти',
             buttonClose: 'Назад',
             messageSuccess: 'Успішно',
