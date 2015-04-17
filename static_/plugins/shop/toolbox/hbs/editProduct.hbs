@@ -55,12 +55,14 @@
                                     <i class="fa fa-fw fa-archive"></i>
                                 </label>
                             </div>
+                            {{#if data.ID}}
                             <ul class="list-group shop-product-price-stats">
                                 <li class="list-group-item">
                                     <span class="badge">{{mpwsGetValueByKey lang key=data.Status prefix="product_status_"}}</span>
                                     {{lang.popup_product_section_details_label_currentStatus}}
                                 </li>
                             </ul>
+                            {{/if}}
                         </div>
                     </div>
                 </fieldset>
@@ -101,6 +103,7 @@
                         <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_field_Price}}</label>
                         <div class="col-md-8">
                             <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
+                            {{#if data.ID}}
                             <ul class="list-group shop-product-price-stats">
                                 <li class="list-group-item">
                                     <span class="badge">{{data._prices.price}}</span>
@@ -119,6 +122,7 @@
                                 </li>
                                 {{/mpwsIsNotEmpty}}
                             </ul>
+                            {{/if}}
                         </div>
                     </div>
                     <!-- Textarea -->
@@ -259,6 +263,14 @@
                             <div class="input-group">
                                 <span class="input-group-addon">{{lang.popup_product_section_details_field_ISBN}}</span>
                                 <input id="isbn" name="ISBN" type="text" class="form-control" value="{{data.Attributes.ISBN}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{lang.popup_product_section_details_field_SKU}}</span>
+                                <input id="sku" type="text" class="form-control" value="{{data.Attributes.SKU}}">
                             </div>
                         </div>
                     </div>

@@ -24,6 +24,8 @@ define([
             this.collection = new CollectionSettings();
             this.collection.setType('ADDRESS');
             this.listenTo(this.collection, 'sync', this.render);
+            _.bindAll(this, 'updateElements');
+            this.updateElements();
         },
         render: function () {
             if (this.collection.isEmpty()) {
@@ -45,59 +47,64 @@ define([
             this.$el.html(this.template(tplData));
             return this;
         },
+        updateElements: function () {
+            // elements
+            var addr = WidgetAddress.getActiveAddress();
+            if (!this.$copy) {
+                this.$copy = $('<span/>').addClass('shop-address-copy');
+            }
+            if (!this.$addressLine) {
+                this.$addressLine = $('<span/>').addClass('shop-address-line');
+            }
+            if (!this.$infoWarranty) {
+                this.$infoWarranty = $('<span/>').addClass('shop-info-warranty');
+            }
+            if (!this.$infoPayment) {
+                this.$infoPayment = $('<span/>').addClass('shop-info-payment');
+            }
+            if (!this.$infoShipping) {
+                this.$infoShipping = $('<span/>').addClass('shop-info-shipping');
+            }
+            if (!this.$linkFacebook) {
+                this.$linkFacebook = $('<a/>').addClass('shop-link-social shop-link-social-facebook')
+                    .html($('<i/>').addClass('fa fa-fw fa-facebook'));
+            }
+            if (!this.$linkGooglePlus) {
+                this.$linkGooglePlus = $('<a/>').addClass('shop-link-social shop-link-social-googleplus')
+                    .html($('<i/>').addClass('fa fa-fw fa-google-plus'));
+            }
+            if (!this.$linkLinkedIn) {
+                this.$linkLinkedIn = $('<a/>').addClass('shop-link-social shop-link-social-linkedin')
+                    .html($('<i/>').addClass('fa fa-fw fa-linkedin'));
+            }
+            if (!this.$linkTwitter) {
+                this.$linkTwitter = $('<a/>').addClass('shop-link-social shop-link-social-twitter')
+                    .html($('<i/>').addClass('fa fa-fw fa-twitter'));
+            }
+            if (addr) {
+                this.$infoPayment.html(addr.InfoPayment);
+                this.$infoShipping.html(addr.InfoShipping);
+                this.$infoWarranty.html(addr.InfoWarranty);
+                this.$addressLine.empty()
+                    .append($('<span>').text((addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3) + ','))
+                    .append($('<span>').text(addr.City))
+                    .append('&nbsp;')
+                    .append($('<span>').text(addr.PhoneHotline || addr.Phone1Value
+                        || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value))
+                    .append('&nbsp;')
+                    .append($('<a>').attr('href', 'mailto:' + addr.EmailSupport).text(addr.EmailSupport));
+                this.$copy.html('&copy; ' + new Date().getFullYear() + ' ,' + addr.ShopName);
+                this.$linkFacebook.attr('href', addr.SocialFacebook || 'javascript://');
+                this.$linkGooglePlus.attr('href', addr.SocialGooglePlus || 'javascript://');
+                this.$linkLinkedIn.attr('href', addr.SocialLinkedIn || 'javascript://');
+                this.$linkTwitter.attr('href', addr.SocialTwitter || 'javascript://');
+            }
+        },
         changeUserAddress: function (event) {
             Cache.set('userAddrID', $(event.target).parents('li').data('ref'));
             this.render();
+            this.updateElements();
         },
-        getInfoPayment: function () {
-            var addr = WidgetAddress.getActiveAddress();
-            return addr && addr.InfoPayment || '';
-        },
-        getInfoShipping: function () {
-            var addr = WidgetAddress.getActiveAddress();
-            return addr && addr.InfoShipping || '';
-        },
-        getInfoWarranty: function () {
-            var addr = WidgetAddress.getActiveAddress();
-            return addr && addr.InfoWarranty || '';
-        },
-        getInfoAddressLine: function (asHtml) {
-            var addr = WidgetAddress.getActiveAddress(),
-                addrLine = $('<span>');
-            if (addr) {
-                addrLine.append($('<span>').text((addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3) + ','));
-                addrLine.append($('<span>').text(addr.City));
-                addrLine.append('&nbsp;');
-                addrLine.append($('<span>').text(addr.PhoneHotline || addr.Phone1Value
-                    || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value));
-                addrLine.append('&nbsp;');
-                addrLine.append($('<a>').attr('href', 'mailto:' + addr.EmailSupport).text(addr.EmailSupport));
-            }
-            if (asHtml) {
-                return addrLine;
-            }
-            return addrLine.text();
-        },
-        getCopyright: function () {
-            var addr = WidgetAddress.getActiveAddress(),
-                cp = '&copy; ' + new Date().getFullYear();
-            if (addr) {
-                cp += ' ,' + addr.ShopName;
-            }
-            return cp;
-        },
-        getSocialLinks: function () {
-            var addr = WidgetAddress.getActiveAddress(),
-                links = {};
-            if (addr) {
-                _(addr).each(function (v, k) {
-                    if (/^Social/.test(k)) {
-                        links[k.match(/^Social(.*)/)[1].toLowerCase()] = v;
-                    }
-                });
-            }
-            return links;
-        }
     }, {
         setActiveAddressID: function (activeID) {
            Cache.set('userAddrID', WidgetAddress.getActiveAddressID(activeID));

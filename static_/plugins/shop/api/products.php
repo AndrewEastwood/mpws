@@ -541,6 +541,12 @@ class products {
         $success = false;
         $ProductID = null;
 
+        // adjust verify/create category
+        $adjustedRes = $this->adjustCategoryAndOriginIDs($reqData);
+        $reqData['CategoryID'] = $adjustedRes['CategoryID'];
+        $reqData['OriginID'] = $adjustedRes['OriginID'];
+        $errors += $adjustedRes['errors'];
+
         $validatedDataObj = Validate::getValidData($reqData, array(
             'CategoryID' => array('int'),
             'OriginID' => array('int'),
@@ -548,7 +554,7 @@ class products {
             'Description' => array('string', 'skipIfEmpty', 'max' => 10000),
             'Synopsis' => array('string', 'skipIfEmpty', 'max' => 350),
             'Model' => array('skipIfEmpty'),
-            'SKU' => array('skipIfEmpty'),
+            'SKU' => array('skipIfUnset'),
             'Price' => array('numeric', 'notEmpty'),
             'IsPromo' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'IsOffer' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
@@ -597,6 +603,9 @@ class products {
                 }
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
+                }
+                if (isset($validatedValues['SKU'])) {
+                    $attributes["SKU"] = $validatedValues['SKU'];
                 }
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
@@ -648,6 +657,7 @@ class products {
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
+                unset($validatedValues['SKU']);
                 unset($validatedValues['WARRANTY']);
                 unset($validatedValues['Features']);
                 unset($validatedValues['file2']);
@@ -804,7 +814,7 @@ class products {
                     // -- BANNER_TEXT_LINE1
                     // -- BANNER_TEXT_LINE2
                     // -- PROMO_TEXT
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY',
+                    $commonAttributeKeys = array('ISBN', 'SKU', 'EXPIRE', 'TAGS', 'WARRANTY',
                         'BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2', 'PROMO_TEXT');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
@@ -826,7 +836,7 @@ class products {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors += $validatedDataObj["errors"];
 
         if ($success && !empty($ProductID)) {
             $result = $this->getProductByID($ProductID);
@@ -844,6 +854,12 @@ class products {
         $result = array();
         $errors = array();
         $success = false;
+
+        // adjust verify/create category
+        $adjustedRes = $this->adjustCategoryAndOriginIDs($reqData);
+        $reqData['CategoryID'] = $adjustedRes['CategoryID'];
+        $reqData['OriginID'] = $adjustedRes['OriginID'];
+        $errors += $adjustedRes['errors'];
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'CategoryID' => array('int', 'skipIfUnset'),
@@ -901,6 +917,9 @@ class products {
                 }
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
+                }
+                if (isset($validatedValues['SKU'])) {
+                    $attributes["SKU"] = $validatedValues['SKU'];
                 }
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
@@ -960,6 +979,7 @@ class products {
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
+                unset($validatedValues['SKU']);
                 unset($validatedValues['WARRANTY']);
                 unset($validatedValues['Features']);
                 unset($validatedValues['file1']);
@@ -1221,7 +1241,7 @@ class products {
                     // -- BANNER_TEXT_LINE1
                     // -- BANNER_TEXT_LINE2
                     // -- PROMO_TEXT
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY',
+                    $commonAttributeKeys = array('ISBN', 'SKU', 'EXPIRE', 'TAGS', 'WARRANTY',
                         'BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2', 'PROMO_TEXT');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
@@ -1246,7 +1266,7 @@ class products {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors += $validatedDataObj["errors"];
 
         $result = $this->getProductByID($ProductID);
         $result['errors'] = $errors;
@@ -1257,91 +1277,189 @@ class products {
         return $result;
     }
 
+    private function adjustCategoryAndOriginIDs ($data) {
+        $category = null;
+        $origin = null;
+        $errors = array();
+
+        // verify/create origin
+        $originID = null;
+        $originName = null;
+        if (isset($data['OriginID'])) {
+            if (is_numeric($data['OriginID'])) {
+                $origin = API::getAPI('shop:origins')->getOriginByID($data['OriginID']);
+            } else {
+                $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginID']);
+            }
+            $originName = $data['OriginID'];
+        }
+        if (isset($data['OriginName'])) {
+            $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
+            $originName = $data['OriginName'];
+        }
+        // create new origin
+        if ($origin === null) {
+            $origin = API::getAPI('shop:origins')->createOrigin(array(
+                'Name' => $originName
+            ));
+            $originID = $origin['ID'];
+            $errors += $origin['errors'];
+        } else {
+            $originID = $origin['ID'];
+        }
+
+        // verify/create category
+        $categoryID = null;
+        $categoryName = null;
+        if (isset($data['CategoryID'])) {
+            if (is_numeric($data['CategoryID'])) {
+                $category = API::getAPI('shop:categories')->getCategoryByID($data['CategoryID']);
+            } else {
+                $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryID']);
+            }
+            $categoryName = $data['CategoryID'];
+        }
+        if (isset($data['CategoryName'])) {
+            $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
+            $categoryName = $data['CategoryName'];
+        }
+        // create new origin
+        if ($category === null) {
+            $category = API::getAPI('shop:categories')->createCategory(array(
+                'Name' => $categoryName
+            ));
+            $categoryID = $category['ID'];
+            $errors += $category['errors'];
+        } else {
+            $categoryID = $category['ID'];
+        }
+
+
+            // // when new product and empty category name
+            // if (empty($data['CategoryName']) && $productID === null) {
+            //     // then we create dummy category for this product
+            //     $category = API::getAPI('shop:categories')->createCategory(array(
+            //         'Name' => 'Other'
+            //     ));
+            // }
+
+            // // if category name is set we check this category and create if it's new
+            // if (!empty($data['CategoryName'])) {
+            //     // get category by name
+            //     $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
+            //     // create non-existent category and/or origin
+            //     if ($category === null) {
+            //         $category = API::getAPI('shop:categories')->createCategory(array(
+            //             'Name' => $data['CategoryName']
+            //         ));
+            //     }
+            // }
+
+        return array(
+            'errors' => $errors,
+            'OriginID' => $origin['ID'],
+            'CategoryID' => $category['ID']
+        );
+    }
+
     public function updateOrInsertProduct ($data) {
         global $app;
         $result = array();
         $errors = array();
         $product = null;
-        $category = null;
-        $origin = null;
+        // $category = null;
+        // $origin = null;
         $productID = null;
-        // get origin by name
-        $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
-        // create new origin
-        if ($origin === null) {
-            $origin = API::getAPI('shop:origins')->createOrigin(array(
-                'Name' => $data['OriginName']
-            ));
+        // $adjustedCategoryAndOriginsID = $this->adjustCategoryAndOriginIDs($data);
+        // // get origin by name
+        // $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
+        // // create new origin
+        // if ($origin === null) {
+        //     $origin = API::getAPI('shop:origins')->createOrigin(array(
+        //         'Name' => $data['OriginName']
+        //     ));
+        // }
+
+        // we have the product item already in db
+        if (isset($data['ID'])) {
+            //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
+            $productID = $this->verifyProductByID($data['ID']);
+            // try to get product item by name and model
+        } elseif (isset($data['Model']) && isset($data['OriginName'])) {
+            //-- echo "[INFO] using product Model and OriginName " . $data['Modef l'] . ' + ' . $data['OriginName'] . PHP_EOL;
+            $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
         }
-        if (isset($origin['ID'])) {
-            // we have the product item already in db
-            if (isset($data['ID'])) {
-                //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
-                $productID = $this->verifyProductByID($data['ID']);
-                // try to get product item by name and model
-            } elseif (isset($data['Model']) && isset($data['OriginName'])) {
-                //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
-                $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
-            }
 
-            // when new product and empty category name
-            if (empty($data['CategoryName']) && $productID === null) {
-                // then we create dummy category for this product
-                $category = API::getAPI('shop:categories')->createCategory(array(
-                    'Name' => 'Other'
-                ));
-            }
-
-            // if category name is set we check this category and create if it's new
-            if (!empty($data['CategoryName'])) {
-                // get category by name
-                $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
-                // create non-existent category and/or origin
-                if ($category === null) {
-                    $category = API::getAPI('shop:categories')->createCategory(array(
-                        'Name' => $data['CategoryName']
-                    ));
-                }
-            }
-
-            // var_dump($category);
-            // var_dump($origin);
-            // set category
-            if (empty($category) && empty($productID)) {
-                $errors[] = 'Cannot create/assign category for new product';
-            } else {
-                // if category is not empty we just set it's id for product
-                if (!empty($category)) {
-                    $data['CategoryID'] = $category['ID'];
-                    unset($data['CategoryName']);
-                }
-                // set origin
-                $data['OriginID'] = $origin['ID'];
-                unset($data['OriginName']);
-                // downlod images
-                // TODO: goes here :)
-                // parse other images and skip own using hostname
-                // var_dump($product);
-                // var_dump($data);
-                // var_dump($productID);
-                if ($productID === null) {
-                    $result = $this->createProduct($data);
-                } else {
-                    $result = $this->updateProduct($productID, $data);
-                }
-            }
-            $result['created'] = $result['success'] && $productID === null;
-            $result['updated'] = $result['success'] && $productID !== null;
-            $errors = array_merge($errors, $result['errors']);
+        if ($productID === null) {
+            $result = $this->createProduct($data);
         } else {
-            if (!isset($category['success']))
-                $errors[] = 'Unable to create category';
-            if (!isset($origin['success']))
-                $errors[] = 'Unable to create origin';
-            // var_dump($origin);
-            // var_dump($category);
+            $result = $this->updateProduct($productID, $data);
         }
-        $result['errors'] = $errors;
+
+        // if (isset($origin['ID'])) {
+
+        //     // when new product and empty category name
+        //     if (empty($data['CategoryName']) && $productID === null) {
+        //         // then we create dummy category for this product
+        //         $category = API::getAPI('shop:categories')->createCategory(array(
+        //             'Name' => 'Other'
+        //         ));
+        //     }
+
+        //     // if category name is set we check this category and create if it's new
+        //     if (!empty($data['CategoryName'])) {
+        //         // get category by name
+        //         $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
+        //         // create non-existent category and/or origin
+        //         if ($category === null) {
+        //             $category = API::getAPI('shop:categories')->createCategory(array(
+        //                 'Name' => $data['CategoryName']
+        //             ));
+        //         }
+        //     }
+
+
+
+
+
+        //     // // var_dump($category);
+        //     // // var_dump($origin);
+        //     // // set category
+        //     // if (empty($category) && empty($productID)) {
+        //     //     $errors[] = 'Cannot create/assign category for new product';
+        //     // } else {
+        //     //     // if category is not empty we just set it's id for product
+        //     //     if (!empty($category)) {
+        //     //         $data['CategoryID'] = $category['ID'];
+        //     //         unset($data['CategoryName']);
+        //     //     }
+        //     //     // set origin
+        //     //     $data['OriginID'] = $origin['ID'];
+        //     //     unset($data['OriginName']);
+        //     //     // downlod images
+        //     //     // TODO: goes here :)
+        //     //     // parse other images and skip own using hostname
+        //     //     // var_dump($product);
+        //     //     // var_dump($data);
+        //     //     // var_dump($productID);
+        //     //     if ($productID === null) {
+        //     //         $result = $this->createProduct($data);
+        //     //     } else {
+        //     //         $result = $this->updateProduct($productID, $data);
+        //     //     }
+        //     // }
+        //     $result['created'] = $result['success'] && $productID === null;
+        //     $result['updated'] = $result['success'] && $productID !== null;
+        //     $errors = array_merge($errors, $result['errors']);
+        // } else {
+        //     if (!isset($category['success']))
+        //         $errors[] = 'Unable to create category';
+        //     if (!isset($origin['success']))
+        //         $errors[] = 'Unable to create origin';
+        //     // var_dump($origin);
+        //     // var_dump($category);
+        // }
+        // $result['errors'] = $errors;
         return $result;
     }
 

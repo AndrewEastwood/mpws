@@ -94,7 +94,7 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
     popup_product_section_details_field_Description: "Опис:",
     popup_product_section_details_field_Synopsis: "Короткий опис:",
     popup_product_section_details_field_Model: "Модель:",
-    popup_product_section_details_field_SKU: "Код товару:",
+    popup_product_section_details_field_SKU: "SKU",
     popup_product_section_details_field_Price: "Ціна:",
     popup_product_section_details_field_IsPromo: "Дозволити знижку на цей товар",
     popup_product_section_details_field_IsFeatured: "Товар є новинкою",

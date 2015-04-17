@@ -121,6 +121,9 @@ class app {
         $h = strtolower($h);
         $host_parts = explode ('.', $h);
         $this->customerName = '';
+        if ($host_parts[0] === 'www') {
+            $host_parts = array_slice($host_parts, 1);
+        }
         if ($host_parts[0] === 'dev') {
             $host_parts = array_slice($host_parts, 1);
         }

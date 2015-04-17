@@ -47,17 +47,28 @@ h1#logo a {
     word-break: break-all;
 }
 
-footer ul.social a {
-    text-indent: 0;
-    color: #fff;
-    border: 1px solid #fff;
-    display: inline-block;
-    border-radius: 2em;
-    padding: 10px 6px;
-    &:hover {
-        background-color: #fff;
+footer {
+    ul.social a {
+        text-indent: 0;
+        color: #fff;
+        border: 1px solid #fff;
+        display: inline-block;
+        border-radius: 2em;
+        padding: 10px 6px;
         .fa {
-            color: #A57350;
+            font-size: 2em;
         }
+        &:hover {
+            background-color: #fff;
+            .fa {
+                color: #A57350;
+            }
+        }
+    }
+    .mpws-js-addressline-footer * {
+        color: #D7D7D7;
+    }
+    .mpws-js-copyright * {
+        color: #D7D7D7;
     }
 }

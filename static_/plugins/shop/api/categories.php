@@ -110,7 +110,7 @@ class categories {
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
             'ParentID' => array('int', 'skipIfUnset'),
             'Description' => array('string', 'skipIfUnset', 'max' => 5000),
-            'file1' => array('string', 'skipIfEmpty')
+            'file1' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)

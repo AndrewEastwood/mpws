@@ -75,8 +75,8 @@ define([
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
                         that.model.save({
-                            CategoryID: parseInt(that.$('#category').select2('val'), 10),
-                            OriginID: parseInt(that.$('#origin').select2('val'), 10),
+                            CategoryID: that.$('#category').val(),
+                            OriginID: that.$('#origin').val(),
                             Name: that.$('#name').val(),
                             Model: that.$('#model').val(),
                             Price: parseFloat(that.$('#price').val().replace( /^\D+/g, ''), 10),
@@ -87,6 +87,7 @@ define([
                             IsFeatured: that.$('#isfeatured').is(':checked'),
                             Tags: that.$('#tags').val(),
                             ISBN: that.$('#isbn').val(),
+                            SKU: that.$('#sku').val(),
                             Warranty: that.$('#warranty').val(),
                             Features: that.getFeaturesMap(),
                             ShowBanner: that.$('#showBanners').is(':checked'),
@@ -134,46 +135,50 @@ define([
 
             this.$el.html($dialog.getModalContent());
 
-            var _initCategory = {
-                category: this.model.get('_category') || {}
-            };
-            var _initOrigin = {
-                origin: this.model.get('_origin') || {}
-            };
-            if (!this.model.isNew()) {
-                _initCategory = {
-                    ID: _initCategory.category.ID || null,
-                    Text: _initCategory.category.Name || null
-                };
-                _initOrigin = {
-                    ID: _initOrigin.origin.ID || null,
-                    Text: _initOrigin.origin.Name || null
-                };
-            } else {
-                _initCategory = Cache.getOnce('mpwsShopPopupProductInitCategory') || _initCategory;
-                _initOrigin = Cache.getOnce('mpwsShopPopupProductInitOrigin') || _initOrigin;
+            var initCategory = this.model.get('_category') || this.model.prepopulatedInitCategory || {},
+                initOrigin = this.model.get('_origin') || this.model.prepopulatedInitOrigin || {};
 
-                if (_.isString(_initCategory)) {
-                    _initCategory = _initCategory.split(';;');
-                    if (_initCategory.length === 2) {
-                        _initCategory = {
-                            ID: parseInt(_initCategory[0], 10),
-                            Text: _initCategory[1]
-                        };
+            if (this.model.isNew()) {
+                if (!this.model.prepopulatedInitCategory) {
+                    initCategory = Cache.getOnce('mpwsShopPopupProductInitCategory') || initCategory;
+                    if (_.isString(initCategory)) {
+                        initCategory = initCategory.split(';;');
+                        if (initCategory.length === 2) {
+                            initCategory = {
+                                ID: parseInt(initCategory[0], 10),
+                                Text: initCategory[1]
+                            };
+                        }
+                        this.model.prepopulatedInitCategory = initCategory;
                     }
                 }
-                if (_.isString(_initOrigin)) {
-                    _initOrigin = _initOrigin.split(';;');
-                    if (_initOrigin.length === 2) {
-                        _initOrigin = {
-                            ID: parseInt(_initOrigin[0], 10),
-                            Text: _initOrigin[1]
-                        };
+                if (!this.model.prepopulatedInitOrigin) {
+                    initOrigin = Cache.getOnce('mpwsShopPopupProductInitOrigin') || initOrigin;
+                    if (_.isString(initOrigin)) {
+                        initOrigin = initOrigin.split(';;');
+                        if (initOrigin.length === 2) {
+                            initOrigin = {
+                                ID: parseInt(initOrigin[0], 10),
+                                Text: initOrigin[1]
+                            };
+                        }
+                        this.model.prepopulatedInitOrigin = initOrigin;
                     }
                 }
             }
+
             var _selectCategory = this.$('#category').select2({
-                placeholder: _initCategory.ID ? false : 'Виберіть категорію',
+                placeholder: initCategory.ID ? false : 'Виберіть категорію',
+                tags: true,
+                maximumSelectionSize: 1,
+                createSearchChoice: function(term, data) {
+                    if(data.some(function(r) { return r.text == term })) {
+                        return { id: term, text: term };
+                    }
+                    else {
+                        return { id: term, text: term + " (нова)" };
+                    }
+                },
                 ajax: {
                     url: APP.getApiLink('shop', 'categories'),
                     results: function (data, page) {
@@ -189,16 +194,26 @@ define([
                     }
                 },
                 initSelection: function (element, callback) {
-                    if (_initCategory.ID >= 0) {
+                    if (initCategory.ID >= 0) {
                         callback({
-                            id: _initCategory.ID,
-                            text: _initCategory.Text
+                            id: initCategory.ID,
+                            text: initCategory.Text
                         });
                     }
                 }
             });
             var _selectOrigins = this.$('#origin').select2({
-                placeholder: _initOrigin.ID ? false : 'Виберіть виробника',
+                placeholder: initOrigin.ID ? false : 'Виберіть виробника',
+                tags: true,
+                maximumSelectionSize: 1,
+                createSearchChoice: function(term, data) {
+                    if(data.some(function(r) { return r.text == term })) {
+                        return { id: term, text: term };
+                    }
+                    else {
+                        return { id: term, text: term + " (новий)" };
+                    }
+                },
                 ajax: {
                     url: APP.getApiLink('shop','origins'),
                     results: function (data, page) {
@@ -214,20 +229,20 @@ define([
                     }
                 },
                 initSelection: function (element, callback) {
-                    if (_initOrigin.ID >= 0) {
+                    if (initOrigin.ID >= 0) {
                         callback({
-                            id: _initOrigin.ID,
-                            text: _initOrigin.Text
+                            id: initOrigin.ID,
+                            text: initOrigin.Text
                         });
                     }
                 }
             });
 
-            if (_initOrigin.ID >= 0) {
-                this.$('#origin').select2('val', _initOrigin.ID);
+            if (initOrigin.ID >= 0) {
+                this.$('#origin').select2('val', initOrigin.ID);
             }
-            if (_initCategory.ID >= 0) {
-                this.$('#category').select2('val', _initCategory.ID);
+            if (initCategory.ID >= 0) {
+                this.$('#category').select2('val', initCategory.ID);
             }
 
             // configure price display

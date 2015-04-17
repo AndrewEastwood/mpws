@@ -5,6 +5,7 @@ define([
     'handlebars',
     'echo',
     'bootstrap-dialog',
+    'isotope',
     // page templates
     // 'text!./../hbs/breadcrumb.hbs',
     // 'text!./../hbs/homeFrame.hbs',
@@ -19,11 +20,13 @@ define([
     // 'owl.carousel',
     'bootstrap',
     'icheck',
-    'jquery.sliphover'
-], function ($, _, Backbone, Handlebars, echo, BootstrapDialog
-
+    'jquery.sliphover',
+    'jquery.bridget'
+], function ($, _, Backbone, Handlebars, echo, BootstrapDialog, Isotope
 
  ) {
+
+    $.bridget('isotope', Isotope);
 
     var shopRoutes = {
         // '!/': 'home',
@@ -41,16 +44,16 @@ define([
 
     APP.configurePlugins({
         shop: {
-            urls: _(shopRoutes).invert()//,
-            // productShortClassNames: 'no-margin product-item-holder hover'
+            urls: _(shopRoutes).invert()
         }
     });
 
-    function onAppReady () {
+    function filterLayoutElements (filter) {
+        // debugger
         var $container = $('#container'),
             defaultOptions = {
                 itemSelector : '.element',
-                filter: '.element',
+                filter: filter,
                 sortBy: 'original-order',
                 sortAscending: true,
                 layoutMode: 'masonry'
@@ -59,8 +62,7 @@ define([
             target: '.slip',
             caption: 'alt'
         });
-        var iso = new Isotope($container.get(0) , defaultOptions);
-        window.c_iso = iso;
+        $container.isotope(defaultOptions);
     }
 
 
@@ -73,6 +75,8 @@ define([
                 '': 'home',
                 '!': 'home',
                 '!/': 'home',
+                '!/contacts': 'contacts',
+                '!/info': 'info',
                 ':whatever': 'page404'
             },
             shopRoutes
@@ -87,7 +91,7 @@ define([
         initialize: function () {
             var that = this;
             this.on('app:ready', function () {
-                onAppReady();
+                filterLayoutElements('.home');
                 // menu items
                 $('.mpws-js-menu-cart').html(that.plugins.shop.menuItemCart().$el);
                 $('.mpws-js-menu-payment').html(that.plugins.shop.menuItemPopupInfoPayment().$el);
@@ -102,32 +106,54 @@ define([
 
                 that.address = that.plugins.shop.widgetAddresses();
 
-                $('.mpws-js-info-shipping').text(that.address.getInfoShipping());
-                $('.mpws-js-info-payment').text(that.address.getInfoPayment());
-                $('.mpws-js-info-warranty').text(that.address.getInfoWarranty());
+                // info data
+                $('.mpws-js-info-shipping').html(that.address.$infoShipping);
+                $('.mpws-js-info-payment').html(that.address.$infoPayment);
+                $('.mpws-js-info-warranty').html(that.address.$infoWarranty);
                 $('.mpws-js-info-contacts').html(that.address.render().$el);
 
                 // footer
-                $('a.mpws-js-link-social-twitter').attr('href', that.address.getSocialLinks().twitter);
-                $('a.mpws-js-link-social-facebook').attr('href', that.address.getSocialLinks().facebook);
-                $('a.mpws-js-link-social-googleplus').attr('href', that.address.getSocialLinks().googleplus);
+                $('.mpws-js-link-social-twitter').html(that.address.$linkTwitter);
+                $('.mpws-js-link-social-facebook').html(that.address.$linkFacebook);
+                $('.mpws-js-link-social-googleplus').html(that.address.$linkGooglePlus);
 
-                $('.mpws-js-addressline-footer').html(that.address.getInfoAddressLine(true));
-                $('.mpws-js-copyright').html(that.address.getCopyright());
+                $('.mpws-js-addressline-footer').html(that.address.$addressLine);
+                $('.mpws-js-copyright').html(that.address.$copy);
 
                 // widgets
-
-
                 $('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
                 $('.mpws-js-widget-cart').html(that.plugins.shop.cart().$el);
-
-
             });
         },
 
-        home: function () {},
 
-        page404: function () {}
+        home: function () {
+            filterLayoutElements('.home');
+        },
+
+        page404: function () {},
+
+        info: function () {
+            // var iso = new Isotope($('#container').get(0) , {filter: '.info'});
+            filterLayoutElements('.info');
+            // debugger
+        },
+
+        contacts: function () {
+            filterLayoutElements('.contacts');
+        },
+
+        shopCart: function () {
+            filterLayoutElements('.shop-cart');
+
+        },
+
+        shopCatalogCategory: function () {
+            filterLayoutElements('.product');
+        },
+        shopCatalogCategoryPage: function () {
+            filterLayoutElements('.product');
+        },
 
     });
 

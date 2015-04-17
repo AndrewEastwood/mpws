@@ -34,11 +34,10 @@
             <div id="nav-button"> <span class="nav-bar"></span> <span class="nav-bar"></span> <span class="nav-bar"></span> </div>
             <div id="options" class="clearfix">
                 <ul class="option-set clearfix" data-option-key="filter">
-                    <li><a href="#!/">Головна</a></li>
+                    <li><a href="#!/">Каталог</a></li>
                     <li><a href="#!/cart">Кошик</a></li>
-                    <li><a href="#!/payment">Оплата</a></li>
-                    <li><a href="#!/warranty">Гарантія</a></li>
-                    <li><a href="#!/shipping">Доставка</a></li>
+                    <li><a href="#!/info">Інформація</a></li>
+                    <li><a href="#!/contacts">Контакти</a></li>
                 </ul>
             </div>
             <!-- end main nav -->
@@ -50,18 +49,18 @@
         <div class="container">
             <div id="container" class="clearfix">
 
-                <div class="element clearfix col1-3 portfolio menu white">
-                    <h3>Хатка</h3>
+                <div class="element clearfix col1-3 portfolio menu home shop-cart white">
+                    <h3>Каталог</h3>
                     <div class="borderline"></div>
-                    <p>Каталог:</p>
                     <p class="small no-underline mpws-js-catalog-tree"></p>
                 </div>
+                <div class="element clearfix col1-3 home white"><p class="mpws-js-info-contacts"></p></div>
 
-                <div class="element clearfix col2-3 info white"><p class="mpws-js-info-shipping"></p></div>
-                <div class="element clearfix col1-3 info white"><p class="mpws-js-info-payment"></p></div>
-                <div class="element clearfix col2-3 info white"><p class="mpws-js-info-warranty"></p></div>
-                <div class="element clearfix col1-3 info white"><p class="mpws-js-info-contacts"></p></div>
-                <div class="element clearfix col3-3 cart white"><p class="mpws-js-widget-cart"></p></div>
+                <div class="element clearfix col1-3 info white"><p class="mpws-js-info-shipping"></p></div>
+                <div class="element clearfix col2-3 info white"><p class="mpws-js-info-payment"></p></div>
+                <div class="element clearfix col1-3 info white"><p class="mpws-js-info-warranty"></p></div>
+                <div class="element clearfix col4-3 contacts white"><p class="mpws-js-info-contacts"></p></div>
+                <div class="element clearfix col3-3 shop-cart white"><p class="mpws-js-widget-cart"></p></div>
 
             </div>
         </div>
@@ -72,9 +71,9 @@
     <footer>
         <div class="container">
             <ul class="social clearfix">
-                <li><a href="javascript://" class="mpws-js-link-social-twitter"><i class="fa fa-fw fa-twitter fa-2x"></i></a></li>
-                <li><a href="javascript://" class="mpws-js-link-social-facebook"><i class="fa fa-fw fa-facebook fa-2x"></i></a></li>
-                <li><a href="javascript://" class="mpws-js-link-social-googleplus"><i class="fa fa-fw fa-google-plus fa-2x"></i></a></li>
+                <li class="mpws-js-link-social-twitter"></li>
+                <li class="mpws-js-link-social-facebook"></li>
+                <li class="mpws-js-link-social-googleplus"></li>
             </ul>
             <p class="mpws-js-addressline-footer"></p>
             <div class="clear"></div>
@@ -82,7 +81,6 @@
         </div>
     </footer>
     <div class="static-content-wrapper render-hidden" title="page basic javascript container">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.0/isotope.pkgd.min.js"></script>
         <script type="text/javascript" id="system">
                 var MPWS = {{SYSTEMJS}};
         </script>
