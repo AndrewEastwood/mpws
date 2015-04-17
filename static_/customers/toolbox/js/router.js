@@ -3,8 +3,7 @@ define([
     'underscore',
     'auth',
     'cachejs',
-    'bootstrap',
-    'routefilter'
+    'bootstrap'
 ], function ($, _, Auth, Cache) {
 
     var shopRoutes = {
@@ -55,11 +54,6 @@ define([
 
         name: 'toolbox',
 
-        settings: {
-            title: APP.config.TITLE,
-            logoImageUrl: APP.config.URL_PUBLIC_LOGO
-        },
-
         routes: _.extend.apply(_, [
             {
                 '': 'home',
@@ -77,44 +71,39 @@ define([
         elements: {},
 
         views: {},
+        route: function (route, name, callback) {
+            var router = this;
+                if (!callback) callback = this[name];
 
-        before: function (route, params) {
-            console.log('on route before ' + route);
-            this.toggleMenu(Auth.getUserID());
-            this.toggleWidgets(Auth.getUserID());
-            if (Auth.getUserID()) {
-                if (/!\/signin/.test(Backbone.history.getHash())) {
+            var f = function() {
+                if (Auth.getUserID() && name === 'signin') {
                     Backbone.history.navigate(Cache.get('location') || '!/', true);
+                    return false;
                 }
-            } else {
-                if (!/!\/signin/.test(Backbone.history.getHash())) {
-                    Backbone.history.navigate('!/signin', true);
-                }
-                return false;
-            }
-        },
 
-        after: function (route) {
-            console.log('on route after ' + route);
-            if (/signin|signout/.test(Backbone.history.getFragment())) {
-                return;
-            }
-            Cache.set('location', Backbone.history.getFragment());
+                // redirect user on signin page
+                if (!Auth.getUserID() && !/signin|signout/.test(name)) {
+                    Backbone.history.navigate('!/signin', true);
+                    return false;
+                }
+
+                callback.apply(router, arguments);
+            };
+            return Backbone.Router.prototype.route.call(this, route, name, f);
         },
 
         signin: function () {
-            if (Auth.getUserID()) {
-                return false;
-            }
+            this.toggleMenu(false);
+            this.toggleWidgets(false);
             var signin = this.plugins.system.signin();
             $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
         signout: function () {
-            var that = this;
             this.toggleMenu(false);
             this.toggleWidgets(false);
             $('section.mpws-js-main-section').empty();
+            // logout and then route to signin
             Auth.signout(function () {
                 Backbone.history.navigate('!/signin', true);
             });
@@ -142,13 +131,9 @@ define([
             });
 
             this.on('route', function (routeFn, params) {
-                console.log('on route ' + routeFn);
-                that.toggleMenu(Auth.getUserID());
-                that.toggleWidgets(Auth.getUserID());
-                if (_.isFunction(that[routeFn])) {
-                    return that[routeFn].apply(that, params);
-                }
                 if (Auth.getUserID()) {
+                    that.toggleMenu(true);
+                    that.toggleWidgets(true);
                     var contentItems = [];
                     _(that.plugins).each(function (plg) {
                         if (_.isFunction(plg[routeFn])) {
@@ -163,6 +148,10 @@ define([
                     } else {
                         Backbone.history.navigate('!/', true);
                     }
+                    // Cache.set('location', Backbone.history.getFragment());
+                } else {
+                    that.toggleMenu(false);
+                    that.toggleWidgets(false);
                 }
             });
 
@@ -200,7 +189,7 @@ define([
             }
         },
         toggleMenu: function (show) {
-            $('mpws-js-top-menu-container').toggleClass('hidden', !show);
+            $('.mpws-js-top-menu-container').toggleClass('hidden', !show);
             $('.mpws-js-top-menu-left').empty();
             if (show) {
                 _(this.plugins).each(function (plg) {

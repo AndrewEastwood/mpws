@@ -55,6 +55,7 @@ define([
             });
         },
         signout: function (callback) {
+            // debugger
             var that = this;
             var query = {
                 fn: 'signout'
@@ -76,8 +77,6 @@ define([
 
     Backbone.on("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();
-        // if (!data.isAuthRequest) {
-        // }
     });
 
     return Auth;
