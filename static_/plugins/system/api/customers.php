@@ -11,17 +11,17 @@ class customers {
     var $customersCache = array();
     private $_statuses = array('ACTIVE', 'REMOVED');
 
-    public function getCustomerUploadInnerDir ($subDir = '') {
+    public function getCustomerUploadInnerDir ($host, $subDir = '') {
         global $app;
         $path = '';
         if (empty($subDir))
-            $path = Path::createDirPath('customers', $app->customerName());
+            $path = Path::createDirPath('customers', $host);
         else
-            $path = Path::createDirPath('customers', $app->customerName(), $subDir);
+            $path = Path::createDirPath('customers', $host, $subDir);
         return $path;
     }
-    public function getCustomerUploadInnerImagePath ($name, $subDir = false) {
-        $path = $this->getCustomerUploadInnerDir($subDir);
+    public function getCustomerUploadInnerImagePath ($host, $name, $subDir = false) {
+        $path = $this->getCustomerUploadInnerDir($host, $subDir);
         return $path . $name;
     }
 
@@ -40,8 +40,11 @@ class customers {
 
     public function loadActiveCustomer () {
         global $app;
+        // echo 'loadActiveCustomer';
         // try to load session customer
-        if (!$this->switchToCustomerByID($this->getCustomerSessionID())) {
+        $sessionID = $this->getCustomerSessionID();
+        $isSwitched = $this->switchToCustomerByID($sessionID);
+        if (!$isSwitched) {
             // otherwise try to load default customer
             if (!$this->switchToDefaultCustomer()) {
                 throw new Exception("Unable to load default customer", 1);
@@ -114,6 +117,7 @@ class customers {
     }
 
     public function getRuntimeCustomer () {
+        // echo 'getRuntimeCustomer';
         global $app;
         $customer = null;
         // we can access to all customer via toolbox only
@@ -167,9 +171,9 @@ class customers {
         if (!empty($customer['Logo'])) {
             $customer['Logo'] = array(
                 'name' => $customer['Logo'],
-                'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo']),
-                'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo'], 'sm'),
-                'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['Logo'], 'xs')
+                'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
+                'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
+                'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
             );
         }
         return $customer;
@@ -189,8 +193,9 @@ class customers {
         $customer = $app->getDB()->query($config, false);
         // echo 2121212;
         // var_dump($customer);
-        if (empty($customer))
+        if (empty($customer)) {
             return null;
+        }
         return $this->__adjustCustomer($customer);
     }
 
@@ -330,9 +335,9 @@ class customers {
 
                     if ($newFileName !== $currentFileName) {
                         if (empty($newFileName) && !empty($currentFileName)) {
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName, 'sm'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName, 'xs'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($currentFileName));
+                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'sm'));
+                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'xs'));
+                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName));
                             $validatedValues['Logo'] = null;
                         }
                         if (!empty($newFileName)) {
@@ -341,9 +346,9 @@ class customers {
                             $smImagePath = 'sm' . Path::getDirectorySeparator() . $currentFileName;
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
                             $normalImagePath = $currentFileName;
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCustomerUploadInnerDir('sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCustomerUploadInnerDir('xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCustomerUploadInnerDir(), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCustomerUploadInnerDir($customer['HostName'], 'sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCustomerUploadInnerDir($customer['HostName'], 'xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCustomerUploadInnerDir($customer['HostName']), $newFileName);
                             $validatedValues['Logo'] = $uploadInfo['filename'];
                         }
                     }
