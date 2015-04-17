@@ -87,7 +87,7 @@ define([
                     return false;
                 }
 
-                callback.apply(router, arguments);
+                callback && callback.apply(router, arguments);
             };
             return Backbone.Router.prototype.route.call(this, route, name, f);
         },

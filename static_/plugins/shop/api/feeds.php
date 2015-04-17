@@ -564,7 +564,7 @@ class feeds {
         $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(100);
         $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(150);
         if (!file_exists(Path::rootPath() . $this->getFeedsUploadDir())) {
-            mkdir(Path::rootPath() . $this->getFeedsUploadDir());
+            mkdir(Path::rootPath() . $this->getFeedsUploadDir(), 0777, true);
         }
         $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls';
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
