@@ -145,18 +145,48 @@ define([
 
         shopCart: function () {
             filterLayoutElements('.shop-cart');
-
         },
 
-        shopCatalogCategory: function () {
-            filterLayoutElements('.product');
+        shopCatalogCategory: function (category) {
+            filterLayoutElements('.shop-catalog');
+            this.shopCatalogCategoryPage(category);
         },
-        shopCatalogCategoryPage: function () {
-            filterLayoutElements('.product');
-        },
+        shopCatalogCategoryPage: function (category, pageNo) {
+            filterLayoutElements('.shop-catalog');
 
+            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
+            var catalogBrowseView = this.plugins.shop.catalogBrowseContent();
+
+            $('.mpws-js-category-filter').html(catalogFilterView.$el);
+            $('.mpws-ja-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
+        },
+        shopProduct: function (id) {
+            var that = this;
+            var productView = this.plugins.shop.product(id);
+            productView.on('render:complete', function () {
+                // initEchoJS();
+                APP.setPageAttributes(productView.getPageAttributes());
+            });
+            $('.mpws-ja-product').html(productView.$el);
+        },
     });
 
+
+
+    function initEchoJS () {
+        echo.init({
+            offset: 100,
+            throttle: 250,
+            callback: function(element, op) {
+                console.log(op)
+                if(op === 'load') {
+                    element.classList.add('loaded');
+                } else {
+                    element.classList.remove('loaded');
+                }
+            }
+        });
+    }
     return Router;
 
 
