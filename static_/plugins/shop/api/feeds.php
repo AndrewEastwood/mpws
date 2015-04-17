@@ -28,7 +28,9 @@ class feeds {
     }
 
     public function getFeedsUploadInnerDir () {
-        $path = Path::createDirPath('shop', $this->getDirNameFeeds());
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
+        $path = Path::createDirPath($customer['HostName'], 'shop', $this->getDirNameFeeds());
         return $path;
     }
 

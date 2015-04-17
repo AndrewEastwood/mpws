@@ -17,11 +17,13 @@ class products {
 
 
     public function getProductUploadInnerDir ($productID, $subDir = '') {
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
         $path = '';
         if (empty($subDir))
-            $path = Path::createDirPath('shop', 'products', $productID);
+            $path = Path::createDirPath($customer['HostName'], 'shop', 'products', $productID);
         else
-            $path = Path::createDirPath('shop', 'products', $productID, $subDir);
+            $path = Path::createDirPath($customer['HostName'], 'shop', 'products', $productID, $subDir);
         return $path;
     }
     public function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {

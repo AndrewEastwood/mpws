@@ -16,11 +16,13 @@ class categories {
     private $_statuses = array('ACTIVE', 'REMOVED');
 
     public function getCategoryUploadInnerDir ($subDir = '') {
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
         $path = '';
         if (empty($subDir))
-            $path = Path::createDirPath('shop', 'categories');
+            $path = Path::createDirPath($customer['HostName'], 'shop', 'categories');
         else
-            $path = Path::createDirPath('shop', 'categories', $subDir);
+            $path = Path::createDirPath($customer['HostName'], 'shop', 'categories', $subDir);
         return $path;
     }
     public function getCategoryUploadInnerImagePath ($name, $subDir = false) {
