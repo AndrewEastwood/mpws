@@ -15,9 +15,9 @@ class customers {
         global $app;
         $path = '';
         if (empty($subDir))
-            $path = Path::createDirPath('customers', $host);
+            $path = Path::createDirPath($host, 'customers');
         else
-            $path = Path::createDirPath('customers', $host, $subDir);
+            $path = Path::createDirPath($host, 'customers', $subDir);
         return $path;
     }
     public function getCustomerUploadInnerImagePath ($host, $name, $subDir = false) {
