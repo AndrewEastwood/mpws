@@ -63,7 +63,10 @@ define([
                 '!/signout': 'signout'
             },
             shopRoutes,
-            systemRoutes
+            systemRoutes,
+            {
+                ':whatever': 'home'
+            }
         ]),
 
         plugins: {},
@@ -76,13 +79,13 @@ define([
                 if (!callback) callback = this[name];
 
             var f = function() {
-                if (Auth.getUserID() && name === 'signin') {
+                if (Auth.verifyStatus() && name === 'signin') {
                     Backbone.history.navigate(Cache.get('location') || '!/', true);
                     return false;
                 }
 
                 // redirect user on signin page
-                if (!Auth.getUserID() && !/signin|signout/.test(name)) {
+                if (!Auth.verifyStatus() && !/signin|signout/.test(name)) {
                     Backbone.history.navigate('!/signin', true);
                     return false;
                 }
@@ -93,9 +96,13 @@ define([
         },
 
         signin: function () {
+            if (Auth.verifyStatus()) {
+                Backbone.history.navigate(Cache.get('location') || '!/', true);
+                return;
+            }
             this.toggleMenu(false);
             this.toggleWidgets(false);
-            var signin = this.plugins.system.signin();
+            var signin = this.plugins.system.signinForm();
             $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
@@ -131,10 +138,14 @@ define([
             });
 
             this.on('route', function (routeFn, params) {
-                if (Auth.getUserID()) {
+                if (Auth.verifyStatus()) {
                     that.toggleMenu(true);
                     that.toggleWidgets(true);
+                    // if (/signin|signout/.test(routeFn)) {
+                    //     return;
+                    // }
                     var contentItems = [];
+                    // debugger
                     _(that.plugins).each(function (plg) {
                         if (_.isFunction(plg[routeFn])) {
                             var view = plg[routeFn].apply(plg, params);
@@ -156,12 +167,12 @@ define([
             });
 
             Auth.on('registered', function () {
-                Backbone.history.navigate(Cache.get('location') || '!/', true);
-                Backbone.history.location.reload();
+                window.location.reload();
             });
         },
         // routes
         home: function () {
+            // debugger
             this.toggleMenu(true);
             this.toggleWidgets(true);
             $('section.mpws-js-main-section').empty();

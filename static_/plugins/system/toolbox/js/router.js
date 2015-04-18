@@ -162,7 +162,7 @@ define([
             return buttonUser;
         },
 
-        signin: function () {
+        signinForm: function () {
             // if (Auth.getUserID()) {
             //     return;
             // }

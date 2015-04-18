@@ -14,18 +14,22 @@ define([
             Backbone.trigger('auth:info', user);
             if (Auth.user === user) {
                 // APP.Sandbox.eventNotify("global:auth:status:unchanged", user);
-                return;
+                if (Auth.user === null)
+                    return false;
+                return true;
             }
             Auth.user = user;
             if (Auth.user) {
                 // Backbone.trigger('auth:registered', user);
                 this.trigger('registered');
+                return true;
                 // APP.Sandbox.eventNotify("global:auth:status:active");
             } else {
                 // Backbone.trigger('auth:guest', user);
                 this.trigger('guest');
                 // APP.Sandbox.eventNotify("global:auth:status:inactive");
             }
+            return false;
         },
         getUserID: function () {
             return Cache.getCookie(authKey) || null;
