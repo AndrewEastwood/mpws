@@ -44,7 +44,7 @@ define([
             var self = this,
                 popup = new PopupSettingsAddress();
             popup.render();
-            popup.on('close', function () {
+            popup.on('updated', function () {
                 self.collection.fetch({
                     reset: true
                 });
@@ -61,7 +61,7 @@ define([
                 // debugger
                 popup = new PopupSettingsAddress({model: model});
                 popup.render();
-                popup.on('close', function () {
+                popup.on('updated', function () {
                     self.collection.fetch({
                         reset: true
                     });

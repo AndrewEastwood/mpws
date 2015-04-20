@@ -57,7 +57,7 @@ define([
                 }, {
                     label: lang.popup_origin_button_Save,
                     cssClass: 'btn-success btn-outline',
-                action: function (dialog) {
+                    action: function (dialog) {
                         that.model.set({
                             ShopName :that.$('#js-ShopName').val(),
                             Country :that.$('#js-Country').val(),
@@ -96,6 +96,7 @@ define([
                         that.model.save().then(function (resp) {
                             if (resp && resp.success) {
                                 BSAlerts.success(lang.settings_message_success);
+                                that.trigger('updated');
                             }
                             if (resp.errors) {
                             }

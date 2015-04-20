@@ -1462,6 +1462,8 @@ class products {
         //     // var_dump($category);
         // }
         // $result['errors'] = $errors;
+        $result['created'] = $result['success'] && $productID === null;
+        $result['updated'] = $result['success'] && $productID !== null;
         return $result;
     }
 
