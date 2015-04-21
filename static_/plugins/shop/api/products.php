@@ -7,6 +7,7 @@ use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
 use \engine\lib\api as API;
+use \static_\plugins\shop\api\shoputils as ShopUtils;
 use Exception;
 use ArrayObject;
 
@@ -236,6 +237,16 @@ class products {
         return intval($product['ID']);
     }
 
+    public function getProductIDByExternalKey ($productExternalKey) {
+        global $app;
+        $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
+        $config['additional'] = array();
+        $product = $app->getDB()->query($config);
+        if (empty($product))
+            return null;
+        return intval($product['ID']);
+    }
+
     public function verifyProductByID ($productID) {
         global $app;
         $config = dbquery::shopGetProductItem();
@@ -386,6 +397,15 @@ class products {
             }
         }
         return $relations;
+    }
+
+    public function getProductShortInfo ($productID) {
+        global $app;
+        $config = dbquery::shopGetProductShortInfo($productID);
+        $productInfo = $app->getDB()->query($config);
+        if (empty($productInfo))
+            return null;
+        return $productInfo;
     }
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
@@ -555,8 +575,8 @@ class products {
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 300),
             'Description' => array('string', 'skipIfEmpty', 'max' => 10000),
             'Synopsis' => array('string', 'skipIfEmpty', 'max' => 350),
-            'Model' => array('skipIfEmpty'),
-            'SKU' => array('skipIfUnset'),
+            'Model' => array('skipIfEmpty', 'max' => 300),
+            'SKU' => array('skipIfUnset', 'max' => 300),
             'Price' => array('numeric', 'notEmpty'),
             'IsPromo' => array('sqlbool', 'skipIfUnset'),
             'IsOffer' => array('sqlbool', 'skipIfUnset'),
@@ -848,6 +868,7 @@ class products {
         $result['success'] = $success;
 
         $this->updateProductSearchTextByID($ProductID);
+        $this->refreshProductExternalKeyByID($ProductID);
 
         return $result;
     }
@@ -870,8 +891,8 @@ class products {
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 300, 'skipIfUnset'),
             'Description' => array('string', 'skipIfUnset', 'max' => 10000),
             'Synopsis' => array('string', 'skipIfEmpty', 'max' => 350),
-            'Model' => array('skipIfUnset'),
-            'SKU' => array('skipIfUnset'),
+            'Model' => array('skipIfUnset', 'max' => 50),
+            'SKU' => array('skipIfUnset', 'max' => 50),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
             'IsPromo' => array('sqlbool', 'skipIfUnset'),
             'IsOffer' => array('sqlbool', 'skipIfUnset'),
@@ -1276,6 +1297,7 @@ class products {
         $result['success'] = $success;
 
         $this->updateProductSearchTextByID($ProductID);
+        $this->refreshProductExternalKeyByID($ProductID);
 
         return $result;
     }
@@ -1389,9 +1411,14 @@ class products {
             $productID = $this->verifyProductByID($data['ID']);
             // try to get product item by name and model
         } elseif (isset($data['Model']) && isset($data['OriginName'])) {
-            //-- echo "[INFO] using product Model and OriginName " . $data['Modef l'] . ' + ' . $data['OriginName'] . PHP_EOL;
-            $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
+            //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
+            // $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
+            $exKey = ShopUtils::createProductExternalKey($data);
+            $productID = $this->getProductIDByExternalKey($exKey, true);
+            // echo "# ... updating " . $exKey . PHP_EOL;
         }
+
+        // var_dump($data);
 
         if ($productID === null) {
             $result = $this->createProduct($data);
@@ -1467,6 +1494,41 @@ class products {
         $result['updated'] = $result['success'] && $productID !== null;
         return $result;
     }
+
+    public function refreshProductExternalKeyByID ($productID) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $productInfo = $this->getProductShortInfo($productID);
+            $exKey = ShopUtils::createProductExternalKey($productInfo);
+
+            // echo 'refreshProductExternalKeyByID(' . $productID . '); >>';
+            // var_dump($productInfo);
+            // echo $exKey;
+            // echo PHP_EOL;
+
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::updateProductExternalKeyByID($productID, $exKey);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
 
     public function updateProductSearchTextByID ($productID) {
         global $app;

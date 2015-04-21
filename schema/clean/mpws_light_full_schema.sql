@@ -43,6 +43,8 @@ CREATE TABLE `mpws_customer` (
   `Locale` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'en',
   `Protocol` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'http',
   `Plugins` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'system',
+  `SnapshotURL` varchar(300) COLLATE utf8_bin NOT NULL,
+  `SitemapURL` varchar(500) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -178,7 +180,7 @@ CREATE TABLE `mpws_tasks` (
   KEY `CustomerID` (`CustomerID`),
   KEY `Hash` (`Hash`),
   CONSTRAINT `mpws_tasks_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -306,7 +308,7 @@ CREATE TABLE `shop_categories` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_categories_ibfk_5` FOREIGN KEY (`ParentID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -354,7 +356,7 @@ CREATE TABLE `shop_currency` (
   KEY `Currency` (`CurrencyA`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_currency_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +453,7 @@ CREATE TABLE `shop_features` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_features_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -539,7 +541,7 @@ CREATE TABLE `shop_origins` (
   UNIQUE KEY `ID` (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_origins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -553,14 +555,14 @@ CREATE TABLE `shop_productAttributes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
-  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY','BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO','BANNER_TEXT_LINE1','BANNER_TEXT_LINE2','PROMO_TEXT') COLLATE utf8_bin NOT NULL,
+  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY','BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO','BANNER_TEXT_LINE1','BANNER_TEXT_LINE2','PROMO_TEXT','SKU') COLLATE utf8_bin NOT NULL,
   `Value` text COLLATE utf8_bin,
   PRIMARY KEY (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19437 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=31561 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -585,7 +587,7 @@ CREATE TABLE `shop_productFeatures` (
   CONSTRAINT `shop_productFeatures_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_3` FOREIGN KEY (`FeatureID`) REFERENCES `shop_features` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9670 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15736 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -606,7 +608,7 @@ CREATE TABLE `shop_productPrices` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_productPrices_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productPrices_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -622,11 +624,11 @@ CREATE TABLE `shop_products` (
   `CategoryID` int(11) NOT NULL,
   `OriginID` int(11) NOT NULL,
   `Name` varchar(300) COLLATE utf8_bin NOT NULL,
-  `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
+  `ExternalKey` varchar(600) COLLATE utf8_bin NOT NULL,
   `Synopsis` varchar(350) COLLATE utf8_bin DEFAULT NULL,
   `Description` text COLLATE utf8_bin,
-  `Model` text COLLATE utf8_bin,
-  `SKU` text COLLATE utf8_bin,
+  `Model` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `SKU` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `PrevPrice` decimal(10,2) DEFAULT NULL,
   `IsPromo` tinyint(1) NOT NULL DEFAULT '0',
@@ -644,7 +646,7 @@ CREATE TABLE `shop_products` (
   CONSTRAINT `shop_products_ibfk_3` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_products_ibfk_4` FOREIGN KEY (`OriginID`) REFERENCES `shop_origins` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_products_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=758 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products';
+) ENGINE=InnoDB AUTO_INCREMENT=766 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -778,7 +780,7 @@ CREATE TABLE `shop_settingsAddress` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settingsAddress_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -819,7 +821,7 @@ CREATE TABLE `shop_settingsExchangeRatesDisplay` (
   `Label` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1117,4 +1119,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-16  0:43:12
+-- Dump completed on 2015-04-22  1:12:22

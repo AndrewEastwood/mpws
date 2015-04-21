@@ -365,6 +365,7 @@ class feeds {
             // $currentImportResult[] = "[INFO] " . "saving product";
             // echo "[INFO] " . "saving product" . PHP_EOL;
             $res = API::getAPI('shop:products')->updateOrInsertProduct($productItem);
+            $currentImportResult[] = $res['ExternalKey'];
             // var_dump("***************** result *****************");
             // var_dump($res);
             if ($res['created']) {

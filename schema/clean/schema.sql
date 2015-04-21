@@ -33,6 +33,8 @@ CREATE TABLE `mpws_customer` (
   `Locale` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'en',
   `Protocol` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'http',
   `Plugins` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'system',
+  `SnapshotURL` varchar(300) COLLATE utf8_bin NOT NULL,
+  `SitemapURL` varchar(500) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -543,7 +545,7 @@ CREATE TABLE `shop_productAttributes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
-  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY','BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO','BANNER_TEXT_LINE1','BANNER_TEXT_LINE2','PROMO_TEXT') COLLATE utf8_bin NOT NULL,
+  `Attribute` enum('IMAGE','ISBN','EXPIRE','TAGS','VIDEO','WARRANTY','BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO','BANNER_TEXT_LINE1','BANNER_TEXT_LINE2','PROMO_TEXT','SKU') COLLATE utf8_bin NOT NULL,
   `Value` text COLLATE utf8_bin,
   PRIMARY KEY (`ID`),
   KEY `ProductID` (`ProductID`),
@@ -612,11 +614,11 @@ CREATE TABLE `shop_products` (
   `CategoryID` int(11) NOT NULL,
   `OriginID` int(11) NOT NULL,
   `Name` varchar(300) COLLATE utf8_bin NOT NULL,
-  `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
+  `ExternalKey` varchar(600) COLLATE utf8_bin NOT NULL,
   `Synopsis` varchar(350) COLLATE utf8_bin DEFAULT NULL,
   `Description` text COLLATE utf8_bin,
-  `Model` text COLLATE utf8_bin,
-  `SKU` text COLLATE utf8_bin,
+  `Model` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `SKU` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `PrevPrice` decimal(10,2) DEFAULT NULL,
   `IsPromo` tinyint(1) NOT NULL DEFAULT '0',
@@ -1107,4 +1109,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-16  0:43:12
+-- Dump completed on 2015-04-22  1:12:22

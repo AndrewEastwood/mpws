@@ -5,6 +5,7 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \static_\plugins\shop\api\shoputils as ShopUtils;
 use Exception;
 use ArrayObject;
 
@@ -40,6 +41,19 @@ class dbquery {
                 "shop_products.ID" => $app->getDB()->createCondition($ProductID)
             );
 
+        return $config;
+    }
+
+    public static function shopGetProductShortInfo ($ProductID) {
+        global $app;
+        $config = self::shopGetProductItem($ProductID);
+        $config["fields"] = array("Name", "Model");
+        $config['additional'] = array(
+            "shop_origins" => array(
+                "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+                "fields" => array('@shop_origins.Name AS OriginName')
+            )
+        );
         return $config;
     }
 
@@ -191,6 +205,23 @@ class dbquery {
         return $config;
     }
 
+    public static function updateProductExternalKeyByID ($ProductID, $ExternalKey) {
+        global $app;
+        $data = array();
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["ExternalKey"] = $ExternalKey;
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "shop_products",
+            "condition" => array(
+                "ID" => $app->getDB()->createCondition($ProductID)
+            ),
+            "action" => "update",
+            "data" => $data,
+            "options" => null
+        ));
+        return $config;
+    }
+
     // public static function shopGetLatestProductsList () {
     //     $config = self::shopGetProductItem();
     //     $config['condition'] = array();
@@ -222,17 +253,18 @@ class dbquery {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
-        $ExternalKey = array();
-        if (isset($data['Name']))
-            $ExternalKey[] = $data['Name'];
-        if (isset($data['Model']))
-            $ExternalKey[] = str_replace(' ', '', $data['Model']);
-        if (isset($data['SKU']))
-            $ExternalKey[] = $data['SKU'];
-        if (!empty($ExternalKey)) {
-            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
-            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        }
+        // $data["ExternalKey"] = ShopUtils::createProductExternalKey($data);
+        // $ExternalKey = array();
+        // if (isset($data['Name']))
+        //     $ExternalKey[] = $data['Name'];
+        // if (isset($data['Model']))
+        //     $ExternalKey[] = str_replace(' ', '', $data['Model']);
+        // if (isset($data['SKU']))
+        //     $ExternalKey[] = $data['SKU'];
+        // if (!empty($ExternalKey)) {
+        //     $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
+        //     $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        // }
         $data["Name"] = substr($data["Name"], 0, 300);
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
@@ -245,19 +277,24 @@ class dbquery {
     public static function shopUpdateProduct ($ProductID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        $ExternalKey = array();
+        // $data["ExternalKey"] = ShopUtils::createProductExternalKey($data);
+        // $ExternalKey = array();
         if (isset($data['Name'])) {
-            $ExternalKey[] = $data['Name'];
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        if (isset($data['Model']))
-            $ExternalKey[] = str_replace(' ', '', $data['Model']);
-        if (isset($data['SKU']))
-            $ExternalKey[] = $data['SKU'];
-        if (!empty($ExternalKey)) {
-            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
-            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        }
+        // $ExternalKey = array();
+        // if (isset($data['Name'])) {
+        //     $ExternalKey[] = $data['Name'];
+        //     $data["Name"] = substr($data["Name"], 0, 300);
+        // }
+        // if (isset($data['Model']))
+        //     $ExternalKey[] = str_replace(' ', '', $data['Model']);
+        // if (isset($data['SKU']))
+        //     $ExternalKey[] = $data['SKU'];
+        // if (!empty($ExternalKey)) {
+        //     $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
+        //     $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        // }
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",

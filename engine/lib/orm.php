@@ -415,7 +415,7 @@ use PDO;
         * @return bool Response of PDOStatement::execute()
         */
         protected static function _execute($query, $parameters = array(), $connection_name = self::DEFAULT_CONNECTION) {
-            self::_log_query($query, $parameters, $connection_name);
+            // self::_log_query($query, $parameters, $connection_name);
 
             $useQueryFn = false;
             $rez = null;
@@ -442,6 +442,7 @@ use PDO;
             } else {
                 $statement = self::$_db[$connection_name]->prepare($query);
                 // echo "/*" . self::get_last_query() . "*/" . PHP_EOL;
+                // var_dump($query);
                 // var_dump($parameters);
                 self::$_last_statement = $statement;
                 // var_dump($statement);
