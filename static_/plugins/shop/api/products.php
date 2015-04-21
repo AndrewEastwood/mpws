@@ -1412,9 +1412,11 @@ class products {
             // try to get product item by name and model
         } elseif (isset($data['Model']) && isset($data['OriginName'])) {
             //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
-            // $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             $exKey = ShopUtils::createProductExternalKey($data);
             $productID = $this->getProductIDByExternalKey($exKey, true);
+            if ($productID === null) {
+                $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
+            }
             // echo "# ... updating " . $exKey . PHP_EOL;
         }
 
