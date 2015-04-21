@@ -199,10 +199,10 @@ class products {
         return $this->__adjustProduct($product, $skipRelations);
     }
 
-    public function getProductByModelAndOriginName ($productName, $originName, $skipRelations = false) {
+    public function getProductByModelAndOriginName ($productModel, $originName, $skipRelations = false) {
         global $app;
         $config = dbquery::shopGetProductItem();
-        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
+        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
         $config['condition']['OriginName'] = $app->getDB()->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
@@ -218,11 +218,11 @@ class products {
         return $this->__adjustProduct($product, $skipRelations);
     }
 
-    public function getProductIDByModelAndOriginName ($productName, $originName) {
+    public function getProductIDByModelAndOriginName ($productModel, $originName) {
         global $app;
         $config = dbquery::shopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['Model'] = $app->getDB()->createCondition($productName);
+        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
         $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
@@ -558,9 +558,10 @@ class products {
             'Model' => array('skipIfEmpty'),
             'SKU' => array('skipIfUnset'),
             'Price' => array('numeric', 'notEmpty'),
-            'IsPromo' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'IsOffer' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'IsFeatured' => array('bool', 'skipIfEmpty', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'IsPromo' => array('sqlbool', 'skipIfUnset'),
+            'IsOffer' => array('sqlbool', 'skipIfUnset'),
+            'IsFeatured' => array('sqlbool', 'skipIfUnset'),
+            'ShowBanner' => array('sqlbool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfEmpty'),
             'ISBN' => array('skipIfEmpty'),
@@ -729,15 +730,15 @@ class products {
 
                 // create product
                 $validatedValues["CustomerID"] = $CustomerID;
-                if (isset($validatedValues["IsPromo"])) {
-                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
-                }
-                if (isset($validatedValues["IsOffer"])) {
-                    $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
-                }
-                if (isset($validatedValues["IsFeatured"])) {
-                    $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
-                }
+                // if (isset($validatedValues["IsPromo"])) {
+                //     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                // }
+                // if (isset($validatedValues["IsOffer"])) {
+                //     $validatedValues["IsOffer"] = $validatedValues["IsOffer"] ? 1 : 0;
+                // }
+                // if (isset($validatedValues["IsFeatured"])) {
+                //     $validatedValues["IsFeatured"] = $validatedValues["IsFeatured"] ? 1 : 0;
+                // }
                 
                 $validatedValues["PrevPrice"] = 0;
                 $validatedValues["SearchText"] = $validatedValues["Name"] . ' ' . $validatedValues["Model"];

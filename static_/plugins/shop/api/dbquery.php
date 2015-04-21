@@ -226,7 +226,7 @@ class dbquery {
         if (isset($data['Name']))
             $ExternalKey[] = $data['Name'];
         if (isset($data['Model']))
-            $ExternalKey[] = $data['Model'];
+            $ExternalKey[] = str_replace(' ', '', $data['Model']);
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
         if (!empty($ExternalKey)) {
@@ -251,7 +251,7 @@ class dbquery {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
         if (isset($data['Model']))
-            $ExternalKey[] = $data['Model'];
+            $ExternalKey[] = str_replace(' ', '', $data['Model']);
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
         if (!empty($ExternalKey)) {

@@ -397,7 +397,11 @@ class feeds {
                 ob_flush();
                 flush();
             }
-            $errors = array_merge($errors, $res['errors']);
+            if (count($res['errors'])) {
+                $productError = array();
+                $productError[$productItem['Name']] = $res['errors'];
+                $errors += $productError;
+            }
             // $parsedProducts[] = $productItem;
             // if (count($parsedProducts) > 1) {
             //     break;
@@ -430,6 +434,7 @@ class feeds {
         API::getAPI('system:tasks')->setTaskResult($task['ID'], print_r($res, true));
 
         // save log file
+        $results['ERRORS'] = $errors;
         file_put_contents($feedLogPath, print_r($results, true));
 
         ob_end_flush();
