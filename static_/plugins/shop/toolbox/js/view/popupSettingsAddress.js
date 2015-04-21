@@ -49,13 +49,13 @@ define([
                     that.stopListening(that.model);
                 },
                 buttons: [{
-                    label: lang.popup_origin_button_Close,
+                    label: lang.popups.settingsAddress.buttonClose,
                     cssClass: 'btn-default btn-link',
                     action: function (dialog) {
                         dialog.close();
                     }
                 }, {
-                    label: lang.popup_origin_button_Save,
+                    label: lang.popups.settingsAddress.buttonSave,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
                         that.model.set({

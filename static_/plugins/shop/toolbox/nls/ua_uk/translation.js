@@ -263,7 +263,9 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
                 title: 'Неможливо зберегти адресу',
                 EmailSupport: 'Ел.адреса',
                 EmailSupportIsNotEmail: 'неправильна ел.адреса'
-            }
+            },
+            buttonClose: 'Закрити',
+            buttonSave: 'Зберегти'
         }
     }
 });
