@@ -16,7 +16,7 @@
         </li>
         {{/each}}
     </ul>
-</div>
+</div>e
 {{/gt}}
 {{#each data}}
 <div itemscope itemtype="http://schema.org/Organization" class="address-item-wrapper">
@@ -29,8 +29,10 @@
             {{#if MapUrl}}
                 <a href="{{MapUrl}}" target="_blank"><i class="fa fa-map-marker fa-fw"></i></a>
             {{/if}}
-            {{#ifAny AddressLine1 AddressLine2 AddressLine3}}
+            {{#ifAny Country City AddressLine1 AddressLine2 AddressLine3}}
             <div class="block addresses" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+            {{#if Country}}<span class="addressLine addressLine1" itemprop="addressCountry">{{Country}}{{#if City}}, {{/if}}</span>{{/if}}
+            {{#if City}}<span class="addressLine addressLine1" itemprop="addressLocality">{{City}}</span>{{/if}}
             {{#if AddressLine1}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1}}</span>{{/if}}
             {{#if AddressLine2}}<span class="addressLine addressLine2" itemprop="addressLocality">{{AddressLine2}}</span>{{/if}}
             {{#if AddressLine3}}<span class="addressLine addressLine3" itemprop="addressRegion">{{AddressLine3}}</span>{{/if}}

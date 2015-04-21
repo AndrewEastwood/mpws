@@ -26,8 +26,8 @@ define([
             this.options = options || {};
             if (!this.model) {
                 this.model = new ModelSetting();
-                this.model.setType('ADDRESS');
             }
+            this.model.setType('ADDRESS');
             this.options.editableOptions = {
                 mode: 'popup',
                 name: 'Name',
@@ -132,13 +132,10 @@ define([
                 mode: 'inline'
             }, this.options.editableOptions));
             // set up wyswig
-            // dfdXEditWysi.done(function () {
-                that.$('.wysihtml5').editable(_.defaults({
-                    mode: 'inline',
-                    emptytext: 'введіть текст'
-                }, that.options.editableOptions));
-            // });
-            // that.$('.wysihtml5').wysiwyg();
+            that.$('.wysihtml5').editable(_.defaults({
+                mode: 'inline',
+                emptytext: 'введіть текст'
+            }, that.options.editableOptions));
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
             }
