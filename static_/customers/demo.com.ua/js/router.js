@@ -157,6 +157,16 @@ define([
             var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
             var catalogBrowseView = this.plugins.shop.catalogBrowseContent();
 
+            catalogFilterView.on('render:complete', function () {
+                var $filterCheckBoxes = $('.mpws-js-category-filter .list-group-item input[type="checkbox"]');
+                $filterCheckBoxes.iCheck({
+                    checkboxClass: 'icheckbox_minimal-aero shop-filter-checkbox',
+                    radioClass: 'iradio_minimal-red'
+                }).on('ifChanged', function (event) { $(event.target).trigger('change'); });
+                initEchoJS();
+                APP.setPageAttributes(catalogFilterView.getPageAttributes());
+            });
+
             $('.mpws-js-category-filter').html(catalogFilterView.$el);
             $('.mpws-ja-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
         },

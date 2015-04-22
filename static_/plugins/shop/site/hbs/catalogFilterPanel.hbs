@@ -12,7 +12,7 @@
             <strong>Підкатегорії:</strong>
         </div>
         <div class="content row">
-            <div class="row">
+            <div class="col-md-12">
                 <span class="helptext">К-ість товарів відповідно до фільтру у підкатегоріях <i class="fa fa-level-down"></i></span>
                 <div class="list-group">
                 {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
@@ -40,7 +40,7 @@
             <strong>Виробники:</strong>
         </div>
         <div class="content row">
-            <div class="row">
+            <div class="col-md-12">
                 <span class="helptext">К-ість товарів у цього виробника <i class="fa fa-level-down"></i></span>
                 <div class="list-group list-group-category-brands">
                 {{#each filter.filterOptionsAvailable.filter_categoryBrands }}
@@ -74,7 +74,7 @@
             <strong>Ціна:</strong>
         </div>
         <div class="content row">
-            <div class="subtitle row">
+            <div class="subtitle col-md-12">
                 <span class="shop-filter-price shop-filter-price-start">
                 {{#each filter.info.priceEdgesAppliedConverted.min}}
                     <strong class="shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
@@ -86,7 +86,7 @@
                 {{/each}}
                 </span>
             </div>
-            <div class="row">
+            <div class="col-md-12">
                 <input type="text" class="form-control slider" value="">
             </div>
         </div>
@@ -100,7 +100,7 @@
             <strong>{{@key}}</strong>
         </div>
         <div class="content row">
-            <div class="row">
+            <div class="col-md-12">
                 <div class="list-group list-group-category-features">
                 {{#each this }}
                     {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
@@ -133,6 +133,7 @@
             <strong>Наявність:</strong>
         </div>
         <div class="content row">
+            <div class="col-md-12">
             {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
                 <span class="helptext">К-ість товарів за типом продажу<i class="fa fa-level-down"></i></span>
                 <div class="list-group list-group-category-availability">
@@ -157,6 +158,7 @@
                 {{/each}}
                 </div>
             {{/mpwsIsNotEmpty}}
+            </div>
         </div>
     </div>
 </div>

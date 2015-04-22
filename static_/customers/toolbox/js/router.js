@@ -75,10 +75,12 @@ define([
 
         views: {},
         route: function (route, name, callback) {
+            // debugger
             var router = this;
                 if (!callback) callback = this[name];
 
             var f = function() {
+                // debugger
                 if (Auth.verifyStatus() && name === 'signin') {
                     Backbone.history.navigate(Cache.get('location') || '!/', true);
                     return false;
@@ -135,9 +137,11 @@ define([
                 brandTitle[blinkingCharPos2].addClass('anim-neonblink2');
                 $('head title').text(APP.config.TITLE);
                 $('a.mpjs-opensite').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_HOMEPAGE);
+                Auth.getStatus();
             });
 
             this.on('route', function (routeFn, params) {
+                // debugger
                 if (Auth.verifyStatus()) {
                     that.toggleMenu(true);
                     that.toggleWidgets(true);

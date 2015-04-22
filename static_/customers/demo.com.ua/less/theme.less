@@ -14,8 +14,33 @@
 
 @import "custom";
 
+@brand-primary:         lighten(#A27149, 6.5%); // #337ab7
+@brand-success:         #468966;
+@brand-info:            #FFB03B;
+@brand-warning:         #B64926;
+@brand-danger:          #8E2800;
+
+@btn-default-color:              #555;
+@btn-primary-color:              #333;
+@btn-success-color:              #333;
+@btn-info-color:                 #333;
+@btn-warning-color:              #333;
+@btn-danger-color:               #333;
+
+
+@component-active-color:    #555;
+//** Global background color for active items (e.g., navs or dropdowns).
+@component-active-bg:       @brand-primary;
+
+@list-group-border-radius: 0px;
+
 body {
     background: url('@{imgPath}bg.jpg') repeat;
+}
+
+footer {
+    display: block;
+    clear: both;
 }
 
 h1#logo a {
@@ -71,5 +96,61 @@ footer {
     }
     .mpws-js-copyright * {
         color: #D7D7D7;
+    }
+}
+
+.address-widget {
+    .openHours {
+        display: none;
+    }
+}
+
+.info-links {
+    li a {
+        display: block;
+        color: #555;
+        &:hover {
+            text-decoration: none;
+            background-color: #EEE;
+            color: #555;
+        }
+    }
+}
+
+.shop-catalog-filter-widget-brands,
+.shop-catalog-filter-widget-status {
+    display: none;
+}
+
+.shop-catalog-filter-widget {
+    margin-bottom: 30px;
+    .title {
+        text-align: left;
+        margin-bottom: 5px;
+    }
+    .list-group-item {
+        text-align: left;
+        .shop-filter-checkbox {
+            margin-right: 20px;
+        }
+    }
+}
+
+.btn, button {
+    background: none;
+    padding: 10px;
+    display: inline-block;
+    border: 0px none;
+    text-decoration: underline;
+    outline: 0px none;
+    border-radius: 0px;
+    &:hover {
+        outline: 0px none;
+        background: #EEE;
+        color: #555;
+    }
+    &:active {
+        box-shadow: none;
+        outline: 0px none;
     }
 }
