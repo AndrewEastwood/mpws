@@ -535,8 +535,8 @@ class feeds {
             $objPHPExcel->getActiveSheet()->setCellValueExplicit('J' . $j, $warranty);//$dataList['items'][$i]['Features']);
             $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, $tags);
             $objPHPExcel->getActiveSheet()->setCellValue('L' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
-            $objPHPExcel->getActiveSheet()->setCellValue('M' . $j, $dataList['items'][$i]['Description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('N' . $j, $dataList['items'][$i]['Synopsis']);
+            $objPHPExcel->getActiveSheet()->setCellValue('M' . $j, $dataList['items'][$i]['Synopsis']);
+            $objPHPExcel->getActiveSheet()->setCellValue('N' . $j, $dataList['items'][$i]['Description']);
             $objPHPExcel->getActiveSheet()->setCellValue('O' . $j, implode(PHP_EOL, $images));
 
             // add dropdown to status field

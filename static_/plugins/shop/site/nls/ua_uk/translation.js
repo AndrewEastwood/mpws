@@ -12,7 +12,7 @@ define("plugins/shop/site/nls/ua_uk/translation", {
     product_status_PREORDER: "Під замовлення",
     product:{
         badge: {
-            ACTIVE: "",
+            ACTIVE: " ",
             ARCHIVED: "Архів",
             DISCOUNT: "Знижка",
             DEFECT: "Уцінка",

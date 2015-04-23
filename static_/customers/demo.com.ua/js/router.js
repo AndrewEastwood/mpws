@@ -17,7 +17,7 @@ define([
     // 'text!./../hbs/productComparisons.hbs',
     // 'text!./../hbs/productWishlist.hbs',
     // 'text!./../hbs/search.hbs',
-    // 'owl.carousel',
+    'owl.carousel',
     'bootstrap',
     'icheck',
     'jquery.sliphover',
@@ -154,8 +154,8 @@ define([
         shopCatalogCategoryPage: function (category, pageNo) {
             filterLayoutElements('.shop-catalog');
 
-            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
-            var catalogBrowseView = this.plugins.shop.catalogBrowseContent();
+            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo),
+                catalogBrowseView = this.plugins.shop.catalogBrowseContent();
 
             catalogFilterView.on('render:complete', function () {
                 var $filterCheckBoxes = $('.mpws-js-category-filter .list-group-item input[type="checkbox"]');
@@ -168,16 +168,17 @@ define([
             });
 
             $('.mpws-js-category-filter').html(catalogFilterView.$el);
-            $('.mpws-ja-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
+            $('.mpws-js-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
         },
         shopProduct: function (id) {
-            var that = this;
-            var productView = this.plugins.shop.product(id);
+            filterLayoutElements('.shop-product');
+            var that = this,
+                productView = this.plugins.shop.product(id);
             productView.on('render:complete', function () {
-                // initEchoJS();
+                initEchoJS();
                 APP.setPageAttributes(productView.getPageAttributes());
             });
-            $('.mpws-ja-product').html(productView.$el);
+            $('.mpws-js-product').html(productView.$el);
         },
     });
 

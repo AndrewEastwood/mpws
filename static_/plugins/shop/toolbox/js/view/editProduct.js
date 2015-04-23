@@ -146,7 +146,7 @@ define([
                         if (initCategory.length === 2) {
                             initCategory = {
                                 ID: parseInt(initCategory[0], 10),
-                                Text: initCategory[1]
+                                Name: initCategory[1]
                             };
                         }
                         this.model.prepopulatedInitCategory = initCategory;
@@ -159,7 +159,7 @@ define([
                         if (initOrigin.length === 2) {
                             initOrigin = {
                                 ID: parseInt(initOrigin[0], 10),
-                                Text: initOrigin[1]
+                                Name: initOrigin[1]
                             };
                         }
                         this.model.prepopulatedInitOrigin = initOrigin;
@@ -197,7 +197,7 @@ define([
                     if (initCategory.ID >= 0) {
                         callback({
                             id: initCategory.ID,
-                            text: initCategory.Text
+                            text: initCategory.Name
                         });
                     }
                 }
@@ -232,7 +232,7 @@ define([
                     if (initOrigin.ID >= 0) {
                         callback({
                             id: initOrigin.ID,
-                            text: initOrigin.Text
+                            text: initOrigin.Name
                         });
                     }
                 }

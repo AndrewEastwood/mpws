@@ -155,7 +155,7 @@ class dbquery {
             if (strlen($options['_pSearchText']) < 5) {
                 return null;
             }
-            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . $options['_pSearchText'] . '%', 'like');
+            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
         }
 
         if (!empty($options['_pStatus'])) {
