@@ -165,19 +165,36 @@ define([
                 }).on('ifChanged', function (event) { $(event.target).trigger('change'); });
                 initEchoJS();
                 APP.setPageAttributes(catalogFilterView.getPageAttributes());
+                filterLayoutElements('.shop-catalog');
             });
 
-            $('.mpws-js-category-filter').html(catalogFilterView.$el);
-            $('.mpws-js-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.$el);
+            $('.mpws-js-category-filter').html(catalogFilterView.render().$el);
+            $('.mpws-js-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.render().$el);
         },
         shopProduct: function (id) {
             filterLayoutElements('.shop-product');
             var that = this,
-                productView = this.plugins.shop.product(id);
+                productView = this.plugins.shop.product(id),
+                catalogFilterView;
+
+
             productView.on('render:complete', function () {
                 initEchoJS();
                 APP.setPageAttributes(productView.getPageAttributes());
+                catalogFilterView = that.plugins.shop.catalogFilterPanel(productView.getCategoryExternalKey());
+                catalogFilterView.on('render:complete', function () {
+                    filterLayoutElements('.shop-product');
+                    var $filterCheckBoxes = $('.mpws-js-category-filter .list-group-item input[type="checkbox"]');
+                    $filterCheckBoxes.iCheck({
+                        checkboxClass: 'icheckbox_minimal-aero shop-filter-checkbox',
+                        radioClass: 'iradio_minimal-red'
+                    }).on('ifChanged', function (event) { $(event.target).trigger('change'); });
+                    initEchoJS();
+                    APP.setPageAttributes(catalogFilterView.getPageAttributes());
+                });
+                $('.mpws-js-category-filter').html(catalogFilterView.render().$el);
             });
+
             $('.mpws-js-product').html(productView.$el);
         },
     });

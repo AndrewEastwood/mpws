@@ -195,6 +195,10 @@ define([
         getDisplayName: function () {
             return this.model && this.model.get('_displayName');
         },
+        getCategoryExternalKey: function () {
+            var _category = this.model.get('_category');
+            return _category && _category.ExternalKey;
+        },
         getProductUrl: function () {
             return this.model && Handlebars.helpers.bb_link(APP.instances.shop.urls.shopProduct, {asRoot: true, product: this.model.get('ExternalKey')});
         },

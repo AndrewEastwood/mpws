@@ -161,6 +161,9 @@ footer {
 .product-availability-ACTIVE {
     display: none;
 }
+.available {
+    color: @brand-success;
+}
 .shop-product-item-full {
     .container {
         width: 100%;
@@ -175,9 +178,36 @@ footer {
             }
         }
     }
+    .product-brand-and-id {
+        margin-top: 10px;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        border-bottom: 1px dashed #D7D7D7;
+    }
     .add-to-cart {
         margin: 15px 25px;
         display: inline-block;
+    }
+    .share-buttons {
+        display: block;
+        margin-top: 15px;
+        li {
+            display: inline-block;
+        }
+        a, a:hover {
+            text-decoration: none;
+            border: 0;
+            &:hover i {
+                color: #A57350;
+            }
+            i {
+                font-size: 1.3em;
+            }
+        }
+    }
+    .list-group-item-service-info {
+        display: block;
+        margin: 15px 0;
     }
 }
 .le-quantity {

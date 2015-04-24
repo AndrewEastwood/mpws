@@ -57,8 +57,11 @@ define([
             }
         },
         render: function () {
-            var that = this;
-            var data = Utils.getHBSTemplateData(this);
+            if (this.collection.isEmpty()) {
+                return this;
+            }
+            var that = this,
+                data = Utils.getHBSTemplateData(this);
             data.filter = this.collection.filter;
             // unset current category in categories
             data.filter.filterOptionsAvailable.filter_categorySubCategories =
