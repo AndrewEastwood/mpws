@@ -129,6 +129,7 @@ define([
 
         home: function () {
             filterLayoutElements('.home');
+            $('.mpws-js-shop-filter-panel-wrapper').addClass('hidden');
         },
 
         page404: function () {},
@@ -144,14 +145,16 @@ define([
         },
 
         shopCart: function () {
+            $('.mpws-js-shop-filter-panel-wrapper').addClass('hidden');
             filterLayoutElements('.shop-cart');
         },
 
         shopCatalogCategory: function (category) {
-            filterLayoutElements('.shop-catalog');
             this.shopCatalogCategoryPage(category);
         },
+
         shopCatalogCategoryPage: function (category, pageNo) {
+            $('.mpws-js-shop-filter-panel-wrapper').removeClass('hidden');
             filterLayoutElements('.shop-catalog');
 
             var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo),
@@ -169,14 +172,14 @@ define([
             });
 
             $('.mpws-js-category-filter').html(catalogFilterView.render().$el);
-            $('.mpws-js-catalog-products').addClass('product-grid-holder').html(catalogBrowseView.render().$el);
+            $('.mpws-js-catalog-products').html(catalogBrowseView.render().$el);
         },
         shopProduct: function (id) {
+            $('.mpws-js-shop-filter-panel-wrapper').addClass('hidden');
             filterLayoutElements('.shop-product');
             var that = this,
                 productView = this.plugins.shop.product(id),
                 catalogFilterView;
-
 
             productView.on('render:complete', function () {
                 initEchoJS();
