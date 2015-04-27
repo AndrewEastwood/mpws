@@ -1317,18 +1317,20 @@ class products {
                 $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginID']);
             }
             $originName = $data['OriginID'];
-        }
-        if (isset($data['OriginName'])) {
+        } elseif (isset($data['OriginName'])) {
             $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
             $originName = $data['OriginName'];
         }
         // create new origin
         if ($origin === null) {
-            $origin = API::getAPI('shop:origins')->createOrigin(array(
-                'Name' => empty($originName) ? 'EmptyOrigin' : $originName
-            ));
-            $originID = $origin['ID'];
-            $errors += $origin['errors'];
+            $origin = API::getAPI('shop:origins')->getOriginByName('EmptyOrigin');
+            if (empty($origin)) {
+                $origin = API::getAPI('shop:origins')->createOrigin(array(
+                    'Name' => empty($originName) ? 'EmptyOrigin' : $originName
+                ));
+                $originID = $origin['ID'];
+                $errors += $origin['errors'];
+            }
         } else {
             $originID = $origin['ID'];
         }
@@ -1343,18 +1345,20 @@ class products {
                 $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryID']);
             }
             $categoryName = $data['CategoryID'];
-        }
-        if (isset($data['CategoryName'])) {
+        } elseif (isset($data['CategoryName'])) {
             $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
             $categoryName = $data['CategoryName'];
         }
         // create new origin
         if ($category === null) {
-            $category = API::getAPI('shop:categories')->createCategory(array(
-                'Name' => empty($categoryName) ? 'Uncategorized' : $categoryName
-            ));
-            $categoryID = $category['ID'];
-            $errors += $category['errors'];
+            $category = API::getAPI('shop:categories')->getCategoryByName('Uncategorized');
+            if (empty($category)) {
+                $category = API::getAPI('shop:categories')->createCategory(array(
+                    'Name' => empty($categoryName) ? 'Uncategorized' : $categoryName
+                ));
+                $categoryID = $category['ID'];
+                $errors += $category['errors'];
+            }
         } else {
             $categoryID = $category['ID'];
         }
