@@ -327,7 +327,14 @@ class dbquery {
     public static function getShopCatalogProductList ($ids) {
         global $app;
         $config = self::shopGetProductList();
-        $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids, "IN");
+        if (is_array($ids)) {
+            if (count($ids) > 1)
+                $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids, "IN");
+            else
+                $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids[0]);
+        } else {
+            $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids);
+        }
         return $config;
     }
 

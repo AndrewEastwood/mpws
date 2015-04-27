@@ -211,6 +211,7 @@ class catalog {
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
 
+        // var_dump($dataProducts);
         // var_dump($dataProductsMatches);
         // var_dump($currentProductsIDs);
 
