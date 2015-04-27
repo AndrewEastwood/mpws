@@ -1325,7 +1325,7 @@ class products {
         // create new origin
         if ($origin === null) {
             $origin = API::getAPI('shop:origins')->createOrigin(array(
-                'Name' => $originName
+                'Name' => empty($originName) ? 'EmptyOrigin' : $originName
             ));
             $originID = $origin['ID'];
             $errors += $origin['errors'];
@@ -1351,7 +1351,7 @@ class products {
         // create new origin
         if ($category === null) {
             $category = API::getAPI('shop:categories')->createCategory(array(
-                'Name' => $categoryName
+                'Name' => empty($categoryName) ? 'Uncategorized' : $categoryName
             ));
             $categoryID = $category['ID'];
             $errors += $category['errors'];
