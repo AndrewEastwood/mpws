@@ -331,59 +331,6 @@ class settings {
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
-                // case 'PHONES':
-                //     $dataRules = array(
-                //         'ShopAddressID' => array('int'),
-                //         'Label' => array('string'),
-                //         'Value' => array('string')
-                //     );
-                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                //         $phones = $this->getSettingsAddressPhones($validatedDataObj['values']['ShopAddressID']);
-                //         if (count($phones) >= 10 && !$isUpdate) {
-                //             throw new Exception("PhonesLimitReached", 1);
-                //         }
-                //     }
-                //     if ($isUpdate) {
-                //         unset($validatedDataObj['values']['ShopAddressID']);
-                //     }
-                //     break;
-                // case 'OPENHOURS':
-                //     $dataRules = array(
-                //         'ShopAddressID' => array('int')
-                //     );
-                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                //         $ophrs = $this->getSettingsAddressOpenHours($validatedDataObj['values']['ShopAddressID']);
-                //         if (!empty($ophrs) && !$isUpdate) {
-                //             throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
-                //         }
-                //     }
-                //     if ($isUpdate) {
-                //         unset($validatedDataObj['values']['ShopAddressID']);
-                //     }
-                //     break;
-                // case 'INFO':
-                //     $dataRules = array(
-                //         'ShopAddressID' => array('int'),
-                //         'Shipping' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                //         'Payment' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                //         'Warranty' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => '')
-                //     );
-                //     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                //     if (isset($validatedDataObj['values']['ShopAddressID'])) {
-                //         $info = $this->getSettingsAddressInfo($validatedDataObj['values']['ShopAddressID']);
-                //         if (!empty($info) && !$isUpdate) {
-                //             throw new Exception("OnlyOneSchedulePerAddressAllowed", 1);
-                //         }
-                //     }
-                //     if ($isUpdate) {
-                //         unset($validatedDataObj['values']['ShopAddressID']);
-                //     }
-                //     break;
-                case 'WEBSITE':
-                    // $dataRules = $this->getSettingsWebsite();
-                    break;
                 case 'EXCHANAGERATESDISPLAY':
                     $dataRules = array(
                         'CurrencyName' => array('string'),
@@ -410,6 +357,7 @@ class settings {
                     break;
             }
 
+            // var_dump($type);
             // var_dump($validatedDataObj);
 
             if (!empty($validatedDataObj) && $validatedDataObj["totalErrors"] == 0 && empty($errors)) {
@@ -443,7 +391,9 @@ class settings {
                     $errors[] = $e->getMessage();
                 }
             } else {
-                $errors += $validatedDataObj["errors"];
+                if (isset($validatedDataObj["errors"])) {
+                    $errors += $validatedDataObj["errors"];
+                }
             }
 
             if ($success && !empty($settingID) || $isUpdate) {

@@ -254,8 +254,6 @@ class feeds {
                 $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
             }
 
-            $currentImportResult['product'] = $productItem;
-
             // $currentImportResult[] = "[INFO] " . "set encoding";
             //-- echo "[INFO] " . "set encoding" . PHP_EOL;
             foreach ($keysToEncode as $key) {
@@ -289,7 +287,7 @@ class feeds {
             }
 
             if (isset($rawProductData['Images'])) {
-                // $currentImportResult[] = "[INFO] " . "downloading images";
+                // $currentImportResult[] = "[INFO] " . "downloading images started";
                 //-- echo "[INFO] " . "downloading images" . PHP_EOL;
                 // var_dump($rawProductData['Images']);
                 $images = array();
@@ -317,7 +315,7 @@ class feeds {
                     if (!empty($urlInfo['host'])) {
                         if ($urlInfo['host'] !== $customer['HostName']) {
                             // $imagesToDownload[] = $imgUrl;
-                            // $currentImportResult[] = "[INFO] " . "downloading image: " . $imgUrl;
+                            $currentImportResult[] = "[INFO] " . "importing image: " . $imgUrl;
                             //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                             set_time_limit(120);
                             echo '# ... importing image ' . $imgUrl;
@@ -338,6 +336,7 @@ class feeds {
                             }
                             echo PHP_EOL;
                         } else {
+                            // add more checks for product id and\or use product ExKeys for folder names
                             $images[] = $pInfo['basename'];
                         }
                     }
@@ -355,6 +354,7 @@ class feeds {
                 for ($i = 0, $cnt = count($images); $i < $cnt; $i++) {
                     $productItem['file' . ($i + 1)] = $images[$i];
                 }
+                // $currentImportResult['images'] = $images;
                 // // $productItem['Images'] = $images;
                 // var_dump($productItem);
                 // return;
@@ -364,6 +364,7 @@ class feeds {
             // var_dump($productItem);
             // $currentImportResult[] = "[INFO] " . "saving product";
             // echo "[INFO] " . "saving product" . PHP_EOL;
+            $currentImportResult['product'] = $productItem;
             $res = API::getAPI('shop:products')->updateOrInsertProduct($productItem);
             $currentImportResult[] = $res['ExternalKey'];
             // var_dump("***************** result *****************");

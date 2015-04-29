@@ -1421,14 +1421,15 @@ class products {
             if ($productID === null) {
                 $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             }
-            // echo "# ... updating " . $exKey . PHP_EOL;
         }
 
         // var_dump($data);
 
+        // echo "# ... current key " . $exKey . PHP_EOL;
         if ($productID === null) {
             $result = $this->createProduct($data);
         } else {
+            // echo "# ... updating [" . $productID . "] " . $exKey . PHP_EOL;
             $result = $this->updateProduct($productID, $data);
         }
 

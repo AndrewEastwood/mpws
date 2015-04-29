@@ -68,7 +68,7 @@ define([
 
     var Router = Backbone.Router.extend({
 
-        name: 'demo.com.ua',
+        name: 'demo.leogroup.com.ua',
         
         routes: _.extend.apply(_, [
             {
