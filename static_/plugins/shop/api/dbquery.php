@@ -306,17 +306,46 @@ class dbquery {
         ));
     }
 
-    public static function shopDeleteProduct ($ProductID) {
-        return $app->getDB()->createDBQuery(array(
+    public static function shopArchiveProduct ($ProductID) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($ProductID)
+                "Status" => $app->getDB()->createCondition("REMOVED", "!="),
             ),
             "data" => array(
                 "Status" => 'ARCHIVED',
                 "DateUpdated" => $app->getDB()->getDate()
             ),
+            "options" => null
+        ));
+        if (isset($ProductID) && $ProductID != null) {
+            $config['condition']['ID'] = $app->getDB()->createCondition($ProductID);
+        }
+        return $config;
+    }
+
+    public static function shopMarkProductAsRemovedByModelAndOrigin ($model, $originName) {
+        global $app;
+        $data = array(
+            'shop_products.Status' => 'REMOVED',
+            "shop_products.DateUpdated" => $app->getDB()->getDate()
+        );
+        return $app->getDB()->createDBQuery(array(
+            "source" => "shop_products",
+            "action" => "update",
+            "condition" => array(
+                "Model" => $app->getDB()->createCondition($model, 'like'),
+                "shop_origins.Name" => $app->getDB()->createCondition($originName),
+            ),
+            'additional' => array(
+                "shop_origins" => array(
+                    "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+                    "fields" => array("@shop_origins.Name AS OriginName")
+                )
+            ),
+            "data" => $data,
             "options" => null
         ));
     }
@@ -1288,6 +1317,9 @@ class dbquery {
             "action" => "select",
             "source" => "shop_boughts",
             "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
+            "condition" => array(
+                "Status" => $app->getDB()->createCondition(array("REMOVED", "ARCHIVED"), "NOT IN")
+            ),
             "order" => array(
                 "field" => "SoldTotal",
                 "ordering" => "DESC"

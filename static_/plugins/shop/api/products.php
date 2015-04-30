@@ -38,7 +38,7 @@ class products {
         return array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT");
     }
     public function getProductStatusesWhenDisabled () {
-        return array("ARCHIVED");
+        return array("ARCHIVED", "REMOVED");
     }
     public function getProductBannerTypes () {
         return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
@@ -532,8 +532,8 @@ class products {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fIsOffer'] = true;
         $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fIsOffer'] = true;
         // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
         if (empty($config))
@@ -1396,18 +1396,7 @@ class products {
         $result = array();
         $errors = array();
         $product = null;
-        // $category = null;
-        // $origin = null;
         $productID = null;
-        // $adjustedCategoryAndOriginsID = $this->adjustCategoryAndOriginIDs($data);
-        // // get origin by name
-        // $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
-        // // create new origin
-        // if ($origin === null) {
-        //     $origin = API::getAPI('shop:origins')->createOrigin(array(
-        //         'Name' => $data['OriginName']
-        //     ));
-        // }
 
         // we have the product item already in db
         if (isset($data['ID'])) {
@@ -1417,14 +1406,26 @@ class products {
         } elseif (isset($data['Model']) && isset($data['OriginName'])) {
             //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
             $exKey = ShopUtils::createProductExternalKey($data);
-            $productID = $this->getProductIDByExternalKey($exKey, true);
-            if ($productID === null) {
-                $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
+            $productIDByExternalKey = $this->getProductIDByExternalKey($exKey, true);
+            $productIDByModelAndOrigin = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
+            // echo '# ... productIDByExternalKey = ' . $productIDByExternalKey . PHP_EOL;
+            // echo '# ... productIDByModelAndOrigin = ' . $productIDByModelAndOrigin . PHP_EOL;
+            // try to get duplicated product and mark them as removed
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), $data['OriginName']);
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtolower($data['OriginName']));
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtoupper($data['OriginName']));
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), $data['OriginName']);
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtolower($data['OriginName']));
+            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtoupper($data['OriginName']));
+
+            if ($productIDByExternalKey === null) {
+                $productID = $productIDByModelAndOrigin;
+            } else {
+                $productID = $productIDByExternalKey;
             }
         }
 
         // var_dump($data);
-
         // echo "# ... current key " . $exKey . PHP_EOL;
         if ($productID === null) {
             $result = $this->createProduct($data);
@@ -1433,70 +1434,6 @@ class products {
             $result = $this->updateProduct($productID, $data);
         }
 
-        // if (isset($origin['ID'])) {
-
-        //     // when new product and empty category name
-        //     if (empty($data['CategoryName']) && $productID === null) {
-        //         // then we create dummy category for this product
-        //         $category = API::getAPI('shop:categories')->createCategory(array(
-        //             'Name' => 'Other'
-        //         ));
-        //     }
-
-        //     // if category name is set we check this category and create if it's new
-        //     if (!empty($data['CategoryName'])) {
-        //         // get category by name
-        //         $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
-        //         // create non-existent category and/or origin
-        //         if ($category === null) {
-        //             $category = API::getAPI('shop:categories')->createCategory(array(
-        //                 'Name' => $data['CategoryName']
-        //             ));
-        //         }
-        //     }
-
-
-
-
-
-        //     // // var_dump($category);
-        //     // // var_dump($origin);
-        //     // // set category
-        //     // if (empty($category) && empty($productID)) {
-        //     //     $errors[] = 'Cannot create/assign category for new product';
-        //     // } else {
-        //     //     // if category is not empty we just set it's id for product
-        //     //     if (!empty($category)) {
-        //     //         $data['CategoryID'] = $category['ID'];
-        //     //         unset($data['CategoryName']);
-        //     //     }
-        //     //     // set origin
-        //     //     $data['OriginID'] = $origin['ID'];
-        //     //     unset($data['OriginName']);
-        //     //     // downlod images
-        //     //     // TODO: goes here :)
-        //     //     // parse other images and skip own using hostname
-        //     //     // var_dump($product);
-        //     //     // var_dump($data);
-        //     //     // var_dump($productID);
-        //     //     if ($productID === null) {
-        //     //         $result = $this->createProduct($data);
-        //     //     } else {
-        //     //         $result = $this->updateProduct($productID, $data);
-        //     //     }
-        //     // }
-        //     $result['created'] = $result['success'] && $productID === null;
-        //     $result['updated'] = $result['success'] && $productID !== null;
-        //     $errors = array_merge($errors, $result['errors']);
-        // } else {
-        //     if (!isset($category['success']))
-        //         $errors[] = 'Unable to create category';
-        //     if (!isset($origin['success']))
-        //         $errors[] = 'Unable to create origin';
-        //     // var_dump($origin);
-        //     // var_dump($category);
-        // }
-        // $result['errors'] = $errors;
         $result['created'] = $result['success'] && $productID === null;
         $result['updated'] = $result['success'] && $productID !== null;
         return $result;
@@ -1596,16 +1533,16 @@ class products {
         $success = false;
         try {
 
-            $CustomerID = $app->getSite()->getRuntimeCustomerID();
+            // $CustomerID = $app->getSite()->getRuntimeCustomerID();
 
             $app->getDB()->beginTransaction();
 
-            $data = array(
-                'CustomerID' => $CustomerID,
-                'Status' => 'ARCHIVED'
-            );
+            // $data = array(
+            //     'CustomerID' => $CustomerID,
+            //     'Status' => 'ARCHIVED'
+            // );
 
-            $config = dbquery::shopUpdateProduct($ProductID, $data);
+            $config = dbquery::shopArchiveProduct($ProductID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -1630,17 +1567,18 @@ class products {
         $success = false;
         try {
 
-            $CustomerID = $app->getSite()->getRuntimeCustomerID();
+            // $CustomerID = $app->getSite()->getRuntimeCustomerID();
 
             $app->getDB()->beginTransaction();
 
-            $data = array(
-                'CustomerID' => $CustomerID,
-                'Status' => 'ARCHIVED'
-            );
+            // $data = array(
+            //     'CustomerID' => $CustomerID,
+            //     'Status' => 'ARCHIVED'
+            // );
 
-            $config = dbquery::shopUpdateProduct(null, $data);
-            $config['condition'] = null;
+            $config = dbquery::shopArchiveProduct(null);
+            // $config = dbquery::shopUpdateProduct(null, $data);
+            // $config['condition'] = null;
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -1656,6 +1594,68 @@ class products {
 
         return $result;
     }
+
+    public function markProductAsRemoved ($ProductID) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $CustomerID = $app->getSite()->getRuntimeCustomerID();
+
+            $app->getDB()->beginTransaction();
+
+            $data = array(
+                'CustomerID' => $CustomerID,
+                'Status' => 'REMOVED'
+            );
+
+            $config = dbquery::shopUpdateProduct($ProductID, $data);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result = $this->getProductByID($ProductID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function markProductAsRemovedByModelAndOrigin ($model, $originName) {
+        global $app;
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $app->getDB()->beginTransaction();
+
+            $config = dbquery::shopMarkProductAsRemovedByModelAndOrigin($model, $originName);
+            $app->getDB()->query($config);
+
+            $app->getDB()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $app->getDB()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+
 
     public function getProducts_TopNonPopular () {
         global $app;

@@ -22,7 +22,9 @@ class search {
         if (empty($text)) {
             return null;
         }
-        $searchOptions['_pSearchText'] = $text;
+        $searchOptions['_pSearchText'] = implode("%", str_split(str_replace(' ', '', $text)));// str_replace(' ', '%', $text);
+        $searchOptions['_fshop_products.Status'] = 'REMOVED:!=';
+        // var_dump($searchOptions);
         return API::getAPI('shop:products')->getProducts_List($searchOptions);
     }
 

@@ -196,6 +196,8 @@ class catalog {
 
         if (count($filterOptionsApplied['filter_commonStatus']))
             $dataConfigProducts['condition']["shop_products.Status"] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonStatus'], 'in');
+        else
+            $dataConfigProducts['condition']["shop_products.Status"] = $app->getDB()->createCondition('REMOVED', '!=');
 
         // filter: brands
         if (count($filterOptionsApplied['filter_categoryBrands']))

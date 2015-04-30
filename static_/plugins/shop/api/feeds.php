@@ -223,8 +223,13 @@ class feeds {
             // required fileds
             $productItem['Name'] = trim($rawProductData['Name']);
             $productItem['Model'] = trim($rawProductData['Model']);
-            $productItem['OriginName'] = trim($rawProductData['OriginName']);
-            $productItem['Status'] = $rawProductData['Status'];
+            $productItem['OriginName'] = strtoupper(trim($rawProductData['OriginName']));
+            // when no status field then we assume all importing products are active
+            if (isset($rawProductData['Status'])) {
+                $productItem['Status'] = trim($rawProductData['Status']);
+            } else {
+                $productItem['Status'] = 'ACTIVE';
+            }
             // optional fields
             if (isset($rawProductData['CategoryName'])) {
                 $productItem['CategoryName'] = trim($rawProductData['CategoryName']);
@@ -263,7 +268,6 @@ class feeds {
             }
 
             // var_dump($productItem);
-
             if (empty($productItem['OriginName'])) {
                 $errors[] = 'No OriginName for ' . $productItem['Name'] . ' ' . $productItem['Model'];
                 $errorCount++;
@@ -317,7 +321,7 @@ class feeds {
                             // $imagesToDownload[] = $imgUrl;
                             $currentImportResult[] = "[INFO] " . "importing image: " . $imgUrl;
                             //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
-                            set_time_limit(120);
+                            set_time_limit(999);
                             echo '# ... importing image ' . $imgUrl;
                             $res = null;
                             try {

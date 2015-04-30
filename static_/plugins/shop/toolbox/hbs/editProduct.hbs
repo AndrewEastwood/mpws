@@ -31,27 +31,27 @@
                         <div class="col-md-8">
                             <div class="btn-group mpws-js-logvalueintoel" data-toggle="buttons">
                                 <label class="btn btn-success{{#is data.Status 'ACTIVE'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_ACTIVE}}">
-                                    <input type="radio" name="Status" class="hidden" value="ACTIVE" data-dispval="{{lang.product_status_ACTIVE}}" autocomplete="off" checked>
+                                    <input type="radio" name="Status" class="hidden" value="ACTIVE" data-dispval="{{lang.product_status_ACTIVE}}" autocomplete="off"{{#is data.Status 'ACTIVE'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-bolt"></i>
                                 </label>
                                 <label class="btn btn-warning{{#is data.Status 'WAITING'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_WAITING}}">
-                                    <input type="radio" name="Status" class="hidden" value="WAITING" data-dispval="{{lang.product_status_WAITING}}" autocomplete="off">
+                                    <input type="radio" name="Status" class="hidden" value="WAITING" data-dispval="{{lang.product_status_WAITING}}" autocomplete="off"{{#is data.Status 'WAITING'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-truck"></i>
                                 </label>
                                 <label class="btn btn-info{{#is data.Status 'PREORDER'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_PREORDER}}">
-                                    <input type="radio" name="Status" class="hidden" value="PREORDER" data-dispval="{{lang.product_status_PREORDER}}" autocomplete="off">
+                                    <input type="radio" name="Status" class="hidden" value="PREORDER" data-dispval="{{lang.product_status_PREORDER}}" autocomplete="off"{{#is data.Status 'PREORDER'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-phone"></i>
                                 </label>
                                 <label class="btn btn-success{{#is data.Status 'DISCOUNT'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_DISCOUNT}}">
-                                    <input type="radio" name="Status" class="hidden" value="DISCOUNT" data-dispval="{{lang.product_status_DISCOUNT}}" autocomplete="off">
+                                    <input type="radio" name="Status" class="hidden" value="DISCOUNT" data-dispval="{{lang.product_status_DISCOUNT}}" autocomplete="off"{{#is data.Status 'DISCOUNT'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-tag"></i>
                                 </label>
                                 <label class="btn btn-primary{{#is data.Status 'DEFECT'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_DEFECT}}">
-                                    <input type="radio" name="Status" class="hidden" value="DEFECT" data-dispval="{{lang.product_status_DEFECT}}" autocomplete="off">
+                                    <input type="radio" name="Status" class="hidden" value="DEFECT" data-dispval="{{lang.product_status_DEFECT}}" autocomplete="off"{{#is data.Status 'DEFECT'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-tags"></i>
                                 </label>
                                 <label class="btn btn-danger{{#is data.Status 'ARCHIVED'}} active{{/is}}" data-toggle="tooltip" data-placement="top" title="{{lang.product_status_ARCHIVED}}">
-                                    <input type="radio" name="Status" class="hidden" value="ARCHIVED" data-dispval="{{lang.product_status_ARCHIVED}}" autocomplete="off">
+                                    <input type="radio" name="Status" class="hidden" value="ARCHIVED" data-dispval="{{lang.product_status_ARCHIVED}}" autocomplete="off"{{#is data.Status 'ARCHIVED'}} checked{{/is}}>
                                     <i class="fa fa-fw fa-archive"></i>
                                 </label>
                             </div>

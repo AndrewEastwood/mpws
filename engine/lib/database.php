@@ -531,10 +531,15 @@ class database {
 
             if (isset($options['sort']) || isset($options['order'])) {
                 $dsConfig['order'] = array();
-                if (isset($options['sort']))
-                    $dsConfig['order']['field'] = $options['sort'];
-                if (isset($options['order']))
+                if (isset($options['sort'])) {
+                    if (strpos($options['sort'], '.') === false)
+                        $dsConfig['order']['field'] = $dsConfig['source'] . '.' . $options['sort'];
+                    else
+                        $dsConfig['order']['field'] = $options['sort'];
+                }
+                if (isset($options['order'])) {
                     $dsConfig['order']['ordering'] = $options['order'];
+                }
             }
 
             if (isset($options['page']))
