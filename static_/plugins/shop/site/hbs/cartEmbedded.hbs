@@ -23,11 +23,13 @@
     <li>
         <div class="basket-item">
             <div class="row">
+                {{#if Images.[0].micro}}
                 <div class="col-xs-4 col-sm-4 no-margin text-center">
                     <div class="thumb">
                         <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{_displayName}}" data-echo="{{Images.[0].micro}}" class="image img-responsive">
                     </div>
                 </div>
+                {{/if}}
                 <div class="col-xs-8 col-sm-8 no-margin">
                     <div class="title">
                         <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_displayName}}">

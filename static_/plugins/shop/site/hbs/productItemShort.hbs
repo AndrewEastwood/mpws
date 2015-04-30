@@ -38,7 +38,11 @@
     {{/if}}
     <div class="image">
         <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="link">
+            {{#if data.Images.[0].sm}}
             <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayNameFull}}" data-echo="{{data.Images.[0].sm}}" class="img img-responsive">
+            {{else}}
+            <div class="shop-no-product-image"></div>
+            {{/if}}
         </a>
     </div>
     <div class="body">

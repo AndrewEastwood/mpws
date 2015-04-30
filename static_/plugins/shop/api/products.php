@@ -175,8 +175,9 @@ class products {
         global $app;
         $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
         $product = $app->getDB()->query($config);
-        if (empty($product))
+        if (empty($product)) {
             return null;
+        }
         return $this->__adjustProduct($product, $skipRelations);
     }
 
@@ -184,6 +185,7 @@ class products {
         global $app;
         $config = dbquery::shopGetProductItem();
         $config['condition']['Name'] = $app->getDB()->createCondition($productName);
+        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -194,6 +196,7 @@ class products {
         global $app;
         $config = dbquery::shopGetProductItem();
         $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
+        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -205,6 +208,7 @@ class products {
         $config = dbquery::shopGetProductItem();
         $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
         $config['condition']['OriginName'] = $app->getDB()->createCondition($originName);
+        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -225,6 +229,7 @@ class products {
         $config['fields'] = array("ID");
         $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
         $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
+        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -240,6 +245,7 @@ class products {
     public function getProductIDByExternalKey ($productExternalKey) {
         global $app;
         $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
+        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array();
         $product = $app->getDB()->query($config);
         if (empty($product))
@@ -252,6 +258,7 @@ class products {
         $config = dbquery::shopGetProductItem();
         $config['fields'] = array("ID");
         $config['condition']['ID'] = $app->getDB()->createCondition($productID);
+        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -508,7 +515,7 @@ class products {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = 'ACTIVE';
+        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         $options['_fIsFeatured'] = true;
         // var_dump($options);
         $config = dbquery::shopGetProductList($options);
@@ -683,8 +690,8 @@ class products {
                 unset($validatedValues['SKU']);
                 unset($validatedValues['WARRANTY']);
                 unset($validatedValues['Features']);
-                unset($validatedValues['file2']);
                 unset($validatedValues['file1']);
+                unset($validatedValues['file2']);
                 unset($validatedValues['file3']);
                 unset($validatedValues['file4']);
                 unset($validatedValues['file5']);

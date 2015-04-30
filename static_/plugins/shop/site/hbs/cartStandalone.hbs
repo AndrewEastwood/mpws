@@ -19,11 +19,13 @@
         <div class="shop-cart-products items-holder col-xs-12 col-md-9 no-margin">
         {{#each data.items }}
             <div class="row no-margin cart-item">
+                {{#if Images.[0].sm}}
                 <div class="col-xs-12 col-sm-2 no-margin">
                     <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_displayName}}">
                         <img width="73" height="73" alt="{{_displayName}}" class="attachment-shop_thumbnail wp-post-image" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" data-echo="{{Images.[0].sm}}">
                     </a>
                 </div>
+                {{/if}}
 
                 <div class="col-xs-12 col-sm-4">
                     <div class="title">

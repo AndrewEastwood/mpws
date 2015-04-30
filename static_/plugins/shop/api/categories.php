@@ -51,6 +51,11 @@ class categories {
                 'micro' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'micro')
             );
         }
+        // add sub categoires IDs
+        $category['SubIDs'] = array();
+        // if (!empty($category['childNodes'])) {
+        //     $category['SubIDs'] += array_keys($category['childNodes']);
+        // }
         return $category;
     }
 
@@ -302,6 +307,10 @@ class categories {
                     // echo "Element is found".PHP_EOL;
                     // echo "Looking for element child nodes wherer ParentID = ", $key,PHP_EOL;
                     $element['childNodes'] = getTree($elements, $key);
+                    $element['SubIDs'] = array_keys($element['childNodes']);
+                    if ($parentId !== null) {
+                        $elements[$parentId]['SubIDs'] += array_keys($element['childNodes']);
+                    }
                     $branch[$key] = $element;
                     // unset($elements[$key]);
                 }

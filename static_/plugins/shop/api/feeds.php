@@ -220,6 +220,7 @@ class feeds {
             flush();
 
             $productItem = array();
+            $$imagesUrls = array();
             // required fileds
             $productItem['Name'] = trim($rawProductData['Name']);
             $productItem['Model'] = trim($rawProductData['Model']);
@@ -258,6 +259,22 @@ class feeds {
             if (isset($rawProductData['WARRANTY'])) {
                 $productItem['WARRANTY'] = trim($rawProductData['WARRANTY']);
             }
+            // set images
+            if (isset($rawProductData['Image1'])) {
+                $imagesUrls[] = trim($rawProductData['Image1']);
+            }
+            if (isset($rawProductData['Image2'])) {
+                $imagesUrls[] = trim($rawProductData['Image2']);
+            }
+            if (isset($rawProductData['Image3'])) {
+                $imagesUrls[] = trim($rawProductData['Image3']);
+            }
+            if (isset($rawProductData['Image4'])) {
+                $imagesUrls[] = trim($rawProductData['Image4']);
+            }
+            if (isset($rawProductData['Image5'])) {
+                $imagesUrls[] = trim($rawProductData['Image5']);
+            }
 
             // $currentImportResult[] = "[INFO] " . "set encoding";
             //-- echo "[INFO] " . "set encoding" . PHP_EOL;
@@ -290,16 +307,14 @@ class feeds {
                 $productItem['Features'] = $features;
             }
 
-            if (isset($rawProductData['Images'])) {
+            if (!empty($imagesUrls)) {
                 // $currentImportResult[] = "[INFO] " . "downloading images started";
                 //-- echo "[INFO] " . "downloading images" . PHP_EOL;
                 // var_dump($rawProductData['Images']);
                 $images = array();
-                $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
-                // $imagesToDownload = array();
-                $urls = $app->getSettings('urls');
+                $appSettingsUrls = $app->getSettings('urls');
                 $options = array(
-                    'script_url' =>  $urls['upload'],
+                    'script_url' =>  $appSettingsUrls['upload'],
                     'download_via_php' => true,
                     'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
                     'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
@@ -495,7 +510,11 @@ class feeds {
             ->setCellValue('L1', 'Features')
             ->setCellValue('M1', 'Synopsis')
             ->setCellValue('N1', 'Description')
-            ->setCellValue('O1', 'Images');
+            ->setCellValue('O1', 'Image1');
+            ->setCellValue('P1', 'Image2');
+            ->setCellValue('Q1', 'Image3');
+            ->setCellValue('R1', 'Image4');
+            ->setCellValue('S1', 'Image5');
         $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
         for ($i = 0, $j = 2, $len = count($dataList['items']); $i < $len; $i++, $j++) {
             $images = array();
@@ -542,7 +561,11 @@ class feeds {
             $objPHPExcel->getActiveSheet()->setCellValue('L' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
             $objPHPExcel->getActiveSheet()->setCellValue('M' . $j, $dataList['items'][$i]['Synopsis']);
             $objPHPExcel->getActiveSheet()->setCellValue('N' . $j, $dataList['items'][$i]['Description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('O' . $j, implode(PHP_EOL, $images));
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . $j, $images[0]);
+            $objPHPExcel->getActiveSheet()->setCellValue('P' . $j, $images[1]);
+            $objPHPExcel->getActiveSheet()->setCellValue('Q' . $j, $images[2]);
+            $objPHPExcel->getActiveSheet()->setCellValue('R' . $j, $images[3]);
+            $objPHPExcel->getActiveSheet()->setCellValue('S' . $j, $images[4]);
 
             // add dropdown to status field
             $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $j)->getDataValidation();

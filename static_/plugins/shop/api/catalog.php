@@ -36,6 +36,10 @@ class catalog {
         return $currentProductsIDs;
     }
 
+    private function getAllChildNodesIDs () {
+
+    }
+
     public function getCatalogBrowse ($categoryID) {
         global $app;
         $data = array();
@@ -99,23 +103,29 @@ class catalog {
             die();
         }
 
-        $cetegoriesIDs = array();
-        $cetegoriesNodes = array();
+        $categoriesIDs = array();
+        $categoriesNodes = array();
 
         // var_dump($cetegories);
 
         foreach ($cetegories as $categoryItem) {
-            $cetegoriesIDs[] = intval($categoryItem['ID']);
-            $cetegoriesNodes[$categoryItem['ID']] = array(
+            $categoriesIDs[] = intval($categoryItem['ID']);
+            $categoriesNodes[$categoryItem['ID']] = array(
                 'ID' => intval($categoryItem['ID']),
                 'Name' => $categoryItem['Name'],
-                'ExternalKey' => $categoryItem['ExternalKey']
+                'ExternalKey' => $categoryItem['ExternalKey'],
+                'SubIDs' => $categoryItem['SubIDs']
             );
+            if (!empty($categoryItem['SubIDs'])) {
+                $categoriesIDs += $categoryItem['SubIDs'];
+            }
         }
+
+        // var_dump($categoriesNodes);
 
         // var_dump($activeTree);
         //filter: get category price edges
-        $dataConfigCategoryPriceEdges = dbquery::getShopCatalogPriceEdges(implode(',', $cetegoriesIDs));
+        $dataConfigCategoryPriceEdges = dbquery::getShopCatalogPriceEdges(implode(',', $categoriesIDs));
         $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
         $filterOptionsAvailable['filter_commonPriceMax'] = intval(floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval(floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10);
@@ -125,7 +135,7 @@ class catalog {
         // var_dump($dataConfigCategoryPriceEdges);
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = dbquery::shopCatalogBrands(implode(',', $cetegoriesIDs));
+        $dataConfigCategoryAllBrands = dbquery::shopCatalogBrands(implode(',', $categoriesIDs));
         $dataCategoryAllBrands = $app->getDB()->query($dataConfigCategoryAllBrands);
         if ($dataCategoryAllBrands)
             foreach ($dataCategoryAllBrands as $key => $brandItem) {
@@ -134,7 +144,7 @@ class catalog {
 
         // set categories and brands
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $cetegoriesNodes ?: array();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $categoriesNodes ?: array();
         // var_dump($dataCategoryPriceEdges);
         // var_dump($dataCategoryAllBrands);
 
@@ -142,7 +152,7 @@ class catalog {
         // return;
 
         // get catalog features
-        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
+        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($categoriesIDs);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
         foreach ($catalogProductIDs as $productItemID) {
@@ -159,7 +169,7 @@ class catalog {
 
         // set data source
         // ---
-        $dataConfigProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
+        $dataConfigProducts = dbquery::getShopCatalogProductList($categoriesIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -208,7 +218,7 @@ class catalog {
         $dataProducts = $app->getDB()->query($dataConfigProducts);
 
         // get products count for current filter
-        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
+        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($categoriesIDs);
         $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
@@ -283,14 +293,15 @@ class catalog {
             // $count = 0;
             $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-            $arrValues = array($categoryID);
+            $arrValues = array($categoryID) + $categoryItem['SubIDs'];
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
                 $arrValues = array_merge($filterOptionsApplied['filter_categorySubCategories'], $arrValues);
             }
             $arrValues = array_unique($arrValues);
             // var_dump(">>> values >>>>>>");
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $app->getDB()->createCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['shop_products.CategoryID'] = $app->getDB()->createCondition($arrValues, 'IN');
+            // var_dump($dataConfigCategoryInfo);
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // var_dump(">>>>results>>>>>>>");

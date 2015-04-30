@@ -355,7 +355,9 @@ define([
                 optionsCatalogProducts = {design: {className: 'col-xs-12 col-sm-4 no-margin product-item-holder hover'}},
                 featuredProducts = this.plugins.shop.featuredProducts(optionsFeaturedProducts);
 
-            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo);
+            var catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo, {
+                filter_viewItemsOnPage: 21
+            });
             var catalogBrowseView = this.plugins.shop.catalogBrowseContent(optionsCatalogProducts);
 
             $tplCatalogBrowser.find('.mpws-js-category-filter').html(catalogFilterView.$el);

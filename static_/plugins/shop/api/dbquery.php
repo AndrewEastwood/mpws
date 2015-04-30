@@ -158,7 +158,9 @@ class dbquery {
             $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%', 'like');
         }
 
-        if (!empty($options['_pStatus'])) {
+        if (empty($options['_pStatus'])) {
+            $config['condition']["shop_products.Status"] = $app->getDB()->createCondition('REMOVED', '!=');
+        } else {
             $config['condition']["shop_products.Status"] = $app->getDB()->createCondition($options['_pStatus']);
         }
 
@@ -1316,13 +1318,19 @@ class dbquery {
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
-            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
+            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(shop_boughts.Price * Quantity) AS SumTotal"),
             "condition" => array(
-                "Status" => $app->getDB()->createCondition(array("REMOVED", "ARCHIVED"), "NOT IN")
+                "shop_products.Status" => $app->getDB()->createCondition(array("REMOVED", "ARCHIVED"), "NOT IN")
             ),
             "order" => array(
                 "field" => "SoldTotal",
                 "ordering" => "DESC"
+            ),
+            'additional' => array(
+                "shop_products" => array(
+                    "constraint" => array("shop_boughts.ProductID", "=", "shop_products.ID"),
+                    "fields" => array("@shop_products.Status AS ProductStatus")
+                )
             ),
             "limit" => !empty($options['limit']) ? $options['limit'] : 15,
             "group" => "ProductID",
