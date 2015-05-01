@@ -133,16 +133,17 @@ define([
                 }
 
                 ProductItem.plugin.order.dfdState.done(function () {
-                    var prodQ = ProductItem.plugin.order.getProductQunatity(that.model.id);
-                    var starsOdometer = new Odometer({
-                        el: that.$('.add-to-cart .odometer').get(0),
-                        theme: 'default',
-                        value: prodQ
-                    });
-                    starsOdometer.render();
-                    if (prodQ) {
-                        that.$el.addClass('shop-product-in-cart');
-                        // that.$('.add-to-cart').addClass('has-value');
+                    if (!that.isArchived()) {
+                        var prodQ = ProductItem.plugin.order.getProductQunatity(that.model.id);
+                        var starsOdometer = new Odometer({
+                            el: that.$('.add-to-cart .odometer').get(0),
+                            theme: 'default',
+                            value: prodQ
+                        });
+                        starsOdometer.render();
+                        if (prodQ) {
+                            that.$el.addClass('shop-product-in-cart');
+                        }
                     }
                 });
 
@@ -191,6 +192,9 @@ define([
                 }));
             });
             return pathItems;
+        },
+        isArchived: function () {
+            return this.model && this.model.get('_archived');
         },
         getDisplayName: function () {
             return this.model && this.model.get('_displayName');
