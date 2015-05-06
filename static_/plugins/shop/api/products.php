@@ -1418,12 +1418,13 @@ class products {
             // echo '# ... productIDByExternalKey = ' . $productIDByExternalKey . PHP_EOL;
             // echo '# ... productIDByModelAndOrigin = ' . $productIDByModelAndOrigin . PHP_EOL;
             // try to get duplicated product and mark them as removed
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), $data['OriginName']);
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtolower($data['OriginName']));
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtoupper($data['OriginName']));
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), $data['OriginName']);
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtolower($data['OriginName']));
-            $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtoupper($data['OriginName']));
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), $data['OriginName']);
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtolower($data['OriginName']));
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '%', $data['Model']), strtoupper($data['OriginName']));
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), $data['OriginName']);
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtolower($data['OriginName']));
+            // $result = $this->markProductAsRemovedByModelAndOrigin(str_replace(' ', '', $data['Model']), strtoupper($data['OriginName']));
+            $result = $this->markProductAsRemovedByModelAndOrigin(implode("%", str_split(str_replace(' ', '', $data['Model']))), $data['OriginName']);
 
             if ($productIDByExternalKey === null) {
                 $productID = $productIDByModelAndOrigin;

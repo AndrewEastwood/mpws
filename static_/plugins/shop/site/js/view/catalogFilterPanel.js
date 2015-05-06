@@ -58,7 +58,6 @@ define([
         },
         render: function () {
             if (this.collection.isEmpty()) {
-                this.trigger('render:complete');
                 return this;
             }
             var that = this,

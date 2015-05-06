@@ -73,6 +73,10 @@ h1#logo a {
     word-break: break-all;
 }
 
+.inline {
+  display: inline-block;
+}
+
 footer {
     ul.social a {
         text-indent: 0;
@@ -122,11 +126,72 @@ footer {
     display: none;
 }
 
+.shop-catalog-navigator {
+  .catalog-title, a, li, b:not(.caret) {
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px;
+    font-weight: normal;
+    display: block;
+    width: 210px;
+  }
+  a {
+    width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .dropdown-menu .row {
+    margin: 0px;
+    padding: 0px 0px 0px 10px;
+  }
+  .shop-category-block {
+    padding: 0px;
+    margin: 0px;
+    float: none;
+    width: 100%;
+  }
+}
+.mpws-js-catalog-products {
+  padding-top: 0;
+  .pagination {
+    margin: 0 0 0 15px;
+  }
+  nav:last-child {
+    margin-top: 30px;
+    text-align: right;
+  }
+  .shop-product-item-short {
+    background-color: #fff;
+    display: inline-block;
+    height: 240px;
+    width: 240px;
+    text-align: center;
+    margin: 30px 0 0 30px;
+    .product-item > *:not(.image) {
+      display: none;
+    }
+    .image {
+      padding: 20px;
+    }
+    img {
+      max-height: 200px;
+      max-width: 200px;
+      margin: 0px auto;
+    }
+  }
+}
+
 .shop-catalog-filter-widget {
     margin-bottom: 30px;
     .title {
         text-align: left;
         margin-bottom: 5px;
+    }
+    .content {
+      .helptext {
+        display: none;
+      }
     }
     .list-group-item {
         text-align: left;
@@ -134,6 +199,20 @@ footer {
             margin-right: 20px;
         }
     }
+    &.shop-catalog-filter-widget-features {
+      display: none;
+    }
+}
+
+.mpws-js-info-contacts {
+  .button-phones {
+    &.open > .dropdown-menu {
+      display: block;
+      top: -160px;
+      left: -32px;
+      width: 274px;
+    }
+  }
 }
 
 .btn, button {
@@ -209,6 +288,57 @@ footer {
         display: block;
         margin: 15px 0;
     }
+    .single-product-tab {
+      text-align: left;
+    }
+}
+.shop-cart-standalone {
+  .shop-cart-products {
+    margin: 30px 0;
+  }
+  a {
+    border-bottom: 0 none;
+  }
+  .brand {
+    display: none;
+  }
+  .title {
+    margin-top: 30px;
+    font-size: 13px;
+  }
+  .quantity {
+    margin-top: 10px;
+  }
+  .price {
+    margin-top: 27px;
+  }
+  .cart-item {
+    position: relative;
+    .shop-cart-product-remove {
+      margin-top: 10px;
+      display: inline-block;
+      clear: both;
+    }
+    .le-quantity {
+      border: 0 none;
+      a {
+        border: 0 none;
+        height: auto;
+        top: 20px;
+      }
+    }
+  }
+  .sidebar {
+    text-align: left;
+    .buttons-holder {
+      margin-top: 15px;
+      a {
+        display: block;
+        text-decoration: underline;
+        border: 0 none;
+      }
+    }
+  }
 }
 .le-quantity {
   padding: 12px;

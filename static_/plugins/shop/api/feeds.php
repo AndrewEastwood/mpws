@@ -187,10 +187,11 @@ class feeds {
         $headingsArray = $objWorksheet->rangeToArray('A1:'.$highestColumn.'1',null, true, true, true);
         $headingsArray = $headingsArray[1];
 
+
         $r = -1;
         $namedDataArray = array();
         for ($row = 2; $row <= $highestRow; ++$row) {
-            $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row,null, true, true, true);
+            $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row, null, true, true, true);
             if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
                 ++$r;
                 foreach($headingsArray as $columnKey => $columnHeading) {
@@ -200,6 +201,7 @@ class feeds {
         }
 
         $errors = array();
+        $info = array();
         $parsedProducts = array();
         $addedCount = 0;
         $updatedCount = 0;
@@ -210,8 +212,11 @@ class feeds {
         $keysToEncode = array('Name', 'Model', 'CategoryName', 'OriginName',
             'Description', 'Features', 'TAGS', 'WARRANTY');
 
-        // archive all products
-        API::getAPI('shop:products')->archiveAllProducts();
+        // archive all products if Status column is added in feed
+        if (in_array('Status', $headingsArray)) {
+            $info[] = 'Archiving all prducts';
+            API::getAPI('shop:products')->archiveAllProducts();
+        }
 
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
@@ -462,6 +467,7 @@ class feeds {
 
         // save log file
         $results['ERRORS'] = $errors;
+        $results['INFO'] = $info;
         file_put_contents($feedLogPath, print_r($results, true));
 
         ob_end_flush();

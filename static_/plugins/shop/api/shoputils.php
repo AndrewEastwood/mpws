@@ -5,8 +5,6 @@ class shoputils {
 
     public static function createProductExternalKey ($data) {
         $ExternalKey = array();
-        if (isset($data['Name']))
-            $ExternalKey[] = $data['Name'];
         if (isset($data['OriginName']))
             $ExternalKey[] = $data['OriginName'];
         if (isset($data['Model']))
