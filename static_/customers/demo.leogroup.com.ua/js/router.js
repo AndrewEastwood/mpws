@@ -101,6 +101,22 @@ define([
                 $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
 
 
+                var hotOffers = this.plugins.shop.hotOffers({design: {style: 'offerbanner'}});
+                hotOffers.on('shop:rendered', function () {
+                    hotOffers.$el.owlCarousel({
+                        loop: true,
+                        autoplay: true,
+                        autoplayTimeout: 5000,
+                        autoplayHoverPause: true,
+                        items: 1,
+                        animateOut: 'slideOutLeft',
+                        animateIn: 'slideInRight',
+                        stagePadding:-30,
+                        smartSpeed:450
+                    });
+                });
+                $('.mpws-js-shop-offers-carousel').html(hotOffers.$el);
+
                 var optionsCategoryMenu = {design: {className: 'nav navbar-nav'}};
                 that.views.categoryHomeMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
 

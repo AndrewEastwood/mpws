@@ -179,7 +179,6 @@ define([
                 $tplHomeFrame.find('.mpws-js-catalog-tree').html(that.views.categoryHomeMenu.render().$el);
                 $tplHomeFrame.find('.mpws-js-shop-offers-carousel').html(hotOffers.$el);
                 hotOffers.$el.addClass('owl-carousel owl-inner-nav owl-ui-sm owl-theme');
-                hotOffers.$el.addClass('owl-carousel owl-inner-nav owl-ui-sm owl-theme');
                 $('.mpws-js-main-home-frame').html($tplHomeFrame);
 
                 hotOffers.on('shop:rendered', function () {
