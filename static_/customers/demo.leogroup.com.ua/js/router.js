@@ -8,15 +8,7 @@ define([
     'isotope',
     // page templates
     'text!./../hbs/breadcrumb.hbs',
-    // 'text!./../hbs/homeFrame.hbs',
-    // 'text!./../hbs/productsTab.hbs',
-    // 'text!./../hbs/viewedProducts.hbs',
-    // 'text!./../hbs/page404.hbs',
-    // 'text!./../hbs/catalogBrowser.hbs',
-    // 'text!./../hbs/categoriesRibbon.hbs',
-    // 'text!./../hbs/productComparisons.hbs',
-    // 'text!./../hbs/productWishlist.hbs',
-    // 'text!./../hbs/search.hbs',
+    // plugins
     'owl.carousel',
     'bootstrap',
     'icheck',
@@ -28,7 +20,6 @@ define([
     $.bridget('isotope', Isotope);
 
     var shopRoutes = {
-        // '!/': 'home',
         '!/catalog/:category': 'shopCatalogCategory',
         '!/catalog/:category/:page': 'shopCatalogCategoryPage',
         '!/catalog/': 'home', //catalog
@@ -38,7 +29,6 @@ define([
         '!/compare': 'shopCompare',
         '!/tracking/(:id)': 'shopTracking',
         '!/search/:text': 'shopSearch'
-        // "!/shop/profile/orders": "shop_profile_orders"
     };
 
     APP.configurePlugins({
@@ -58,7 +48,6 @@ define([
     }
 
     function filterLayoutElements (filter) {
-        // debugger
         var $container = $('#container'),
             defaultOptions = {
                 itemSelector : '.element',
@@ -105,6 +94,7 @@ define([
             var that = this;
             this.on('app:ready', function () {
                 filterLayoutElements('.home');
+
                 // menu items
                 $('.mpws-js-menu-cart').html(that.plugins.shop.menuItemCart().$el);
                 $('.mpws-js-menu-payment').html(that.plugins.shop.menuItemPopupInfoPayment().$el);
@@ -113,6 +103,18 @@ define([
                 $('.mpws-js-menu-compare').html(that.plugins.shop.menuItemCompareList().$el);
                 $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
 
+                // setup breadcrumbs
+                var $tplBreadcrumbCat = that.templates.breadcrumb(),
+                    $tplBreadcrumbProd = that.templates.breadcrumb(),
+                    optionsSubItemChildItems = {design: {style: 'sub', className: 'dropdown-menu'}};
+                that.views.categoryBreadcrumbTopLevelListCat = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
+                that.views.categoryBreadcrumbTopLevelListProd = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
+                $tplBreadcrumbCat.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelListCat.render().$el);
+                $tplBreadcrumbProd.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelListProd.render().$el);
+                $('.mpws-js-breadcrumb-category').html($tplBreadcrumbCat);
+                $('.mpws-js-breadcrumb-product').html($tplBreadcrumbProd);
+
+                // hot offers
                 var hotOffers = this.plugins.shop.hotOffers({design: {style: 'offerbanner'}});
                 hotOffers.on('shop:rendered', function () {
                     hotOffers.$el.owlCarousel({
@@ -130,6 +132,7 @@ define([
                 });
                 $('.mpws-js-shop-offers-carousel').html(hotOffers.$el);
 
+                // category menu
                 var optionsCategoryMenu = {design: {className: 'nav navbar-nav'}};
                 that.views.categoryHomeMenu = that.plugins.shop.catalogNavigator(optionsCategoryMenu);
 
@@ -154,7 +157,6 @@ define([
                 $('.mpws-js-widget-cart').html(that.plugins.shop.cart().$el);
             });
         },
-
 
         home: function () {
             filterLayoutElements('.home');
@@ -182,7 +184,7 @@ define([
         },
 
         shopCatalogCategoryPage: function (category, pageNo) {
-            console.log('shopCatalogCategoryPage');
+            // console.log('shopCatalogCategoryPage');
             $('.mpws-js-shop-filter-panel-wrapper').removeClass('hidden');
             filterLayoutElements('.shop-catalog');
 
@@ -193,7 +195,7 @@ define([
             catalogFilterView.on('render:complete', function () {
                 initEchoJS();
                 APP.setPageAttributes(catalogFilterView.getPageAttributes());
-                filterLayoutElements('.shop-catalog');
+                // filterLayoutElements('.shop-catalog');
                 // update breadcrumb
                 var brItems = [],
                     productLocationPath = catalogFilterView.getPathInCatalog();
@@ -202,27 +204,23 @@ define([
                         subList = pathCategorySubList.hasSubCategories(locItem.ID) && pathCategorySubList.render().$el;
                     brItems.push([locItem.Name, that.plugins.shop.getCatalogUrl(locItem.ExternalKey), subList]);
                 });
-                // brItems.push([catalogFilterView.getDisplayName(), catalogFilterView.getCatalogUrl()]);
                 that.updateBreadcrumb(brItems, 'category');
             });
-
-            var $tplBreadcrumb = that.templates.breadcrumb(),
-                optionsSubItemChildItems = {design: {style: 'sub', className: 'dropdown-menu'}};
-            that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
-            $tplBreadcrumb.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
-            $('.mpws-js-breadcrumb-category').html($tplBreadcrumb);
 
             $('.mpws-js-category-filter').html(catalogFilterView.$el);
             $('.mpws-js-catalog-products').html(catalogBrowseView.$el);
         },
         shopProduct: function (id) {
-            console.log('shopProduct');
+            // console.log('shopProduct');
             $('.mpws-js-shop-filter-panel-wrapper').addClass('hidden');
             filterLayoutElements('.shop-product');
             var that = this,
-                productView = this.plugins.shop.product(id)
+                productView = this.plugins.shop.product(id);
 
             productView.on('render:complete', function () {
+                initEchoJS();
+                APP.setPageAttributes(productView.getPageAttributes());
+                // update breadcrumb
                 var brItems = [],
                     productLocationPath = productView.getPathInCatalog();
                 _(productLocationPath).each(function (locItem) {
@@ -232,15 +230,7 @@ define([
                 });
                 brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
                 that.updateBreadcrumb(brItems, 'product');
-                initEchoJS();
-                APP.setPageAttributes(productView.getPageAttributes());
             });
-
-            var $tplBreadcrumb = that.templates.breadcrumb(),
-                optionsSubItemChildItems = {design: {style: 'sub', className: 'dropdown-menu'}};
-            that.views.categoryBreadcrumbTopLevelList = that.plugins.shop.catalogNavigator(optionsSubItemChildItems);
-            $tplBreadcrumb.find('li.mpws-js-shop-categories-toplist').append(that.views.categoryBreadcrumbTopLevelList.render().$el);
-            $('.mpws-js-breadcrumb-product').html($tplBreadcrumb);
 
             $('.mpws-js-product').html(productView.$el);
         },
@@ -278,8 +268,6 @@ define([
         },
     });
 
-
-
     function initEchoJS () {
         echo.init({
             offset: 100,
@@ -295,7 +283,5 @@ define([
         });
     }
     return Router;
-
-
 
 });

@@ -209,7 +209,7 @@ define([
             return false;
         },
         filterProducts_CancelFilter: function () {
-            console.log('cancel filtering');
+            // console.log('cancel filtering');
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function (event) {

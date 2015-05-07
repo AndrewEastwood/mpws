@@ -37,86 +37,6 @@ define([
             'click .shop-cart-product-remove': 'removeProduct',
             'click .shop-cart-clear': 'clearAll',
         },
-        removeProduct: function (event) {
-            var that = this,
-                $target = $(event.target).parents('a'),
-                productID = $target.data('id');
-            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
-                if (result) {
-                    that.model.removeProduct(productID);
-                }
-            });
-        },
-        clearAll: function () {
-            var that = this;
-            BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
-                if (result) {
-                    that.model.setProduct('*', 0, true);
-                }
-            });
-        },
-        doEdit: function () {
-            // debugger
-            this.$('.shop-cart-page').addClass('hidden');
-            this.$('.shop-cart-edit').removeClass('hidden');
-        },
-        doCheckout: function () {
-            // debugger
-            this.$('.shop-cart-page').addClass('hidden');
-            this.$('.shop-cart-checkout').removeClass('hidden');
-        },
-        doSave: function () {
-            var $form = this.$('.form-order-create');
-            var result = {},
-                formDataArray = $form.serializeArray();
-            _(formDataArray).each(function (item) {
-                result[item.name] = item.value;
-            });
-            result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
-            this.model.saveOrder(result);
-        },
-        doPreview: function () {
-            // debugger
-            // var formValidator = $form.data('bootstrapValidator');
-            var that = this,
-                bvOptions = that.formValidator.getOptions() || {};
-            that.$('form.form-order-create .form-control').each(function () {
-                var fldName = $(this).attr('name');
-                if (fldName && bvOptions.fields && bvOptions.fields[fldName]) {
-                    that.formValidator.revalidateField(fldName);
-                }
-            });
-            // debugger
-            if (this.formValidator.isValid()) {
-                that.$('form.form-order-create .form-control').each(function () {
-                    var fldName = $(this).attr('name');
-                    var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
-                    // console.log(fldName + ' = ' + value);
-                    if (fldName) {
-                        that.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
-                    }
-                });
-                that.$('.shop-cart-page').addClass('hidden');
-                that.$('.shop-cart-preview').removeClass('hidden');
-            }
-        },
-        updateQuantity: function (e) {
-            // Quantity Spinner
-            e.preventDefault();
-            var $targetBtn = $(e.target),
-                $qInput = $targetBtn.parent().find('input[name="quantity"]'),
-                productID = $qInput.data('id'),
-                currentQty = parseInt($qInput.val(), 10);
-            if ($targetBtn.hasClass('shop-cart-product-minus') && currentQty > 1) {
-                $qInput.val(--currentQty);
-            } else if($targetBtn.hasClass('shop-cart-product-plus') && currentQty < 99) {
-                $qInput.val(++currentQty);
-            }
-            this.updateModelQuantity(productID, currentQty);
-        },
-        updateModelQuantity: _.debounce(function (productID, currentQty) {
-            this.model.setProduct(productID, currentQty, true);
-        }, 250),
         initialize: function (options) {
             this.model = ModelOrder.getInstance();
             this.modelSettings = options && options.settings || null;
@@ -127,28 +47,8 @@ define([
             this.listenTo(this.model, 'saved', this.renderSuccess);
             _.bindAll(this, 'doCheckout', 'doPreview', 'renderSuccess', 'saveUserInfo', 'clearUserInfo', 'collectUserInfo');
         },
-        collectUserInfo: function () {
-            // collect user info
-            // debugger;
-            var _userInfo = {};
-            this.$('input,textarea,select').not('disable').each(function () {
-                if (!/^shopCart/.test($(this).attr('name')))
-                    return;
-                if ($(this).is(':checkbox'))
-                    _userInfo[$(this).attr('name')] = $(this).is(':checked');
-                else
-                    _userInfo[$(this).attr('name')] = $(this).val();
-            });
-            return _userInfo;
-        },
-        saveUserInfo: function () {
-            Cache.set("shopUser", this.collectUserInfo(this));
-        },
-        clearUserInfo: function () {
-            Cache.set("shopUser", null);
-        },
         render: function () {
-            console.log('rendering cart standalone');
+            // console.log('rendering cart standalone');
             var self = this;
             var data = Utils.getHBSTemplateData(this);
             var formValidator = null;
@@ -161,13 +61,9 @@ define([
 
             // save user info
             var _userInfoChanged = _.debounce(this.saveUserInfo, 100);
-            // var _productQunatityChanged = _.debounce(function (event) {
-            //     self.updateProductQuantity.call(self, event);
-            // }, 300);
             this.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
-            // this.$el.on('change', 'input.quantity', _productQunatityChanged);
             this.$el.on('click', '.btn-promo-submit', function () {
                 self.model.applyPromo(self.$('#shop-order-promo-ID').val());
             });
@@ -220,12 +116,6 @@ define([
             $formPreview.on('submit', function () {
                 return false;
             });
-
-            // this.$('.shop-cart-do-preview').click(function () {
-            // });
-
-            // this.$('.shop-cart-do-save').click(function () {
-            // });
 
             $form.bootstrapValidator({
                 message: 'Вказане значення є неправильне',
@@ -306,21 +196,115 @@ define([
             this.delegateEvents();
             return this;
         },
+        // render page when order cretaed
         renderSuccess: function (modelData) {
-                // self.model.saveOrder(result).done(function () {
-                //     if (self.model.isSaved()) {
-                //         self.clearUserInfo();
-                //         self.renderSuccess(self.model.toJSON());
-                //         self.clear();
-                //     }
-                // });
             var data = Utils.getHBSTemplateData(this);
             this.clearUserInfo();
             this.$el.off().empty().html(this.templates.success(data));
             return this;
+        },
+        // remove product from cart
+        removeProduct: function (event) {
+            var that = this,
+                $target = $(event.target).parents('a'),
+                productID = $target.data('id');
+            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
+                if (result) {
+                    that.model.removeProduct(productID);
+                }
+            });
+        },
+        // truncate shopping cart
+        clearAll: function () {
+            var that = this;
+            BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
+                if (result) {
+                    that.model.setProduct('*', 0, true);
+                }
+            });
+        },
+        // naigate to edit page
+        doEdit: function () {
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-edit').removeClass('hidden');
+        },
+        // navigate to checkout page
+        doCheckout: function () {
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-checkout').removeClass('hidden');
+        },
+        // navigate to save page
+        doSave: function () {
+            var $form = this.$('.form-order-create');
+            var result = {},
+                formDataArray = $form.serializeArray();
+            _(formDataArray).each(function (item) {
+                result[item.name] = item.value;
+            });
+            result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
+            this.model.saveOrder(result);
+        },
+        // navigate to preview page
+        doPreview: function () {
+            var that = this,
+                bvOptions = that.formValidator.getOptions() || {};
+            that.$('form.form-order-create .form-control').each(function () {
+                var fldName = $(this).attr('name');
+                if (fldName && bvOptions.fields && bvOptions.fields[fldName]) {
+                    that.formValidator.revalidateField(fldName);
+                }
+            });
+            if (this.formValidator.isValid()) {
+                that.$('form.form-order-create .form-control').each(function () {
+                    var fldName = $(this).attr('name');
+                    var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
+                    // console.log(fldName + ' = ' + value);
+                    if (fldName) {
+                        that.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
+                    }
+                });
+                that.$('.shop-cart-page').addClass('hidden');
+                that.$('.shop-cart-preview').removeClass('hidden');
+            }
+        },
+        // set new qunatity for specific product
+        updateQuantity: function (e) {
+            // Quantity Spinner
+            e.preventDefault();
+            var $targetBtn = $(e.target),
+                $qInput = $targetBtn.parent().find('input[name="quantity"]'),
+                productID = $qInput.data('id'),
+                currentQty = parseInt($qInput.val(), 10);
+            if ($targetBtn.hasClass('shop-cart-product-minus') && currentQty > 1) {
+                $qInput.val(--currentQty);
+            } else if($targetBtn.hasClass('shop-cart-product-plus') && currentQty < 99) {
+                $qInput.val(++currentQty);
+            }
+            this.updateModelQuantity(productID, currentQty);
+        },
+        updateModelQuantity: _.debounce(function (productID, currentQty) {
+            this.model.setProduct(productID, currentQty, true);
+        }, 250),
+        // manage user's data for order form
+        collectUserInfo: function () {
+            // collect user info
+            var _userInfo = {};
+            this.$('input,textarea,select').not('disable').each(function () {
+                if (!/^shopCart/.test($(this).attr('name')))
+                    return;
+                if ($(this).is(':checkbox'))
+                    _userInfo[$(this).attr('name')] = $(this).is(':checked');
+                else
+                    _userInfo[$(this).attr('name')] = $(this).val();
+            });
+            return _userInfo;
+        },
+        saveUserInfo: function () {
+            Cache.set("shopUser", this.collectUserInfo(this));
+        },
+        clearUserInfo: function () {
+            Cache.set("shopUser", null);
         }
-
-
     });
 
     return CartStandalone;
