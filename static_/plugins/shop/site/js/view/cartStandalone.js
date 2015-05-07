@@ -31,6 +31,7 @@ define([
         events: {
             'click .shop-cart-product-quantity a': 'updateQuantity',
             'click .shop-cart-do-checkout': 'doCheckout',
+            'click .shop-cart-do-edit': 'doEdit',
             'click .shop-cart-do-preview': 'doPreview',
             'click .shop-cart-do-save': 'doSave',
             'click .shop-cart-product-remove': 'removeProduct',
@@ -53,6 +54,11 @@ define([
                     that.model.setProduct('*', 0, true);
                 }
             });
+        },
+        doEdit: function () {
+            // debugger
+            this.$('.shop-cart-page').addClass('hidden');
+            this.$('.shop-cart-edit').removeClass('hidden');
         },
         doCheckout: function () {
             // debugger
@@ -142,7 +148,7 @@ define([
             Cache.set("shopUser", null);
         },
         render: function () {
-            console.log('rendering car standalone');
+            console.log('rendering cart standalone');
             var self = this;
             var data = Utils.getHBSTemplateData(this);
             var formValidator = null;

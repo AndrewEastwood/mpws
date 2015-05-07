@@ -272,45 +272,30 @@ define([
 
         // pages
         catalogFilterPanel: function (categoryID, pageNo, manualFilters) {
-            // create new view
-            var view = new ViewCatalogFilterPanel();
+            // create new view or get existent
+            this.viewCatalogFilterPanelTmp = this.viewCatalogFilterPanelTmp || new ViewCatalogFilterPanel();
             collCatalog.setCategoryID(categoryID);
             if (pageNo) {
                 var _pageNo = parseInt(pageNo, 10);
                 if (_pageNo.toString() === pageNo) {
-                    view.collection.setFilter('filter_viewPageNum', pageNo);
+                    this.viewCatalogFilterPanelTmp.collection.setFilter('filter_viewPageNum', pageNo);
                 }
             }
             if (manualFilters) {
                 _(manualFilters).each(function (filterValue, filterKey) {
-                    view.collection.setFilter(filterKey, filterValue);
+                    this.viewCatalogFilterPanelTmp.collection.setFilter(filterKey, filterValue);
                 });
             }
             collCatalog.fetch({
                 reset: true
             });
-            return view;
+            return this.viewCatalogFilterPanelTmp;
         },
         catalogBrowseContent: function (options) {
             // create new view
             var view = new ViewCatalogBrowseContent(options || {});
             return view;
         },
-
-        // catalogCategory: function (categoryID, pageNo) {
-        //     // create new view
-        //     var listProductCatalog = new ViewListProductCatalog({
-        //         categoryID: categoryID
-        //     });
-        //     var _pageNo = parseInt(pageNo, 10);
-        //     if (_pageNo.toString() === pageNo) {
-        //         listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
-        //     }
-        //     listProductCatalog.collection.fetch({
-        //         reset: true
-        //     });
-        //     return listProductCatalog;
-        // },
 
         product: function (productID) {
             // create new view

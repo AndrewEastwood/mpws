@@ -17,15 +17,15 @@ define([
         },
         savedFilters: {},
         initialize: function (categoryID) {
-            console.log('initialize');
-            console.log(categoryID);
+            // console.log('initialize');
+            // console.log(categoryID);
             if (categoryID) {
                 this.setCategoryID(categoryID);
             }
         },
         setCategoryID: function (categoryID) {
-            console.log('setCategoryID');
-            console.log(categoryID);
+            // console.log('setCategoryID');
+            // console.log(categoryID);
             var resetFilter = this.categoryID !== categoryID;
             if (resetFilter) {
                 this.resetFilter();
@@ -66,8 +66,8 @@ define([
             _(this.filter.filterOptionsApplied).each(function (v, filterKey) {
                 Cache.set(filterKey, null);
             });
-            console.log('resetFilter');
-            console.log(JSON.stringify(this.filter.filterOptionsApplied));
+            // console.log('resetFilter');
+            // console.log(JSON.stringify(this.filter.filterOptionsApplied));
             return this;
         },
         isFilterApplied: function (filter) {
@@ -98,7 +98,7 @@ define([
             return this.filter.filterOptionsApplied[filterKey];
         },
         setFilter: function (filterKey, value) {
-            console.log('setFilter   ' + filterKey + '   , ' + value);
+            // console.log('setFilter   ' + filterKey + '   , ' + value);
             var key = this.generateFilterStorageKey(filterKey);
             this.filter.filterOptionsApplied[filterKey] = value;
             Cache.set(filterKey, this.filter.filterOptionsApplied[filterKey]);

@@ -45,10 +45,11 @@ define([
         },
         initialize: function (options) {
             this.collection = CollListProductCatalog.getInstance();
-            _.bindAll(this, 'render', 'switchCurrency');
+            _.bindAll(this, 'switchCurrency');
             // this.collection.setCategoryID(options.categoryID);
-            this.collection.on('sync', this.render, this);
-            this.collection.on('reset', this.render, this);
+            this.listenTo(this.collection, 'sync', this.render);
+            // this.collection.on('sync', this.render, this);
+            // this.collection.on('reset', this.render, this);
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
         },
         switchCurrency: function () {
@@ -57,6 +58,7 @@ define([
             }
         },
         render: function () {
+            console.log('viewCatalogFilterPanelTmp render');
             if (this.collection.isEmpty()) {
                 return this;
             }
@@ -235,6 +237,13 @@ define([
             // }
             _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
             _innerCheckbox.trigger('change');
+        },
+        close: function () {
+            this.unbind(); // Unbind all local event bindings
+            this.collection.unbind('sync', this.render, this); // Unbind reference to the model
+            this.remove(); // Remove view from DOM
+            delete this.$el; // Delete the jQuery wrapped object variable
+            delete this.el; // Delete the variable reference to this node
         }
     });
 
