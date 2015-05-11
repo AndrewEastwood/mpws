@@ -4,14 +4,14 @@ define([
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/popupSettingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     'editable-wysihtml5'
-], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     var PopupSettingsAddress = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -93,15 +93,17 @@ define([
                             InfoWarranty: that.$('#js-info-InfoWarranty').editable('getValue', true),
                             EmailSupport: that.$('#js-EmailSupport').val(),
                         });
-                        that.model.save().then(function (resp) {
-                            if (resp && resp.success) {
-                                BSAlerts.success(lang.settings_message_success);
+                        that.model.save().then(function (response) {
+                            if (!response || !response.success) {
+                                toastr.error(lang.settings_error_save);
+                            } else {
+                                toastr.success(lang.settings_message_success);
                                 that.trigger('updated');
                             }
-                            if (resp.errors) {
+                            if (response.errors) {
                             }
                         }, function () {
-                            BSAlerts.danger(lang.settings_error_save);
+                            toastr.error(lang.settings_error_save);
                             that.model.set(that.model.previousAttributes());
                             that.render();
                         });

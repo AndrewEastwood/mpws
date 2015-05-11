@@ -3,7 +3,7 @@ define([
 ], function (Backbone) {
 
     var Promo = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         urlRoot: APP.getApiLink('shop', 'promos')
     });
 

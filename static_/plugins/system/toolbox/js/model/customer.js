@@ -3,7 +3,7 @@ define([
 ], function (Backbone) {
 
     var Customer = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         urlRoot: APP.getApiLink('system', 'customers')
     });
 

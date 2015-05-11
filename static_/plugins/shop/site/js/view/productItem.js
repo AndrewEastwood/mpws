@@ -280,7 +280,7 @@ define([
                 cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.InfoShipping
+                message: APP.instances.shop.settings._user.activeAddress.InfoShipping
             });
         },
         openPopupPayments: function (event) {
@@ -289,7 +289,7 @@ define([
                 cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.InfoPayment
+                message: APP.instances.shop.settings._user.activeAddress.InfoPayment
             });
         },
         openPopupOpenHours: function (event) {
@@ -300,7 +300,7 @@ define([
                 title: $(event.target).html().trim(),
                 message: function () {
                     var $openHoursList = $('<ul>').addClass('list-group');
-                    _(APP.instances.shop.settings._activeAddress.OpenHoursMap).each(function (item) {
+                    _(APP.instances.shop.settings._user.activeAddress.OpenHoursMap).each(function (item) {
                         $openHoursList.append($('<li>').addClass('list-group-item ' + (item.isToday ? 'active' : '')).append([
                             $('<span>').addClass('badge').text(item.hours),
                             item.day
@@ -318,7 +318,7 @@ define([
                 title: $(event.target).html().trim(),
                 message: function () {
                     var $contactsList = $('<ul>').addClass('list-group');
-                    _(APP.instances.shop.settings._activeAddress.PhonesMap).each(function (item) {
+                    _(APP.instances.shop.settings._user.activeAddress.PhonesMap).each(function (item) {
                         $contactsList.append($('<li>').addClass('list-group-item').append([
                             $('<span>').addClass('badge').text(item.value),
                             item.label
@@ -334,7 +334,7 @@ define([
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
-                message: APP.instances.shop.settings._activeAddress.InfoWarranty
+                message: APP.instances.shop.settings._user.activeAddress.InfoWarranty
             });
         }
     });

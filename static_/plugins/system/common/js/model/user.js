@@ -7,7 +7,7 @@ define([
 ], function (AccountAddress, $, _, Backbone, Cache) {
 
     var User = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         urlRoot: APP.getApiLink('system', 'users'),
         // url: function () {
         //     var _params =  {

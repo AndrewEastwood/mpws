@@ -4,7 +4,7 @@ define([
 ], function (Backbone, moment) {
 
     var Feed = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         url: function () {
             var _params =  {};
             if (!this.isNew()) {

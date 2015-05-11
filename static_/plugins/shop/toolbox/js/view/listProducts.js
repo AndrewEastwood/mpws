@@ -4,6 +4,7 @@ define([
     'utils',
     "backgrid",
     "formatter-price",
+    'toastr',
     /* collection */
     "plugins/shop/toolbox/js/collection/listProducts",
     /* template */
@@ -15,7 +16,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, toastr, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -85,7 +86,12 @@ define([
                     this.listenTo(this.model, "change:Name", function (model) {
                         model.save(model.changed, {
                             silent: true,
-                            success: function () {
+                            success: function (m, response) {
+                                if (!response || !response.success) {
+                                    toastr.error('Помилка');
+                                } else {
+                                    toastr.success('Успішно');
+                                }
                                 model.collection.fetch({
                                     reset: true
                                 });
@@ -105,7 +111,12 @@ define([
                     this.listenTo(this.model, "change:Model", function (model) {
                         model.save(model.changed, {
                             silent: true,
-                            success: function () {
+                            success: function (m, response) {
+                                if (!response || !response.success) {
+                                    toastr.error('Помилка');
+                                } else {
+                                    toastr.success('Успішно');
+                                }
                                 model.collection.fetch({
                                     reset: true
                                 });
@@ -149,7 +160,12 @@ define([
                     this.listenTo(this.model, "change:SKU", function (model) {
                         model.save(model.changed, {
                             silent: true,
-                            success: function () {
+                            success: function (m, response) {
+                                if (!response || !response.success) {
+                                    toastr.error('Помилка');
+                                } else {
+                                    toastr.success('Успішно');
+                                }
                                 model.collection.fetch({
                                     reset: true
                                 });
@@ -169,7 +185,12 @@ define([
                     this.listenTo(this.model, "change:Price", function (model) {
                         model.save(model.changed, {
                             silent: true,
-                            success: function () {
+                            success: function (m, response) {
+                                if (!response || !response.success) {
+                                    toastr.error('Помилка');
+                                } else {
+                                    toastr.success('Успішно');
+                                }
                                 model.collection.fetch({
                                     reset: true
                                 });
@@ -214,8 +235,13 @@ define([
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
                     this.listenTo(this.model, "change:Status", function (model) {
                         model.save(model.changed, {
-                            patch: true,
-                            success: function () {
+                            silent: true,
+                            success: function (m, response) {
+                                if (!response || !response.success) {
+                                    toastr.error('Помилка');
+                                } else {
+                                    toastr.success('Успішно');
+                                }
                                 model.collection.fetch({
                                     reset: true
                                 });

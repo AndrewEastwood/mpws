@@ -5,13 +5,13 @@ define([
     'plugins/shop/toolbox/js/view/popupSettingsAddress',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/settingsAddress.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-switch'
-], function (Backbone, Handlebars, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, CollectionSettings, PopupSettingsAddress, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-addresses",
@@ -77,7 +77,7 @@ define([
             BootstrapDialog.confirm(lang.settings_msg_confirmation_delete_address, function (rez) {
                 if (rez) {
                     model.destroy().fail(function () {
-                        BSAlerts.danger(lang.settings_error_save);
+                        toastr.error(lang.settings_error_save);
                     }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
                 }
             });
@@ -91,7 +91,7 @@ define([
             if (model) {
                 model.set('Status', !!state ? 'ACTIVE' : 'DISABLED');
                 model.save().fail(function () {
-                    BSAlerts.danger(lang.settings_error_save);
+                    toastr.error(lang.settings_error_save);
                 }).always($.proxy(self.collection.fetch, self.collection)({reset: true}));
             }
         }

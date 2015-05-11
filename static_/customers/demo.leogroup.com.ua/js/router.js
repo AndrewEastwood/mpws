@@ -218,6 +218,7 @@ define([
                 productView = this.plugins.shop.product(id);
 
             productView.on('render:complete', function () {
+                filterLayoutElements('.shop-product');
                 initEchoJS();
                 APP.setPageAttributes(productView.getPageAttributes());
                 // update breadcrumb

@@ -1,2 +1,2 @@
 dep:
-	(cd ./deploy && grunt deploy)
+	(rm -rf ./_dist_/ && cd ./deploy && grunt deploy)

@@ -3,7 +3,7 @@ define([
 ], function (Backbone) {
 
     var Origin = Backbone.Model.extend({
-        idAttribute: "ID",
+        idAttribute: 'ID',
         urlRoot: APP.getApiLink('shop', 'origins')
     });
 

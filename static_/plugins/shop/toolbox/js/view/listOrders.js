@@ -4,6 +4,7 @@ define([
     'utils',
     "backgrid",
     "formatter-price",
+    'toastr',
     /* collection */
     "plugins/shop/toolbox/js/collection/listOrders",
     /* template */
@@ -14,7 +15,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, toastr, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
         // we show following statuses only
@@ -86,8 +87,9 @@ define([
             editable: false,
             formatter: {
                 fromRaw: function (value) {
-                    if (!!value)
+                    if (!!value) {
                         return $('<i/>').addClass('fa fa-check-circle-o');
+                    }
                 }
             }
         };
@@ -99,8 +101,9 @@ define([
             editable: false,
             formatter: {
                 fromRaw: function (value) {
-                    if (value)
+                    if (value) {
                         return value + ' %';
+                    }
                 }
             }
         };
@@ -120,7 +123,12 @@ define([
                             return;
                         }
                         skipSave = true;
-                        model.save(model.changed).done(function () {
+                        model.save(model.changed).done(function (response) {
+                            if (!response || !response.success) {
+                                toastr.error('Помилка');
+                            } else {
+                                toastr.success('Успішно');
+                            }
                             model.collection.fetch({
                                 reset: true
                             }, {
@@ -142,8 +150,9 @@ define([
             formatter: {
                 fromRaw: function (value) {
                     var _logisticAgency = lang['logisticAgency_' + value];
-                    if (_logisticAgency)
+                    if (_logisticAgency) {
                         return _logisticAgency;
+                    }
                     return lang.logisticAgency_Unknown;
                 }
             }
