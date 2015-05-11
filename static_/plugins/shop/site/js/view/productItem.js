@@ -115,7 +115,7 @@ define([
                 // show price chart (powered by http://omnipotent.net/jquery.sparkline)
                 var prices = this.model.get('_prices') || {},
                     priceHistory = _(prices.history || {}).values(),
-                    priceHistoryValuesChain = _(priceHistory).chain().pluck(1),
+                    priceHistoryValuesChain = _(priceHistory).chain().pluck(1).filter(function (v) { return v; }),
                     priceHistoryValues = priceHistoryValuesChain.value(),
                     priceHistoryMax = priceHistoryValuesChain.max().value(),
                     priceHistoryMin = priceHistoryValuesChain.min().value(),
@@ -125,7 +125,7 @@ define([
                         type: 'bar',
                         // width: '300px',
                         height: '30px',
-                        lineColor: '#cf7400',
+                        barColor: '#cf7400',
                         fillColor: false,
                         chartRangeMin: priceHistoryMin - avgMaxMin,
                         drawNormalOnTop: true

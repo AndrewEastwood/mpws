@@ -4,13 +4,13 @@ define([
     'plugins/shop/toolbox/js/model/origin',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/editOrigin.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable'
-], function (Backbone, Handlebars, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrigin, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     function _getTitle (isNew) {
         if (isNew) {
@@ -57,7 +57,9 @@ define([
                                 // debugger;
                                 if (!response || !response.success) {
                                     that.render();
+                                    toastr.error('Помилка');
                                 } else {
+                                    toastr.success('Успішно');
                                     Backbone.history.navigate(APP.instances.shop.urls.contentList, true);
                                 }
                             }

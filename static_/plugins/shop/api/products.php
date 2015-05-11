@@ -887,9 +887,13 @@ class products {
         $success = false;
 
         // adjust verify/create category
-        $adjustedRes = $this->adjustCategoryAndOriginIDs($reqData);
-        $reqData['CategoryID'] = $adjustedRes['CategoryID'];
-        $reqData['OriginID'] = $adjustedRes['OriginID'];
+        $adjustedRes = $this->adjustCategoryAndOriginIDs($reqData, true);
+        if (isset($adjustedRes['CategoryID'])) {
+            $reqData['CategoryID'] = $adjustedRes['CategoryID'];
+        }
+        if (isset($adjustedRes['OriginID'])) {
+            $reqData['OriginID'] = $adjustedRes['OriginID'];
+        }
         $errors += $adjustedRes['errors'];
 
         $validatedDataObj = Validate::getValidData($reqData, array(
@@ -1309,10 +1313,11 @@ class products {
         return $result;
     }
 
-    private function adjustCategoryAndOriginIDs ($data) {
+    private function adjustCategoryAndOriginIDs ($data, $skipIfEmpty = false) {
         $category = null;
         $origin = null;
         $errors = array();
+        $res = array();
 
         // verify/create origin
         $originID = null;
@@ -1330,13 +1335,17 @@ class products {
         }
         // create new origin
         if ($origin === null) {
-            $origin = API::getAPI('shop:origins')->getOriginByName('EmptyOrigin');
-            if (empty($origin)) {
-                $origin = API::getAPI('shop:origins')->createOrigin(array(
-                    'Name' => empty($originName) ? 'EmptyOrigin' : $originName
-                ));
-                $originID = $origin['ID'];
-                $errors += $origin['errors'];
+            if (!$skipIfEmpty) {
+                $origin = API::getAPI('shop:origins')->getOriginByName('EmptyOrigin');
+                if (empty($origin)) {
+                    $origin = API::getAPI('shop:origins')->createOrigin(array(
+                        'Name' => empty($originName) ? 'EmptyOrigin' : $originName
+                    ));
+                    $originID = $origin['ID'];
+                    $errors += $origin['errors'];
+                } else {
+                    $originID = $origin['ID'];
+                }
             }
         } else {
             $originID = $origin['ID'];
@@ -1358,44 +1367,35 @@ class products {
         }
         // create new origin
         if ($category === null) {
-            $category = API::getAPI('shop:categories')->getCategoryByName('Uncategorized');
-            if (empty($category)) {
-                $category = API::getAPI('shop:categories')->createCategory(array(
-                    'Name' => empty($categoryName) ? 'Uncategorized' : $categoryName
-                ));
-                $categoryID = $category['ID'];
-                $errors += $category['errors'];
+            if (!$skipIfEmpty) {
+                $category = API::getAPI('shop:categories')->getCategoryByName('Uncategorized');
+                if (empty($category)) {
+                    $category = API::getAPI('shop:categories')->createCategory(array(
+                        'Name' => empty($categoryName) ? 'Uncategorized' : $categoryName
+                    ));
+                    $categoryID = $category['ID'];
+                    $errors += $category['errors'];
+                } else {
+                    $categoryID = $category['ID'];
+                }
             }
         } else {
             $categoryID = $category['ID'];
         }
 
+        $res['errors'] = $errors;
+        if (!is_null($categoryID))
+            $res['CategoryID'] = $categoryID;
+        if (!is_null($originID))
+            $res['OriginID'] = $originID;
 
-            // // when new product and empty category name
-            // if (empty($data['CategoryName']) && $productID === null) {
-            //     // then we create dummy category for this product
-            //     $category = API::getAPI('shop:categories')->createCategory(array(
-            //         'Name' => 'Other'
-            //     ));
-            // }
+        return $res;
 
-            // // if category name is set we check this category and create if it's new
-            // if (!empty($data['CategoryName'])) {
-            //     // get category by name
-            //     $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
-            //     // create non-existent category and/or origin
-            //     if ($category === null) {
-            //         $category = API::getAPI('shop:categories')->createCategory(array(
-            //             'Name' => $data['CategoryName']
-            //         ));
-            //     }
-            // }
-
-        return array(
-            'errors' => $errors,
-            'OriginID' => $origin['ID'],
-            'CategoryID' => $category['ID']
-        );
+        // return array(
+        //     'errors' => ,
+        //     'OriginID' => $originID,
+        //     'CategoryID' => $categoryID
+        // );
     }
 
     public function updateOrInsertProduct ($data) {

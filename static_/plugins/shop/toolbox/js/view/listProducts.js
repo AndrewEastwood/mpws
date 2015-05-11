@@ -56,6 +56,7 @@ define([
                 fromRaw: function (value, model) {
                     var btn = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
                     var dnd = $('<span class="dndrow"><i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i></span>');
+                    dnd.data('id', model.id);
                     return [dnd, btn];
                 }
             }
@@ -254,7 +255,7 @@ define([
         });
     }
 
-    var ListOrders = Backbone.View.extend({
+    var ListProducts = Backbone.View.extend({
         className: 'list list-products',
         initialize: function (options) {
             this.options = options || {};
@@ -289,7 +290,7 @@ define([
             }, 200);
         },
         render: function () {
-            console.log('listOrders: render');
+            console.log('listProducts: render');
             // debugger;
             this.$el.off().empty();
             if (this.collection.length) {
@@ -303,5 +304,5 @@ define([
         }
     });
 
-    return ListOrders;
+    return ListProducts;
 });

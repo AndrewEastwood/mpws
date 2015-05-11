@@ -4,14 +4,14 @@ define([
     'plugins/shop/toolbox/js/model/promo',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/editPromo.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable',
     'moment'
-], function (Backbone, Handlebars, ModelPromo, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelPromo, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     function _getTitle(isNew) {
         if (isNew) {
@@ -57,7 +57,9 @@ define([
                                 // debugger;
                                 if (!response || !response.success) {
                                     that.render();
+                                    toastr.error('Помилка');
                                 } else {
+                                    toastr.success('Успішно');
                                     Backbone.history.navigate(APP.instances.shop.urls.promo, true);
                                 }
                             }

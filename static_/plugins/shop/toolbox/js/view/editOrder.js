@@ -4,13 +4,13 @@ define([
     'plugins/shop/toolbox/js/model/order',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/editOrder.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-editable'
-], function (Backbone, Handlebars, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Backbone, Handlebars, ModelOrder, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     function _getTitleByStatus (status) {
         switch (status) {
@@ -126,11 +126,13 @@ define([
                 }, {
                     success: function (model, response) {
                         if (!response || !response.success) {
-                            BSAlert.danger('Помилка під час оновлення замовлення');
+                            toastr.error('Помилка під час оновлення замовлення');
+                        } else {
+                            toastr.success('Успішно');
                         }
                     },
                     error: function () {
-                        BSAlert.danger('Помилка під час оновлення замовлення');
+                        toastr.error('Помилка під час оновлення замовлення');
                     }
                 });
             });
@@ -141,11 +143,13 @@ define([
                 }, {
                     success: function (model, response) {
                         if (!response || !response.success) {
-                            BSAlert.danger('Помилка під час оновлення замовлення');
+                            toastr.error('Помилка під час оновлення замовлення');
+                        } else {
+                            toastr.success('Успішно');
                         }
                     },
                     error: function () {
-                        BSAlert.danger('Помилка під час оновлення замовлення');
+                        toastr.error('Помилка під час оновлення замовлення');
                     }
                 });
             }, 300);

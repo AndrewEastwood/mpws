@@ -8,8 +8,7 @@ define([
     'plugins/shop/toolbox/js/view/listProducts',
     'text!plugins/shop/toolbox/hbs/managerProducts.hbs',
     /* lang */
-    'i18n!plugins/shop/toolbox/nls/translation',
-    'bootstrap-tagsinput'
+    'i18n!plugins/shop/toolbox/nls/translation'
 ], function (Cache, _, Backbone, Handlebars, Utils, ViewListProducts, tpl, lang) {
 
     var ManagerContent_Products = ViewListProducts.extend({
@@ -33,8 +32,12 @@ define([
 
             this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
                 this.refreshBadges(resp.stats);
-                // if (this && resp.stats) {
-                // }
+                // ability to set new category by dropping product onto category node (category tree)
+                this.grid.$('tbody > tr').attr({
+                    draggable: true
+                }).on('dragstart', function (ev) {
+                    ev.originalEvent.dataTransfer.setData('productId', $(this).find('.dndrow').data('id'));
+                });
             }, this));
         },
         setTitle: function () {
@@ -82,12 +85,13 @@ define([
             } else {
                 this.$('.category-title').addClass('hidden');
             }
-            // debugger;
             var searchItems = this.collection.getCustomQueryParam("Search");
             // debugger;
             if (_.isArray(searchItems)) {
                 this.$('.search').tagsinput('add', searchItems.join(','));
             }
+            // debugger;
+            this.trigger('rendered');
             return this;
         },
         search: function () {

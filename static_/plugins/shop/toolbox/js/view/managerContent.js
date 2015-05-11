@@ -10,8 +10,9 @@ define([
     /* template */
     'text!plugins/shop/toolbox/hbs/managerContent.hbs',
     /* lang */
-    'i18n!plugins/shop/toolbox/nls/translation'
-], function (_, Backbone, Handlebars, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
+    'i18n!plugins/shop/toolbox/nls/translation',
+    'toastr'
+], function (_, Backbone, Handlebars, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang, toastr) {
 
     var ManagerOrders = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -29,6 +30,8 @@ define([
                 }
             });
 
+            var that = this;
+
             this.viewProductsList = new ViewListProducts(productListOptions);
             this.viewOriginsList = new ViewListOrigins(options);
             this.viewCatergoriesTree = new ViewCategoriesTree(options);
@@ -40,7 +43,6 @@ define([
                 if (activeCategory.id < 0) {
                     // show all categories
                     this.viewProductsList.collection.setCustomQueryField("CategoryID", void(0));
-                    
                 } else {
                     this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.allIDs.join(',') + ':IN');
                 }
@@ -60,6 +62,19 @@ define([
                     reset: true
                 });
             }, 200), this);
+
+            this.viewCatergoriesTree.on('productCategoryChanged', function (eventData) {
+                if (eventData.productID < 0 || eventData.categoryID < 0) {
+                    return;
+                }
+                var productModel = that.viewProductsList.collection.get(eventData.productID);
+                productModel.setCategoryID(eventData.categoryID).done(function () {
+                    toastr.success('Успішно');
+                    that.viewProductsList.collection.fetch({
+                        reset: true
+                    });
+                });
+            });
 
             _.bindAll(this, 'saveLayout');
 

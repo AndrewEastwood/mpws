@@ -51,6 +51,7 @@ require.config({
         'select2': 'vendors/select2/select2',
         'spinjs': 'vendors/spin.js/jquery.spin',
         'spin': 'vendors/spin.js/spin',
+        'toastr': 'vendors/toastr/toastr',
         'typehead': 'vendors/typehead.js/dist/typehead.jquery',
         'underscore': 'vendors/underscore/underscore',
         'echo': 'vendors/echojs/dist/echo',

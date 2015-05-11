@@ -3,7 +3,6 @@ define([
     'handlebars',
     'utils',
     'cachejs',
-    'bootstrap-dialog',
     'plugins/shop/toolbox/js/collection/filterTreeCategories',
     /* template */
     'text!plugins/shop/toolbox/hbs/filterTreeCategories.hbs',
@@ -11,7 +10,7 @@ define([
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
     'jstree'
-], function (Backbone, Handlebars, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
+], function (Backbone, Handlebars, Utils, Cache, CollectionFilterTreeCategories, tpl, lang) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: Handlebars.compile(tpl), // check
@@ -215,7 +214,6 @@ define([
                 }
             }).on('activate_node.jstree', function (e, data) {
                 var id = parseInt(data.node.data.id, 10) || void(0);
-                // debugger;
                 var ids = [id];
                 _(data.node.children).each(function (subCategoryID) {
                     ids.push(parseInt(subCategoryID, 10))
@@ -225,8 +223,34 @@ define([
                     allIDs: ids,
                     text: data.node.text.trim()
                 });
+            }).on('dragover', 'li', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                // debugger
+                if (currentSelectedNode === null) {
+                    currentSelectedNode = jstree.get_selected();
+                }
+                jstree.deselect_all();
+                jstree.select_node(ev.target);
+                jstree.open_node(ev.target);
+            }).on('drop', 'li', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var categoryID = $(ev.currentTarget).data('id'),
+                    productID = ev.originalEvent.dataTransfer.getData('productId');
+                self.trigger('productCategoryChanged', {
+                    productID: parseInt(productID, 10),
+                    categoryID: parseInt(categoryID, 10)
+                });
+                jstree.deselect_all();
+                jstree.select_node(currentSelectedNode);
+                currentSelectedNode = null;
             });
 
+            var jstree = this.$('#categoryTree').data('jstree'),
+                currentSelectedNode = null;
+
+            this.trigger('rendered');
             return this;
         }
     });

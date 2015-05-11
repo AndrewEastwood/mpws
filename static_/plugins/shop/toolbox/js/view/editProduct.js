@@ -6,7 +6,7 @@ define([
     'utils',
     'cachejs',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     "formatter-price",
     "image-upload",
     /* template */
@@ -19,7 +19,7 @@ define([
     'bootstrap-tagsinput',
     'bootstrap-editable',
     'jquery.sparkline'
-], function ($, Backbone, Handlebars, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, priceFmt, WgtImageUpload, tpl, lang) {
+], function ($, Backbone, Handlebars, ModelProduct, Utils, Cache, BootstrapDialog, toastr, priceFmt, WgtImageUpload, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -109,19 +109,19 @@ define([
                             success: function (model, response) {
                                 if (!response || !response.success) {
                                     that.render();
-                                    BSAlert.danger('Помилка під час оновлення замовлення');
+                                    toastr.error('Помилка під час оновлення замовлення');
                                 } else {
                                     if (dialog.getData('isNew')) {
-                                        BSAlert.success('Товар успішно створено');
+                                        toastr.success('Товар успішно створено');
                                     } else {
-                                        BSAlert.success('Товар успішно оновлено');
+                                        toastr.success('Товар успішно оновлено');
                                     }
                                     // dialog.close();
                                     Backbone.history.navigate(APP.instances.shop.urls.contentList, true);
                                 }
                             },
                             error: function () {
-                                BSAlert.danger('Помилка під час оновлення замовлення');
+                                toastr.error('Помилка під час оновлення замовлення');
                             }
                         });
                     }

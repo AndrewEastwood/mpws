@@ -133,6 +133,11 @@ class dbquery {
                                 $valToSearch = '%' . $valToSearch . '%';
                                 $conditionOp = 'like';
                                 break;
+                            case 'cat':
+                                $conditionField = "shop_categories.Name";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
                         }
                         // var_dump($conditionField);
                         // var_dump($valToSearch);
