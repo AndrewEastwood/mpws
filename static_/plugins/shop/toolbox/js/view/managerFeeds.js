@@ -3,6 +3,7 @@ define([
     'handlebars',
     'utils',
     'bootstrap-dialog',
+    'toastr',
     'plugins/shop/toolbox/js/view/feed',
     /* collection */
     "plugins/shop/toolbox/js/collection/feeds",
@@ -11,7 +12,7 @@ define([
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'image-upload',
-], function (Backbone, Handlebars, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
+], function (Backbone, Handlebars, Utils, BootstrapDialog, toastr, ViewFeed, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({
         template: Handlebars.compile(tpl), // check
@@ -62,7 +63,8 @@ define([
                         name: response.result.files[0].name
                     }, {
                         wait: true,
-                        success: function () {
+                        success: function (col, response) {
+                            toastr.success('Файл додано');
                             that.collection.fetch({reset: true});
                         }
                     });
@@ -72,9 +74,17 @@ define([
         },
         generateFeed: function (event) {
             var that = this;
+            if (that.$('.generate').hasClass('disabled')) {
+                return;
+            }
             BootstrapDialog.confirm('Generate new feed?', function (rez) {
                 if (rez) {
-                    that.collection.generateNewProductFeed();
+                    that.$('.generate').addClass('fa-spin disabled text-muted');
+                    that.collection.generateNewProductFeed()
+                        .done(function () {
+                            that.$('.generate').removeClass('fa-spin disabled text-muted');
+                            toastr.success('Згенеровано');
+                        });
                 }
             });
         },
@@ -101,12 +111,18 @@ define([
                         dataFilter: function (data) {
                             return data.replace(/[#;].*\n/g, '');
                         },
-                        success: function (resp) {
+                        success: function (col, response) {
                             // debugger;
+                            if (!response || !response.success) {
+                                toastr.error('Помилка імпорту');
+                            } else {
+                                toastr.success('Імпорт завершено');
+                            }
                             that.collection.fetch({reset: true});
                         },
                         error: function () {
                             // debugger;
+                            toastr.success('Помилка імпорту');
                         }
                     });
                 }
@@ -125,6 +141,7 @@ define([
                     feedModel.cancelActiveImportProductFeed({
                         patch: true,
                         success: function () {
+                            toastr.success('Скасовано');
                             that.collection.fetch({reset: true});
                         }
                     });
@@ -143,6 +160,7 @@ define([
                 if (rez) {
                     feedModel.destroy({
                         success: function () {
+                            toastr.success('Видалено');
                             that.collection.fetch({reset: true});
                         }
                     });

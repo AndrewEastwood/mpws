@@ -9,8 +9,9 @@ define([
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     /* extensions */
+    'toastr',
     'jstree'
-], function (Backbone, Handlebars, Utils, Cache, CollectionFilterTreeCategories, tpl, lang) {
+], function (Backbone, Handlebars, Utils, Cache, CollectionFilterTreeCategories, tpl, lang, toastr) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: Handlebars.compile(tpl), // check
@@ -108,13 +109,19 @@ define([
                                     model.save({
                                         Status: "ACTIVE"
                                     }, {
-                                        success: function (model, resp, options) {
+                                        success: function (model, response, options) {
+                                            if (!response || !response.success) {
+                                                toastr.error('Помилка');
+                                            } else {
+                                                toastr.success('Успішно');
+                                            }
                                             self.collection.fetch({
                                                 reset: true
                                             });
                                         },
                                         error: function () {
                                             inst.refresh();
+                                            toastr.error('Помилка');
                                         }
                                     });
                                 }
@@ -137,19 +144,20 @@ define([
                 }
             }).on('create_node.jstree', function (e, data) {
                 self.collection.create(data.node.original, {
-                    success: function (model, resp, options) {
-                        if (!resp || (resp.errors && resp.errors.length) || !resp.ID)
+                    success: function (model, response, options) {
+                        if (!response || (response.errors && response.errors.length) || !response.ID)
                             data.instance.refresh();
                         else {
                             data.node.data = {
-                                id: resp.ID,
-                                parent: resp.ParentID
+                                id: response.ID,
+                                parent: response.ParentID
                             };
-                            data.instance.set_id(data.node, resp.ID);
+                            data.instance.set_id(data.node, response.ID);
                         }
                     },
                     error: function () {
                         data.instance.refresh();
+                        toastr.error('Помилка');
                     }
                 });
             }).on('rename_node.jstree', function (e, data) {
@@ -159,12 +167,18 @@ define([
                     model.save({
                         Name: data.node.text.trim()
                     }, {
-                        success: function (model, resp, options) {
-                            if (!resp || (resp.errors && resp.errors.length) || !resp.ID)
+                        success: function (model, response, options) {
+                            if (!response || !response.success) {
+                                toastr.error('Помилка');
+                            } else {
+                                toastr.success('Успішно');
+                            }
+                            if (!response || (response.errors && response.errors.length) || !response.ID)
                                 data.instance.refresh();
                         },
                         error: function () {
                             data.instance.refresh();
+                            toastr.error('Помилка');
                         }
                     });
                 }
@@ -173,7 +187,12 @@ define([
                 var model = self.collection.get(id);
                 if (model && model.destroy) {
                     model.destroy({
-                        success: function (model, resp, options) {
+                        success: function (model, response, options) {
+                            if (!response || !response.success) {
+                                toastr.error('Помилка');
+                            } else {
+                                toastr.success('Успішно');
+                            }
                             // debugger;
                             // if (resp && resp.Status) {
                             //     data.node.type = resp.Status;
@@ -185,6 +204,7 @@ define([
                         },
                         error: function () {
                             data.instance.refresh();
+                            toastr.error('Помилка');
                         }
                     });
                 }
@@ -199,7 +219,12 @@ define([
                     model.save({
                         ParentID: parentID >= 0 ? parentID : null
                     }, {
-                        success: function (model, resp, options) {
+                        success: function (model, response, options) {
+                            if (!response || !response.success) {
+                                toastr.error('Помилка');
+                            } else {
+                                toastr.success('Успішно');
+                            }
                             // data.instance.refresh();
                             self.collection.fetch({
                                 reset: true
@@ -207,6 +232,7 @@ define([
                         },
                         error: function () {
                             data.instance.refresh();
+                            toastr.error('Помилка');
                         }
                     });
                 } else {

@@ -4,14 +4,14 @@ define([
     'plugins/shop/toolbox/js/model/category',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/editCategory.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'image-upload',
     'select2',
-], function (Backbone, Handlebars, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelCategory, Utils, BootstrapDialog, toastr, tpl, lang, WgtImageUpload) {
 
     function _getTitle(isNew) {
         if (isNew) {
@@ -50,7 +50,7 @@ define([
                     label: lang.popup_category_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        debugger
+                        // debugger
                         that.model.set({
                             Name: that.$('#name').val(),
                             Description: that.$('#description').val(),
@@ -62,7 +62,9 @@ define([
                         that.model.save().done(function (response) {
                             if (!response || !response.success) {
                                 that.render();
+                                toastr.error('Помилка');
                             } else {
+                                toastr.success('Успішно');
                                 Backbone.history.navigate(APP.instances.shop.urls.contentList, true);
                             }
                         });

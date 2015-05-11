@@ -207,7 +207,7 @@ define([
                 tags: true,
                 maximumSelectionSize: 1,
                 createSearchChoice: function(term, data) {
-                    if(data.some(function(r) { return r.text == term })) {
+                    if (data.some(function(r) { return r.text == term })) {
                         return { id: term, text: term };
                     }
                     else {

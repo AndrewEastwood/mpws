@@ -22,6 +22,15 @@
         getApiLink: function (options) {
             throw "Implment function getApiLink";
         },
+        getApiLink: function (options) {
+            throw "Implment function getApiLink";
+        },
+        getStaticCustomerLink: function (customer, ending) {
+            return ('/static_/customers/' + (customer || APP.config.CUSTOMER) + '/' + ending).replace('//', '/');
+        },
+        getStaticDefaultLink: function (ending) {
+            return '/static_/base/'.replace('//', '/');
+        },
         dfd: {},
         utils: {
             replaceArray: function (replaceString, find, replace) {

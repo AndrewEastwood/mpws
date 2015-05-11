@@ -18,7 +18,7 @@ define([
                 jobUrl = APP.getApiLink('shop','feeds',{
                     generate: true
                 });
-            Backbone.$.get(jobUrl, function () {
+            return Backbone.$.get(jobUrl, function () {
                 that.fetch({reset: true});
             });
         },

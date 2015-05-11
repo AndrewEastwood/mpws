@@ -20,6 +20,7 @@ define([
             'itemRemoved .search': 'search'
         },
         initialize: function (options) {
+            var that = this;
             this.options = options || {};
             ViewListProducts.prototype.initialize.call(this, options);
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
@@ -30,15 +31,21 @@ define([
             }
             this.collection.setCustomQueryParam("Stats", true);
 
-            this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
-                this.refreshBadges(resp.stats);
+            // setup drag icon
+            this.dragIcon = document.createElement('img');
+            this.dragIcon.src = APP.getStaticCustomerLink(null, 'img/defaultDragIcon.png');
+            this.dragIcon.width = 100;
+
+            this.listenTo(this.collection, 'sync', function (collection, resp) {
+                that.refreshBadges(resp.stats);
                 // ability to set new category by dropping product onto category node (category tree)
-                this.grid.$('tbody > tr').attr({
+                that.grid.$('tbody > tr').attr({
                     draggable: true
                 }).on('dragstart', function (ev) {
+                    ev.originalEvent.dataTransfer.setDragImage(that.dragIcon, -10, -10);
                     ev.originalEvent.dataTransfer.setData('productId', $(this).find('.dndrow').data('id'));
                 });
-            }, this));
+            });
         },
         setTitle: function () {
             this.$('.title').text(lang.pluginMenu_Products_Grid_Title);
