@@ -122,8 +122,8 @@ module.exports = function (grunt) {
                     mainConfigFile: paths.base + 'js/loader.js',
                     dir: paths.jsbuild,
                     findNestedDependencies: false,
-                    optimize: 'none',
-                    // optimize: 'uglify2',
+                    // optimize: 'none',
+                    optimize: 'uglify2',
                     skipDirOptimize: true,
                     modules: getModules(),
                     optimizeCss: 'none'

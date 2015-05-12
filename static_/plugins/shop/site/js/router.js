@@ -273,6 +273,7 @@ define([
         // pages
         catalogFilterPanel: function (categoryID, pageNo, manualFilters) {
             // create new view or get existent
+            var that = this;
             this.viewCatalogFilterPanelTmp = this.viewCatalogFilterPanelTmp || new ViewCatalogFilterPanel();
             collCatalog.setCategoryID(categoryID);
             if (pageNo) {
@@ -283,7 +284,7 @@ define([
             }
             if (manualFilters) {
                 _(manualFilters).each(function (filterValue, filterKey) {
-                    this.viewCatalogFilterPanelTmp.collection.setFilter(filterKey, filterValue);
+                    that.viewCatalogFilterPanelTmp.collection.setFilter(filterKey, filterValue);
                 });
             }
             collCatalog.fetch({
