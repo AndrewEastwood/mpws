@@ -71,6 +71,7 @@ define([
                             success: function (model, response) {
                                 // debugger;
                                 if (response && response.success) {
+                                    debugger
                                     BSAlert.success(lang.editors.customer.messageSuccess);
                                     Backbone.history.navigate(APP.instances.system.urls.customersList, true);
                                     window.location.reload();

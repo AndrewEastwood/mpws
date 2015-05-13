@@ -233,7 +233,7 @@ class customers {
             'Lang' => array('string', 'skipIfUnset', 'max' => 50, 'defaultValueIfEmpty' => 'en'),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfEmpty' => 'en_us'),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10, 'defaultValueIfEmpty' => 'http'),
-            'SnapshotApiKey' => array('string', 'skipIfUnset', 'max' => 300),
+            'SnapshotURL' => array('string', 'skipIfUnset', 'max' => 300),
             'SitemapURL' => array('string', 'skipIfUnset', 'max' => 500),
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfEmpty' => 'system')
         ));
@@ -312,7 +312,7 @@ class customers {
             'Lang' => array('string', 'skipIfUnset', 'max' => 50),
             'Locale' => array('string', 'skipIfUnset', 'max' => 10),
             'Protocol' => array('string', 'skipIfUnset', 'max' => 10),
-            'SnapshotApiKey' => array('string', 'skipIfUnset', 'max' => 300),
+            'SnapshotURL' => array('string', 'skipIfUnset', 'max' => 300),
             'SitemapURL' => array('string', 'skipIfUnset', 'max' => 500),
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
         ));

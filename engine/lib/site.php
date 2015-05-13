@@ -131,7 +131,10 @@ class site {
             Response::setResponse('Empty SnapshotURL');
             return;
         }
-        curl_setopt($ch, CURLOPT_URL, $url);
+        // var_dump($_GET);
+        // echo $url . '/?_escaped_fragment_=' . urlencode($_GET['_escaped_fragment_']);
+        // return;
+        curl_setopt($ch, CURLOPT_URL, $url . '/?_escaped_fragment_=' . urlencode($_GET['_escaped_fragment_']));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $resp = curl_exec($ch);
