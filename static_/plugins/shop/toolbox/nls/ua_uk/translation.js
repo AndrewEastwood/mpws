@@ -21,7 +21,7 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
     // orderEntry_Popup_field_warehouse: "Номер складу",
     // orderEntry_Popup_field_comment: "Коментар",
     // menu
-    pluginMenuTitle: 'Інтернет Магазин',
+    pluginMenuTitle: 'Магазин',
     pluginMenu_Dashboard: 'Статистика',
     pluginMenu_Products: 'Товари',
     pluginMenu_Orders: 'Замовлення',

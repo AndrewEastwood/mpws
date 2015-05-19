@@ -555,7 +555,6 @@ class orders {
                 }
         } else {
 
-
             // $productItems = !empty($order['items']) ? $order['items'] : array();
             $sessionPromo = API::getAPI('shop:promos')->getSessionPromo();
             $sessionOrderProducts = $this->_getSessionOrderProducts();
@@ -574,22 +573,26 @@ class orders {
             foreach ($sessionOrderProducts as $purchasingProduct) {
                 // get product
                 $product = API::getAPI('shop:products')->getProductByID($purchasingProduct['ID']);
-                // get purchased product quantity
-                $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
-                // get product sub and total by raw price
-                $_subTotal = $product['_prices']['price'] * $purchasingProduct['_orderQuantity'];
-                $_total = $product['_prices']['actual'] * $purchasingProduct['_orderQuantity'];
-                // conversions
-                $product['_totalSummary'] = array(
-                    "_sub" => $_subTotal,
-                    "_total" => $_total,
-                    "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
-                    "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
-                    "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
-                    "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
-                );
-                // add into list
-                $productItems[$product['ID']] = $product;
+                if (!empty($product)) {
+                    // get purchased product quantity
+                    $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
+                    // get product sub and total by raw price
+                    $_subTotal = $product['_prices']['price'] * $purchasingProduct['_orderQuantity'];
+                    $_total = $product['_prices']['actual'] * $purchasingProduct['_orderQuantity'];
+                    // conversions
+                    $product['_totalSummary'] = array(
+                        "_sub" => $_subTotal,
+                        "_total" => $_total,
+                        "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
+                        "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
+                        "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
+                        "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
+                    );
+                    // add into list
+                    $productItems[$product['ID']] = $product;
+                } else {
+                    
+                }
             }
         }
         // create info data

@@ -1,3 +1,4 @@
+{{#if data.Name}}
 <section id="single-product" itemscope itemtype="http://schema.org/Product">
     <div class="container">
 
@@ -334,3 +335,12 @@
         </div><!-- /.tab-holder -->
     </div><!-- /.container -->
 </section>
+{{else}}
+<a href="javascript://" onclick="javascript:history.back();" class="mpws-shop-link-back">
+    <i class="fa fa-fw fa-arrow-circle-o-left"></i>Назад
+</a>
+<div class="alert alert-warning">
+    <strong>Нажаль такого товару неіснує.</strong>
+    <p>Перейдіть на попередню стоірнку та виберіть інший товар.</p>
+</div>
+{{/if}}

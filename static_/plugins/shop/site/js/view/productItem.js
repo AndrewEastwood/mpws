@@ -61,7 +61,7 @@ define([
                 });
             }
             if (this.model) {
-                this.listenTo(this.model, 'change', this.render);
+                // this.listenTo(this.model, 'change', this.render);
                 this.listenTo(this.model, 'sync', this.render);
             }
 
@@ -85,97 +85,85 @@ define([
             ProductItem.plugin.compareList.addProduct(this.model.id, this.getSelectedQuantity());
             this.model.fetch();
         },
-        // refresh: function (data) {
-        //     if (this.model) {
-        //         if (data && data.id && (data.id === this.model.id || data.id === "*")) {
-        //             this.model.fetch();
-        //         }
-        //     }
-        // },
         render: function () {
-            // debugger
             var that = this,
                 design = this.options.design,
-                tpl = this.templates[design.style];
+                tpl = this.templates[design.style],
+                isWrongProduct = !this.model.get('Name');
             this.$el.addClass('shop-product-item-' + design.style);
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            // shop pulse animation for cart button badge
-            // if (this.model.hasChanged('_viewExtras') && this.model.previous('_viewExtras') && this.model.get('_viewExtras').InCartCount !== this.model.previous('_viewExtras').InCartCount)
-            //     this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
-            //         $(this).removeClass("pulse").dequeue();
-            //     });
-            this.$('[data-toggle="tooltip"]').tooltip();
-            this.$('.product-availability .fa').popover({trigger: 'hover'});
 
-            if (design.className) {
-                this.$el.addClass(design.className);
-            }
+            // when product has no Name then it's wrong product ID
+            if (isWrongProduct) {
+                this.$el.addClass(this.className + '-empty');
+            } else {
+                this.$('[data-toggle="tooltip"]').tooltip();
+                this.$('.product-availability .fa').popover({trigger: 'hover'});
+                if (design.className) {
+                    this.$el.addClass(design.className);
+                }
+                if (this.isStyleFull()) {
+                    // show price chart (powered by http://omnipotent.net/jquery.sparkline)
+                    var prices = this.model.get('_prices') || {},
+                        priceHistory = _(prices.history || {}).values(),
+                        priceHistoryValuesChain = _(priceHistory).chain().pluck(1).filter(function (v) { return v; }),
+                        priceHistoryValues = priceHistoryValuesChain.value(),
+                        priceHistoryMax = priceHistoryValuesChain.max().value(),
+                        priceHistoryMin = priceHistoryValuesChain.min().value(),
+                        avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
+                    if (priceHistory.length) {
+                        this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
+                            type: 'bar',
+                            // width: '300px',
+                            height: '30px',
+                            barColor: '#cf7400',
+                            fillColor: false,
+                            chartRangeMin: priceHistoryMin - avgMaxMin,
+                            drawNormalOnTop: true
+                        });
+                    }
 
-            if (this.isStyleFull()) {
-                // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-                var prices = this.model.get('_prices') || {},
-                    priceHistory = _(prices.history || {}).values(),
-                    priceHistoryValuesChain = _(priceHistory).chain().pluck(1).filter(function (v) { return v; }),
-                    priceHistoryValues = priceHistoryValuesChain.value(),
-                    priceHistoryMax = priceHistoryValuesChain.max().value(),
-                    priceHistoryMin = priceHistoryValuesChain.min().value(),
-                    avgMaxMin = (priceHistoryMax - priceHistoryMin) / priceHistory.length;
-                if (priceHistory.length) {
-                    this.$(".price-history-sparkline").sparkline(priceHistoryValues, {
-                        type: 'bar',
-                        // width: '300px',
-                        height: '30px',
-                        barColor: '#cf7400',
-                        fillColor: false,
-                        chartRangeMin: priceHistoryMin - avgMaxMin,
-                        drawNormalOnTop: true
+                    ProductItem.plugin.order.dfdState.done(function () {
+                        if (that.isStyleFull() && !isWrongProduct && !that.isArchived()) {
+                            var prodQ = ProductItem.plugin.order.getProductQunatity(that.model.id);
+                            var starsOdometer = new Odometer({
+                                el: that.$('.add-to-cart .odometer').get(0),
+                                theme: 'default',
+                                value: prodQ
+                            });
+                            starsOdometer.render();
+                            if (prodQ) {
+                                that.$el.addClass('shop-product-in-cart');
+                            }
+                        }
                     });
                 }
-
-                ProductItem.plugin.order.dfdState.done(function () {
-                    if (!that.isArchived()) {
-                        var prodQ = ProductItem.plugin.order.getProductQunatity(that.model.id);
-                        var starsOdometer = new Odometer({
-                            el: that.$('.add-to-cart .odometer').get(0),
-                            theme: 'default',
-                            value: prodQ
-                        });
-                        starsOdometer.render();
-                        if (prodQ) {
-                            that.$el.addClass('shop-product-in-cart');
+                if (design.wrap) {
+                    this.$el = $(design.wrap).html(this.$el);
+                }
+                if (this.model.get('ShowBanner') && !_.isEmpty(this.model.get('Banners'))) {
+                    this.$el.addClass('shop-product-banner');
+                }
+                echo.init({
+                    offset: 100,
+                    throttle: 250,
+                    callback: function(element, op) {
+                        if (op === 'load') {
+                            element.classList.add('loaded');
+                        } else {
+                            element.classList.remove('loaded');
+                        }
+                        if (that.isStyleFull()) {
+                            that.$('.single-product-gallery-item img').magnify();
+                            if (that.hasAdditionalImages() &&
+                                that.$('.shop-single-product-thumbnails img.loaded').length ===
+                                that.$('.shop-single-product-thumbnails img').length) {
+                                that.$('.shop-single-product-thumbnails').owlCarousel({items:5, dots:false});
+                            }
                         }
                     }
                 });
             }
-
-            if (design.wrap) {
-                this.$el = $(design.wrap).html(this.$el);
-            }
-
-            if (this.model.get('ShowBanner') && !_.isEmpty(this.model.get('Banners'))) {
-                this.$el.addClass('shop-product-banner');
-            }
-
-
-            echo.init({
-                offset: 100,
-                throttle: 250,
-                callback: function(element, op) {
-                    if (op === 'load') {
-                        element.classList.add('loaded');
-                    } else {
-                        element.classList.remove('loaded');
-                    }
-                    if (that.isStyleFull()) {
-                        that.$('.single-product-gallery-item img').magnify();
-                        if (that.hasAdditionalImages() &&
-                            that.$('.shop-single-product-thumbnails img.loaded').length ===
-                            that.$('.shop-single-product-thumbnails img').length) {
-                            that.$('.shop-single-product-thumbnails').owlCarousel({items:5, dots:false});
-                        }
-                    }
-                }
-            });
             this.trigger('render:complete');
             this.delegateEvents();
             return this;
@@ -230,7 +218,9 @@ define([
             }
         },
         isStyleFull: function () {
-            return this.options.design.style === 'full';
+            return this.options &&
+                this.options.design &&
+                this.options.design.style === 'full';
         },
         getPageAttributes: function () {
             var data = this.model.toJSON();
@@ -238,6 +228,7 @@ define([
             var formatTitle = "",
                 formatKeywords = "",
                 formatDescription = "";
+
             if (APP.instances.shop.settings.SEO.ProductPageTitle) {
                 formatTitle = APP.instances.shop.settings.SEO.ProductPageTitle;
             }
@@ -249,14 +240,19 @@ define([
             }
 
             var searchValues = ['\\[ProductName\\]', '\\[CategoryName\\]', '\\[OriginName\\]', '\\[ProductModel\\]', '\\[ProductDisplayTitle\\]'];
-            var replaceValues = [data.Name, data._category.Name, data._origin.Name, data.Model, data._displayName];
+            var replaceValues = [
+                data.Name || '',
+                data._category && data._category.Name || '',
+                data._origin && data._origin.Name || '',
+                data.Model || '',
+                data._displayName || ''];
 
             var title = APP.utils.replaceArray(formatTitle, searchValues, replaceValues);
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
             var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
 
             var image = null;
-            if (data.Images.length) {
+            if (data.Images && data.Images.length) {
                 image = data.Images[0].sm;
             }
 

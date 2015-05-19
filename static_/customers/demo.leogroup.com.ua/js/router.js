@@ -128,7 +128,6 @@ define([
                         stagePadding:-30,
                         smartSpeed:450
                     });
-                    filterLayoutElements('.home');
                 });
                 $('.mpws-js-shop-offers-carousel').html(hotOffers.$el);
 
