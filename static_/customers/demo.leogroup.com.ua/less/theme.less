@@ -197,7 +197,7 @@ footer {
         height: 240px;
         width: 240px;
         text-align: center;
-        margin: 30px 0 0 30px;
+        margin: 30px 0 0 40px;
         .product-item > *:not(.image) {
             display: none;
         }
@@ -334,13 +334,73 @@ button {
     .shop-open-cart-link {
         display: none;
     }
+    .mpws-shop-product-incart-alert {
+        text-align: left;
+        i {
+            .pull-right();
+            cursor: pointer;
+        }
+    }
     &.shop-product-in-cart {
         .shop-open-cart-link {
             display: block;
         }
+        .mpws-shop-product-incart-alert {
+            margin-top: -40px;
+            margin-bottom: 30px;
+        }
     }
     &.shop-product-item-empty {
         text-align: left;
+    }
+    #single-product-tab {
+        text-align: left;
+        p.product-synopsis,
+        p.product-description {
+            &:first-letter {
+                font-size: 1.5em;
+                font-weight: 600;
+            }
+        }
+        .tab-pane {
+            padding: 30px;
+        }
+        .meta-row {
+            margin-top: 30px;
+            .seperator {
+                display: none;
+            }
+            .inline {
+                display: block;
+                border-bottom: 1px dashed #D7D7D7;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+            }
+        }
+        .feature-list {
+            margin-bottom: 20px;
+            width: 100%;
+            li {
+                display: block;
+                border-bottom: 1px dashed #D7D7D7;
+                margin-bottom: 3px;
+                padding-bottom: 3px;
+                label {
+                    display: inline-block;
+                    font-weight: 600;
+                    width: 60%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    vertical-align: middle;
+                }
+                .value {
+                    text-align: right;
+                    width: 35%;
+                    display: inline-block;
+                }
+            }
+        }
     }
 }
 
@@ -592,7 +652,7 @@ button {
 
 .mpws-js-breadcrumb-category {
     background-color: #fff;
-    margin: 0px 0px 30px;
+    margin: 0px 35px 0px 25px;
     padding: 0px;
     #breadcrumb-alt {
         margin-bottom: 0;

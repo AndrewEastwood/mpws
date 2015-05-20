@@ -45,7 +45,7 @@ define([
                 isNew = !!!product,
                 existentQ = !isNew && product._orderQuantity || 0,
                 quantity = !!skipUpdate ? quantity : quantity + existentQ;
-            this.save({
+            return this.save({
                     productID: productID,
                     _orderQuantity: parseInt(quantity, 10),
                 }, {

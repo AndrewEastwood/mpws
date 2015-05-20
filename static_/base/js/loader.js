@@ -62,13 +62,13 @@ require.config({
         'routefilter': 'vendors/routefilter/dist/backbone.routefilter',
         'isotope': 'vendors/isotope/dist/isotope.pkgd',
         'jquery.sparkline': 'vendors/jquery-sparkline/dist/jquery.sparkline',
+        'jquery.sliphover': 'vendors/sliphover/src/jquery.sliphover',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
         'json2': 'base/js/lib/json2',
         'editable-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/wysihtml5',
         'bootstrap-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2',
         'wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/wysihtml5-0.3.0',
-        'jquery.sliphover': 'base/js/lib/jquery.sliphover',
         // plugins
         'async': 'base/js/plugin/async',
         'css': 'base/js/plugin/css',

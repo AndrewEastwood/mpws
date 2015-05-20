@@ -13,7 +13,7 @@ define([
     'bootstrap',
     'icheck',
     'jquery.sliphover',
-    'jquery.bridget'
+    'jquery.bridget',
 ], function ($, _, Backbone, Handlebars,
      echo, BootstrapDialog, Isotope, tplBreadcrumb) {
 
@@ -192,9 +192,7 @@ define([
                 catalogBrowseView = this.plugins.shop.catalogBrowseContent();
 
             catalogFilterView.on('render:complete', function () {
-                initEchoJS();
                 APP.setPageAttributes(catalogFilterView.getPageAttributes());
-                // filterLayoutElements('.shop-catalog');
                 // update breadcrumb
                 var brItems = [],
                     productLocationPath = catalogFilterView.getPathInCatalog();
@@ -205,7 +203,20 @@ define([
                 });
                 that.updateBreadcrumb(brItems, 'category');
             });
-
+            catalogBrowseView.on('render:complete', function () {
+                // init sliphover
+                initEchoJS();
+                filterLayoutElements('.shop-catalog');
+                catalogBrowseView.$('.shop-product-item-short').each(function () {
+                    $(this).wrap($('<a>').attr({
+                        href: $(this).find('link[itemprop="url"]').attr('href'),
+                        title: $(this).attr('title')
+                    }));
+                });
+                catalogBrowseView.$('.displayItems').sliphover({
+                    target: '.shop-product-item-short'
+                });
+            });
             $('.mpws-js-category-filter').html(catalogFilterView.$el);
             $('.mpws-js-catalog-products').html(catalogBrowseView.$el);
         },
@@ -217,8 +228,6 @@ define([
                 productView = this.plugins.shop.product(id);
 
             productView.on('render:complete', function () {
-                filterLayoutElements('.shop-product');
-                initEchoJS();
                 APP.setPageAttributes(productView.getPageAttributes());
                 // update breadcrumb
                 var brItems = [],
@@ -230,6 +239,8 @@ define([
                 });
                 brItems.push([productView.getDisplayName(), productView.getProductUrl()]);
                 that.updateBreadcrumb(brItems, 'product');
+                initEchoJS();
+                filterLayoutElements('.shop-product');
             });
 
             $('.mpws-js-product').html(productView.$el);

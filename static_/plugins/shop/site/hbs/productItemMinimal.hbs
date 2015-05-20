@@ -1,23 +1,26 @@
-<div class="col-xs-12 col-sm-9 no-margin">
-    <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">{{data.Model}}</a>
-    <div class="price">
-        {{#each data._prices.others}}
-            <div class="price-current text-right shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
-        {{/each}}
-        {{#if data._promoIsApplied }}
-        <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
-        {{/if}}
-        <span class="product-availability product-availability-{{data.Status}}">
-            <i class="fa fa-circle fa-fw" title="{{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}"></i>
-        </span>
+<div itemscope itemtype="http://schema.org/Product">
+    <link itemprop="url" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}" />
+    <div class="col-xs-12 col-sm-9 no-margin">
+        <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}">{{data.Model}}</a>
+        <div class="price">
+            {{#each data._prices.others}}
+                <div class="price-current text-right shop-price-value {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.EXCHANAGERATESDISPLAY}}</div>
+            {{/each}}
+            {{#if data._promoIsApplied }}
+            <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%)</div>
+            {{/if}}
+            <span class="product-availability product-availability-{{data.Status}}">
+                <i class="fa fa-circle fa-fw" title="{{mpwsGetValueByKey lang key=data.Status prefix="product_badge_"}}"></i>
+            </span>
+        </div>
     </div>
-</div>
-<div class="col-xs-12 col-sm-3 no-margin">
-    <a title="{{data._displayNameFull}}" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey}}" class="thumb-holder">
-        {{#if data.Images.[0].micro}}
-        <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayNameFull}}" data-echo="{{data.Images.[0].micro}}" class="image img-responsive">
-        {{else}}
-        <div class="shop-no-product-image"></div>
-        {{/if}}
-    </a>
+    <div class="col-xs-12 col-sm-3 no-margin">
+        <a lass="thumb-holder">
+            {{#if data.Images.[0].micro}}
+            <img src="{{appConfig.app.baseStaticUrl}}/img/blank.gif" alt="{{data._displayNameFull}}" data-echo="{{data.Images.[0].micro}}" class="image img-responsive">
+            {{else}}
+            <div class="shop-no-product-image"></div>
+            {{/if}}
+        </a>
+    </div>
 </div>

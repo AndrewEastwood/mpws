@@ -2,6 +2,16 @@
 <section id="single-product" itemscope itemtype="http://schema.org/Product">
     <div class="container">
 
+        <div class="alert alert-success alert-dismissible mpws-shop-product-incart-alert hidden" role="alert">
+            <strong>Ура!</strong> Я потрапив до Вашого кошика :)
+            <i class="fa fa-times" data-dismiss="alert" aria-label="Close"></i>
+        </div>
+
+        <div class="alert alert-dangre alert-dismissible mpws-shop-product-outcart-alert hidden" role="alert">
+            <strong>О ні!</strong> Ви мене видалили з кошика :(
+            <i class="fa fa-times" data-dismiss="alert" aria-label="Close"></i>
+        </div>
+
         {{#if data.Images}}
          <div class="no-margin col-xs-12 col-sm-6 col-md-5 gallery-holder">
             <div class="product-item-holder size-big single-product-gallery">
@@ -238,8 +248,7 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="description">
-                    <p>{{data.Description}}</p>
-
+                    <p class="product-synopsis">{{data.Synopsis}}</p>
                     <div class="meta-row">
                         <div class="inline">
                             <label>Модель:</label>
@@ -281,15 +290,21 @@
                 </div><!-- /.tab-pane #description -->
 
                 <div class="tab-pane" id="additional-info">
-                    <ul class="tabled-data feature-list">
-                        {{#each data.Features}}
-                        <li>
-                            <label>{{@key}}</label>
-                            <div class="value">{{#each this}}{{this}}{{/each}}</div>
-                        </li>
-                        {{/each}}
-                    </ul>
-
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="product-description">{{data.Description}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="tabled-data feature-list">
+                                {{#each data.Features}}
+                                <li>
+                                    <label>{{@key}}</label>
+                                    <div class="value">{{#each this}}{{this}}{{/each}}</div>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
                     <div class="meta-row">
                         <div class="inline">
                             <label>Модель:</label>
@@ -336,11 +351,13 @@
     </div><!-- /.container -->
 </section>
 {{else}}
-<a href="javascript://" onclick="javascript:history.back();" class="mpws-shop-link-back">
-    <i class="fa fa-fw fa-arrow-circle-o-left"></i>Назад
-</a>
-<div class="alert alert-warning">
-    <strong>Нажаль такого товару неіснує.</strong>
-    <p>Перейдіть на попередню стоірнку та виберіть інший товар.</p>
+<div class="container">
+    <a href="javascript://" onclick="javascript:history.back();" class="mpws-shop-link-back">
+        <i class="fa fa-fw fa-arrow-circle-o-left"></i>Назад
+    </a>
+    <div class="alert alert-warning">
+        <strong>Нажаль такого товару неіснує.</strong>
+        <p>Перейдіть на попередню стоірнку та виберіть інший товар.</p>
+    </div>
 </div>
 {{/if}}

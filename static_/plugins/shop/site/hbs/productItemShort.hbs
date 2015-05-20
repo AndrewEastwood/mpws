@@ -1,4 +1,5 @@
-<div class="product-item">
+<div class="product-item" itemscope itemtype="http://schema.org/Product">
+    <link itemprop="url" href="{{bb_link instances.shop.urls.shopProduct product=data.ExternalKey asRoot=true fullUrl=true}}" />
     <div class="ribbon blue mpws-shop-product-badge-{{data.Status}}">
         <span>{{mpwsGetValueByKey lang.product.badge key=data.Status}}</span>
     </div>

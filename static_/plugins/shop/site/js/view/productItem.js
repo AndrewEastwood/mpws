@@ -51,7 +51,9 @@ define([
             this.options.design = _.extend({style: 'short'}, this.options.design || {});
             this.options.templates = _.extend({}, this.options.templates, this.options.design.templates || {});
             // bind context
-            _.bindAll(this, 'switchCurrency', 'updateQuantity', 'addToCart', 'isStyleFull');
+            _.bindAll(this, 'switchCurrency',
+                'updateQuantity', 'addToCart', 'isStyleFull',
+                'showProductCartSuccessBanner', 'showProductCartRemovedBanner');
 
             // refresh price when currency widget is changed
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
@@ -68,10 +70,15 @@ define([
             ProductItem.plugin.order.on('product:quantity:updated', function (q) {
                 that.$el.addClass('shop-product-in-cart');
                 that.$('.add-to-cart .in-cart-quantity').html(q);
+                that.showProductCartSuccessBanner();
+            });
+            ProductItem.plugin.order.on('product:added', function () {
+                that.showProductCartSuccessBanner();
             });
             ProductItem.plugin.order.on('product:removed', function (q) {
                 that.$el.removeClass('shop-product-in-cart');
                 that.$('.add-to-cart .in-cart-quantity').html('');
+                that.showProductCartRemovedBanner();
             });
         },
         addToCart: function () {
@@ -85,6 +92,30 @@ define([
             ProductItem.plugin.compareList.addProduct(this.model.id, this.getSelectedQuantity());
             this.model.fetch();
         },
+        showProductCartSuccessBanner: function () {
+            var that = this;
+            setTimeout(function () {
+                that.$('.mpws-shop-product-incart-alert')
+                    .removeClass('hidden')
+                    .css('opacity', 0)
+                    .animate({'opacity': 1}, 200)
+                    .animate({'opacity': 0}, 10000, function () {
+                        $(this).addClass('hidden');
+                    });
+            });
+        },
+        showProductCartRemovedBanner: function () {
+            var that = this;
+            setTimeout(function () {
+                that.$('.mpws-shop-product-outcart-alert')
+                    .removeClass('hidden')
+                    .css('opacity', 0)
+                    .animate({'opacity': 1}, 200)
+                    .animate({'opacity': 0}, 5000, function () {
+                        $(this).addClass('hidden');
+                    });
+            });
+        },
         render: function () {
             var that = this,
                 design = this.options.design,
@@ -97,6 +128,7 @@ define([
             if (isWrongProduct) {
                 this.$el.addClass(this.className + '-empty');
             } else {
+                this.$el.attr('title', this.model.get('_displayName'));
                 this.$('[data-toggle="tooltip"]').tooltip();
                 this.$('.product-availability .fa').popover({trigger: 'hover'});
                 if (design.className) {
