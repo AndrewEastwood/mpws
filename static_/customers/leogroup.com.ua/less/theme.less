@@ -107,9 +107,13 @@ a.list-group-item.active:focus {
 
 // customization
 .top-bar {
+    .widget-user-menu,
     .exchange-rates-widget {
         li {
             display: block;
+        }
+        .caret {
+            display: none;
         }
     }
     .mpws-js-top-nav-left {
@@ -308,7 +312,16 @@ header {
 
 /* keep commented until owl.carousel is not fixed */
 section.mpws-js-shop-viewed-products {
-    display: none !important;
+    // display: none !important;
+    .shop-product-item {
+        border: 1px solid #ECECEC;
+        &.hover .product-item {
+            padding-bottom: 0;
+            .hover-area {
+                display: none;
+            }
+        }
+    }
 }
 
 #footer {

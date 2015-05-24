@@ -2,7 +2,6 @@ define([
     'backbone',
     'handlebars',
     'plugins/system/common/js/model/user',
-    // 'plugins/system/common/js/model/userAddress',
     'plugins/system/common/js/view/userAddress',
     'utils',
     'createPopupTitle',
@@ -11,14 +10,14 @@ define([
     'bootstrap-alert',
     /* template */
     'text!plugins/system/common/hbs/editUser.hbs',
-    'text!plugins/system/common/hbs/partials/userAddress.hbs',
     /* lang */
     'i18n!plugins/system/common/nls/translation',
-    'plugins/system/common/js/view/userAddress',
     // 'image-upload',
     'bootstrap-switch',
     'bootstrap-editable'
-], function (Backbone, Handlebars, ModelUser, ViewAddress, Utils, createPopupTitle, cachejs, BootstrapDialog, BSAlert, tpl, pUserAddr, lang, ViewUserAddress, WgtImageUpload) {
+], function (Backbone, Handlebars, ModelUser, ViewAddress, Utils,
+             createPopupTitle, cachejs, BootstrapDialog, BSAlert,
+             tpl, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
         var backUrl = APP.config.USER.p_CanMaintain ? APP.instances.system.urls.usersList : APP.instances.system.urls.dashboard;

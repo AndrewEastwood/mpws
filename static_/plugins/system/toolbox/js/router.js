@@ -134,9 +134,7 @@ define([
 
 
         menu: function (options) {
-            var menu = new ViewMenu(_.extend({}, options || {}, {
-                model: user
-            }));
+            var menu = new ViewMenu(_.extend({}, options || {}));
             menu.render();
             return menu;
         },
@@ -152,12 +150,9 @@ define([
             var buttonUser = null;
             var authUserID = Auth.getUserID();
             if (authUserID) {
-                user.set('ID', authUserID);
-                user.fetch();
-                buttonUser = new ViewButtonUser({
-                    model: user
-                });
-                buttonUser.render();
+                buttonUser = new ViewButtonUser();
+                buttonUser.model.set('ID', authUserID);
+                buttonUser.model.fetch();
             }
             return buttonUser;
         },

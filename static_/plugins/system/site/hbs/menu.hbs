@@ -1,0 +1,14 @@
+{{#if data.FirstName }}
+<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+   {{lang.profile_menu_welcome}} <strong>{{data.FirstName}} {{data.LastName}}</strong>
+  <b class="caret"></b>
+</a>
+<ul class="dropdown-menu">
+   <li><a href="{{bb_link instances.system.urls.account}}">{{lang.profile_menu_profile}}</a></li>
+   <li><a href="javascript://" class="user-signout">{{lang.profile_menu_logout}}</a></li>
+</ul>
+{{else}}
+<a href="{{bb_link instances.system.urls.signin}}">
+   {{lang.form_signin_menu_title}}
+</a>
+{{/if}}

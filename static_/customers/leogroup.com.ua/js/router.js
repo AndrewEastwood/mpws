@@ -55,10 +55,17 @@ define([
         // "!/shop/profile/orders": "shop_profile_orders"
     };
 
+    var systemUrls = {
+        '!/signin': 'signin'
+    };
+
     APP.configurePlugins({
         shop: {
             urls: _(shopRoutes).invert()//,
             // productShortClassNames: 'no-margin product-item-holder hover'
+        },
+        system: {
+            urls: _(systemUrls).invert()
         }
     });
 
@@ -97,7 +104,8 @@ define([
                 '!/': 'home',
                 ':whatever': 'page404'
             },
-            shopRoutes
+            shopRoutes,
+            systemUrls
         ]),
 
         plugins: {},
@@ -119,6 +127,32 @@ define([
 
         views: {},
 
+
+        signin: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+
+            var auth = this.plugins.system.authorize();
+            $('section.mpws-js-main-section').html(auth.$el);
+            // if (Auth.verifyStatus()) {
+            //     Backbone.history.navigate(Cache.get('location') || '!/', true);
+            //     return;
+            // }
+            // this.toggleMenu(false);
+            // this.toggleWidgets(false);
+            // var signin = this.plugins.system.signinForm();
+            // $('section.mpws-js-main-section').html(signin.render().$el);
+        },
+
+        signout: function () {
+            // this.toggleMenu(false);
+            // this.toggleWidgets(false);
+            // $('section.mpws-js-main-section').empty();
+            // // logout and then route to signin
+            // Auth.signout(function () {
+            //     Backbone.history.navigate('!/signin', true);
+            // });
+        },
         // getPlugin: function (name) {
         //     return this.plugins[name] || null;
         // },
@@ -149,7 +183,10 @@ define([
                 // widgets
                 $('.mpws-js-shop-addresses').html(that.plugins.shop.widgetAddresses().$el);
                 $('.mpws-js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
-                $('.mpws-js-top-nav-right').html($('<li>').addClass('dropdown').html(that.plugins.shop.widgetExchangeRates().$el));
+                $('.mpws-js-top-nav-right').html([
+                    $('<li>').addClass('dropdown').html(that.plugins.shop.widgetExchangeRates().$el),
+                    $('<li>').addClass('dropdown').html(that.plugins.system.menu().$el)
+                ]);
 
                 // common elements
 
@@ -210,9 +247,8 @@ define([
                     }
                 });
 
-
                 // setup recently viewed products
-                if (false) {
+                if (true) {
                     var $tplViewedProducts = that.templates.viewedProducts(),
                         optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
                     that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
@@ -224,7 +260,7 @@ define([
                     // $owlEl.html($tplViewedProducts);
                     var owl = that.views.viewedProducts.$el.data('owlCarousel');
                     that.views.viewedProducts.on('shop:rendered', function () {
-                    return;
+                    // return;
                     // console.log('viewed rendering');
                     // $tplViewedProducts.removeClass('hidden');
                     // debugger

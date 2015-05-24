@@ -28,7 +28,7 @@ define([
             _.bindAll(this, 'render', 'saveAddress', 'removeAddress');
         },
         render: function () {
-            console.log('rendering address item');
+            // console.log('rendering address item');
             var that = this;
             this.model.extras = {
                 isNew: this.model.isNew()
@@ -47,7 +47,7 @@ define([
             return !this.model.get('isRemoved');
         },
         saveAddress: _.debounce(function (event) {
-            console.log('saving address');
+            // console.log('saving address');
             var that = this,
                 updatedData = $(event.target).parents('.user-address-item').find('.editable').editable('getValue');
             this.model.save(updatedData, {wait: true}).then(function (response) {

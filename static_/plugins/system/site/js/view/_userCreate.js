@@ -93,7 +93,7 @@ define([
         clearUserInfo: function () {
             Cache.set("newUser", null);
         },
-        doRegister: function () {
+        signUp: function () {
             var self = this;
             this.model.save(this.collectUserInfo(), {
                 wait: true,
@@ -103,6 +103,14 @@ define([
                     }
                 }
             });
+            return false;
+        },
+        signIn: function () {
+            var authData = this.collectCredentials();
+            Auth.signin(authData.email, authData.password, authData.remember, $.proxy(function (authID, response) {
+                // this.render();
+                this.model.set(response);
+            }, this));
             return false;
         }
     });

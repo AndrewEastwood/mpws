@@ -11,7 +11,7 @@ define([
 ], function (_, Backbone, Handlebars, Utils, Cache, tpl, lang) {
 
     var WidgetExchangeRates = Backbone.View.extend({
-        className: 'btn-group exchange-rates-widget',
+        className: 'exchange-rates-widget',
         id: 'exchange-rates-widget-ID',
         template: Handlebars.compile(tpl), // check
         lang: lang,

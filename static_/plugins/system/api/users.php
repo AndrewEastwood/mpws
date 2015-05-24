@@ -168,10 +168,17 @@ class users {
                     throw new Exception('UserCreateError');
                 }
 
-                // create permission
-                $Permission = $this->createUserPermissions($UserID, $dataPermission);
-                if (!$Permission['success']) {
-                    throw new Exception(implode(';', $Permission['errors']));
+                // create permission (admins only)
+                if (API::getAPI('system:auth')->ifYouCan('Admin') && (
+                    API::getAPI('system:auth')->ifYouCan('AddUsers') ||
+                    API::getAPI('system:auth')->ifYouCan('Maintain')
+                )) {
+                    $Permission = $this->createUserPermissions($UserID, $dataPermission);
+                    if (!$Permission['success']) {
+                        throw new Exception(implode(';', $Permission['errors']));
+                    }
+                } else {
+                    $Permission = $this->createUserPermissions($UserID, array());
                 }
 
                 $app->getDB()->commit();
@@ -442,10 +449,10 @@ class users {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+        //     $resp['error'] = "AccessDenied";
+        //     return;
+        // }
         $resp = $this->createUser($req->data);
     }
 

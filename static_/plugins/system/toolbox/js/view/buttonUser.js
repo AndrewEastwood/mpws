@@ -3,10 +3,11 @@ define([
     'handlebars',
     'auth',
     'utils',
+    'plugins/system/common/js/model/user',
     'text!plugins/system/toolbox/hbs/buttonUser.hbs',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
-], function (Backbone, Handlebars, Auth, Utils, tpl, lang) {
+], function (Backbone, Handlebars, Auth, Utils, ModelUser, tpl, lang) {
 
     var ButtonUser = Backbone.View.extend({
         tagName: 'li',
@@ -14,6 +15,7 @@ define([
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
+            this.model = ModelUser.getInstance();
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {

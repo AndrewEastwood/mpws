@@ -1,10 +1,10 @@
 define([
-    'plugins/system/common/js/model/userAddress',
     'jquery',
     'underscore',
-    'backbone',
-    'cachejs'
-], function (AccountAddress, $, _, Backbone, Cache) {
+    'backbone'
+], function ($, _, Backbone) {
+
+    var instance = null;
 
     var User = Backbone.Model.extend({
         idAttribute: 'ID',
@@ -36,6 +36,15 @@ define([
         //     return this.get('success');
         // }
 
+    }, {
+        getInstance: function (options) {
+            if (instance) {
+                return instance;
+            } else {
+                instance = new User(options);
+                return instance;
+            }
+        }
     });
 
     return User;
