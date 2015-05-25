@@ -130,5 +130,10 @@ class utils {
         return '\\' . Path::getDirNameEngine() . '\\' . Path::getDirNameMW() . '\\' . $mwName;
     }
 
+    static function formatExceptionMsgForResponse ($msg) {
+        $errors['Others'] = array(str_replace(' ', '', $msg));
+        return $errors;
+    }
+
 }
 ?>

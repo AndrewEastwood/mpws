@@ -4,6 +4,7 @@ define([
     'backbone',
     'handlebars',
     'echo',
+    'auth',
     'bootstrap-dialog',
     // page templates
     'text!./../hbs/breadcrumb.hbs',
@@ -19,7 +20,7 @@ define([
     'owl.carousel',
     'bootstrap',
     'icheck'
-], function ($, _, Backbone, Handlebars, echo, BootstrapDialog,
+], function ($, _, Backbone, Handlebars, echo, Auth, BootstrapDialog,
      tplBreadcrumb,
      tplHomeFrame,
      tplProductsTab,
@@ -56,7 +57,8 @@ define([
     };
 
     var systemUrls = {
-        '!/signin': 'signin'
+        '!/signin': 'signin',
+        '!/account': 'account'
     };
 
     APP.configurePlugins({
@@ -129,39 +131,27 @@ define([
 
 
         signin: function () {
+            // check if user is authenticated
+            if (Auth.verifyStatus()) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             this.toggleCategoryRibbonAndBreadcrumb(true);
             this.toggleHomeFrame(false);
-
             var auth = this.plugins.system.authorize();
             $('section.mpws-js-main-section').html(auth.$el);
-            // if (Auth.verifyStatus()) {
-            //     Backbone.history.navigate(Cache.get('location') || '!/', true);
-            //     return;
-            // }
-            // this.toggleMenu(false);
-            // this.toggleWidgets(false);
-            // var signin = this.plugins.system.signinForm();
-            // $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
-        signout: function () {
-            // this.toggleMenu(false);
-            // this.toggleWidgets(false);
-            // $('section.mpws-js-main-section').empty();
-            // // logout and then route to signin
-            // Auth.signout(function () {
-            //     Backbone.history.navigate('!/signin', true);
-            // });
+        account: function () {
+            // check if user is authenticated
+            if (!Auth.verifyStatusAndThen()) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
+            var user = this.plugins.system.userPanel();
+            $('section.mpws-js-main-section').html(user.$el);
         },
-        // getPlugin: function (name) {
-        //     return this.plugins[name] || null;
-        // },
 
-        // setPlugin: function (plugin) {
-        //     if (!plugin || !plugin.name)
-        //         throw 'wrong plugin object. plugin is ' + (typeof plugin);
-        //     this.plugins[plugin.name] = plugin;
-        // },
         initialize: function () {
 
             var that = this;

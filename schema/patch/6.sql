@@ -9,3 +9,5 @@ ALTER TABLE `shop_origins` CHANGE `Name` `Name` VARCHAR(200) CHARACTER SET utf8 
 ALTER TABLE `shop_products` CHANGE `Model` `Model` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `shop_products` CHANGE `SearchText` `SearchText` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `shop_products` CHANGE `Name` `Name` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE `mpws_permissions` CHANGE `CanAdmin` `CanAdmin` TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanCreate` `CanCreate` TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanEdit` `CanEdit` TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanViewReports` `CanViewReports` TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanAddUsers` `CanAddUsers` TINYINT(1) NOT NULL DEFAULT '0';

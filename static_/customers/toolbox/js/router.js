@@ -109,6 +109,10 @@ define([
         },
 
         signout: function () {
+            if (!Auth.verifyStatus()) {
+                Backbone.history.navigate('!/signin', true);
+                return;
+            }
             this.toggleMenu(false);
             this.toggleWidgets(false);
             $('section.mpws-js-main-section').empty();

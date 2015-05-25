@@ -6,7 +6,7 @@ define("plugins/system/site/nls/ua_uk/translation", {
     form_register_field_LastName: "Прізвище",
     form_register_field_EMail: "Ел. адреса",
     form_register_field_Password: "Пароль",
-    form_register_field_ConfirmPassword: "Підтвердження паролю",
+    form_register_field_PasswordConfirm: "Підтвердження паролю",
     form_register_message_bottom_title: "Отримуйте переваги:",
     form_register_message_bottom1: "Швидко оформлювати замовлення",
     form_register_message_bottom2: "Слідкувати за історєю Ваших замовлень",
@@ -16,6 +16,21 @@ define("plugins/system/site/nls/ua_uk/translation", {
     form_register_message_success_line2: "Для успішного завершення реєстрації Вам необхідно виконати інструкції в отриманому листі",
     form_register_button_create: "Сворити профіль",
     form_register_commonError: "Помилка під час створення профілю",
+    forms: {
+        signup: {
+            errors: {
+                FirstNameIsNotExists: 'Ви не вказали Ваше імя',
+                PasswordDoesNotContainAnyNumber: 'В паролі нема цифри',
+                PasswordDoesNotContainAnyUpperCase: 'Пароль не має символів верхнього регістру',
+                PasswordDoesNotContainAnyLowerCase: 'Пароль не має символів нижнього регістру',
+                PasswordDoesNotContainAnySpecial: 'Пароль має мати хочаб один спецсимвол !@#$%^&',
+                PasswordLengthIsLowerThan_8: 'Мінімальна довжина паролю - 8 символів',
+                ConfirmPasswordIsNotEqualTo_Password: 'Паролі не співпадають',
+                ConfirmPasswordIsNotExists: 'Пароль підтвердження порожній',
+                EmailAlreadyInUse: 'Така email вже зареєстрований'
+            }
+        }
+    },
     /* form signin */
     form_signin_menu_title: "Увійти",
     form_signin_menu_subtitle: "Увійдіть у власний профіль",

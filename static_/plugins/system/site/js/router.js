@@ -116,11 +116,11 @@ define([
             return authorize;
         },
 
-        userPanel: function (id) {
+        userPanel: function (/*id*/) {
             // debugger;
             // create new view
             var viewEditUser = new ViewEditUser();
-            viewEditUser.model.set('ID', id, {silent: true});
+            // viewEditUser.model.set('ID', id, {silent: true});
             viewEditUser.model.fetch({reset: true});
             return viewEditUser;
         },

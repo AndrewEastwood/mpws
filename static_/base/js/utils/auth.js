@@ -31,6 +31,21 @@ define([
             }
             return false;
         },
+        verifyStatusAndThen: function () {
+            function authOK () {
+                return Auth.verifyStatus() === true;
+            }
+            function authNotOK () {
+                Auth.verifyStatus() === false;
+            }
+            var actions = {
+                ifRegistered: ifRegistered,
+                ifNotRegistered: ifNotRegistered
+            };
+            function ifRegistered (fn) { if (authOK()) { fn(); } return actions; }
+            function ifNotRegistered (fn) { if (authNotOK()) { fn(); } return actions; }
+            return actions;
+        },
         getUserID: function () {
             return Cache.getCookie(authKey) || null;
         },

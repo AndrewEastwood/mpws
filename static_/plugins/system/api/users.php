@@ -4,6 +4,7 @@ namespace static_\plugins\system\api;
 use \engine\lib\api as API;
 use \engine\lib\secure as Secure;
 use \engine\lib\validate as Validate;
+use \engine\lib\utils as Utils;
 use Exception;
 
 class users {
@@ -119,13 +120,14 @@ class users {
         $errors = array();
         $success = false;
 
+        $autoPwd = Secure::generateStrongPassword();
         $validatedDataObj = Validate::getValidData($reqData, array(
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string', "defaultValueIfUnset" => ""),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('isPhone', 'skipIfUnset', 'defaultValueIfUnset' => Validate::getEmptyPhoneNumber()),
-            'Password' => array('isPassword', 'notEmpty', 'min' => 8, 'max' => 30),
-            'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty'),
+            'Password' => array('isPassword', 'notEmpty', 'min' => 8, 'max' => 30, 'defaultValueIfUnset' => $autoPwd),
+            'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty', 'defaultValueIfUnset' => $autoPwd),
             // permissions
             'p_CanAdmin' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'p_CanCreate' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
@@ -154,8 +156,8 @@ class users {
                 $dataUser["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $dataUser["Password"] = Secure::EncodeUserPassword($validatedValues['Password']);
                 $dataUser["ValidationString"] = Secure::EncodeUserPassword(time());
-                // if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
-                //     throw new Exception("EmailAlreadyInUse", 1);
+                if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
+                    throw new Exception("EmailAlreadyInUse", 1);
                 
                 unset($dataUser['ConfirmPassword']);
 
@@ -188,7 +190,7 @@ class users {
                 $success = true;
             } catch (Exception $e) {
                 $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
+                $errors = Utils::formatExceptionMsgForResponse($e->getMessage());
             }
         else
             $errors = $validatedDataObj["errors"];
@@ -265,7 +267,7 @@ class users {
                 // echo $app->getDB()->getLastErrorCode();
                 // echo $e;
                 $errors[] = 'UserUpdateError';
-                $errors[] = $e->getMessage();
+                $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
             }
         else
             $errors = $validatedDataObj["errors"];

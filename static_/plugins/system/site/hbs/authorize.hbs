@@ -1,3 +1,4 @@
+{{#unless data.success}}
 <div class="container">
     <div class="row">
         
@@ -41,7 +42,7 @@
                     </div>
 
                     <div class="buttons-holder">
-                        <button type="submit" class="le-button huge">{{lang.form_signin_menu_title}}</button>
+                        <button type="button" class="le-button huge">{{lang.form_signin_menu_title}}</button>
                     </div><!-- /.buttons-holder -->
                 </form><!-- /.cf-style-1 -->
 
@@ -53,19 +54,30 @@
                 <h2 class="bordered">{{lang.form_register_title}}</h2>
                 <p>{{lang.form_register_subtitle}}</p>
 
+                {{#mpwsIsNotEmpty data.errors }}
+                <div id="msg" class="alert alert-danger">
+                    {{lang.editors.customer.errors.title}}
+                    <ol class="errors">
+                        {{#each data.errors}}
+                        {{#each this}}
+                        <li>{{mpwsGetValueByKey ../../lang.forms.signup.errors key=this prefix=""}}</li>
+                        {{/each}}
+                        {{/each}}
+                    </ol>
+                </div>
+                {{/mpwsIsNotEmpty}}
                 <form role="form" class="register-form cf-style-1">
+                    <div class="field-row">
+                        <label>{{lang.form_register_field_FirstName}}</label>
+                        <input type="text" name="firstname" class="le-input signup-firstname">
+                    </div><!-- /.field-row -->
                     <div class="field-row">
                         <label>{{lang.form_register_field_EMail}}</label>
                         <input type="email" name="email" class="le-input signup-email">
                     </div><!-- /.field-row -->
 
-                    <div class="field-row">
-                        <label>{{lang.form_register_field_Password}}</label>
-                        <input type="password" name="password" class="le-input signup-password">
-                    </div><!-- /.field-row -->
-
                     <div class="buttons-holder">
-                        <button type="submit" class="le-button huge">{{lang.form_register_button_create}}</button>
+                        <button type="button" class="le-button huge">{{lang.form_register_button_create}}</button>
                     </div><!-- /.buttons-holder -->
                 </form>
 
@@ -83,3 +95,27 @@
 
     </div><!-- /.row -->
 </div><!-- /.container -->
+{{else}}
+<div class="container">
+    <div class="row">
+        <div class="system-user-register-success">
+            <h2>Вітаємо з успішною реєстрацією!</h2>
+            <div class="panel panel-success">
+                <!-- List group -->
+                <div class="list-group">
+                    <div class="list-group-item">
+                        Ми надіслали Вам активаційе повідомлення на Вашу електронну адресу.
+                    </div>
+                    <div class="list-group-item hidden">
+                        Активуйте Ваш профіль виконавши інструкції у листі.
+                    </div>
+                    <div class="list-group-item">
+                        Якщо у Вас виникли будь-які запитання то неодмінно подзвоніть нам.
+                    </div>
+                </div>
+            </div>
+            <a class="le-button" href="/#!/">Продовжити закупи</a>
+        </div>
+    </div>
+</div>
+{{/unless}}
