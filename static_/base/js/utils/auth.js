@@ -8,6 +8,7 @@ define([
     var authKey = APP.config.AUTHKEY;
 
     var Auth = _.extend({
+        user: null,
         verifyStatus: function () {
             // debugger
             var user = Auth.getUserID();
@@ -92,7 +93,7 @@ define([
     }, Backbone.Events);
 
     // init user data
-    Auth.user = Auth.getUserID()
+    // Auth.user = Auth.getUserID()
 
     Backbone.on("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();

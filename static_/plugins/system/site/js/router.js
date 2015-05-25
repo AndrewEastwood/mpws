@@ -24,23 +24,6 @@ define([
     // //     APP.Sandbox.eventNotify('plugin:user:model:change', user);
     // // });
 
-    Auth.on('registered', function () {
-        debugger
-        var authUserID = Auth.getUserID();
-        if (authUserID) {
-            var user = ModelUser.getInstance();
-            user.set('ID', authUserID);
-            user.fetch();
-        }
-        // _navigateToUserIfAuthorizedFn();
-    });
-
-    Auth.on('guest', function () {
-        debugger
-        var user = ModelUser.getInstance();
-        user.clear();
-        // _navigateToHomeIfNotAuthorizedFn();
-    });
 
     // var _navigateToHomeIfNotAuthorizedFn = function () {
     //     var isUserPage = /^user/.test(Backbone.history.fragment);
@@ -64,6 +47,7 @@ define([
 
     var Router = Backbone.View.extend({
         urls: {},
+        states: {},
         // routes: {
         //     "user/summary": "summary",
         //     "user/create": "create",
@@ -81,18 +65,69 @@ define([
         // },
         initialize: function (options, callback) {
             // configure plugin
+            var that = this;
             this.options = options || {};
             this.urls = options && options.urls || {};
+            this.states = options && options.states || {};
             // fetch data
             // callback();
+            Auth.on('registered', function () {
+                debugger
+                var user = ModelUser.getInstance();
+                user.set('ID', Auth.getUserID());
+                user.fetch();
+                if (that.states.onRegisteredRoute) {
+                    Backbone.history.navigate(that.states.onRegisteredRoute, true);
+                }
+                // _navigateToUserIfAuthorizedFn();
+            });
+
+            Auth.on('guest', function () {
+                debugger
+                var user = ModelUser.getInstance();
+                user.clear();
+                if (that.states.onGuestRoute) {
+                    Backbone.history.navigate(that.states.onGuestRoute, true);
+                }
+                // _navigateToHomeIfNotAuthorizedFn();
+            });
         },
 
         menu: function (options) {
             var menu = new ViewMenu(_.extend({}, options || {}));
-            menu.model.fetch();
+            menu.render();
             return menu;
         },
 
+        authorize: function () {
+            // debugger;
+            // create new view
+            if (Auth.verifyStatus()) {
+                if (that.states.onRegisteredRoute) {
+                    Backbone.history.navigate(that.states.onRegisteredRoute, true);
+                }
+                return null;
+            }
+            var authorize = new ViewAuthorize();
+            authorize.render();
+            return authorize;
+        },
+
+        userPanel: function (/*id*/) {
+            var that = this;
+            // debugger;
+            // create new view
+            if (!Auth.verifyStatus()) {
+                if (that.states.onGuestRoute) {
+                    Backbone.history.navigate(that.states.onGuestRoute, true);
+                }
+                return null;
+            }
+            var viewEditUser = new ViewEditUser();
+            viewEditUser.model.set('ID', Auth.getUserID(), {silent: true});
+            viewEditUser.model.fetch({reset: true});
+            return viewEditUser;
+        },
 
         // signup: function () {
         //     // if (_navigateToUserIfAuthorizedFn())
@@ -113,22 +148,6 @@ define([
 
         // },
 
-        authorize: function () {
-            // debugger;
-            // create new view
-            var authorize = new ViewAuthorize();
-            authorize.render();
-            return authorize;
-        },
-
-        userPanel: function (/*id*/) {
-            // debugger;
-            // create new view
-            var viewEditUser = new ViewEditUser();
-            viewEditUser.model.set('ID', Auth.getUserID(), {silent: true});
-            viewEditUser.model.fetch({reset: true});
-            return viewEditUser;
-        },
 
 
         // summary: function () {

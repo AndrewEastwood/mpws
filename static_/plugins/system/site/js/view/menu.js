@@ -19,7 +19,7 @@ define([
         },
         initialize: function () {
             this.model = ModelUser.getInstance();
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'sync', this.render);
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));

@@ -67,7 +67,11 @@ define([
             // productShortClassNames: 'no-margin product-item-holder hover'
         },
         system: {
-            urls: _(systemUrls).invert()
+            urls: _(systemUrls).invert(),
+            states: {
+                onGuestRoute: '!/',
+                onRegisteredRoute: '!/account'
+            }
         }
     });
 
@@ -94,10 +98,10 @@ define([
 
         name: 'pb.com.ua',
 
-        settings: {
-            title: APP.config.TITLE,
-            logoImageUrl: APP.config.URL_PUBLIC_LOGO
-        },
+        // settings: {
+        //     title: APP.config.TITLE,
+        //     logoImageUrl: APP.config.URL_PUBLIC_LOGO
+        // },
 
         routes: _.extend.apply(_, [
             {
@@ -132,24 +136,30 @@ define([
 
         signin: function () {
             // check if user is authenticated
-            if (Auth.verifyStatus()) {
-                Backbone.history.navigate('!/', true);
-                return;
-            }
-            this.toggleCategoryRibbonAndBreadcrumb(true);
-            this.toggleHomeFrame(false);
+            // if (Auth.verifyStatus()) {
+            //     Backbone.history.navigate('!/', true);
+            //     return;
+            // }
             var auth = this.plugins.system.authorize();
-            $('section.mpws-js-main-section').html(auth.$el);
+            if (auth) {
+                this.toggleCategoryRibbonAndBreadcrumb(true);
+                this.toggleHomeFrame(false);
+                $('section.mpws-js-main-section').html(auth.$el);
+            }
         },
 
         account: function () {
             // check if user is authenticated
-            if (!Auth.verifyStatusAndThen()) {
-                Backbone.history.navigate('!/', true);
-                return;
-            }
+            // if (!Auth.verifyStatusAndThen()) {
+            //     Backbone.history.navigate('!/', true);
+            //     return;
+            // }
             var user = this.plugins.system.userPanel();
-            $('section.mpws-js-main-section').html(user.$el);
+            if (user) {
+                this.toggleCategoryRibbonAndBreadcrumb(true);
+                this.toggleHomeFrame(false);
+                $('section.mpws-js-main-section').html(user.$el);
+            }
         },
 
         initialize: function () {
@@ -161,6 +171,13 @@ define([
             this.on('app:ready', function () {
                 Auth.getStatus();
 
+                // Auth.on('registered', function () {
+                //     Backbone.history.navigate(that.plugins.system.urls.account, true);
+                // });
+
+                // Auth.on('guest', function () {
+                //     Backbone.history.navigate('!/', true);
+                // });
                 // that.setPlugin(APP.getPlugin('shop'));
 
                 // menu items

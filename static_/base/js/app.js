@@ -427,10 +427,10 @@
                     // notify all that loader completed its tasks
                     APP.Sandbox.eventNotify('global:loader:complete');
                     Backbone.trigger('global:loader:complete');
+                    Backbone.history.start({hashChange: true});
                     if (APP.instances.customer && APP.instances.customer instanceof Backbone.Router) {
                         APP.instances.customer.trigger('app:ready');
                     }
-                    Backbone.history.start({hashChange: true});
                     updatePageBodyClassNameFn();
 
                     // init some handy actions
