@@ -392,9 +392,11 @@ class users {
     private function _adjustPermissions ($perms) {
         $adjustedPerms = array();
         // adjust permission values
-        foreach ($perms as $field => $value) {
-            if (preg_match("/^Can/", $field) === 1) {
-                $adjustedPerms[$field] = intval($value) === 1;
+        if (!empty($perms)) {
+            foreach ($perms as $field => $value) {
+                if (preg_match("/^Can/", $field) === 1) {
+                    $adjustedPerms[$field] = intval($value) === 1;
+                }
             }
         }
         // $this->permissions = $listOfDOs;

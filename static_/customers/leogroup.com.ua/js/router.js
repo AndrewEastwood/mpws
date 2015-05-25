@@ -159,6 +159,7 @@ define([
             $('img.mpws-js-logo').attr('src', APP.config.URL_PUBLIC_LOGO);
 
             this.on('app:ready', function () {
+                Auth.getStatus();
 
                 // that.setPlugin(APP.getPlugin('shop'));
 

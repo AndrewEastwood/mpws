@@ -4,10 +4,11 @@ define([
     'backbone',
     'handlebars',
     'auth',
+    'plugins/system/common/js/model/user',
     'plugins/system/site/js/view/menu',
     'plugins/system/site/js/view/authorize',
     'plugins/system/common/js/view/editUser'
-], function ($, _, Backbone, Handlebars, Auth, ViewMenu, ViewAuthorize, ViewEditUser) {
+], function ($, _, Backbone, Handlebars, Auth, ModelUser, ViewMenu, ViewAuthorize, ViewEditUser) {
 
     // return false;
     // this is the user instance
@@ -23,19 +24,23 @@ define([
     // //     APP.Sandbox.eventNotify('plugin:user:model:change', user);
     // // });
 
-    // Auth.on('registered', function () {
-    //     var authUserID = Auth.getUserID();
-    //     if (authUserID) {
-    //         user.set('ID', authUserID);
-    //         user.fetch();
-    //     }
-    //     _navigateToUserIfAuthorizedFn();
-    // });
+    Auth.on('registered', function () {
+        debugger
+        var authUserID = Auth.getUserID();
+        if (authUserID) {
+            var user = ModelUser.getInstance();
+            user.set('ID', authUserID);
+            user.fetch();
+        }
+        // _navigateToUserIfAuthorizedFn();
+    });
 
-    // Auth.on('guest', function () {
-    //     user.clear();
-    //     _navigateToHomeIfNotAuthorizedFn();
-    // });
+    Auth.on('guest', function () {
+        debugger
+        var user = ModelUser.getInstance();
+        user.clear();
+        // _navigateToHomeIfNotAuthorizedFn();
+    });
 
     // var _navigateToHomeIfNotAuthorizedFn = function () {
     //     var isUserPage = /^user/.test(Backbone.history.fragment);
@@ -84,7 +89,7 @@ define([
 
         menu: function (options) {
             var menu = new ViewMenu(_.extend({}, options || {}));
-            menu.render();
+            menu.model.fetch();
             return menu;
         },
 
@@ -120,7 +125,7 @@ define([
             // debugger;
             // create new view
             var viewEditUser = new ViewEditUser();
-            // viewEditUser.model.set('ID', id, {silent: true});
+            viewEditUser.model.set('ID', Auth.getUserID(), {silent: true});
             viewEditUser.model.fetch({reset: true});
             return viewEditUser;
         },

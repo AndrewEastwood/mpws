@@ -31,7 +31,7 @@ define([
 
     // this is the user instance
     // var menuView = null;
-    var user = new ModelUser();
+    var user = ModelUser.getInstance();
     // APP.dfd.systemDashboard = new $.Deferred();
     // APP.dfd.systemMenu = new $.Deferred();
     // Backbone.on('auth:info auth:registered', function () {
