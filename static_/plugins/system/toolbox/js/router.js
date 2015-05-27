@@ -66,7 +66,7 @@ define([
     //             el: menuView.$el
     //         });
 
-    //         if (APP.config.USER.p_CanMaintain) {
+    //         if (Auth.userData.p_CanMaintain) {
     //             customerSwitcherView = new ViewCustomerSwitcher();
     //             customerSwitcherView.render();
     //             APP.Sandbox.eventNotify('global:content:render', {
@@ -140,7 +140,7 @@ define([
         },
         widgetCustomerSwitcher: function () {
             var customerSwitcherView = null;
-            if (APP.config.USER.p_CanMaintain) {
+            if (Auth.userData.p_CanMaintain) {
                 customerSwitcherView = new ViewCustomerSwitcher();
                 customerSwitcherView.render();
             }
@@ -148,10 +148,9 @@ define([
         },
         widgetUserButton: function () {
             var buttonUser = null;
-            var authUserID = Auth.getUserID();
-            if (authUserID) {
+            if (Auth.verifyStatus()) {
                 buttonUser = new ViewButtonUser();
-                buttonUser.model.set('ID', authUserID);
+                buttonUser.model.set('ID', Auth.getUserID());
                 buttonUser.model.fetch();
             }
             return buttonUser;
@@ -178,7 +177,7 @@ define([
         },
 
         customersList: function () {
-            if (!APP.config.USER.p_CanMaintain) {
+            if (!Auth.userData.p_CanMaintain) {
                 // Backbone.history.navigate(this.urls.dashboard, true);
                 return null;
             }
@@ -190,7 +189,7 @@ define([
         },
 
         customersListByStatus: function (status) {
-            if (!APP.config.USER.p_CanMaintain) {
+            if (!Auth.userData.p_CanMaintain) {
                 // Backbone.history.navigate(this.urls.dashboard, true);
                 return null;
             }
@@ -214,7 +213,7 @@ define([
         },
 
         customerCreate: function () {
-            if (!APP.config.USER.p_CanMaintain) {
+            if (!Auth.userData.p_CanMaintain) {
                 Backbone.history.navigate(this.urls.dashboard, true);
                 return;
             }

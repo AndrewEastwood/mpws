@@ -59,8 +59,9 @@ define([
                 '': 'home',
                 '!': 'home',
                 '!/': 'home',
+                '!/home': 'home',
                 '!/signin': 'signin',
-                '!/signout': 'signout'
+                // '!/signout': 'signout'
             },
             shopRoutes,
             systemRoutes,
@@ -74,60 +75,75 @@ define([
         elements: {},
 
         views: {},
-        route: function (route, name, callback) {
-            // debugger
-            var router = this;
-                if (!callback) callback = this[name];
+        // route: function (route, name, callback) {
+        //     // debugger
+        //     var router = this;
+        //         if (!callback) callback = this[name];
 
-            var f = function() {
-                // debugger
-                if (Auth.verifyStatus() && name === 'signin') {
-                    Backbone.history.navigate(Cache.get('location') || '!/', true);
-                    return false;
-                }
+        //     var f = function() {
+        //         // debugger
+        //         if (Auth.verifyStatus() && name === 'signin') {
+        //             Backbone.history.navigate(Cache.get('location') || '!/', true);
+        //             return false;
+        //         }
 
-                // redirect user on signin page
-                if (!Auth.verifyStatus() && !/signin|signout/.test(name)) {
-                    Backbone.history.navigate('!/signin', true);
-                    return false;
-                }
+        //         // redirect user on signin page
+        //         if (!Auth.verifyStatus() && !/signin|signout/.test(name)) {
+        //             Backbone.history.navigate('!/signin', true);
+        //             return false;
+        //         }
 
-                callback && callback.apply(router, arguments);
-            };
-            return Backbone.Router.prototype.route.call(this, route, name, f);
-        },
+        //         callback && callback.apply(router, arguments);
+        //     };
+        //     return Backbone.Router.prototype.route.call(this, route, name, f);
+        // },
 
         signin: function () {
-            if (Auth.verifyStatus()) {
-                Backbone.history.navigate(Cache.get('location') || '!/', true);
-                return;
-            }
+            // if (Auth.verifyStatus()) {
+            //     Backbone.history.navigate(Cache.get('location') || '!/', true);
+            //     return;
+            // }
             this.toggleMenu(false);
             this.toggleWidgets(false);
             var signin = this.plugins.system.signinForm();
             $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
-        signout: function () {
-            if (!Auth.verifyStatus()) {
-                Backbone.history.navigate('!/signin', true);
-                return;
-            }
-            this.toggleMenu(false);
-            this.toggleWidgets(false);
-            $('section.mpws-js-main-section').empty();
-            // logout and then route to signin
-            Auth.signout(function () {
-                Backbone.history.navigate('!/signin', true);
-            });
-        },
+        // signout: function () {
+        //     // if (!Auth.verifyStatus()) {
+        //     //     Backbone.history.navigate('!/signin', true);
+        //     //     return;
+        //     // }
+        //     this.toggleMenu(false);
+        //     this.toggleWidgets(false);
+        //     $('section.mpws-js-main-section').empty();
+        //     // logout and then route to signin
+        //     Auth.signout(function () {
+        //         Backbone.history.navigate('!/signin', true);
+        //     });
+        // },
 
         initialize: function () {
 
-            var that = this;
+            var that = this,
+                routesWhenUnauthorizedOnly = ['signin'];
+
+
+            Auth.on('registered', function () {
+                // debugger
+                that.toggleMenu(true);
+                that.toggleWidgets(true);
+            });
+
+
+            Auth.on('guest', function () {
+                // debugger
+                that.toggleMenu(false);
+                that.toggleWidgets(false);
+                Backbone.history.navigate('!/signin', true);
+            });
 
             this.on('app:ready', function () {
-
                 // setup site animated title
                 $('a.navbar-brand').attr('href', '/#!/').empty();
                 var brandTitle = APP.config.TITLE.split(''),
@@ -145,7 +161,20 @@ define([
             });
 
             this.on('route', function (routeFn, params) {
+
                 // debugger
+                // when we're not authorized and route is no allowed then we go to signin route
+                if (!Auth.verifyStatus() && _(routesWhenUnauthorizedOnly).indexOf(routeFn) === -1) {
+                    Backbone.history.navigate('!/signin', true);
+                    return;
+                }
+
+                // when we're authorized and route is for non-authorized state then we go to homepage
+                if (Auth.verifyStatus() && _(routesWhenUnauthorizedOnly).indexOf(routeFn) !== -1) {
+                    Backbone.history.navigate('!/', true);
+                    return;
+                }
+
                 if (Auth.verifyStatus()) {
                     that.toggleMenu(true);
                     that.toggleWidgets(true);
@@ -174,9 +203,9 @@ define([
                 }
             });
 
-            Auth.on('registered', function () {
-                window.location.reload();
-            });
+            // Auth.on('registered', function () {
+            //     window.location.reload();
+            // });
         },
         // routes
         home: function () {

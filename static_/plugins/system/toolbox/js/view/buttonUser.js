@@ -14,6 +14,9 @@ define([
         className: 'dropdown plugin-system-user-button',
         template: Handlebars.compile(tpl), // check
         lang: lang,
+        events: {
+            'click .mpws-js-signout': Auth.signout
+        },
         initialize: function () {
             this.model = ModelUser.getInstance();
             this.listenTo(this.model, 'change', this.render);

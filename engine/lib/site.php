@@ -67,22 +67,22 @@ class site {
             $logoUrl = $customer['Logo']['normal'];
         }
         $initialJS = "{
-            LOCALE: '" . $locale . "',
-            BUILD: " . $build . ",
-            DEBUG: " . ($app->isDebug() ? 'true' : 'false') . ",
-            ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
-            PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
-            CUSTOMER: '" . $displayCustomer . "',
-            ACTIVEID: '" . $customer['ID'] . "',
-            ACTIVEHOSTNAME: '" . $customer['HostName'] . "',
-            URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
-            URL_PUBLIC_HOSTNAME: '" . $Host . "',
-            URL_PUBLIC_SCHEME: '" . $Scheme . "',
-            URL_PUBLIC_LOGO: '" . $logoUrl . "',
-            TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "',
-            AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "',
-            USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . "
+            LOCALE: '" . $locale . "'
+            ,BUILD: " . $build . "
+            ,DEBUG: " . ($app->isDebug() ? 'true' : 'false') . "
+            ,ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . "
+            ,PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . "
+            ,CUSTOMER: '" . $displayCustomer . "'
+            ,ACTIVEID: '" . $customer['ID'] . "'
+            ,ACTIVEHOSTNAME: '" . $customer['HostName'] . "'
+            ,URL_PUBLIC_HOMEPAGE: '" . $Homepage . "'
+            ,URL_PUBLIC_HOSTNAME: '" . $Host . "'
+            ,URL_PUBLIC_SCHEME: '" . $Scheme . "'
+            ,URL_PUBLIC_LOGO: '" . $logoUrl . "'
+            ,TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "'
+            ,AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "'
         }";
+        // ,USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . "
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
 
         $html = file_get_contents($layoutCustomer);

@@ -9,6 +9,7 @@ define([
 
     var Auth = _.extend({
         user: null,
+        userData: {},
         verifyStatus: function () {
             // debugger
             var user = Auth.getUserID();
@@ -51,49 +52,56 @@ define([
             return Cache.getCookie(authKey) || null;
         },
         getStatus: function (callback) {
-            var query = {
-                fn: 'status'
-            };
-            return $.get(APP.getAuthLink(query), function (response) {
-                if (_.isFunction(callback))
+            var that = this;
+            // var query = {
+            //     fn: 'status'
+            // };
+            return $.get(APP.getAuthLink(/*query*/), function (response) {
+                that.userData = response || {};
+                if (_.isFunction(callback)) {
                     callback(Auth.getUserID(), response);
+                }
             });
         },
         signin: function (email, password, remember, callback) {
             var that = this;
-            var query = {
-                fn: 'signin'
-            };
-            return $.post(APP.getAuthLink(query), {
+            // var query = {
+            //     fn: 'signin'
+            // };
+            return $.post(APP.getAuthLink(/*query*/), {
                 email: email,
                 password: password,
                 remember: remember,
             }, function (response) {
                 that.trigger('signin:ok');
-                if (_.isFunction(callback))
+                that.userData = response || {};
+                if (_.isFunction(callback)) {
                     callback(Auth.getUserID(), response);
+                }
             });
         },
         signout: function (callback) {
             // debugger
             var that = this;
-            var query = {
-                fn: 'signout'
-            };
+            // var query = {
+            //     fn: 'signout'
+            // };
             return $.ajax({
-                url: APP.getAuthLink(query),
+                url: APP.getAuthLink(/*query*/),
                 type: 'DELETE',
                 success: function (response) {
                     that.trigger('signout:ok');
-                    if (_.isFunction(callback))
+                    that.userData = {};
+                    if (_.isFunction(callback)) {
                         callback(Auth.getUserID(), response);
+                    }
                 }
             });
         }
     }, Backbone.Events);
 
     // init user data
-    // Auth.user = Auth.getUserID()
+    Auth.user = Auth.getUserID()
 
     Backbone.on("global:ajax:response", function (/*data*/) {
         Auth.verifyStatus();

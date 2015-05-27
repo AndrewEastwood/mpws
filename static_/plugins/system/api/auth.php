@@ -84,12 +84,13 @@ class auth {
     }
 
     public function get (&$resp) {
-        $resp[$this->authKey] = $this->getAuthenticatedUser();
+        $resp = $this->getAuthenticatedUser();
         $this->updateSessionAuth();
     }
 
     public function delete (&$resp, $req) {
-        $resp[$this->authKey] = $this->clearAuthID();
+        // $resp[$this->authKey] = $this->clearAuthID();
+        $this->clearAuthID();
         $this->updateSessionAuth();
     }
 
@@ -134,7 +135,9 @@ class auth {
                 API::getAPI('system:users')->setOnline($user['ID']);
             }
             // $resp[$this->authKey] = $this->getAuthID();
-            $this->updateSessionAuth();
+            // $resp = $this->getAuthenticatedUser();
+            // $this->updateSessionAuth();
+            $this->get($resp);
 
         // }
         // if (isset($req->get['signout'])) {

@@ -4,6 +4,7 @@ define([
     'plugins/system/common/js/model/user',
     'plugins/system/common/js/view/userAddress',
     'utils',
+    'auth',
     'createPopupTitle',
     'cachejs',
     'bootstrap-dialog',
@@ -15,12 +16,12 @@ define([
     // 'image-upload',
     'bootstrap-switch',
     'bootstrap-editable'
-], function (Backbone, Handlebars, ModelUser, ViewAddress, Utils,
+], function (Backbone, Handlebars, ModelUser, ViewAddress, Utils, Auth,
              createPopupTitle, cachejs, BootstrapDialog, BSAlert,
              tpl, lang, WgtImageUpload) {
 
     function _getTitle (isNew) {
-        var backUrl = APP.config.USER.p_CanMaintain ? APP.instances.system.urls.usersList : APP.instances.system.urls.dashboard;
+        var backUrl = Auth.userData.p_CanMaintain ? APP.instances.system.urls.usersList : APP.instances.system.urls.dashboard;
         return createPopupTitle(isNew ? lang.editors.user.titleForNew : lang.editors.user.titleForExistent, backUrl);
     }
 
