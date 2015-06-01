@@ -50,7 +50,7 @@ define([
                 });
             });
         },
-        editAddress: function () {
+        editAddress: function (event) {
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
