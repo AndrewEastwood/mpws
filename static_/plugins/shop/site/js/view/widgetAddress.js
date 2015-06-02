@@ -85,14 +85,26 @@ define([
                 this.$infoPayment.html(addr.InfoPayment);
                 this.$infoShipping.html(addr.InfoShipping);
                 this.$infoWarranty.html(addr.InfoWarranty);
-                this.$addressLine.empty()
-                    .append($('<span>').text((addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3) + ','))
-                    .append($('<span>').text(addr.City))
-                    .append('&nbsp;')
-                    .append($('<span>').text(addr.PhoneHotline || addr.Phone1Value
-                        || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value))
-                    .append('&nbsp;')
-                    .append($('<a>').attr('href', 'mailto:' + addr.EmailSupport).text(addr.EmailSupport));
+                this.$addressLine.empty();
+                var addrItems = [];
+                if (addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3) {
+                    addrItems.push($('<span>').addClass('mpws-shop-addr-el mpws-shop-addr-el-text')
+                        .text((addr.AddressLine1 || addr.AddressLine2 || addr.AddressLine3)));
+                }
+                if (addr.City) {
+                    addrItems.push($('<span>').addClass('mpws-shop-addr-el mpws-shop-addr-el-text')
+                        .text(addr.City));
+                }
+                if (addr.PhoneHotline || addr.Phone1Value || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value) {
+                    addrItems.push($('<span>').addClass('mpws-shop-addr-el mpws-shop-addr-el-text')
+                        .text(addr.PhoneHotline || addr.Phone1Value || addr.Phone2Value || addr.Phone3Value || addr.Phone4Value || addr.Phone5Value));
+                }
+                if (addr.EmailSupport) {
+                    addrItems.push($('<a>').addClass('mpws-shop-addr-el mpws-shop-addr-email')
+                        .attr('href', 'mailto:' + addr.EmailSupport).text(addr.EmailSupport));
+                }
+                this.$addressLine.html(addrItems);
+                this.$addressLine.find('.mpws-shop-addr-el-text').after($('<span>').html(',&nbsp;'));
                 this.$copy.html('&copy; ' + new Date().getFullYear() + ' ,' + addr.ShopName);
                 this.$linkFacebook.attr('href', addr.SocialFacebook || 'javascript://');
                 this.$linkGooglePlus.attr('href', addr.SocialGooglePlus || 'javascript://');
