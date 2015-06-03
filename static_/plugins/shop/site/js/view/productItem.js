@@ -48,7 +48,7 @@ define([
 
             this.options = options || {};
             // set default style
-            this.options.design = _.extend({style: 'short'}, this.options.design || {});
+            this.options.design = _.extend({style: 'short', titleKey: '_displayName'}, this.options.design || {});
             this.options.templates = _.extend({}, this.options.templates, this.options.design.templates || {});
             // bind context
             _.bindAll(this, 'switchCurrency',
@@ -128,7 +128,8 @@ define([
             if (isWrongProduct) {
                 this.$el.addClass(this.className + '-empty');
             } else {
-                this.$el.attr('title', this.model.get('_displayName'));
+                this.$el.attr('title', this.model.get(design.titleKey));
+                this.$el.data('Name', this.model.get('Name'));
                 this.$('[data-toggle="tooltip"]').tooltip();
                 this.$('.product-availability .fa').popover({trigger: 'hover'});
                 if (design.className) {

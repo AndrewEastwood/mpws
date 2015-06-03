@@ -102,8 +102,8 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_field_Price}}</label>
                         <div class="col-md-8">
-                            <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
                             {{#if data.ID}}
+                            <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
                             <ul class="list-group shop-product-price-stats">
                                 <li class="list-group-item">
                                     <span class="badge">{{data._prices.price}}</span>
@@ -122,6 +122,8 @@
                                 </li>
                                 {{/mpwsIsNotEmpty}}
                             </ul>
+                            {{else}}
+                            <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Price}}">
                             {{/if}}
                         </div>
                     </div>

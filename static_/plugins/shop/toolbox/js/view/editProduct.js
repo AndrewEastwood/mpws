@@ -310,6 +310,7 @@ define([
                 if (featureTypes && featureTypes.length) {
                     that.$('.feature-item .dropdown-toggle').removeClass('hidden');
                     that.$('.feature-item .feature-types').removeClass('hidden');
+                    that.$('.feature-item .feature-types').empty();
                     _(featureTypes).each(function (groupName) {
                         that.$('.feature-item .feature-types').append('<li><a href="javascript://" class="feature-type">' + groupName + '</a></li>');
                     })

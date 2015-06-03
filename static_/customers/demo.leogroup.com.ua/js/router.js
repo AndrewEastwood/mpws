@@ -188,8 +188,13 @@ define([
             filterLayoutElements('.shop-catalog');
 
             var that = this,
+                catalogOptions = {
+                    design: {
+                        titleKey: 'Name'
+                    }
+                },
                 catalogFilterView = this.plugins.shop.catalogFilterPanel(category, pageNo),
-                catalogBrowseView = this.plugins.shop.catalogBrowseContent();
+                catalogBrowseView = this.plugins.shop.catalogBrowseContent(catalogOptions);
 
             catalogFilterView.on('render:complete', function () {
                 APP.setPageAttributes(catalogFilterView.getPageAttributes());
@@ -207,10 +212,11 @@ define([
                 // init sliphover
                 initEchoJS();
                 filterLayoutElements('.shop-catalog');
-                catalogBrowseView.$('.shop-product-item-short').each(function () {
+                catalogBrowseView.$('.shop-product-item-short').each(function (i, productItem) {
+                    $productItem = $(productItem);
                     $(this).wrap($('<a>').attr({
-                        href: $(this).find('link[itemprop="url"]').attr('href'),
-                        title: $(this).attr('title')
+                        href: $productItem.find('link[itemprop="url"]').attr('href'),
+                        title: $productItem.data('Name')
                     }));
                 });
                 catalogBrowseView.$('.displayItems').sliphover({

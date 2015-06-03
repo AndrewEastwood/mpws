@@ -852,7 +852,7 @@ class products {
                         }
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
-                        $attrData['Value'] = $value;
+                        $attrData['Value'] = $attributes[$key];
                         $config = dbquery::shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
