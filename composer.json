@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "engine/vendors"
+    },
+    "require": {
+        "mandrill/mandrill": "=1.0.0"
+    }
+}

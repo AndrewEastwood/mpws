@@ -65,6 +65,7 @@ require.config({
         'jquery.sliphover': 'vendors/sliphover/src/jquery.sliphover',
         // libs
         'i18nprecompile': 'base/js/lib/i18nprecompile',
+        'mandrill': 'base/js/lib/mandrill',
         'json2': 'base/js/lib/json2',
         'editable-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/wysihtml5',
         'bootstrap-wysihtml5': 'base/js/lib/inputs-ext/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2',
@@ -184,6 +185,10 @@ require.config({
         'isotope': {
             exports: 'Isotope',
             deps: ['jquery']
+        },
+        'mandrill': {
+            exports: 'mandrill',
+            deps: ['json2']
         }
     },
     waitSeconds: 30,

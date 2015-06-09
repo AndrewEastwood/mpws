@@ -15,6 +15,7 @@ spl_autoload_register(function ($className) {
     if (file_exists(MPWS_ROOT . DIRECTORY_SEPARATOR . $fileName)) {
         require $fileName;
     }
+    // echo $fileName .'<br/>';
     return false;
 });
 
@@ -24,8 +25,11 @@ spl_autoload_register(function ($className) {
     if (file_exists($fileName)) {
         require $fileName;
     }
+    // echo $fileName .'<br/>';
     return false;
 });
+
+require_once __DIR__ . '/engine/vendors' . '/autoload.php';
 
 use \engine\lib\request as Request;
 use \engine\lib\response as Response;
@@ -109,9 +113,14 @@ class app {
             'upload' => '/upload/'
         )
     );
+    private $keys = null;
     private $db = null;
 
     function __construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
+        // keys
+        $keys = (object)array(
+            'mandrill' => '4tSbctT_FNQrZ0AnClOH_w'
+        );
         // header data
         $this->header = $header;
         // request type
@@ -132,6 +141,7 @@ class app {
             $host_parts = array_slice($host_parts, 1);
         }
         $this->customerName = implode('.', $host_parts);
+        $this->currentHost = $_SERVER['HTTP_HOST'];
         // if ($host_parts[0] === 'www' || $host_parts[0] === 'toolbox') {
         // }
         // else
@@ -154,6 +164,8 @@ class app {
         // setup DB
         $this->db = new DB($this->getDBConnection());
         $this->site = new Site();
+        // setup mail
+        $this->mail = new Mandrill($keys->mandrill);
     }
 
     private function getDBConnection () {
@@ -168,6 +180,10 @@ class app {
 
     public function getDB () {
         return $this->db;
+    }
+
+    public function getMail () {
+        return $this->mail;
     }
 
     public function getEnvironment () {
@@ -202,6 +218,10 @@ class app {
 
     public function getSite () {
         return $this->site;
+    }
+
+    public function getRawHost () {
+        return $this->currentHost;
     }
 
     public function getResponse () {

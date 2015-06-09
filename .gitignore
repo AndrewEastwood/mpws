@@ -20,3 +20,4 @@ uploads/
 vendors
 _dist_
 temp
+composer.lock

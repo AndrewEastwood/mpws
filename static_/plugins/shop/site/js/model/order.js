@@ -108,7 +108,7 @@ define([
                         that.trigger('saved');
                         that.clear();
                         that.set({ID: 'temp'});
-                        this.fetch({silent: true})
+                        this.fetch({silent: true});
                     }
                 }
             });

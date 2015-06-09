@@ -8,6 +8,7 @@ use \engine\lib\path as Path;
 use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
+use Mandrill as Mandrill;
 
 class orders {
 

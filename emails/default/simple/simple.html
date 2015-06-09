@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width"/>
+    <!-- For development, pass document through inliner -->
+    <link rel="stylesheet" href="simple.css">
+    <style type="text/css">
+    /* Your custom styles go here */
+    </style>
+</head>
+<body>
+<table class="body-wrap">
+    <tr>
+        <td class="container">
+
+            <!-- Message start -->
+            <table>
+                <tr>
+                    {{#if view_head_small}}
+                    <td align="left" class="masthead_small">
+                        <div class="padded">
+                            <table>
+                                <tr>
+                                    {{#if param_customer_logo}}
+                                    <td width="30">
+                                        <img src="{{param_customer_logo}}" width="auto" height="30" alt="{{param_cont_company}}" />
+                                    </td>
+                                    {{/if}}
+                                    <td>{{#if param_customer_title}}<h1>{{param_customer_title}}</h1>{{/if}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    {{else}}
+                    <td align="center" class="masthead">
+                        {{#if param_customer_logo}}
+                        <img src="{{param_customer_logo}}" width="auto" height="auto" alt="{{param_cont_company}}" />
+                        {{/if}}
+                        {{#if param_customer_title}}<h1>{{param_customer_title}}</h1>{{/if}}
+                    </td>
+                    {{/if}}
+                </tr>
+                <tr>
+                    <td class="content">
+                        {{#if param_greeting}}<h2>{{{param_greeting}}}</h2>{{/if}}
+                        {{#if param_content}}<p>{{{param_content}}}</p>{{/if}}
+                        {{#if param_content2}}<p>{{{param_content2}}}</p>{{/if}}
+                        {{#if param_content3}}<p>{{{param_content3}}}</p>{{/if}}
+                        {{#if param_show_buttons}}
+                        <table>
+                            <tr>
+                                <td align="center">
+                                    <p>
+                                        {{#if param_button_href_1}}<a href="{{param_button_href_1}}" class="button" title="{{param_button_title_1}}">
+                                            {{param_button_title_1}}
+                                        </a>{{/if}}
+                                        {{#if param_button_href_2}}<a href="{{param_button_href_2}}" class="button" title="{{param_button_title_2}}">
+                                            {{param_button_title_2}}
+                                        </a>{{/if}}
+                                        {{#if param_button_href_3}}<a href="{{param_button_href_3}}" class="button" title="{{param_button_title_3}}">
+                                            {{param_button_title_3}}
+                                        </a>{{/if}}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        {{/if}}
+                        {{#if param_lead}}<p>{{{param_lead}}}</p>{{/if}}
+                        {{#if param_content_ending}}<p><em>{{{param_content_ending}}}</em></p>{{/if}}
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+    <tr>
+        <td class="container">
+
+            <!-- Message start -->
+            <table>
+                <tr>
+                    <td class="content footer" align="center">
+                        <p>{{text_cont_prefix}} <a href="{{param_homepage}}">{{param_cont_company}}</a>, {{param_cont_addr}}</p>
+                        <p><a href="mailto:{{param_cont_mailto}}">{{param_cont_mailto}}</a> | <a href='{{unsub ""}}'>{{text_unsub_link}}</a></p>
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>
