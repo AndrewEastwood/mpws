@@ -146,7 +146,17 @@ class site {
                 array('name' => 'param_homepage', 'content' => $Homepage),
                 array('name' => 'text_unsub_link', 'content' => 'Відписатися'),
                 array('name' => 'text_cont_prefix', 'content' => 'Від:'),
-                array('name' => 'view_head_small', 'content' => true)
+                array('name' => 'view_head_small', 'content' => true),
+                // items
+                array('name' => 'param_items', 'content' => array(
+                    array('image' => 'http://www.tongfang-global.com/userfiles/image1.jpeg', 'title' => 'aaaa', 'text' => 'aaa', 'href' => '', 'button_text' => ''),
+                    array('image' => 'http://www.d4products.com/wp-content/uploads/2013/11/sample_item3.png', 'title' => 'fsdf', 'text' => 'b', 'href' => '', 'button_text' => ''),
+                    array('image' => 'http://ic.tweakimg.net/ext/i/1277370767.jpeg', 'title' => 'fsdf', 'text' => 'gfdg', 'href' => '', 'button_text' => ''),
+                    array('image' => 'http://www.bandag.eu/Assets/Images/Content/product%20range%20pic.JPG', 'title' => 'fsdf', 'text' => 'fsdfsdfsdf', 'href' => '', 'button_text' => ''),
+                    array('image' => 'http://intl.welchallyn.com/images/products/fullsize/Defibrillation/AEDs/AED10case_900421_product2_MC.jpg', 'title' => 'fsfsdfdsf', 'text' => 'fsdfsdfsdfsdfsd', 'href' => '', 'button_text' => '')
+                )),
+                array('name' => 'param_items_title', 'content' => 'hot offers')
+
             ),
             "merge" => true,
             'headers' => array('Reply-To' => 'no-reply@leogroup.com.ua'),

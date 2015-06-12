@@ -15,6 +15,7 @@ body,
   width: 100% !important;
   height: 100%;
   background: #efefef;
+  -ms-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: none; }
 
@@ -58,7 +59,12 @@ h4 {
 
 h5 {
   font-size: 16px; }
-
+table {
+  border-spacing: 0;
+}
+table td {
+  border-collapse: collapse;
+}
 p, ul, ol {
   font-size: 16px;
   font-weight: normal;
@@ -71,7 +77,8 @@ p, ul, ol {
   clear: both !important;
   margin: 0 auto !important;
   max-width: 580px !important; }
-  .container table {
+  .container table.main_table,
+  .container table.contacts {
     width: 100% !important;
     border-collapse: collapse; }
   .container .masthead {
@@ -100,3 +107,29 @@ p, ul, ol {
         color: #888;
         text-decoration: none;
         font-weight: bold; }
+
+.item {
+  overflow: hidden;
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+.item .image {
+  float: left;
+  margin-right: 20px;
+}
+.item .subtitle {
+font-family:Helvetica, Arial, sans-serif;font-size:16px;font-weight:600;color:#2469A0;margin-top:18px
+}
+.item .copy {
+font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;text-align:left;color:#333333;margin-top:12px
+}
+.items_title {
+  font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;color:#374550
+}
+.item .item_text_wrapper {
+  padding: 10px 0 0 20px;
+}
