@@ -667,6 +667,95 @@ class dbquery {
         unset($config['additional']);
         return $config;
     }
+
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // EMAILS
+    // -----------------------------------------------
+    // -----------------------------------------------
+
+
+    public static function getEmailByID ($EmailID = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "mpws_emails",
+            "fields" => array("*"),
+            "limit" => 1,
+            "condition" => array(),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+        if (isset($EmailID) && $EmailID != null) {
+            $config['condition']['ID'] = $app->getDB()->createCondition($EmailID);
+        }
+        return $config;
+    }
+
+    public static function getEmailList (array $options = array()) {
+        global $app;
+        $config = self::getEmailByID();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        if (empty($options['removed'])) {
+            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
+        }
+        return $config;
+    }
+
+    public static function createEmail ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["Name"] = substr($data["Name"], 0, 300);
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_emails",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public static function updateEmail ($EmailID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        if (isset($data['Name'])) {
+            $data["Name"] = substr($data["Name"], 0, 300);
+        }
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_emails",
+            "action" => "update",
+            "condition" => array(
+                "ID" => $app->getDB()->createCondition($EmailID)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public static function archiveEmail ($EmailID) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "mpws_emails",
+            "action" => "update",
+            "condition" => array(
+                "Status" => $app->getDB()->createCondition("REMOVED", "!="),
+            ),
+            "data" => array(
+                "Status" => 'ARCHIVED',
+                "DateUpdated" => $app->getDB()->getDate()
+            ),
+            "options" => null
+        ));
+        if (isset($EmailID) && $EmailID != null) {
+            $config['condition']['ID'] = $app->getDB()->createCondition($EmailID);
+        }
+        return $config;
+    }
+
+
 }
 
 ?>

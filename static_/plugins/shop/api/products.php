@@ -1822,7 +1822,6 @@ class products {
             return;
         }
         $resp = $this->archiveProduct($req->data);
-        // $this->_getOrSetCachedState('changed:product', true);
     }
 
 }

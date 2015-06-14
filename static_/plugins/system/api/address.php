@@ -76,9 +76,9 @@ class address {
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateUser = dbquery::createAddress($data);
+                $configCreateAddr = dbquery::createAddress($data);
 
-                $AddressID = $app->getDB()->query($configCreateUser) ?: null;
+                $AddressID = $app->getDB()->query($configCreateAddr) ?: null;
 
                 $app->getDB()->commit();
 

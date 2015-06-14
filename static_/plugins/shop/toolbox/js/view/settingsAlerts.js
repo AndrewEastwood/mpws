@@ -30,7 +30,8 @@ define([
             this.model = new ModelSetting();
             this.model.setType('ALERTS');
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'toggleAlerts', 'render');
+            _.bindAll(this, 'toggleAlerts', 'render', 'setEmails');
+            Backbone.on('system:emails', this.setEmails);
         },
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
@@ -40,6 +41,7 @@ define([
             this.$('.panel-body .shop-property-AllowAlerts').remove();
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             this.toggleAlerts();
+            Backbone.trigger('system:getEmails');
             return this;
         },
         toggleAlerts: function () {
@@ -59,6 +61,9 @@ define([
                 that.model.set(that.model.previousAttributes());
                 that.render();
             });
+        },
+        setEmails: function () {
+            debugger
         }
     });
 

@@ -9,6 +9,9 @@
         <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
             <input type="checkbox" class="switcher pull-right"{{#if this}}checked{{/if}}>
             <span class="property-label">{{mpwsGetValueByKey ../lang.settings.alerts key=@key }}</span>
+            <select class="badge mpws-js-shop-email-list">
+                <option value="">none</option>
+            </select>
         </a>
     {{/each}}
     </div>

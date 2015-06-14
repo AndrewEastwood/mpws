@@ -165,9 +165,9 @@ class site {
         $async = false;
         $ip_pool = 'Main Pool';
         $send_at = 'example send_at';
-        $result = $app->getMail()->messages->sendTemplate($template_name, $template_content, $message);
+        // $result = $app->getMail()->messages->sendTemplate($template_name, $template_content, $message);
         // print_r($message);
-        print_r($result);
+        // print_r($result);
 
         return $html;
     }

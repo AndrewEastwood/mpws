@@ -14,6 +14,7 @@ define([
     'plugins/system/toolbox/js/view/managerUsers',
 
     'plugins/system/common/js/model/user',
+    'plugins/system/common/js/collection/listEmails',
     'auth',
     'cachejs',
 ], function ($, _, Backbone,
@@ -27,7 +28,7 @@ define([
     ViewEditUser,
     ViewManagerUsers,
 
-    ModelUser, Auth, Cache) {
+    ModelUser, CollectionEmail, Auth, Cache) {
 
     // this is the user instance
     // var menuView = null;
@@ -104,6 +105,8 @@ define([
     //     "!/system/user/new": "userCreate"
     // };
 
+    var colEm = null;
+
     var View = Backbone.View.extend({
         // routes: routes,
         urls: {},
@@ -113,6 +116,19 @@ define([
             this.urls = options && options.urls || {};
             // fetch data
             // callback();
+
+            Backbone.on('system:getEmails', function () {
+                if (colEm) {
+                    colEm.fetch();
+                } else {
+                    var colEm = colEm || new CollectionEmail();
+                    colEm.fetch();
+                    colEm.on('sync', function (reps) {
+                        debugger
+                        Backbone.trigger('system:emails', resp);
+                    });
+                }
+            });
         },
 
         // urls: _(routes).invert(),
