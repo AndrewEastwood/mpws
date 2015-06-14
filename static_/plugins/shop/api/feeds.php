@@ -526,7 +526,8 @@ class feeds {
             ->setCellValue('P1', 'Image2')
             ->setCellValue('Q1', 'Image3')
             ->setCellValue('R1', 'Image4')
-            ->setCellValue('S1', 'Image5');
+            ->setCellValue('S1', 'Image5')
+            ->setCellValue('T1', 'ProductURL');
         $objPHPExcel->getActiveSheet()->getStyle('A1:Z1')->getFont()->setBold(true);
         for ($i = 0, $j = 2, $len = count($dataList['items']); $i < $len; $i++, $j++) {
             $images = array();
@@ -583,6 +584,7 @@ class feeds {
                 $objPHPExcel->getActiveSheet()->setCellValue('R' . $j, $images[3]);
             if (isset($images[4]))
                 $objPHPExcel->getActiveSheet()->setCellValue('S' . $j, $images[4]);
+            $objPHPExcel->getActiveSheet()->setCellValue('T' . $j, $customer['Protocol'] . '://' . $customer['HostName'] . '/#!/product/' . $dataList['items'][$i]['ExternalKey']);
 
             // add dropdown to status field
             $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $j)->getDataValidation();
