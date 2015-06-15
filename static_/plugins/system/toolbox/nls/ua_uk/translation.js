@@ -5,7 +5,8 @@ define("plugins/system/toolbox/nls/ua_uk/translation", {
         customers: 'Сайти',
         customerEdit: 'Редагувати',
         migrations: 'Маграції БД',
-        users: 'Користувачі'
+        users: 'Користувачі',
+        email: 'Параметри листів'
     },
     form: {
         signin: {

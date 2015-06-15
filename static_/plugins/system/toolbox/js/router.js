@@ -271,7 +271,7 @@ define([
             var viewManagerUsers = new ViewManagerUsers(options);
             viewManagerUsers.collection.fetch({reset: true});
             return viewManagerUsers;
-        }
+        },
 
 
         emailList: function () {
