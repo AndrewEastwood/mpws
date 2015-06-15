@@ -38,7 +38,10 @@ define([
         "!/system/users": "usersList",
         "!/system/users/:status": "usersListByStatus",
         "!/system/user/edit/:id": "userEdit",
-        "!/system/user/new": "userCreate"
+        "!/system/user/new": "userCreate",
+        "!/system/email": "emailList",
+        "!/system/email/new": "emailCreate",
+        "!/system/email/edit/:id": "emailEdit"
     };
 
     APP.configurePlugins({

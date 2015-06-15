@@ -272,6 +272,21 @@ define([
             viewManagerUsers.collection.fetch({reset: true});
             return viewManagerUsers;
         }
+
+
+        emailList: function () {
+
+        },
+
+        emailCreate: function () {
+
+        },
+
+        emailEdit: function () {
+
+        }
+
+
     });
 
     return View;

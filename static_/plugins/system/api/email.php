@@ -21,11 +21,10 @@ class email {
     public function getEmailByID ($EmailID) {
         global $app;
         $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
-        $user = $app->getDB()->query(dbquery::getEmailByID($EmailID), $useCustomerDataOnly);
-        // var_dump('getUserByID', $UserID);
-        if (!is_null($user))
-            $user = $this->__adjustEmail($user);
-        return $user;
+        $email = $app->getDB()->query(dbquery::getEmailByID($EmailID), $useCustomerDataOnly);
+        if (!is_null($email))
+            $email = $this->__adjustEmail($email);
+        return $email;
     }
 
     public function getAvailableEmails_List ($options = array()) {
@@ -45,6 +44,17 @@ class email {
         );
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
+    }
+
+    public function getAvailableEmailsSimple_List ($options = array()) {
+        global $app;
+        $config = dbquery::getEmailListSimple($options);
+        if (empty($config)) {
+            return array();
+        }
+        $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
+        $simpleList = $app->getDB()->query($config, $useCustomerDataOnly);
+        return $simpleList;
     }
 
 
@@ -165,8 +175,8 @@ class email {
         // var_dump($req);
         if (isset($req->get['type'])) {
             switch ($req->get['type']) {
-                case 'new': {
-                    $resp = $this->getNewProducts_List($req->get);
+                case 'simplelist': {
+                    $resp = $this->getAvailableEmailsSimple_List($req->get);
                     break;
                 }
             }

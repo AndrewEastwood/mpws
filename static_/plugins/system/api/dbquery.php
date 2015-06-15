@@ -705,6 +705,13 @@ class dbquery {
         return $config;
     }
 
+    public static function getEmailListSimple (array $options = array()) {
+        global $app;
+        $config = self::getEmailList($options);
+        $config['fields'] = array("ID", "Name");
+        return $config;
+    }
+
     public static function createEmail ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
