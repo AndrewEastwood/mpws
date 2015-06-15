@@ -99,7 +99,6 @@ define([
         },
         saveOrder: function (formData) {
             var that = this;
-            // debugger;
             this.set('form', formData, {silent: true});
             return this.sync("create", this, {
                 success: function (response) {
@@ -109,6 +108,10 @@ define([
                         that.clear();
                         that.set({ID: 'temp'});
                         this.fetch({silent: true});
+                        return;
+                    }
+                    if (response && response.errors) {
+                        that.trigger('errors');
                     }
                 }
             });

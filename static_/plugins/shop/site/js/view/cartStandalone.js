@@ -45,9 +45,11 @@ define([
             }
             this.listenTo(this.model, 'sync', this.render);
             this.listenTo(this.model, 'saved', this.renderSuccess);
+            this.listenTo(this.model, 'errors', this.render);
             _.bindAll(this, 'doCheckout', 'doPreview', 'renderSuccess', 'saveUserInfo', 'clearUserInfo', 'collectUserInfo');
         },
         render: function () {
+            // debugger
             // console.log('rendering cart standalone');
             var self = this;
             var data = Utils.getHBSTemplateData(this);

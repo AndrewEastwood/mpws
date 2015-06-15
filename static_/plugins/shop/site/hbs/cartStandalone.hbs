@@ -2,6 +2,19 @@
     <i class="fa fa-fw fa-arrow-circle-o-left"></i>Назад
 </a>
 {{#if data.info.productCount }}
+
+
+    {{#mpwsIsNotEmpty data.errors }}
+    <div id="msg" class="alert alert-danger mpws-shop-cart-errors">
+        {{lang.shopping_cart_error_title}}
+        <ol class="errors">
+        {{#each data.errors}}
+            <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
+        {{/each}}
+        </ol>
+    </div>
+    {{/mpwsIsNotEmpty}}
+
     <!--  edit page  -->
     <div class="shop-cart-page shop-cart-edit">
         <h4 class="hidden"><i class="icon-shopping-cart"></i>{{lang.shopping_cart_form_title}}</h4>
@@ -86,18 +99,6 @@
     <!--  checkout page  -->
     <div class="shop-cart-page shop-cart-checkout hidden">
         <h1 class="border shop-cart-form-title">Ваші контакти</h1>
-        {{#mpwsIsNotEmpty data.errors }}
-        <div id="msg" class="alert alert-danger">
-            {{lang.shopping_cart_error_title}}
-            <ol class="errors">
-            {{#each data.errors}}
-                {{#each this}}
-                    <li>{{mpwsGetValueByKey ../../lang key=this prefix="shopping_cart_error_"}}</li>
-                {{/each}}
-            {{/each}}
-            </ol>
-        </div>
-        {{/mpwsIsNotEmpty}}
         <!-- Address and Shipping details form -->
         <div class="form form-small">
             <!-- Register form (not working)-->
@@ -301,7 +302,6 @@
     <!--  preview page  -->
     <div class="shop-cart-page shop-cart-preview hidden">
         <h4 class="hidden">Попередній перегляд</h4>
-
         <!-- Address and Shipping details form -->
         <div class="form form-small">
             <!-- Register form (not working)-->

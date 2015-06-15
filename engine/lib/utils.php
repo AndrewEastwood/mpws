@@ -3,6 +3,8 @@
 namespace engine\lib;
 
 use engine\lib\path as Path;
+use RecursiveIteratorIterator;
+use RecursiveArrayIterator;
 
 class utils {
 
@@ -133,6 +135,19 @@ class utils {
     static function formatExceptionMsgForResponse ($msg) {
         $errors['Others'] = array(str_replace(' ', '', $msg));
         return $errors;
+    }
+
+    static function flatten_array ($array) {
+        $result = array();
+        foreach($array as $key=>$value) {
+            if(is_array($value)) {
+                $result = $result + self::flatten_array($value);
+            }
+            else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
     }
 
 }

@@ -6,6 +6,7 @@ use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\api as API;
+use \engine\lib\utils as Utils;
 use Exception;
 use ArrayObject;
 use Mandrill as Mandrill;
@@ -360,7 +361,7 @@ class orders {
             $result = $this->getOrderByID($orderID);
         }
 
-        $result['errors'] = $errors;
+        $result['errors'] = Utils::flatten_array($errors);
         $result['success'] = $success;
 
         return $result;
