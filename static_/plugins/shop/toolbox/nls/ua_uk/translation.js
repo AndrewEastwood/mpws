@@ -271,6 +271,13 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
             },
             buttonClose: 'Закрити',
             buttonSave: 'Зберегти'
+        },
+        settingsAlerts: {
+            errors: {
+                title: 'Неможливо зберегти параметри сповіщення'
+            },
+            buttonClose: 'Закрити',
+            buttonSave: 'Зберегти'
         }
     }
 });

@@ -257,25 +257,31 @@ class settings {
                     break;
                 case 'ALERTS':
                     $dataRules = array(
-                        'AllowAlerts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'NewProductAdded' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ProductPriceGoesDown' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'PromoIsStarted' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'AddedNewOrigin' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'AddedNewCategory' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'AddedNewDiscountedProduct' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                        'AllowAlerts' => array('sqlbool'),
+                        'NewProductAdded' => array('sqlbool'),
+                        'ProductPriceGoesDown' => array('sqlbool'),
+                        'PromoIsStarted' => array('sqlbool'),
+                        'AddedNewOrigin' => array('sqlbool'),
+                        'AddedNewCategory' => array('sqlbool'),
+                        'AddedNewDiscountedProduct' => array('sqlbool'),
+                        'ParamsNewProductAdded' => array('string', 'null', 'skipIfUnset'),
+                        'ParamsProductPriceGoesDown' => array('string', 'null', 'skipIfUnset'),
+                        'ParamsPromoIsStarted' => array('string', 'null', 'skipIfUnset'),
+                        'ParamsAddedNewOrigin' => array('string', 'null', 'skipIfUnset'),
+                        'ParamsAddedNewCategory' => array('string', 'null', 'skipIfUnset'),
+                        'ParamsAddedNewDiscountedProduct' => array('string', 'null', 'skipIfUnset')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
                 case 'PRODUCT':
                     $dataRules = array(
-                        'ShowOpenHours' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowDeliveryInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowPaymentInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowSocialSharing' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowPriceChart' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowWarrantyInfo' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowContacts' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                        'ShowOpenHours' => array('sqlbool'),
+                        'ShowDeliveryInfo' => array('sqlbool'),
+                        'ShowPaymentInfo' => array('sqlbool'),
+                        'ShowSocialSharing' => array('sqlbool'),
+                        'ShowPriceChart' => array('sqlbool'),
+                        'ShowWarrantyInfo' => array('sqlbool'),
+                        'ShowContacts' => array('sqlbool')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
@@ -327,7 +333,7 @@ class settings {
                     $dataRules = array(
                         'DBPriceCurrencyType' => array('string'),
                         'SiteDefaultPriceCurrencyType' => array('string'),
-                        'ShowSiteCurrencySelector' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                        'ShowSiteCurrencySelector' => array('sqlbool')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;
@@ -341,17 +347,17 @@ class settings {
                     break;
                 case 'FORMORDER':
                     $dataRules = array(
-                        'ShowName' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowEMail' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowPhone' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowAddress' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowPOBox' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowCountry' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowCity' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowDeliveryAganet' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-                        'ShowComment' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+                        'ShowName' => array('sqlbool'),
+                        'ShowEMail' => array('sqlbool'),
+                        'ShowPhone' => array('sqlbool'),
+                        'ShowAddress' => array('sqlbool'),
+                        'ShowPOBox' => array('sqlbool'),
+                        'ShowCountry' => array('sqlbool'),
+                        'ShowCity' => array('sqlbool'),
+                        'ShowDeliveryAganet' => array('sqlbool'),
+                        'ShowComment' => array('sqlbool'),
                         'SucessTextLines' => array('string', 'skipIfUnset', 'defaultValueIfUnset' => ''),
-                        'ShowOrderTrackingLink' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+                        'ShowOrderTrackingLink' => array('sqlbool')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
                     break;

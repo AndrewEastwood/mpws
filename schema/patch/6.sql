@@ -17,30 +17,52 @@ ALTER TABLE `mpws_permissions` CHANGE `CanAdmin` `CanAdmin`
     TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanAddUsers` `CanAddUsers`
     TINYINT(1) NOT NULL DEFAULT '0';
 
+ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_2`; ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_3`; ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_4`; ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_5`; ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_6`; ALTER TABLE `shop_settingsAlerts`
+    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_7`;
 
-ALTER TABLE `shop_settingsAlerts` CHANGE `NewProductAdded` `NewProductAdded` INT NULL DEFAULT NULL;
-ALTER TABLE `shop_settingsAlerts` CHANGE `ProductPriceGoesDown` `ProductPriceGoesDown` INT NULL DEFAULT NULL;
-ALTER TABLE `shop_settingsAlerts` CHANGE `PromoIsStarted` `PromoIsStarted` INT NULL DEFAULT NULL;
-ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewOrigin` `AddedNewOrigin` INT NULL DEFAULT NULL;
-ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewCategory` `AddedNewCategory` INT NULL DEFAULT NULL;
-ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewDiscountedProduct` `AddedNewDiscountedProduct` INT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` CHANGE `NewProductAdded` `NewProductAdded` INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `shop_settingsAlerts` CHANGE `ProductPriceGoesDown` `ProductPriceGoesDown` INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `shop_settingsAlerts` CHANGE `PromoIsStarted` `PromoIsStarted` INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewOrigin` `AddedNewOrigin` INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewCategory` `AddedNewCategory` INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewDiscountedProduct` `AddedNewDiscountedProduct` INT(1) NOT NULL DEFAULT 0;
 
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`NewProductAdded`);
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`ProductPriceGoesDown`);
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`PromoIsStarted`);
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewOrigin`);
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewCategory`);
-ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewDiscountedProduct`);
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsNewProductAdded` TEXT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsProductPriceGoesDown` TEXT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsPromoIsStarted` TEXT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsAddedNewOrigin` TEXT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsAddedNewCategory` TEXT NULL DEFAULT NULL;
+ALTER TABLE `shop_settingsAlerts` ADD `ParamsAddedNewDiscountedProduct` TEXT NULL DEFAULT NULL;
 
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`NewProductAdded`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`ProductPriceGoesDown`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`PromoIsStarted`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`AddedNewOrigin`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`AddedNewCategory`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `shop_settingsAlerts` ADD
-    FOREIGN KEY (`AddedNewDiscountedProduct`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `NewProductAdded` `NewProductAdded` INT NULL DEFAULT NULL;
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `ProductPriceGoesDown` `ProductPriceGoesDown` INT NULL DEFAULT NULL;
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `PromoIsStarted` `PromoIsStarted` INT NULL DEFAULT NULL;
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewOrigin` `AddedNewOrigin` INT NULL DEFAULT NULL;
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewCategory` `AddedNewCategory` INT NULL DEFAULT NULL;
+-- ALTER TABLE `shop_settingsAlerts` CHANGE `AddedNewDiscountedProduct` `AddedNewDiscountedProduct` INT NULL DEFAULT NULL;
+
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`NewProductAdded`);
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`ProductPriceGoesDown`);
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`PromoIsStarted`);
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewOrigin`);
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewCategory`);
+-- ALTER TABLE `shop_settingsAlerts` ADD INDEX(`AddedNewDiscountedProduct`);
+
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`NewProductAdded`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`ProductPriceGoesDown`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`PromoIsStarted`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`AddedNewOrigin`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`AddedNewCategory`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `shop_settingsAlerts` ADD
+--     FOREIGN KEY (`AddedNewDiscountedProduct`) REFERENCES `mpws_light`.`mpws_emails`(`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT;

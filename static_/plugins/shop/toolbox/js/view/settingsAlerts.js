@@ -4,20 +4,21 @@ define([
     'plugins/shop/common/js/model/setting',
     'utils',
     'bootstrap-dialog',
-    'bootstrap-alert',
+    'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/settingsAlerts.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-switch'
-], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, toastr, tpl, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-alerts",
         template: Handlebars.compile(tpl), // check
         lang: lang,
         events: {
-            'switchChange.bootstrapSwitch .switcher': 'setSettingState'
+            'switchChange.bootstrapSwitch .switcher': 'setSettingState',
+            'click .edit-alert': 'editAlert'
         },
         initialize: function () {
             this.options = {};
@@ -30,8 +31,7 @@ define([
             this.model = new ModelSetting();
             this.model.setType('ALERTS');
             this.listenTo(this.model, 'sync', this.render);
-            _.bindAll(this, 'toggleAlerts', 'render', 'setEmails');
-            Backbone.on('system:emails', this.setEmails);
+            _.bindAll(this, 'toggleAlerts', 'render', 'editAlert');
         },
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
@@ -41,7 +41,6 @@ define([
             this.$('.panel-body .shop-property-AllowAlerts').remove();
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             this.toggleAlerts();
-            Backbone.trigger('system:getEmails');
             return this;
         },
         toggleAlerts: function () {
@@ -57,13 +56,51 @@ define([
             // debugger
             this.model.set(propName, !!state);
             this.model.save().then(this.render, function () {
-                BSAlerts.danger(lang.settings_error_save);
+                toastr.danger(lang.settings_error_save);
                 that.model.set(that.model.previousAttributes());
                 that.render();
             });
         },
-        setEmails: function () {
-            debugger
+        editAlert: function (event) {
+            var that = this,
+                alertPropertyName = 'Params' + $(event.target).data('property'),
+                alertPropertyContent = this.model.get(alertPropertyName) || '',
+                $ediatble = $('<textarea>').text(alertPropertyContent);
+            BootstrapDialog.show({
+                message: $ediatble,
+                cssClass: 'popup-settings-alerts',
+                onhide: function () {
+                    that.stopListening(that.model);
+                },
+                buttons: [{
+                    label: lang.popups.settingsAlerts.buttonClose,
+                    cssClass: 'btn-default btn-link',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
+                    label: lang.popups.settingsAlerts.buttonSave,
+                    cssClass: 'btn-success btn-outline',
+                    action: function (dialog) {
+                        that.model.set(alertPropertyName, $ediatble.val());
+                        that.model.save().then(function (response) {
+                            if (!response || !response.success) {
+                                toastr.error(lang.settings_error_save);
+                            } else {
+                                toastr.success(lang.settings_message_success);
+                                that.trigger('updated');
+                                dialog.close();
+                            }
+                            if (response.errors) {
+                            }
+                        }, function () {
+                            toastr.error(lang.settings_error_save);
+                            that.model.set(that.model.previousAttributes());
+                            that.render();
+                        });
+                    }
+                }]
+            });
         }
     });
 

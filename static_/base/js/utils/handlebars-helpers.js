@@ -366,10 +366,11 @@ define([
     helpers.ifLtEq = helpers.if_lteq;
     helpers.unlessLtEq = helpers.unless_lteq;
     helpers.srtStartsWith = function (text, startPart, options) {
+        // debugger
         if (text && text.toString().startWith(startPart)) {
-            return options.fn(this.valueOf());
+            return options.fn(this);
         }
-        return options.inverse(this.valueOf());
+        return options.inverse(this);
     }
     // from: http://stackoverflow.com/a/12002281
     helpers.foreach = function (arr, options) {
