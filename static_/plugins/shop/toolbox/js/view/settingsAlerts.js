@@ -7,14 +7,16 @@ define([
     'toastr',
     /* template */
     'text!plugins/shop/toolbox/hbs/settingsAlerts.hbs',
+    'text!plugins/shop/toolbox/hbs/settingsAlertPopupContent.hbs',
     /* lang */
     'i18n!plugins/shop/toolbox/nls/translation',
     'bootstrap-switch'
-], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, toastr, tpl, lang) {
+], function (Backbone, Handlebars, ModelSetting, Utils, BootstrapDialog, toastr, tpl, tplParams, lang) {
 
     return Backbone.View.extend({
         className: "panel panel-default shop-settings-alerts",
         template: Handlebars.compile(tpl), // check
+        templatePopup: Handlebars.compile(tplParams), // check
         lang: lang,
         events: {
             'switchChange.bootstrapSwitch .switcher': 'setSettingState',
@@ -36,6 +38,8 @@ define([
         render: function () {
             var tplData = Utils.getHBSTemplateData(this);
             tplData.data = _(tplData.data).omit('ID', 'errors', 'success');
+            tplData.data = _(tplData.data).pick(function (v, k) { return !/^Param/.test(k); });
+            // debugger
             this.$el.html(this.template(tplData));
             this.$('.switcher-main').html(this.$('.panel-body .shop-property-AllowAlerts').clone(true));
             this.$('.panel-body .shop-property-AllowAlerts').remove();
@@ -48,12 +52,9 @@ define([
             this.$('.panel-body .switcher').bootstrapSwitch('disabled', !this.model.get('AllowAlerts'));
         },
         setSettingState: function (event, state) {
-
             var that = this,
                 $item = $(event.target).closest('.list-group-item'),
                 propName = $item.data('property');
-
-            // debugger
             this.model.set(propName, !!state);
             this.model.save().then(this.render, function () {
                 toastr.danger(lang.settings_error_save);
@@ -63,12 +64,32 @@ define([
         },
         editAlert: function (event) {
             var that = this,
-                alertPropertyName = 'Params' + $(event.target).data('property'),
+                $item = $(event.target).closest('.list-group-item'),
+                propName = $item.data('property'),
+                alertPropertyName = 'Params' + propName,
                 alertPropertyContent = this.model.get(alertPropertyName) || '',
-                $ediatble = $('<textarea>').text(alertPropertyContent);
+                $popupTpl = $(this.templatePopup());
+                $popupTpl.find('textarea').text(alertPropertyContent);
+
             BootstrapDialog.show({
-                message: $ediatble,
+                title: 'Сповіщення',
+                message: $popupTpl,//$ediatble,
                 cssClass: 'popup-settings-alerts',
+                onshow: function (dialog) {
+                    var $txtArea = dialog.getMessage().find('textarea');
+                    dialog.getMessage().find('.label').addClass('label-success').on('click', function () {
+                        var eparam = $(this).data('eparam'),
+                            defValue = eparam.indexOf('=') >= 0 ? '' : 'XXXXXXX';
+                        if (!eparam) {
+                            return;
+                        }
+                        $txtArea.val($txtArea.val() + ' [' + eparam + defValue + '];\r\n');
+                        // if (eparam.indexOf('=') >= 0) {
+                        // } else {
+                        //     $txtArea.val($txtArea.val() + ' [' +  + '];\r\n');
+                        // }
+                    });
+                },
                 onhide: function () {
                     that.stopListening(that.model);
                 },
@@ -82,7 +103,7 @@ define([
                     label: lang.popups.settingsAlerts.buttonSave,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        that.model.set(alertPropertyName, $ediatble.val());
+                        that.model.set(alertPropertyName, $popupTpl.find('textarea').val());
                         that.model.save().then(function (response) {
                             if (!response || !response.success) {
                                 toastr.error(lang.settings_error_save);

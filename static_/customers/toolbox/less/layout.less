@@ -694,11 +694,16 @@ table, table td, label, h1, h2, h3, h4, h5, h6, span, a, div, strong {
 }
 
 .shop-settings-alerts {
-    .panel-body {
-        .shop-property-AllowAlerts {
+    .panel-heading {
+        .fa-pencil {
             display: none;
         }
     }
+    // .panel-body {
+    //     .shop-property-AllowAlerts {
+    //         display: none;
+    //     }
+    // }
     .switcher-main {
         .list-group-item {
             background: none;
@@ -1032,5 +1037,20 @@ input[type="radio"], input[type="checkbox"] {
     }
     .account-addresses-buttons {
         margin-bottom: 10px;
+    }
+}
+
+
+.popup-settings-alerts {
+    .label {
+        cursor: pointer;
+        &:hover {
+            background-color: darken(@label-success-bg, 10%);
+        }
+    }
+    textarea {
+        display: block;
+        width: 100%;
+        height: 300px;
     }
 }

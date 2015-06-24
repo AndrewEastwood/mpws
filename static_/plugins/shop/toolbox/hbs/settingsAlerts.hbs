@@ -6,14 +6,11 @@
 <div class="panel-body">
     <div class="list-group">
     {{#each data}}
-        {{#srtStartsWith @key "Params"}}
-        {{else}}
-        <a href="javascript://" class="list-group-item shop-property-{{@key}}">
-            <input type="checkbox" class="switcher"{{#if this}}checked{{/if}}>
-            <span class="property-label">{{mpwsGetValueByKey ../../lang.settings.alerts key=@key }}</span>
-            <i class="fa fa-pencil pull-right fa-fw edit-alert" data-property="{{@key}}"></i>
+        <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}" data-val="{{.}}">
+            <input type="checkbox" class="switcher" {{#if .}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang.settings.alerts key=@key }}</span>
+            <i class="fa fa-pencil pull-right fa-fw edit-alert"></i>
         </a>
-        {{/srtStartsWith}}
     {{/each}}
     </div>
 </div>
