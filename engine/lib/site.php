@@ -22,6 +22,7 @@ class site {
         // var_dump($mandrill);
     }
 
+    // TODO: move most general params into customer api
     public function getHtmlPage () {
         global $app;
         $apiCustomer = API::getAPI('system:customers');
@@ -100,74 +101,6 @@ class site {
         $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);
         $html = str_replace("{{URL_PUBLIC_LOGO}}", $logoUrl, $html);
         $html = str_replace("{{BUILD}}", $build, $html);
-
-
-
-        // $result = $app->getMail()->users->info();
-        $template_name = 'demo4';
-        $template_content = array(
-            array(
-                'name' => 'header',
-                'content' => 'Вітаємо з покупкою!!!!'
-            )
-        );
-        $message = array(
-            'subject' => 'simple demo 4',
-            'from_email' => 'no-reply@leogroup.com.ua',
-            'from_name' => 'leogroup',
-            'to' => array(
-                array(
-                    'email' => 'soulcor+test@gmail.com',
-                    'name' => 'demo user',
-                    'type' => 'to'
-                )
-            ),
-            'global_merge_vars' => array(
-                array('name' => 'param_email_static', 'content' => 'http://' . $app->getRawHost() . '/emails/' . 'default/simple/'),
-                array('name' => 'param_customer_static', 'content' => 'http://' . $app->getRawHost() . '/' . $staticPathCustomer),
-                array('name' => 'param_customer_title', 'content' => 'Нове замовлення'),
-                array('name' => 'param_customer_logo2', 'content' => 'http://leogroup.com.ua/static_/customers/leogroup.com.ua/img/logo.png'),
-                array('name' => 'param_greeting', 'content' => 'Вітаємо, DEMO USER3333!'),
-                array('name' => 'param_content', 'content' => 'Congratulations! You have successfuly registered...'),
-                array('name' => 'param_content2', 'content' => 'Please use your credentials...'),
-                array('name' => 'param_content3', 'content' => 'Contact support any time...'),
-                array('name' => 'param_show_buttons', 'content' => true),
-                array('name' => 'param_button_href_1', 'content' => '//www.facebook.com/'),
-                array('name' => 'param_button_title_1', 'content' => 'Share on Facebook'),
-                array('name' => 'param_button_href_2', 'content' => ''),
-                array('name' => 'param_button_title_2', 'content' => ''),
-                array('name' => 'param_button_href_3', 'content' => ''),
-                array('name' => 'param_button_title_3', 'content' => ''),
-                array('name' => 'param_lead', 'content' => ''),
-                array('name' => 'param_content_ending', 'content' => 'З повагою,<br/>Leogroup'),
-                array('name' => 'param_cont_company', 'content' => 'Leogroup'),
-                array('name' => 'param_cont_addr', 'content' => 'Polska, Jaroslaw ul.Wiegerska 1'),
-                array('name' => 'param_cont_mailto', 'content' => 'sales@leo-trade.pl'),
-                array('name' => 'param_homepage', 'content' => $Homepage),
-                array('name' => 'text_unsub_link', 'content' => 'Відписатися'),
-                array('name' => 'text_cont_prefix', 'content' => 'Від:'),
-                array('name' => 'view_head_small', 'content' => true),
-                // items
-                array('name' => 'param_items', 'content' => array(
-                    array('image' => 'http://www.tongfang-global.com/userfiles/image1.jpeg', 'title' => 'aaaa', 'text' => 'aaa', 'href' => '', 'button_text' => ''),
-                    array('image' => 'http://www.d4products.com/wp-content/uploads/2013/11/sample_item3.png', 'title' => 'fsdf', 'text' => 'b', 'href' => '', 'button_text' => ''),
-                    array('image' => 'http://ic.tweakimg.net/ext/i/1277370767.jpeg', 'title' => 'fsdf', 'text' => 'gfdg', 'href' => '', 'button_text' => ''),
-                    array('image' => 'http://www.bandag.eu/Assets/Images/Content/product%20range%20pic.JPG', 'title' => 'fsdf', 'text' => 'fsdfsdfsdf', 'href' => '', 'button_text' => ''),
-                    array('image' => 'http://intl.welchallyn.com/images/products/fullsize/Defibrillation/AEDs/AED10case_900421_product2_MC.jpg', 'title' => 'fsfsdfdsf', 'text' => 'fsdfsdfsdfsdfsd', 'href' => '', 'button_text' => '')
-                )),
-                array('name' => 'param_items_title', 'content' => 'hot offers')
-
-            ),
-            "merge" => true,
-            'headers' => array('Reply-To' => 'no-reply@leogroup.com.ua'),
-            'tags' => array('test'),
-        );
-        $async = false;
-        $ip_pool = 'Main Pool';
-        $send_at = 'example send_at';
-        // $result = $app->getMail()->messages->sendTemplate($template_name, $template_content, $message);
-        // print_r($message);
-        // print_r($result);
 
         return $html;
     }
