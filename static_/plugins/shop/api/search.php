@@ -14,16 +14,22 @@ class search {
 
     public function get (&$resp, $req) {
         if (isset($req->get['text'])) {
-            $resp = $this->search($req->get['text']);
+            $resp = $this->search($req->get['text'], $req);
         }
     }
 
-    public function search ($text) {
+    public function search ($text, $req = null) {
         if (empty($text)) {
             return null;
         }
         $searchOptions['_pSearchText'] = implode("%", str_split(str_replace(' ', '', $text)));// str_replace(' ', '%', $text);
         $searchOptions['_fshop_products.Status'] = 'REMOVED:!=';
+        if (isset($req->get['limit'])) {
+            $searchOptions['limit'] = $req->get['limit'];
+        }
+        if (isset($req->get['page'])) {
+            $searchOptions['page'] = $req->get['page'];
+        }
         // var_dump($searchOptions);
         return API::getAPI('shop:products')->getProducts_List($searchOptions);
     }

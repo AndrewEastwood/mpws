@@ -220,6 +220,11 @@ class app {
         return $this->site;
     }
 
+    public function getStaticPath () {
+        $urls = $this->getSettings('urls');
+        return $urls['static'];
+    }
+
     public function getRawHost () {
         return $this->currentHost;
     }

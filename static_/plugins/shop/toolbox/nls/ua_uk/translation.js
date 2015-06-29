@@ -125,6 +125,7 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
     popup_product_section_details_fieldset_Status: 'Статус товару',
     popup_product_section_details_field_Status: 'Статус',
     popup_product_section_details_label_currentStatus: 'Поточний статус',
+    popup_product_section_details_field_RelatedProducts: 'Зв\'язані товари',
     popup_product_error_atField_CategoryID: 'Не вибрано категорію',
     popup_product_error_CategoryIDIsNotInt: 'Код категорії не правильний',
     popup_product_error_atField_Name: 'Помилка в полі Назва',

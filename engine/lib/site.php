@@ -9,6 +9,7 @@ use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\api as API;
+use \engine\lib\email as Email;
 use Exception;
 
 class site {
@@ -40,50 +41,27 @@ class site {
             $layout = 'blocked.hbs';
         }
 
-        // TODO: get Plugins, Title, Locale, Lang and all other public customer's settings from DB
-        // and expose in the template : >>>>>
-        $lang = $customer['Lang'];
-        $locale = $customer['Locale'];
-        $plugins = $customer['Plugins'];
-        $Homepage = $customer['HomePage'];
-        $Host = $customer['HostName'];
-        $Scheme = $customer['Protocol'];
-        $Title = $customer['Title'];
-        // <<< get from db according to display customer
+        $customerSettings = $apiCustomer->getCustomerSettings();
 
         $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $layout, $app->isDebug());
         $layoutBodyCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $layoutBody, $app->isDebug());
 
-        // var_dump($layoutCustomer);
-        // var_dump($layoutBodyCustomer);
-        // var_dump($app->isDebug());
-        // var_dump($layoutBodyCustomer);
-        // var_dump($version);
-        // var_dump($layoutCustomer, 'layoutCustomer');
-        // var_dump($layoutDefault, 'layoutDefault');
-
         $build = $app->getBuildVersion();
-        $urls = $app->getSettings('urls');
-        $staticPath = $urls['static'];
-        $staticPathCustomer = $staticPath . Path::createPath(Path::getDirNameCustomer(), $displayCustomer);
-        $logoUrl = $staticPathCustomer . '/img/logo.png';
-        if (!empty($customer['Logo'])) {
-            $logoUrl = $customer['Logo']['normal'];
-        }
+
         $initialJS = "{
-            LOCALE: '" . $locale . "'
+            LOCALE: '" . $customerSettings->locale . "'
             ,BUILD: " . $build . "
             ,DEBUG: " . ($app->isDebug() ? 'true' : 'false') . "
             ,ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . "
-            ,PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . "
+            ,PLUGINS: " . (count($customerSettings->plugins) ? "['" . implode("', '", $customerSettings->plugins) . "']" : '[]') . "
             ,CUSTOMER: '" . $displayCustomer . "'
             ,ACTIVEID: '" . $customer['ID'] . "'
             ,ACTIVEHOSTNAME: '" . $customer['HostName'] . "'
-            ,URL_PUBLIC_HOMEPAGE: '" . $Homepage . "'
-            ,URL_PUBLIC_HOSTNAME: '" . $Host . "'
-            ,URL_PUBLIC_SCHEME: '" . $Scheme . "'
-            ,URL_PUBLIC_LOGO: '" . $logoUrl . "'
-            ,TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $Title) . "'
+            ,URL_PUBLIC_HOMEPAGE: '" . $customerSettings->homepage . "'
+            ,URL_PUBLIC_HOSTNAME: '" . $customerSettings->host . "'
+            ,URL_PUBLIC_SCHEME: '" . $customerSettings->scheme . "'
+            ,URL_PUBLIC_LOGO: '" . $customerSettings->logoUrl . "'
+            ,TITLE: '" . ($app->isToolbox() ? $customer['AdminTitle'] : $customerSettings->title) . "'
             ,AUTHKEY: '" . API::getAPI('system:auth')->getAuthCookieKey() . "'
         }";
         // ,USER: " . API::getAPI('system:auth')->getAuthenticatedUserJSON() . "
@@ -94,12 +72,12 @@ class site {
 
         // add system data
         $html = str_replace("{{BODY}}", $layoutBodyContent, $html);
-        $html = str_replace("{{LANG}}", $lang, $html);
+        $html = str_replace("{{LANG}}", $customerSettings->lang, $html);
         $html = str_replace("{{SYSTEMJS}}", $initialJS, $html);
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
-        $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
-        $html = str_replace("{{URL_STATIC_CUSTOMER}}", $staticPathCustomer, $html);
-        $html = str_replace("{{URL_PUBLIC_LOGO}}", $logoUrl, $html);
+        $html = str_replace("{{PATH_STATIC}}", $app->getStaticPath(), $html);
+        $html = str_replace("{{URL_STATIC_CUSTOMER}}", $customerSettings->staticPathCustomer, $html);
+        $html = str_replace("{{URL_PUBLIC_LOGO}}", $customerSettings->logoUrl, $html);
         $html = str_replace("{{BUILD}}", $build, $html);
 
         return $html;

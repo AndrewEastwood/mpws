@@ -925,7 +925,8 @@ class products {
             'fileBannerSmall' => array('string', 'skipIfUnset'),
             'fileBannerMicro' => array('string', 'skipIfUnset'),
             'bannerTextLine1' => array('skipIfUnset'),
-            'bannerTextLine2' => array('skipIfUnset')
+            'bannerTextLine2' => array('skipIfUnset'),
+            'RELATIONS' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -938,6 +939,7 @@ class products {
                 $attributes["BANNER"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
+                $relatedIDs = array();
 
 
                 // $keyToStripQuotes = array('Name', 'Description', 'Model', 'SKU', 'ISBN');
@@ -958,6 +960,9 @@ class products {
                 }
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
+                }
+                if (isset($validatedValues['RELATIONS'])) {
+                    $relatedIDs = $validatedValues['RELATIONS'];
                 }
                 // promo and banners
                 if (isset($validatedValues['promoText'])) {
@@ -1029,6 +1034,7 @@ class products {
                 unset($validatedValues['fileBannerMicro']);
                 unset($validatedValues['bannerTextLine1']);
                 unset($validatedValues['bannerTextLine2']);
+                unset($validatedValues['RELATIONS']);
 
                 $app->getDB()->beginTransaction();
 
@@ -1292,6 +1298,8 @@ class products {
                         $app->getDB()->query($config);
                     }
                 }
+
+
 
                 $app->getDB()->commit();
 

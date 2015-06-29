@@ -160,6 +160,31 @@ class customers {
         return $runtimeID === $defCustomer['ID'];
     }
 
+    public function getCustomerSettings () {
+        global $app;
+
+        $customer = $this->getRuntimeCustomer();
+        $urls = $app->getSettings('urls');
+        $staticPath = $urls['static'];
+        $staticPathCustomer = $staticPath . Path::createPath(Path::getDirNameCustomer(), $app->displayCustomer());
+        $logoUrl = $staticPathCustomer . '/img/logo.png';
+        if (!empty($customer['Logo'])) {
+            $logoUrl = $customer['Logo']['normal'];
+        }
+        $settings = array(
+            'lang' => $customer['Lang'],
+            'locale' => $customer['Locale'],
+            'plugins' => $customer['Plugins'],
+            'homepage' => $customer['HomePage'],
+            'host' => $customer['HostName'],
+            'scheme' => $customer['Protocol'],
+            'title' => $customer['Title'],
+            'staticPathCustomer' => $staticPathCustomer,
+            'logoUrl' => $logoUrl
+        );
+        return (object)$settings;
+    }
+
     private function __adjustCustomer (&$customer) {
         // adjusting
         $ID = intval($customer['ID']);

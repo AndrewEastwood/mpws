@@ -78,16 +78,11 @@ define([
                 onshow: function (dialog) {
                     var $txtArea = dialog.getMessage().find('textarea');
                     dialog.getMessage().find('.label').addClass('label-success').on('click', function () {
-                        var eparam = $(this).data('eparam'),
-                            defValue = eparam.indexOf('=') >= 0 ? '' : 'XXXXXXX';
+                        var eparam = $(this).data('eparam');
                         if (!eparam) {
                             return;
                         }
-                        $txtArea.val($txtArea.val() + ' [' + eparam + defValue + '];\r\n');
-                        // if (eparam.indexOf('=') >= 0) {
-                        // } else {
-                        //     $txtArea.val($txtArea.val() + ' [' +  + '];\r\n');
-                        // }
+                        $txtArea.val($txtArea.val() + eparam + '\r\n');
                     });
                 },
                 onhide: function () {

@@ -3,6 +3,7 @@
 namespace engine\lib;
 use \engine\lib\api as API;
 use \engine\lib\path as Path;
+use \engine\lib\utils as Utils;
 
 class email {
 
@@ -40,12 +41,12 @@ class email {
 
     // TEXTS
     public function setTitle ($title) {
-        $this->$params['param_customer_title'] = $title;
+        $this->params['param_customer_title'] = $title;
         return $this;
     }
 
     public function setGreeting ($greeting) {
-        $this->$params['param_greeting'] = $greeting;
+        $this->params['param_greeting'] = $greeting;
         return $this;
     }
 
@@ -62,21 +63,21 @@ class email {
         return $this;
     }
     private function setContent ($n, $text) {
-        $this->$params['param_content' . $n] = $text;
+        $this->params['param_content' . $n] = $text;
         return $this;
     }
     public function setContentLead ($text) {
-        $this->$params['param_lead'] = $text;
+        $this->params['param_lead'] = $text;
         return $this;
     }
     public function setContentEnding ($text) {
-        $this->$params['param_content_ending'] = $text;
+        $this->params['param_content_ending'] = $text;
         return $this;
     }
 
     // ITEMS
     public function setItemsTitle ($text) {
-        $this->$params['param_items_title'] = $text;
+        $this->params['param_items_title'] = $text;
         return $this;
     }
     public function addItem ($title, $text, $href = '', $image = '', $button_text = '') {
@@ -92,46 +93,46 @@ class email {
 
     // ADDRESS
     public function setCompany ($text) {
-        $this->$params['param_cont_company'] = $text;
+        $this->params['param_cont_company'] = $text;
         return $this;
     }
     public function setAddress ($text) {
-        $this->$params['param_cont_addr'] = $text;
+        $this->params['param_cont_addr'] = $text;
         return $this;
     }
     public function setMailto ($text) {
-        $this->$params['param_cont_mailto'] = $text;
+        $this->params['param_cont_mailto'] = $text;
         return $this;
     }
 
     // LABELS
     public function setTextUnsubLink ($text) {
-        $this->$params['text_unsub_link'] = $text;
+        $this->params['text_unsub_link'] = $text;
         return $this;
     }
     public function setContactsPrefix ($text) {
-        $this->$params['text_cont_prefix'] = $text;
+        $this->params['text_cont_prefix'] = $text;
         return $this;
     }
 
     // UI CONFIG
     public function showButtons () {
-        $this->$params['param_show_buttons'] = true;
+        $this->params['param_show_buttons'] = true;
         return $this;
     }
 
     public function hideButtons () {
-        $this->$params['param_show_buttons'] = false;
+        $this->params['param_show_buttons'] = false;
         return $this;
     }
 
     public function smallHeader () {
-        $this->$params['view_head_small'] = true;
+        $this->params['view_head_small'] = true;
         return $this;
     }
 
     public function normalHeader () {
-        $this->$params['view_head_small'] = false;
+        $this->params['view_head_small'] = false;
         return $this;
     }
 
@@ -149,15 +150,15 @@ class email {
         return $this;
     }
     private function setButton ($n, $href, $title) {
-        $this->$params['param_button_href_' . $n] = $href;
-        $this->$params['param_button_title_' . $n] = $title;
+        $this->params['param_button_href_' . $n] = $href;
+        $this->params['param_button_title_' . $n] = $title;
         return $this;
     }
 
     // ATTRIBUTES
     private $from_email = '';
     private $from_name = '';
-    public function setSenderName ($email, $name = '') {
+    public function setSender ($email, $name = '') {
         $this->from_email = $email;
         $this->from_name = $name;
         return $this;
@@ -192,29 +193,30 @@ class email {
         return $this;
     }
 
+    public function setParamsIni ($iniParams) {
+        $params = Utils::parse_ini_string_m($iniParams);
+        $this->params = array_merge($this->params, $params);
+    }
+
     // SEND EMAIL
-    public function send ($emails, $from) {
+    public function send () {
         global $app;
 
+        if (empty($this->template_name)) {
+            return 'EmptyTemplateName';
+        }
+
         $apiCustomer = API::getAPI('system:customers');
-        $customer = $apiCustomer->getRuntimeCustomer();
-
-        $urls = $app->getSettings('urls');
-        $displayCustomer = $app->displayCustomer();
-        
-        $Homepage = $customer['HomePage'];
-
-        $staticPath = $urls['static'];
-        $staticPathCustomer = $staticPath . Path::createPath(Path::getDirNameCustomer(), $displayCustomer);
+        $customerSettings = $apiCustomer->getCustomerSettings();
 
         // Prepare params
         $global_merge_vars = array(
             array('name' => 'param_email_static', 'content' => 'http://' . $app->getRawHost() . '/emails/' . 'default/simple/'),
-            array('name' => 'param_customer_static', 'content' => 'http://' . $app->getRawHost() . '/' . $staticPathCustomer),
+            array('name' => 'param_customer_static', 'content' => 'http://' . $app->getRawHost() . '/' . $customerSettings->staticPathCustomer),
             array('name' => 'param_customer_logo2', 'content' => 'http://leogroup.com.ua/static_/customers/leogroup.com.ua/img/logo.png'),
-            array('name' => 'param_homepage', 'content' => $Homepage)
+            array('name' => 'param_homepage', 'content' => $customerSettings->homepage)
         );
-        foreach ($params as $key => $value) {
+        foreach ($this->params as $key => $value) {
             $global_merge_vars[] = array('name' => $key, 'content' => $value);
         }
 

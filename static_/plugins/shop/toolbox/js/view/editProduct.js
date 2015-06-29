@@ -39,6 +39,7 @@ define([
             'click .add-feature': 'addFeature',
             'click .remove-feature': 'removeFeature',
             'click .feature-types a': 'selectFeatureGroup',
+            'click .mpws-js-remove-related-product': 'removeRelatedProduct'
         },
         initialize: function () {
             this.model = new ModelProduct();
@@ -55,6 +56,7 @@ define([
                     }
                 }
             };
+            this.relatedProducts = [];
         },
         render: function () {
             var that = this;
@@ -104,6 +106,7 @@ define([
                             fileBannerMicro: that.$('#bannerMicro').val(),
                             bannerTextLine1: that.$('#bannerTextLine1').val(),
                             bannerTextLine2: that.$('#bannerTextLine2').val(),
+                            RELATED: that.getRelatedProductIDs()
                         }, {
                             silent: true,
                             success: function (model, response) {
@@ -245,6 +248,58 @@ define([
                 this.$('#category').select2('val', initCategory.ID);
             }
 
+            // init related products
+            if (!this.model.isNew()) {
+                this.relatedProducts = _(this.model.get('Relations') || []).map(function (productItem) {
+                    return {
+                        ID: productItem.ID,
+                        text: productItem._displayNameFull
+                    }
+                });
+                this.refreshRelatedProducts();
+            }
+            this.$('.mpws-js-input-relations').select2({
+                placeholder: 'Введіть текст для пошуку',
+                minimumInputLength: 5,
+                ajax: {
+                    url: APP.getApiLink('shop', 'search'),
+                    data: function (data) {
+                        return {
+                            text: data,
+                            limit: 10
+                        };
+                    },
+                    results: function (data) {
+                        var _results = _(data.items).map(function (item) {
+                            return {
+                                id: item.ID,
+                                text: item._displayNameFull
+                            };
+                        });
+                        return {
+                            results: _results
+                        };
+                    }
+                }
+            }).on('select2-selecting', function (e) {
+                var newItem = e.choice,
+                    alreadyChosen = _(that.relatedProducts).findWhere({ID: newItem.id});
+                if (alreadyChosen) {
+                    toastr.error('Цей товар вже доданий досписку');
+                } else {
+                    e.preventDefault();
+                    that.relatedProducts.push({
+                        ID: newItem.id,
+                        text: newItem.text
+                    });
+                    that.$('.mpws-js-input-relations').select2('close');
+                    that.refreshRelatedProducts();
+                }
+                e.preventDefault();
+                return false;
+            });
+
+
             // configure price display
             // var _currencyDisplay = APP.instances.shop.settings.MISC.DBPriceCurrencyType,
             //     fmt = priceFmt(0, _currencyDisplay, APP.instances.shop.settings.EXCHANAGERATESDISPLAY),
@@ -327,6 +382,29 @@ define([
             // this.setupFileUploadItem(this.$('.temp-upload-image'));
             return this;
         },
+
+        // >>>>>> RELATED PRODUCTS
+        refreshRelatedProducts: function () {
+            var that = this;
+            this.$('.mpws-js-shop-product-reltaions').empty();
+            _(this.relatedProducts).each(function (selectedItem) {
+                var $item = this.$('.hidden .related-product-template').clone();
+                $item.data('id', selectedItem.ID);
+                $item.prepend(selectedItem.text);
+                that.$('.mpws-js-shop-product-reltaions').append($item);
+            });
+        },
+        getRelatedProductIDs: function () {
+            return _(this.relatedProducts).map(function (selectedItem) {
+                return selectedItem.ID;
+            });
+        },
+        removeRelatedProduct: function (event) {
+
+        },
+        // <<<<< END OF RELATED PRODUCTS
+
+        // >>>>>> PRODUCT FEATURES
         getFeaturesMap: function () {
             var map = {};
             this.$('.features .feature-item .form-control').each(function () {

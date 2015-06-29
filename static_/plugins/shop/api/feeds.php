@@ -165,6 +165,7 @@ class feeds {
             // $feeds['active'] = $activeTasks;
         return $feeds;
     }
+
     public function importProductFeed ($name) {
         global $app;
 
@@ -471,6 +472,50 @@ class feeds {
         file_put_contents($feedLogPath, print_r($results, true));
 
         ob_end_flush();
+
+        // send emails
+        $settingsAlerts = API::getAPI('shop:settings')->getSettingsAlerts();
+        $email = new Email();
+        $email->setTemplate('demo4');
+
+        // ->setSubject('test')
+        // ->setTitle('Нове замовлення')
+        // ->setGreeting('Вітаємо з замовленням')
+        // ->setSender('no-reply@leogroup.com.ua', 'leogroup')
+        // ->addRecepient('soulcor+test@gmail.com', 'test')
+        // ->send();
+
+        // new products
+        if ($settingsAlerts['NewProductAdded'] && !empty($settingsAlerts['ParamsNewProductAdded'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsNewProductAdded']);
+            $email->send();
+        }
+        // best price
+        if ($settingsAlerts['ProductPriceGoesDown'] && !empty($settingsAlerts['ParamsProductPriceGoesDown'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsProductPriceGoesDown']);
+            $email->send();
+        }
+        // promo started
+        if ($settingsAlerts['PromoIsStarted'] && !empty($settingsAlerts['ParamsPromoIsStarted'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsPromoIsStarted']);
+            $email->send();
+        }
+        // new origin
+        if ($settingsAlerts['AddedNewOrigin'] && !empty($settingsAlerts['ParamsAddedNewOrigin'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsAddedNewOrigin']);
+            $email->send();
+        }
+        // new category
+        if ($settingsAlerts['AddedNewCategory'] && !empty($settingsAlerts['ParamsAddedNewCategory'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsAddedNewCategory']);
+            $email->send();
+        }
+        // on-sale / discounted products
+        if ($settingsAlerts['AddedNewDiscountedProduct'] && !empty($settingsAlerts['ParamsAddedNewDiscountedProduct'])) {
+            $mail->setParamsIni($settingsAlerts['ParamsAddedNewDiscountedProduct']);
+            $email->send();
+        }
+
         // if (ob_get_length()) ob_end_clean();
         // ob_end_clean();
         // if (ob_get_level() == 0) ob_start();
