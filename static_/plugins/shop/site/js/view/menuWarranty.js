@@ -19,7 +19,7 @@ define([
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
         },
-        showPopup: function () {
+        showPopup: function (event) {
             BootstrapDialog.show({
                 draggable: false,
                 cssClass: 'popup-shop-info popup-shop-warranty',
