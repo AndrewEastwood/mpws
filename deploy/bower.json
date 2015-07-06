@@ -63,5 +63,9 @@
     "jquery.debouncedresize": "~1.0.1",
     "toastr": "~2.1.1",
     "sliphover": "~2.0.2"
+  },
+  "resolutions": {
+    "select2": "~3.5.2",
+    "jquery": "~1.10.2"
   }
 }
