@@ -192,7 +192,7 @@ class app {
 
     public function getBuildVersion () {
         if ($this->isDebug())
-            return mktime();
+            return time();
         return $this->buildVersion;
     }
 

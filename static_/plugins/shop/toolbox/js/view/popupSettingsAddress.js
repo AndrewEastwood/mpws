@@ -86,7 +86,7 @@ define([
                             HoursWednesday: that.$('#js-hours-wednesday').editable('getValue', true),
                             HoursThursday: that.$('#js-hours-thursday').editable('getValue', true),
                             HoursFriday: that.$('#js-hours-friday').editable('getValue', true),
-                            HoursSturday: that.$('#js-hours-sturday').editable('getValue', true),
+                            HoursSaturday: that.$('#js-hours-saturday').editable('getValue', true),
                             HoursSunday: that.$('#js-hours-sunday').editable('getValue', true),
                             InfoPayment: that.$('#js-info-InfoPayment').editable('getValue', true),
                             InfoShipping: that.$('#js-info-InfoShipping').editable('getValue', true),
