@@ -189,6 +189,7 @@ define([
                 $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
 
                 // widgets
+                $('.mpws-js-shop-phones').html(that.plugins.shop.widgetPhonesList().$el);
                 $('.mpws-js-shop-addresses').html(that.plugins.shop.widgetAddresses().$el);
                 $('.mpws-js-cart-embedded').html(that.plugins.shop.widgetCartButton().$el);
                 $('.mpws-js-top-nav-right').html([

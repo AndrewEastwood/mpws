@@ -119,7 +119,8 @@ define([
         },
     }, {
         setActiveAddressID: function (activeID) {
-           Cache.set('userAddrID', WidgetAddress.getActiveAddressID(activeID));
+            Cache.set('userAddrID', WidgetAddress.getActiveAddressID(activeID));
+            Backbone.trigger('changed:plugin-shop-address', WidgetAddress.getActiveAddressID(activeID));
         },
         getActiveAddressID: function (activeID) {
             var userAddrID = activeID || Cache.get('userAddrID') || null,

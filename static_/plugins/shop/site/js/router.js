@@ -27,6 +27,7 @@ define([
     'plugins/shop/site/js/view/orderTrackingButton',
     'plugins/shop/site/js/view/cartEmbedded',
     'plugins/shop/site/js/view/catalogNavigator',
+    'plugins/shop/site/js/view/widgetPhonesList',
 
     'plugins/shop/site/js/collection/listProductCatalog',
     'plugins/shop/site/js/collection/listProductWish',
@@ -58,6 +59,7 @@ define([
     ViewWidgetOrderTrackingButton,
     ViewWidgetCartEmbedded,
     ViewCatalogNavigator,
+    ViewWidgetPhonesList,
 
     // collections
     CollectionCatalog,
@@ -262,6 +264,12 @@ define([
             var cartEmbedded = new ViewWidgetCartEmbedded();
             cartEmbedded.render();
             return cartEmbedded;
+        },
+        widgetPhonesList: function () {
+            // inject embedded shopping cart
+            var phonesList = new ViewWidgetPhonesList();
+            phonesList.render();
+            return phonesList;
         },
         catalogNavigator: function (options) {
             // catalog navigation panel
