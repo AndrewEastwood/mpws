@@ -106,7 +106,7 @@ define([
                             fileBannerMicro: that.$('#bannerMicro').val(),
                             bannerTextLine1: that.$('#bannerTextLine1').val(),
                             bannerTextLine2: that.$('#bannerTextLine2').val(),
-                            RELATED: that.getRelatedProductIDs()
+                            RELATIONS: that.getRelatedProductIDs()
                         }, {
                             silent: true,
                             success: function (model, response) {
@@ -390,6 +390,7 @@ define([
             _(this.relatedProducts).each(function (selectedItem) {
                 var $item = this.$('.hidden .related-product-template').clone();
                 $item.data('id', selectedItem.ID);
+                $item.attr('data-id', selectedItem.ID);
                 $item.prepend(selectedItem.text);
                 that.$('.mpws-js-shop-product-reltaions').append($item);
             });
@@ -400,7 +401,13 @@ define([
             });
         },
         removeRelatedProduct: function (event) {
-
+            var that = this,
+                $target = $(event.target),
+                $item = $target.parents('.mpws-js-shop-related-product');
+            if ($item.length) {
+                $item.remove();
+                that.relatedProducts = _(that.relatedProducts).filter(function (item) { return item.ID !== $item.data('id'); });
+            }
         },
         // <<<<< END OF RELATED PRODUCTS
 
@@ -414,8 +421,8 @@ define([
         },
         addFeature: function (event) {
             event.preventDefault();
-            var that = this;
-            var $tpl = this.$('.hidden .feature-template').clone();
+            var that = this,
+                $tpl = this.$('.hidden .feature-template').clone();
             $tpl.removeClass('.feature-template');
             this.$('.features').append($tpl);
             var $buttonLabel = $tpl.find('.button-label');

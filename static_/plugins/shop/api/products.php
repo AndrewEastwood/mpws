@@ -605,7 +605,8 @@ class products {
             'fileBannerSmall' => array('string', 'skipIfUnset'),
             'fileBannerMicro' => array('string', 'skipIfUnset'),
             'bannerTextLine1' => array('skipIfUnset'),
-            'bannerTextLine2' => array('skipIfUnset')
+            'bannerTextLine2' => array('skipIfUnset'),
+            'RELATIONS' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -617,6 +618,7 @@ class products {
                 $attributes["BANNER"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
+                $relatedIDs = array();
 
                 // $keyToStripQuotes = array('Name', 'Description', 'Model', 'SKU', 'ISBN');
                 // foreach ($keyToStripQuotes as $key) {
@@ -639,6 +641,9 @@ class products {
                 }
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
+                }
+                if (isset($validatedValues['RELATIONS'])) {
+                    $relatedIDs = $validatedValues['RELATIONS'];
                 }
                 // promo and banners
                 if (isset($validatedValues['promoText'])) {
@@ -855,6 +860,14 @@ class products {
                         $attrData['Value'] = $attributes[$key];
                         $config = dbquery::shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
+                    }
+                }
+
+                // update related products
+                if (isset($reqData['RELATIONS'])) {
+                    dbquery::shopClearProductRelations($ProductID);
+                    foreach ($relatedIDs as $relatedID) {
+                        dbquery::shopSetRelatedProduct($ProductID, $relatedID);
                     }
                 }
 
@@ -1299,7 +1312,13 @@ class products {
                     }
                 }
 
-
+                // update related products
+                if (isset($reqData['RELATIONS'])) {
+                    dbquery::shopClearProductRelations($ProductID);
+                    foreach ($relatedIDs as $relatedID) {
+                        dbquery::shopSetRelatedProduct($ProductID, $relatedID);
+                    }
+                }
 
                 $app->getDB()->commit();
 

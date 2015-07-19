@@ -476,6 +476,27 @@ class dbquery {
             "limit" => 0
         ));
     }
+    public static function shopClearProductRelations ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
+            "action" => "delete",
+            "source" => "shop_relations",
+            "condition" => array(
+                "ProductA_ID" => $app->getDB()->createCondition($id)
+            )
+        ));
+    }
+    public static function shopSetRelatedProduct ($id, $relatedProductID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
+            "action" => "insert",
+            "source" => "shop_relations",
+            "data" => array(
+                "ProductA_ID" => $id,
+                "ProductB_ID" => $relatedProductID
+            )
+        ));
+    }
     // <<<< Product relations
 
 
