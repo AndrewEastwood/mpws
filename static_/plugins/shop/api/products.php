@@ -606,7 +606,7 @@ class products {
             'fileBannerMicro' => array('string', 'skipIfUnset'),
             'bannerTextLine1' => array('skipIfUnset'),
             'bannerTextLine2' => array('skipIfUnset'),
-            'RELATIONS' => array('string', 'skipIfUnset')
+            'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -642,8 +642,8 @@ class products {
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
                 }
-                if (isset($validatedValues['RELATIONS'])) {
-                    $relatedIDs = $validatedValues['RELATIONS'];
+                if (isset($validatedValues['relatedProductIds'])) {
+                    $relatedIDs = $validatedValues['relatedProductIds'];
                 }
                 // promo and banners
                 if (isset($validatedValues['promoText'])) {
@@ -707,6 +707,7 @@ class products {
                 unset($validatedValues['fileBannerMicro']);
                 unset($validatedValues['bannerTextLine1']);
                 unset($validatedValues['bannerTextLine2']);
+                unset($validatedValues['relatedProductIds']);
 
                 $app->getDB()->beginTransaction();
 
@@ -864,10 +865,11 @@ class products {
                 }
 
                 // update related products
-                if (isset($reqData['RELATIONS'])) {
-                    dbquery::shopClearProductRelations($ProductID);
+                if (isset($reqData['relatedProductIds'])) {
+                    $config = dbquery::shopClearProductRelations($ProductID);
+                    $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        dbquery::shopSetRelatedProduct($ProductID, $relatedID);
+                        $app->getDB()->query(dbquery::shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 
@@ -939,7 +941,7 @@ class products {
             'fileBannerMicro' => array('string', 'skipIfUnset'),
             'bannerTextLine1' => array('skipIfUnset'),
             'bannerTextLine2' => array('skipIfUnset'),
-            'RELATIONS' => array('string', 'skipIfUnset')
+            'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -974,8 +976,8 @@ class products {
                 if (isset($validatedValues['WARRANTY'])) {
                     $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
                 }
-                if (isset($validatedValues['RELATIONS'])) {
-                    $relatedIDs = $validatedValues['RELATIONS'];
+                if (isset($validatedValues['relatedProductIds'])) {
+                    $relatedIDs = $validatedValues['relatedProductIds'];
                 }
                 // promo and banners
                 if (isset($validatedValues['promoText'])) {
@@ -1047,7 +1049,7 @@ class products {
                 unset($validatedValues['fileBannerMicro']);
                 unset($validatedValues['bannerTextLine1']);
                 unset($validatedValues['bannerTextLine2']);
-                unset($validatedValues['RELATIONS']);
+                unset($validatedValues['relatedProductIds']);
 
                 $app->getDB()->beginTransaction();
 
@@ -1313,10 +1315,11 @@ class products {
                 }
 
                 // update related products
-                if (isset($reqData['RELATIONS'])) {
-                    dbquery::shopClearProductRelations($ProductID);
+                if (isset($reqData['relatedProductIds'])) {
+                    $config = dbquery::shopClearProductRelations($ProductID);
+                    $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        dbquery::shopSetRelatedProduct($ProductID, $relatedID);
+                        $app->getDB()->query(dbquery::shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 

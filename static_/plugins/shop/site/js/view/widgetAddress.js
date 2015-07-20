@@ -116,6 +116,7 @@ define([
             Cache.set('userAddrID', $(event.target).parents('li').data('ref'));
             this.render();
             this.updateElements();
+            Backbone.trigger('changed:plugin-shop-address', WidgetAddress.getActiveAddressID());
         },
     }, {
         setActiveAddressID: function (activeID) {

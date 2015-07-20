@@ -106,7 +106,7 @@ define([
                             fileBannerMicro: that.$('#bannerMicro').val(),
                             bannerTextLine1: that.$('#bannerTextLine1').val(),
                             bannerTextLine2: that.$('#bannerTextLine2').val(),
-                            RELATIONS: that.getRelatedProductIDs()
+                            relatedProductIds: that.getRelatedProductIDs()
                         }, {
                             silent: true,
                             success: function (model, response) {

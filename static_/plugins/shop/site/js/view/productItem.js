@@ -18,8 +18,11 @@ define([
     'echo',
     'bootstrap-magnify',
     'lightbox',
+    'owl.carousel',
     'jquery.sparkline'
 ], function ($, _, Backbone, Handlebars, Utils, Odometer, BootstrapDialog, ModelProduct, tplMinimal, tplMinimal2, tplShort, tplFull, tplOfferBanner, lang, echo) {
+
+    var skipRelatedProducts = false;
 
     var ProductItem = Backbone.View.extend({
         className: 'shop-product-item',
@@ -170,6 +173,50 @@ define([
                             }
                         }
                     });
+
+                    // create related products
+                    if (!skipRelatedProducts) {
+                        var $relations = [];
+                        skipRelatedProducts = true;
+                        _(this.model.get('Relations') || []).each(function (relatedProductData) {
+                            var relatedItemView = new ProductItem({
+                                design: {className: 'no-margin product-item-holder'},
+                                model: new ModelProduct(relatedProductData)
+                            });
+                            $relations.push(relatedItemView.render().$el);
+                        });
+                        if ($relations.length) {
+                            this.$('.shop-js-related-products').append($relations);
+                            this.$('.shop-related-products-section').removeClass('hidden');
+                            this.$('.shop-js-related-products').owlCarousel({
+                                stopOnHover: true,
+                                rewindNav: false,
+                                items: 4,
+                                pagination: false,
+                                loop: true,
+                                itemsTablet: [768, 3],
+                                responsive:{
+                                    0:{
+                                        items:1
+                                    },
+                                    600:{
+                                        items:3
+                                    },
+                                    1000:{
+                                        items:4
+                                    }
+                                }
+                            });
+                            var owl = this.$('.shop-js-related-products').data('owlCarousel');
+                            this.$('.shop-related-products-section .slider-next').click(function () {
+                                that.$('.shop-js-related-products').trigger('next.owl.carousel', [1500]);
+                            });
+                            this.$('.shop-related-products-section .slider-prev').click(function () {
+                                that.$('.shop-js-related-products').trigger('prev.owl.carousel', [1500]);
+                            });
+                        }
+                        skipRelatedProducts = false;
+                    }
                 }
                 if (design.wrap) {
                     this.$el = $(design.wrap).html(this.$el);

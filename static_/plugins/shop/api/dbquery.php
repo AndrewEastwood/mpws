@@ -486,12 +486,13 @@ class dbquery {
             )
         ));
     }
-    public static function shopSetRelatedProduct ($id, $relatedProductID) {
+    public static function shopSetRelatedProduct ($CustomerID, $id, $relatedProductID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "insert",
             "source" => "shop_relations",
             "data" => array(
+                "CustomerID" => $CustomerID,
                 "ProductA_ID" => $id,
                 "ProductB_ID" => $relatedProductID
             )

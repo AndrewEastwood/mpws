@@ -259,7 +259,7 @@ define([
                 // setup recently viewed products
                 if (true) {
                     var $tplViewedProducts = that.templates.viewedProducts(),
-                        optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder size-small hover'}};
+                        optionsViewedProducts = {design: {className: 'no-margin item carousel-item product-item-holder'}};
                     that.views.viewedProducts = that.plugins.shop.viewedProducts(optionsViewedProducts);
 
                     $('div.mpws-js-shop-viewed-products', $tplViewedProducts).html(that.views.viewedProducts.$el);

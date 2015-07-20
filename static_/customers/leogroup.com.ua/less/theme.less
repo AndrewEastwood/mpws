@@ -447,7 +447,7 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
             .qnt-holder {
                 display: block;
                 clear: both;
-                padding: 0 37px;
+                padding: 0px;
             }
             .social-row {
                 margin-bottom: 10px;
@@ -521,6 +521,16 @@ a.btn-add-to-wishlist, a.btn-add-to-compare {
             font-size: 0.8em;
             display: inline-block;
             line-height: 1em;
+        }
+    }
+    // related products
+    .shop-related-products-section {
+        padding: 50px 0px 80px;
+        .product-grid-holder {
+            margin-top: 10px;
+            .row:nth-child(n+2) .product-item-holder {
+                border: 1px solid #ECECEC;
+            }
         }
     }
 }

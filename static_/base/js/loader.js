@@ -45,7 +45,7 @@ require.config({
         'jquery.steps': 'vendors/jquery.steps/build/jquery.steps',
         'jstree': 'vendors/jstree/dist/jstree',
         'jsurl': 'vendors/jsurl/url',
-        'lightbox': 'vendors/lightbox/dist/js/lightbox',
+        'lightbox': 'vendors/lightbox/js/lightbox',
         'moment': 'vendors/moment/moment',
         'requirejs': 'vendors/requirejs/require',
         'select2': 'vendors/select2/select2',
