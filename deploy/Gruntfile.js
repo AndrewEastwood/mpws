@@ -36,7 +36,8 @@ module.exports = function (grunt) {
             'base': staticPathBase,
             'customers': staticPathCustomers,
             'plugins': staticPathPlugins
-        };
+        },
+        isBuild = false;
 
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
@@ -65,11 +66,12 @@ module.exports = function (grunt) {
             }
         },
 
-        // Compiles LESS to CSS
+        // Compiles LESS to CSS + minify
         less: {
             theme: {
                 options: {
-                    paths: ['<%= paths.static %>']
+                    paths: ['<%= paths.static %>'],
+                    compress: isBuild
                 },
                 files: [{
                     expand: true,
@@ -83,6 +85,19 @@ module.exports = function (grunt) {
                         // grunt.log.writeln('[' + customerName + '] creating css: ' + dest + customerName + '/css/' + filename + '.css');
                         return dest + customerName + '/css/' + filename + '.css';
                     }
+                }]
+            }
+        },
+        cssmin: {
+            target: {
+                options: {
+                    processImport: false
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= paths.customers %>',
+                    dest: '<%= paths.customers %>',
+                    src: '{,*/}css/theme.css'
                 }]
             }
         },
@@ -126,7 +141,8 @@ module.exports = function (grunt) {
                     optimize: 'uglify2',
                     skipDirOptimize: true,
                     modules: getModules(),
-                    optimizeCss: 'none'
+                    // optimizeCss: 'none',
+                    removeCombined: true
                 }
             }
         }
@@ -165,8 +181,9 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('deploy', 'Deployment', function () {
+        isBuild = true;
         grunt.log.writeln('Running deployment...');
-        grunt.task.run([/*'jshint', */'requirejs', 'less', 'copy:dist']);
+        grunt.task.run([/*'jshint', */'requirejs', 'less', 'cssmin', 'copy:dist']);
         grunt.file.write(distPath + 'version.txt', Date.now());
         grunt.file.write(distPath + 'env.txt', 'production');
     });

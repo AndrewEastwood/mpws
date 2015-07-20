@@ -17,13 +17,13 @@ ALTER TABLE `mpws_permissions` CHANGE `CanAdmin` `CanAdmin`
     TINYINT(1) NOT NULL DEFAULT '0', CHANGE `CanAddUsers` `CanAddUsers`
     TINYINT(1) NOT NULL DEFAULT '0';
 
-ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_2`; ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_3`; ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_4`; ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_5`; ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_6`; ALTER TABLE `shop_settingsAlerts`
-    DROP FOREIGN KEY `shop_settingsAlerts_ibfk_7`;
+-- ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_2`; ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_3`; ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_4`; ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_5`; ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_6`; ALTER TABLE `shop_settingsAlerts`
+--     DROP FOREIGN KEY `shop_settingsAlerts_ibfk_7`;
 
 ALTER TABLE `shop_settingsAlerts` CHANGE `NewProductAdded` `NewProductAdded` INT(1) NOT NULL DEFAULT 0;
 ALTER TABLE `shop_settingsAlerts` CHANGE `ProductPriceGoesDown` `ProductPriceGoesDown` INT(1) NOT NULL DEFAULT 0;
