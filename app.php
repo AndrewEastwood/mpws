@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('UTC');
 define('MPWS_ROOT', dirname(__FILE__) . '/');
 
 spl_autoload_register(function ($className) {
