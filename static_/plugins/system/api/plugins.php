@@ -23,6 +23,20 @@ class plugins {
         }
         $resp = $this->getInstalledPlugins();
     }
+
+    public function getPlugnisPermissons () {
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
+        $plugins = $customer['Plugins'];
+        $permissions = [];
+        foreach ($plugins as $plgName) {
+            $plgSearchApi = API::getApi($plgName . ':permissions');
+            if (!empty($plgSearchApi) && isset($req->get['text'])) {
+                $permissions[$plgName] = $plgSearchApi->getPermissions($req->get['text']);
+            }
+        }
+        return $permissions;
+    }
 }
 
 ?>

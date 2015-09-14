@@ -45,6 +45,10 @@ class users {
             $user['p_' . $key] = $value;
         }
 
+        // attach plugin's permissions
+        //$plugins = API::getAPI('system:plugins');
+        //$plugins->getPlugnisPermissons();
+
         // customizations
         $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
         $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
