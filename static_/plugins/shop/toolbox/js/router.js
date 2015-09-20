@@ -4,6 +4,7 @@ define([
     'underscore',
     'backbone',
     'cachejs',
+    'auth',
 
     'plugins/shop/toolbox/js/view/dashboard',
     'plugins/shop/toolbox/js/view/editProduct',
@@ -19,7 +20,7 @@ define([
     'plugins/shop/toolbox/js/view/menu',
 
     'plugins/shop/common/js/model/setting'
-], function (require, $, _, Backbone, Cache,
+], function (require, $, _, Backbone, Cache, Auth,
 
     ViewDashboard,
     ViewEditProduct,
@@ -168,11 +169,19 @@ define([
             return dashboard;
         },
         productCreate: function () {
+            if (!Auth.canDo('shop_CREATE_PRODUCT')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editProduct = new ViewEditProduct();
             editProduct.render();
             return editProduct;
         },
         productEdit: function (productID) {
+            if (!Auth.canDo('shop_EDIT_PRODUCT')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editProduct = new ViewEditProduct();
             editProduct.model.set('ID', productID);
             editProduct.model.fetch();
@@ -182,6 +191,10 @@ define([
             return this.contentListByStatus();
         },
         contentListByStatus: function (status) {
+            if (!Auth.canDo('shop_MENU_CONTENT')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // create new view
             var options = status ? {
                 status: status
@@ -202,6 +215,10 @@ define([
         // orderEmailTracking: function (orderID) {},
         // orderEmailReceipt: function (orderID) {},
         orderEdit: function (orderID) {
+            if (!Auth.canDo('shop_EDIT_ORDER')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editOrder = new ViewEditOrder();
             editOrder.model.set('ID', orderID);
             editOrder.model.fetch();
@@ -211,6 +228,10 @@ define([
             return this.ordersListByStatus();
         },
         ordersListByStatus: function (status) {
+            if (!Auth.canDo('shop_MENU_ORDERS')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // set active menu
             var options = status ? {
                 status: status
@@ -223,23 +244,39 @@ define([
         },
 
         categoryEdit: function (categoryID) {
+            if (!Auth.canDo('shop_EDIT_CATEGORY')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editCategory = new ViewEditCategory();
             editCategory.model.set('ID', categoryID);
             editCategory.model.fetch();
             return editCategory;
         },
         categoryCreate: function () {
+            if (!Auth.canDo('shop_CREATE_CATEGORY')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editCategory = new ViewEditCategory();
             editCategory.model.fetch();
             return editCategory;
         },
         originEdit: function (originID) {
+            if (!Auth.canDo('shop_EDIT_ORIGIN')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editOrigin = new ViewEditOrigin();
             editOrigin.model.set('ID', originID);
             editOrigin.model.fetch();
             return editOrigin;
         },
         originCreate: function () {
+            if (!Auth.canDo('shop_CREATE_ORIGIN')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var editOrigin = new ViewEditOrigin();
             editOrigin.model.fetch();
             return editOrigin;
@@ -249,6 +286,10 @@ define([
         },
 
         feeds: function () {
+            if (!Auth.canDo('shop_MENU_FEEDS')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // set active menu
             var managerFeeds = new ManagerFeeds();
             managerFeeds.collection.fetch({
@@ -258,6 +299,10 @@ define([
         },
 
         promo: function () {
+            if (!Auth.canDo('shop_MENU_PROMO')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // set active menu
             var managerPromoCodes = new ManagerPromoCodes();
             managerPromoCodes.viewPromosList.collection.fetch({
@@ -267,6 +312,10 @@ define([
         },
 
         promoEdit: function (promoID) {
+            if (!Auth.canDo('shop_EDIT_PROMO')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // set active menu
             var viewEditPromo = new ViewEditPromo();
             viewEditPromo.model.set('ID', promoID);
@@ -278,6 +327,10 @@ define([
         },
 
         promoCreate: function () {
+            if (!Auth.canDo('shop_CREATE_PROMO')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             // set active menu
             var viewEditPromo = new ViewEditPromo();
             viewEditPromo.render();
@@ -288,6 +341,10 @@ define([
         },
 
         shopSettings: function () {
+            if (!Auth.canDo('shop_MENU_SETTINGS')) {
+                Backbone.history.navigate('!/', true);
+                return;
+            }
             var pluginSettings = new Settings();
             // delivery agencies
             // 

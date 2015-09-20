@@ -1,6 +1,7 @@
 define([
     'backbone',
     'handlebars',
+    'auth',
     'utils',
     "backgrid",
     "formatter-price",
@@ -15,7 +16,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, toastr, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Backbone, Handlebars, Auth, Utils, Backgrid, priceFmt, toastr, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
         // we show following statuses only
@@ -111,6 +112,7 @@ define([
         var columnStatus = {
             name: "Status",
             label: lang.pluginMenu_Orders_Grid_Column_Status,
+            editable: Auth.canDo('shop_EDIT_ORDER'),
             cell: Backgrid.SelectCell.extend({
                 // It's possible to render an option group or use a
                 // function to provide option values too.

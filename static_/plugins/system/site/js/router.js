@@ -82,7 +82,6 @@ define([
             });
 
             Auth.on('guest', function () {
-                debugger
                 var user = ModelUser.getInstance();
                 user.clear();
                 if (that.states.onGuestRoute) {

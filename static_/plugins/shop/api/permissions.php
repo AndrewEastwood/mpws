@@ -12,13 +12,17 @@ use ArrayObject;
 class permissions {
 
     private $_permissions = array(
-    	// PRODUCTS
+    	// PRODUCTS, ORIGINS, CATEGORIES
     	'EDIT_PRODUCT', 'EDIT_ORIGIN', 'EDIT_CATEGORY',
     	'CREATE_PRODUCT', 'CREATE_ORIGIN', 'CREATE_CATEGORY',
-    	// PROMO
-    	'EDIT_PROMO', 'CREATE_PROMO',
+        // ORDER
+    	'EDIT_ORDER', 'CREATE_ORDER',
+        // PROMO
+        'EDIT_PROMO', 'CREATE_PROMO',
     	// FEEDS
-    	'EXPORT_XML', 'IMPORT_XLS', 'EXPORT_YAML'
+    	'EXPORT_XML', 'IMPORT_XLS', 'EXPORT_YAML',
+        // MENU
+        'MENU_CONTENT', 'MENU_ORDERS', 'MENU_PROMO', 'MENU_SETTINGS', 'MENU_FEEDS', 'MENU_REPORTS'
     );
     public function getPermissions () {
         return $this->_permissions;

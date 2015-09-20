@@ -108,6 +108,7 @@ define([
                         that.model.save(newData, {
                             wait: true,
                             success: function (model, response) {
+                                Auth.getStatus();
                                 // debugger;
                                 if (response && response.success) {
                                     BSAlert.success(lang.editors.user.messageSuccess);
