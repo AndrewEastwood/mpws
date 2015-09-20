@@ -1,6 +1,7 @@
 define([
     'backbone',
     'handlebars',
+    'auth',
     'utils',
     "backgrid",
     "formatter-price",
@@ -16,7 +17,7 @@ define([
     "backgrid-paginator",
     "backgrid-select-all",
     "backgrid-htmlcell"
-], function (Backbone, Handlebars, Utils, Backgrid, priceFmt, toastr, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
+], function (Backbone, Handlebars, Auth, Utils, Backgrid, priceFmt, toastr, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
 
     var opts = {
         lines: 9, // The number of lines to draw
@@ -53,6 +54,7 @@ define([
             cell: "html",
             editable: false,
             sortable: false,
+            renderable: Auth.canDo('shop_EDIT_PRODUCT'),
             formatter: {
                 fromRaw: function (value, model) {
                     var btn = Handlebars.compile(tplBtnMenuMainItem)(Utils.getHBSTemplateData(model.toJSON()));
@@ -80,6 +82,7 @@ define([
             name: "Name",
             label: lang.pluginMenu_Products_Grid_Column_Name,
             width: '100px',
+            editable: Auth.canDo('shop_EDIT_PRODUCT'),
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -105,6 +108,7 @@ define([
         var columnModel = {
             name: "Model",
             label: lang.pluginMenu_Products_Grid_Column_Model,
+            editable: Auth.canDo('shop_EDIT_PRODUCT'),
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -154,6 +158,7 @@ define([
         var columnSKU = {
             name: "SKU",
             label: lang.pluginMenu_Products_Grid_Column_SKU,
+            editable: Auth.canDo('shop_EDIT_PRODUCT'),
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -179,6 +184,7 @@ define([
         var columnPrice = {
             name: "Price",
             label: lang.pluginMenu_Products_Grid_Column_Price,
+            editable: Auth.canDo('shop_EDIT_PRODUCT'),
             cell: Backgrid.NumberCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
@@ -227,6 +233,7 @@ define([
         var columnStatus = {
             name: "Status",
             label: lang.pluginMenu_Products_Grid_Column_Status,
+            editable: Auth.canDo('shop_EDIT_PRODUCT'),
             cell: Backgrid.SelectCell.extend({
                 // It's possible to render an option group or use a
                 // function to provide option values too.

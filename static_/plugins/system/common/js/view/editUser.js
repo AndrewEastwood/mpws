@@ -96,7 +96,8 @@ define([
                                 'p_CanUpload': that.$('.js-p_CanUpload').is(':checked'),
                                 'p_CanViewReports': that.$('.js-p_CanViewReports').is(':checked'),
                                 'p_CanAddUsers': that.$('.js-p_CanAddUsers').is(':checked'),
-                                'p_CanMaintain': that.$('.js-p_CanMaintain').is(':checked')
+                                'p_CanMaintain': that.$('.js-p_CanMaintain').is(':checked'),
+                                'p_Others': that.$('.js-p_Other:checked').map(function () { return $(this).val(); }).toArray().join(';')
                             };
 
                         if (pwd || pwdv) {

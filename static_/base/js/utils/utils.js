@@ -155,7 +155,8 @@ define([
             // displayItems: obj && obj.displayItems || [],
             instances: APP.instances,
             isToolbox: APP.config.ISTOOLBOX,
-            appConfig: APP.config
+            appConfig: APP.config,
+            perms: APP.Auth.perms
         }
     }
 

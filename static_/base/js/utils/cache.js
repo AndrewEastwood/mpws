@@ -41,7 +41,12 @@ define([
     }
 
     Cache.getFromLocalStorage = function (key) {
-        return JSON.parse(localStorage.getItem(key));
+        var res;
+        try {
+            debugger
+            JSON.parse(localStorage.getItem(key));
+        } catch (e) { console.log(e); }
+        return res;
     }
     Cache.removeFromLocalStorage = function (key) {
         localStorage.removeItem(key);

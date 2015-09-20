@@ -31,8 +31,11 @@ class plugins {
         $permissions = [];
         foreach ($plugins as $plgName) {
             $plgSearchApi = API::getApi($plgName . ':permissions');
-            if (!empty($plgSearchApi) && isset($req->get['text'])) {
-                $permissions[$plgName] = $plgSearchApi->getPermissions($req->get['text']);
+            if (!empty($plgSearchApi)) {
+                $permissions[$plgName] = $plgSearchApi->getPermissions();
+                foreach ($permissions[$plgName] as &$value) {
+                    $value = $plgName . '_' . $value;
+                }
             }
         }
         return $permissions;

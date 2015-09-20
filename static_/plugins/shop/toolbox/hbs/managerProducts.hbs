@@ -1,7 +1,9 @@
 <div class="panel-heading">
+    {{#ifAny perms.p_shop_CREATE_PRODUCT}}
     <a href="{{bb_link instances.shop.urls.productCreate id=data.ID asRoot=true}}">
         <i class="fa fa-plus fa-fw"></i>
     </a>
+    {{/ifAny}}
     <span class="title">{{lang.pluginMenu_Products_Grid_Title}}</span>
     <span class="category-title hidden">
         <strong class="prefix">(</strong><strong class="text">{{extras._category.Name}}</strong><strong class="suffix">)</strong>

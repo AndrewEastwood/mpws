@@ -24,6 +24,10 @@ class api {
             }
             $parts = explode(':', $apiKey);
             $apiClass = Utils::getApiClassName($parts[0], $parts[1]);
+            // echo $apiClass . '.php';
+            // if (!file_exists($apiClass . '.php')) {
+            //     return null;
+            // }
             self::$cacheApis[$apiKey] = new $apiClass();
             $api = self::$cacheApis[$apiKey];
             if (empty($api)) {

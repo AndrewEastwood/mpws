@@ -46,8 +46,8 @@ class users {
         }
 
         // attach plugin's permissions
-        //$plugins = API::getAPI('system:plugins');
-        //$plugins->getPlugnisPermissons();
+        $plugins = API::getAPI('system:plugins');
+        $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
 
         // customizations
         $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
@@ -139,7 +139,8 @@ class users {
             'p_CanUpload' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'p_CanViewReports' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'p_CanAddUsers' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'p_CanMaintain' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0)
+            'p_CanMaintain' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
+            'p_Others' => array('string')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -157,6 +158,8 @@ class users {
                     else
                         $dataUser[$field] = $value;
                 }
+                // filter permissions
+                $dataPermission = $this->_filterPermissions($dataPermission);
                 $dataUser["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $dataUser["Password"] = Secure::EncodeUserPassword($validatedValues['Password']);
                 $dataUser["ValidationString"] = Secure::EncodeUserPassword(time());
@@ -226,7 +229,8 @@ class users {
             'p_CanUpload' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
             'p_CanViewReports' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
             'p_CanAddUsers' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
-            'p_CanMaintain' => array('bool', 'skipIfUnset', 'transformToTinyInt')
+            'p_CanMaintain' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
+            'p_Others' => array('string')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -246,6 +250,9 @@ class users {
                     else
                         $dataUser[$field] = $value;
                 }
+
+                // filter permissions
+                $dataPermission = $this->_filterPermissions($dataPermission);
 
                 if (!empty($dataUser)) {
                     if (isset($dataUser['Password'])) {
@@ -403,8 +410,19 @@ class users {
                 }
             }
         }
+        $adjustedPerms['Others'] = array_filter(explode(';', $perms['Others'] ?: ''));
         // $this->permissions = $listOfDOs;
         return $adjustedPerms;
+    }
+
+    private function _filterPermissions ($dataPermission) {
+        $dataPermission['Others'] = implode(';', array_filter(
+            explode(';', $dataPermission['Others']),
+            function ($v) {
+                return trim($v);
+            }
+        ));
+        return $dataPermission;
     }
 
     // stats

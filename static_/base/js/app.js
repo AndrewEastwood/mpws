@@ -86,6 +86,7 @@
         }
         _.extend(APP, Backbone.Events);
         APP.Sandbox = Sandbox;
+        APP.Auth = Auth;
 
         APP.getApiLink = function (extraOptions /* or args */) {
             var _url = new JSUrl('/api/'),

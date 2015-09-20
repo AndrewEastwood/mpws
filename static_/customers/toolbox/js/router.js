@@ -3,8 +3,9 @@ define([
     'underscore',
     'auth',
     'cachejs',
+    'toastr',
     'bootstrap'
-], function ($, _, Auth, Cache) {
+], function ($, _, Auth, Cache, toastr) {
 
     var shopRoutes = {
         "!/shop/content": "contentList",
@@ -144,6 +145,10 @@ define([
                 that.toggleMenu(false);
                 that.toggleWidgets(false);
                 Backbone.history.navigate('!/signin', true);
+            });
+
+            Auth.on('signin:fail', function () {
+                toastr.error('Помилка');
             });
 
             this.on('app:ready', function () {

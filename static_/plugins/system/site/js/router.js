@@ -72,7 +72,6 @@ define([
             // fetch data
             // callback();
             Auth.on('registered', function () {
-                debugger
                 var user = ModelUser.getInstance();
                 user.set('ID', Auth.getUserID());
                 user.fetch();

@@ -183,12 +183,26 @@
                     {{#each data}}
                     {{#srtStartsWith @key 'p_Can'}}
                         <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
-                            <input type="checkbox" class="switcher pull-right js-{{@key}}"{{#if . }}checked{{/if}}>
+                            <input type="checkbox" class="switcher pull-right js-{{@key}}"{{#if . }} checked{{/if}}>
                             <span class="property-label">{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix='label' }}</span>
                         </a>
                     {{/srtStartsWith}}
                     {{/each}}
                     </div>
+
+                    {{#each data._availableOtherPerms}}
+                    <div class="list-group js-permissions">
+                    {{#if .}}
+                    <h4>{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix="label"}}</h4>  
+                    {{#each .}}
+                        <a href="javascript://" class="list-group-item shop-property-{{.}}" data-property="{{.}}">
+                            <input type="checkbox" class="switcher pull-right js-p_Other js-{{.}}"{{#in_array ../../../data.p_Others . }} checked{{/in_array}} value="{{.}}">
+                            <span class="property-label">{{mpwsGetValueByKey ../../../lang.editors.user key=. prefix='label' }}</span>
+                        </a>
+                    {{/each}}
+                    {{/if}}
+                    </div>
+                    {{/each}}
 
 
 

@@ -1,13 +1,19 @@
 <div class="well">
+    {{#ifAny perms.p_shop_CREATE_PRODUCT}}
     <a href="{{bb_link instances.shop.urls.productCreate id=data.ID asRoot=true}}" class="btn btn-outline btn-primary">
         <i class="fa fa-fw fa-plus"></i> {{lang.productManager_Button_Create_Product}}
     </a>
+    {{/ifAny}}
+    {{#ifAny perms.p_shop_CREATE_CATEGORY}}
     <a href="{{bb_link instances.shop.urls.categoryCreate id=data.ID asRoot=true}}" class="btn btn-outline btn-primary">
         <i class="fa fa-fw fa-plus"></i> {{lang.productManager_Button_Create_Category}}
     </a>
+    {{/ifAny}}
+    {{#ifAny perms.p_shop_CREATE_ORIGIN}}
     <a href="{{bb_link instances.shop.urls.originCreate id=data.ID asRoot=true}}" class="btn btn-outline btn-primary">
         <i class="fa fa-fw fa-plus"></i> {{lang.productManager_Button_Create_Origin}}
     </a>
+    {{/ifAny}}
 </div>
 <div class="row">
     <div class="col-sm-12 col-lg-3">

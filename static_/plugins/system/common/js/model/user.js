@@ -25,6 +25,13 @@ define([
             //     this.unset('success', {silent: true});
             // }, this));
         // },
+        can: function (perm) {
+            var res = this.get('p_Can' + perm) === true;
+            if (!builtinPerm) {
+                res = _(this.get('p_Others') || []).indexOf(perm) >= 0;;
+            }
+            return res;
+        },
         changePassword: function (password, confirmation) {
             var data = {
                 Password: password,

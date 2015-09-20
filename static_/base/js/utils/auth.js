@@ -5,11 +5,13 @@ define([
     "cachejs"
 ], function ($, _, Backbone, Cache) {
 
-    var authKey = APP.config.AUTHKEY;
+    var authKey = APP.config.AUTHKEY,
+        user = Cache.get('user');
 
     var Auth = _.extend({
         user: null,
-        userData: {},
+        userData: user,
+        perms: getCurrentUserPerms(user),
         verifyStatus: function () {
             // debugger
             var user = Auth.getUserID();
@@ -58,6 +60,8 @@ define([
             // };
             return $.get(APP.getAuthLink(/*query*/), function (response) {
                 that.userData = response || {};
+                that.perms = getCurrentUserPerms(that.userData);
+                Cache.set('user', that.userData);
                 if (_.isFunction(callback)) {
                     callback(Auth.getUserID(), response);
                 }
@@ -68,17 +72,25 @@ define([
             // var query = {
             //     fn: 'signin'
             // };
-            return $.post(APP.getAuthLink(/*query*/), {
+            $dfd = $.post(APP.getAuthLink(/*query*/), {
                 email: email,
                 password: password,
                 remember: remember,
             }, function (response) {
                 that.trigger('signin:ok');
                 that.userData = response || {};
+                that.perms = getCurrentUserPerms(that.userData);
+                Cache.set('user', that.userData);
                 if (_.isFunction(callback)) {
                     callback(Auth.getUserID(), response);
                 }
             });
+
+            $dfd.fail(function () {
+                that.trigger('signin:fail');
+            });
+
+            return $dfd;
         },
         signout: function (callback) {
             // debugger
@@ -92,13 +104,31 @@ define([
                 success: function (response) {
                     that.trigger('signout:ok');
                     that.userData = {};
+                    that.perms = {};
+                    Cache.set('user', that.userData);
                     if (_.isFunction(callback)) {
                         callback(Auth.getUserID(), response);
                     }
                 }
             });
+        },
+        canDo: function (action) {
+            return this.perms['p_' + action] === true;
         }
     }, Backbone.Events);
+
+    function getCurrentUserPerms (userData) {
+        if (userData) {
+            var perms = _(userData).omit(function (v, k) {
+                return !/^p_Can/.test(k) && k !== 'p_Others';
+            });
+            _(perms.p_Others).each(function (v) {
+                perms['p_' + v] = true;
+            });
+            return perms;
+        }
+        return {};
+    }
 
     // init user data
     Auth.user = Auth.getUserID()
