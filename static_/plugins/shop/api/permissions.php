@@ -20,7 +20,7 @@ class permissions {
         // PROMO
         'EDIT_PROMO', 'CREATE_PROMO',
     	// FEEDS
-    	'EXPORT_XML', 'IMPORT_XLS', 'EXPORT_YAML',
+    	'IMPORT_XLS', 'EXPORT_XML', 'EXPORT_XLS', 'EXPORT_YML', 'EXPORT_JSON',
         // MENU
         'MENU_CONTENT', 'MENU_ORDERS', 'MENU_PROMO', 'MENU_SETTINGS', 'MENU_FEEDS', 'MENU_REPORTS'
     );

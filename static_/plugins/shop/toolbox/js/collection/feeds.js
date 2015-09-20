@@ -13,10 +13,10 @@ define([
         comparator: function (model) {
             return -model.get('time');
         },
-        generateNewProductFeed: function () {
+        generateNewProductFeed: function (type) {
             var that = this,
                 jobUrl = APP.getApiLink('shop','feeds',{
-                    generate: true
+                    generate: type || 'XLS'
                 });
             return Backbone.$.get(jobUrl, function () {
                 that.fetch({reset: true});

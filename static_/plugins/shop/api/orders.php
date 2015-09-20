@@ -800,7 +800,7 @@ class orders {
             // if (API::getAPI('system:auth')->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
         // check permissions
-            if (!API::getAPI('system:auth')->ifYouCan('Edit')) {
+            if (!API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER')) {
                 $resp["error"] = "AccessDenied";
             } else {
                 $resp = $this->updateOrder($req->get['params'], $req->data);
@@ -845,11 +845,15 @@ class orders {
 
     // removes particular product or clears whole shopping cart
     public function delete (&$resp, $req) { // ????? we must keep all orders
-        global $app;
-        if (!$app->isToolbox()) {
-            $resp['error'] = 'AccessDenied';
+        // global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER')) {
+            $resp['error'] = "AccessDenied";
             return;
         }
+        // if (!$app->isToolbox()) {
+        //     $resp['error'] = 'AccessDenied';
+        //     return;
+        // }
         if (!empty($req->get['params'])) {
             $OrderID = intval($req->get['params']);
             $resp = $this->disableOrderByID($OrderID);

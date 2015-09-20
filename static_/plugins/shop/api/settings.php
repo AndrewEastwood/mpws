@@ -595,6 +595,10 @@ class settings {
     }
 
     public function post (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
@@ -604,6 +608,10 @@ class settings {
     }
 
     public function put (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
@@ -618,6 +626,10 @@ class settings {
     }
 
     public function delete (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
         //     $resp['error'] = "AccessDenied";
         //     return;

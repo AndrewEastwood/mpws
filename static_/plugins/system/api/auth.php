@@ -51,8 +51,12 @@ class auth {
         if (empty($user)) {
             return false;
         }
-        if (!isset($user['p_Can' . $action]))
+        if (!isset($user['p_Can' . $action])) {
+            if (isset($user['p_Others']) && in_array($action, $user['p_Others'])) {
+                return true;
+            }
             return false;
+        }
         return $user['p_Can' . $action];
     }
 

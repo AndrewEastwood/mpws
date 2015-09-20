@@ -2,7 +2,44 @@
     <div class="col-md-6">
         <div class="panel panel-green">
             <div class="panel-heading">
-                <i class="fa fa-plus fa-fw generate text-info"></i>
+                {{#ifAny perms.p_shop_EXPORT_XLS perms.p_shop_EXPORT_YAML perms.p_shop_EXPORT_XML perms.p_shop_EXPORT_JSON}}
+                <i class="fa fa-spinner fa-pulse hidden js-spinner-generate"></i>
+                <div class="btn-group js-generate-menu">
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-download"></i><span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#ifAny perms.p_shop_EXPORT_XLS}}
+                        <li>
+                            <a href="javascript://" class="js-generate-item" data-type="XLS">
+                                <i class="fa fa-download fa-fw text-info" data-type="XLS"></i>XLS
+                            </a>
+                        </li>
+                        {{/ifAny}}
+                        {{#ifAny perms.p_shop_EXPORT_YML}}
+                        <li>
+                            <a href="javascript://" class="js-generate-item" data-type="YML">
+                                <i class="fa fa-download fa-fw text-info" data-type="YML"></i>YML
+                            </a>
+                        </li>
+                        {{/ifAny}}
+                        {{#ifAny perms.p_shop_EXPORT_XML}}
+                        <li>
+                            <a href="javascript://" class="js-generate-item" data-type="XML">
+                                <i class="fa fa-download fa-fw text-info" data-type="XML"></i>XML
+                            </a>
+                        </li>
+                        {{/ifAny}}
+                        {{#ifAny perms.p_shop_EXPORT_JSON}}
+                        <li>
+                            <a href="javascript://" class="js-generate-item" data-type="JSON">
+                                <i class="fa fa-download fa-fw text-info" data-type="JSON"></i>JSON
+                            </a>
+                        </li>
+                        {{/ifAny}}
+                    </ul>
+                </div>
+                {{/ifAny}}
                 <span class="title">{{lang.managerFeeds.titleImport}}</span>
             </div>
             <div class="panel-body panel-group">
@@ -13,10 +50,12 @@
     <div class="col-md-6">
         <div class="panel panel-yellow">
             <div class="panel-heading">
+                {{#ifAny perms.p_shop_IMPORT_XLS}}
                 <span class="fileinput-button btn-feed-upload">
                     <i class="fa fa-plus fa-fw text-info"></i>
                     <input type="file" id="fileFeed">
                 </span>
+                {{/ifAny}}
                 <span class="title">{{lang.managerFeeds.titleExport}}</span>
             </div>
             <div class="panel-body panel-group" id="uploaded-feeds">

@@ -20,7 +20,7 @@ define([
         className: 'shop-manager-feeds',
         events: {
             'click .start-import': 'importFeed',
-            'click .generate': 'generateFeed',
+            'click .js-generate-item': 'generateFeed',
             'click .delete-uploaded': 'deleteUploadedFeed',
             'click .download-import': 'downloadImportFeed',
             'click .cancel-import': 'cancelImportFeed'
@@ -73,17 +73,33 @@ define([
             return this;
         },
         generateFeed: function (event) {
-            var that = this;
-            if (that.$('.generate').hasClass('disabled')) {
+            var that = this,
+                $generateType = $(event.target).closest('.js-generate-item');
+            if (that.generatingFeed) {
+                return;
+            }
+            var genType = $generateType.data('type');
+            if (!genType) {
+                toastr.success('Невідомий тип експорту');
                 return;
             }
             BootstrapDialog.confirm('Generate new feed?', function (rez) {
                 if (rez) {
-                    that.$('.generate').addClass('fa-spin disabled text-muted');
-                    that.collection.generateNewProductFeed()
+                    that.generatingFeed = true;
+                    that.$('.js-generate-menu').addClass('hidden');
+                    that.$('.js-spinner-generate').removeClass('hidden');
+                    that.collection.generateNewProductFeed(genType)
                         .done(function () {
-                            that.$('.generate').removeClass('fa-spin disabled text-muted');
+                            that.generatingFeed = false;
+                            that.$('.js-generate-menu').removeClass('hidden');
+                            that.$('.js-spinner-generate').addClass('hidden');
                             toastr.success('Згенеровано');
+                        })
+                        .fail(function () {
+                            that.generatingFeed = false;
+                            that.$('.js-generate-menu').removeClass('hidden');
+                            that.$('.js-spinner-generate').addClass('hidden');
+                            toastr.error('Помилка генератора');
                         });
                 }
             });

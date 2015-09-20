@@ -179,7 +179,7 @@ class promos {
 
 
     public function get (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_PROMO')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -192,7 +192,7 @@ class promos {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PROMO')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -200,7 +200,7 @@ class promos {
     }
 
     public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PROMO')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -213,7 +213,7 @@ class promos {
     }
 
     public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PROMO')) {
             $resp['error'] = "AccessDenied";
             return;
         }

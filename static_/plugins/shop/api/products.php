@@ -1824,7 +1824,7 @@ class products {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -1833,7 +1833,7 @@ class products {
     }
 
     public function put (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -1847,7 +1847,7 @@ class products {
     }
 
     public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT')) {
             $resp['error'] = "AccessDenied";
             return;
         }

@@ -10,6 +10,7 @@ use PHPExcel_Cell_DataValidation as PHPExcel_Cell_DataValidation;
 use PHPExcel_Shared_File as PHPExcel_Shared_File;
 use PHPExcel_Style_Color as PHPExcel_Style_Color;
 use PHPExcel_Style_Border as PHPExcel_Style_Border;
+use XMLWriter;
 
 class feeds {
 
@@ -49,11 +50,11 @@ class feeds {
     }
 
     public function getGeneratedFeedsFilesList () {
-        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*');
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*');
     }
 
     private function __adjustFeedItem ($feedFilePath) {
@@ -88,10 +89,9 @@ class feeds {
         );
     }
 
-    public function getFeeds () {
+    private function cleanupOldFeeds () {
         global $app;
         $attempts = 20;
-        $feeds = array();
 
         do {
             $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
@@ -118,6 +118,17 @@ class feeds {
             }
             $attempts--;
         } while (count($listFeedsUploaded) > 10 && $attempts > 0);
+
+    }
+
+    public function getFeeds () {
+        global $app;
+        $feeds = array();
+
+        $this->cleanupOldFeeds();
+
+        $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
+        $listFeedsUploaded = $this->getUploadedFeedsFilesList();
 
         if ($listFeedsGenerated)
             foreach ($listFeedsGenerated as $value) {
@@ -539,7 +550,7 @@ class feeds {
         // return $res;
     }
 
-    public function generateProductFeed () {
+    public function generateProductFeedXLS () {
         global $app;
         $customer = API::getApi('system:customers')->getRuntimeCustomer();
         $options = array('limit' => 0);
@@ -680,7 +691,7 @@ class feeds {
         if (!file_exists(Path::rootPath() . $this->getFeedsUploadDir())) {
             mkdir(Path::rootPath() . $this->getFeedsUploadDir(), 0777, true);
         }
-        $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls';
+        $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '_xls.xls';
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         PHPExcel_Shared_File::setUseUploadTempDirectory(true);
         $objWriter->save($fileName);
@@ -688,18 +699,250 @@ class feeds {
         // return $dataList;
     }
 
+    public function generateProductFeedYML () {
+        global $app;
+        $customer = API::getApi('system:customers')->getRuntimeCustomer();
+        $options = array('limit' => 250);
+
+        $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '_yml.xml';
+        
+        $dataProductsList = API::getAPI('shop:products')->getProducts_List($options, false, false);
+        $dataCategoriesList = API::getAPI('shop:categories')->getCategories_List($options, false, false);
+        
+        $activeDeliveryServices = API::getAPI('shop:delivery')->getActiveDeliveryList();
+        
+        $formSettings = API::getAPI('shop:settings')->getSettingsFormOrder();
+        // $websiteSettings = API::getAPI('shop:settings')->getSettingsWebsite();
+
+        $hasDelivery = !empty($activeDeliveryServices) && $formSettings['ShowDeliveryAganet'];
+
+        // create xml writer and dump YML file
+        $writer = new XMLWriter();
+        $writer->openURI($fileName);
+        $writer->setIndent(true);
+        $writer->setIndentString('    ');
+
+        $writer->startDocument("1.0", "windows-1251");
+        $writer->startDTD("yml_catalog", null, "shops.dtd");
+        $writer->endDTD();
+        // $writer->setIndent(true);
+        $writer->startElement("yml_catalog");
+        $writer->writeAttribute('date', date('Y-m-d H:i'));
+            // shop element
+            $writer->startElement("shop");
+                // name
+                $writer->startElement("name");
+                $writer->text($customer['HostName']);
+                $writer->endElement();
+                // company
+                $writer->startElement("company");
+                $writer->text($customer['Title']);
+                $writer->endElement();
+                // url
+                $writer->startElement("url");
+                $writer->text($customer['HomePage']);
+                $writer->endElement();
+                // currency
+                $writer->startElement("currencies");
+                    $writer->startElement("currency");
+                    $writer->writeAttribute('id', 'UAH');
+                    $writer->writeAttribute('rate', '1');
+                    $writer->writeAttribute('plus', '0');
+                    $writer->endElement();
+                $writer->endElement();
+                // categories (loop)
+                $writer->startElement("categories");
+                for ($i = 0, $len = count($dataCategoriesList['items']); $i < $len; $i++) {
+                    $writer->startElement("category");
+                    $writer->writeAttribute('id', $dataCategoriesList['items'][$i]['ID']);
+                    $writer->writeAttribute('parentId', $dataCategoriesList['items'][$i]['ParentID']);
+                    $writer->text($dataCategoriesList['items'][$i]['Name']);
+                    $writer->endElement();
+                }
+                $writer->endElement();
+                // delivery cost
+                if ($hasDelivery) {
+                    $writer->startElement("local_delivery_cost");
+                    $writer->endElement();
+                }
+                // offers (loop)
+                $writer->startElement("offers");
+                for ($i = 0, $len = count($dataProductsList['items']); $i < $len; $i++) {
+                    $images = array();
+                    $features = array();
+                    $warranty = '';
+                    $tags = '';
+                    $mainImage = '';
+                    if (!empty($dataProductsList['items'][$i]['Images'])) {
+                        foreach ($dataProductsList['items'][$i]['Images'] as $value) {
+                            $images[] = $customer['Protocol'] . '://' . $customer['HostName'] . $value['normal'];
+                        }
+                    }
+                    if (isset($dataProductsList['items'][$i]['Attributes'])) {
+                        if (isset($dataProductsList['items'][$i]['Attributes']['TAGS'])) {
+                            $tags = $dataProductsList['items'][$i]['Attributes']['TAGS'];
+                        }
+                        if (isset($dataProductsList['items'][$i]['Attributes']['WARRANTY'])) {
+                            $warranty = $dataProductsList['items'][$i]['Attributes']['WARRANTY'];
+                        }
+                        // if (isset($dataProductsList['items'][$i]['Attributes']['EXPIRE'])) {
+                        //     $expire = $dataProductsList['items'][$i]['Attributes']['EXPIRE'];
+                        // }
+                        // if (isset($dataProductsList['items'][$i]['Attributes']['ISBN'])) {
+                        //     $isbn = $dataProductsList['items'][$i]['Attributes']['ISBN'];
+                        // }
+                    }
+                    if (isset($dataProductsList['items'][$i]['Features'])) {
+                        foreach ($dataProductsList['items'][$i]['Features'] as $featureGroupName => $featureGroupItems) {
+                            $features[] = $featureGroupName . '=' . join(',', array_values($featureGroupItems));
+                        }
+                    }
+
+                    // get first non-empty image
+                    $images = array_filter($images);
+                    if (!empty($images)) {
+                        $mainImage = $images[0];
+                    }
+
+                    $writer->startElement("offer");
+                        // add attrs
+                        $writer->writeAttribute('id', $dataProductsList['items'][$i]['ID']);
+                        $writer->writeAttribute('type', 'vendor.model');
+                        $writer->writeAttribute('available', $dataProductsList['items'][$i]['_available'] ? 'true' : 'false');
+                        // url
+                        $writer->startElement('url');
+                        $writer->text($customer['Protocol'] . '://' . $customer['HostName'] . '/#!/product/' . $dataProductsList['items'][$i]['ExternalKey']);
+                        $writer->endElement();
+                        // price
+                        $writer->startElement('price');
+                        $writer->text($dataProductsList['items'][$i]['_prices']['others']['UAH']);
+                        $writer->endElement();
+                        // currencyId
+                        $writer->startElement('currencyId');
+                        $writer->text('UAH');
+                        $writer->endElement();
+                        // categoryId
+                        $writer->startElement('categoryId');
+                        $writer->writeAttribute('type', 'Own');
+                        $writer->text($dataProductsList['items'][$i]['_category']['ID']);
+                        $writer->endElement();
+                        // picture
+                        if (!empty($mainImage)) {
+                            $writer->startElement('picture');
+                            $writer->text($mainImage);
+                            $writer->endElement();
+                        }
+                        // delivery
+                        if ($hasDelivery) {
+                            $writer->startElement('delivery');
+                            $writer->text($hasDelivery ? 'true' : 'false');
+                            $writer->endElement();
+                            // local_delivery_cost
+                            $writer->startElement('local_delivery_cost');
+                            $writer->text(implode('; ', $activeDeliveryServices));
+                            $writer->endElement();
+                        }
+                        // typePrefix
+                        $writer->startElement('typePrefix');
+                        $writer->text($dataProductsList['items'][$i]['Name']);
+                        $writer->endElement();
+                        // vendor
+                        $writer->startElement('vendor');
+                        $writer->text($dataProductsList['items'][$i]['_origin']['Name']);
+                        $writer->endElement();
+                        // vendorCode
+                        $writer->startElement('vendorCode');
+                        $writer->text($dataProductsList['items'][$i]['_origin']['ID']);
+                        $writer->endElement();
+                        // model
+                        $writer->startElement('model');
+                        $writer->text($dataProductsList['items'][$i]['Model']);
+                        $writer->endElement();
+                        // description
+                        if (!empty($dataProductsList['items'][$i]['Description'])) {
+                            $writer->startElement('description');
+                            $writer->text($dataProductsList['items'][$i]['Description']);
+                            $writer->endElement();
+                        }
+                        // manufacturer_warranty
+                        // if (!empty($warranty)) {
+                        //     $writer->startElement('manufacturer_warranty');
+                        //     $writer->text($warranty);
+                        //     $writer->endElement();
+                        // }
+                        // country_of_origin
+                        // $writer->startElement('country_of_origin');
+                        // $writer->text($dataProductsList['items'][$i]['XXXX']);
+                        // $writer->endElement();
+                        if (isset($dataList['items'][$i]['Features'])) {
+                            foreach ($dataList['items'][$i]['Features'] as $featureGroupName => $featureGroupItems) {
+                                // <param name="Вага" unit="кг">2.73</param>
+                                $writer->startElement('param');
+                                $writer->writeAttribute('name', $featureGroupName);
+                                $writer->text(join(',', array_values($featureGroupItems)));
+                                $writer->endElement();
+                            }
+                        }
+                    $writer->endElement();
+                }
+                $writer->endElement();
+            $writer->endElement();
+
+        $writer->endElement();
+        $writer->flush();
+    }
+    public function generateProductFeedXML () {
+
+    }
+    public function generateProductFeedJSON () {
+
+    }
+
+    public function generateProductFeed ($type) {
+        if ($type == 'XLS') {
+            $res = $this->generateProductFeedXLS();
+        }
+        if ($type == 'YML') {
+            $res = $this->generateProductFeedYML();
+        }
+        if ($type == 'XML') {
+            $res = $this->generateProductFeedXML();
+        }
+        if ($type == 'JSON') {
+            $res = $this->generateProductFeedJSON();
+        }
+        $this->cleanupOldFeeds();
+        return $res;
+    }
+
     public function get (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         // $res = array('gdfgfdgdggd');
         // echo gzcompress(print_r($res, true)) . PHP_EOL . PHP_EOL;
         // echo mysql_real_escape_string(gzcompress(print_r($res, true))) . PHP_EOL . PHP_EOL;
         if (isset($req->get['generate'])) {
-            $resp = $this->generateProductFeed();
+            if (!API::getAPI('system:auth')->ifYouCan('shop_EXPORT_' . $req->get['generate'])) {
+                $resp['error'] = "AccessDenied";
+                return;
+            }
+            $resp = $this->generateProductFeed($req->get['generate']);
         } else {
+            if (!API::getAPI('system:auth')->ifYouCan('shop_MENU_FEEDS')) {
+                $resp['error'] = "AccessDenied";
+                return;
+            }
             $resp = $this->getFeeds();
         }
     }
 
     public function post (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         if (isset($req->data['name'])) {
             // var_dump($req->data['name']);
             // foreach ($resp['files'] as $tempFileItem) {
@@ -709,9 +952,14 @@ class feeds {
                 // var_dump($res);
                 $resp = $this->__adjustFeedItem(Path::rootPath() . $this->getFeedsUploadDir() . $res['filename']);
             // }
+                $this->cleanupOldFeeds();
         }
     }
     public function patch (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         $activeTasks = API::getAPI('system:tasks')->getActiveTasksByGroupName('shop');
         if (isset($req->data['schedule']) && isset($req->get['name'])) {
             $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
