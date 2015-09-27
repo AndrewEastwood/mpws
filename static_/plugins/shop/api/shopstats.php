@@ -12,19 +12,24 @@ use ArrayObject;
 class shopstats {
 
     public function get (&$resp, $req) {
+        global $app;
         $self = $this;
         $sources = array();
+
         // $sources['orders_new'] = function ($req) use ($self) {
         //     return $self->getOrders_ListPending($req);
         // };
-        $sources['orders_list_pending'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListPending();
+        $sources['orders_list_pending'] = function ($req) use ($self, $app) {
+            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            return API::getAPI('shop:orders')->getOrders_ListPending($options);
         };
-        $sources['orders_list_todays'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListTodays();
+        $sources['orders_list_todays'] = function ($req) use ($self, $app) {
+            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            return API::getAPI('shop:orders')->getOrders_ListTodays($options);
         };
-        $sources['orders_list_expired'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListExpired();
+        $sources['orders_list_expired'] = function ($req) use ($self, $app) {
+            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            return API::getAPI('shop:orders')->getOrders_ListExpired($options);
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {
             $res = array();

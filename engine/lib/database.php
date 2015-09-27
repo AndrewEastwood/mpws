@@ -467,6 +467,19 @@ class database {
         ));
     }
 
+    public function getDataListParamsFromRequest ($req) {
+        $keys = array('limit', 'page', 'sort', 'order', '_f([a-zA-Z\._]+)');
+        $options = array();
+        foreach ($req->get as $queryKey => $queryParam) {
+            foreach ($keys as $keyToGrab) {
+                $matches = array();
+                if (preg_match("/^" . $keyToGrab . "$/", $queryKey, $matches)) {
+                    $options[$queryKey] = $queryParam;
+                }
+            }
+        }
+        return $options;
+    }
     public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
         $dsConfig = $dsConfig ?: array();
         $limit = isset($dsConfig['limit']) ? $dsConfig['limit'] : 0;
