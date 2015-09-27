@@ -5,8 +5,9 @@ define([
     'cachejs',
     'toastr',
     'imageInsert',
+    'bootstrap-dialog',
     'bootstrap'
-], function ($, _, Auth, Cache, toastr, imageInsert) {
+], function ($, _, Auth, Cache, toastr, imageInsert, BootstrapDialog) {
 
     var shopRoutes = {
         "!/shop/content": "contentList",
@@ -211,6 +212,17 @@ define([
                 }
             });
 
+            // Setting up defaults
+            // ==================================
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DEFAULT] = 'Повідомлення';
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_INFO] = 'Повідомлення';
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = 'Повідомлення';
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_SUCCESS] = 'Успішно';
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_WARNING] = 'Увага';
+            BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DANGER] = 'Помилка';
+            BootstrapDialog.DEFAULT_TEXTS['OK'] = 'Добре';
+            BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = 'Скасувати';
+            BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = 'Підтвердити';
             ImageInsert.setDefaults({
                 FLD_URL: 'Адреса',
                 FLD_TITLE: 'Заголовок',

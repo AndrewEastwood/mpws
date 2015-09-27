@@ -426,6 +426,7 @@ class users {
     }
 
     private function _filterPermissions ($dataPermission) {
+        $dataPermission['Others'] = isset($dataPermission['Others']) ? $dataPermission['Others'] : array();
         $dataPermission['Others'] = implode(';', array_filter(
             $dataPermission['Others'],
             function ($v) {

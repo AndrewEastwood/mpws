@@ -539,6 +539,9 @@ define([
             }
             url = location.protocol + '//' + location.hostname + url;
         }
+        // IF parameter is optional (:xxx)
+        // then you may pass _xxx into options
+        // to replace round braces
         _(config).each(function (v, k) {
             if (/^_/.test(k))
                 url = url.replace("(:" + k.substr(1) + ")", v);

@@ -53,6 +53,7 @@
         'jsurl',
         'cachejs',
         'asyncjs',
+        'toastr',
         'handlebars-helpers',
         'handlebars-partials',
         // localizations
@@ -78,7 +79,7 @@
     // debugger
     this.APP = APP;
 
-    require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache, Async) {
+    require(startupModules, function (Sandbox, $, _, Backbone, Auth, JSUrl, Cache, Async, toastr) {
 
         // APP.commonElements = $('div[name^="Common"]:not(:has(*))');
         Backbone.Model.prototype.isEmpty = function () {
@@ -87,6 +88,7 @@
         _.extend(APP, Backbone.Events);
         APP.Sandbox = Sandbox;
         APP.Auth = Auth;
+        APP.alert = toastr;
 
         APP.getApiLink = function (extraOptions /* or args */) {
             var _url = new JSUrl('/api/'),

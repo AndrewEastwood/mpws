@@ -762,15 +762,17 @@ class orders {
 
     public function get (&$resp, $req) {
         global $app;
-        if (isset($req->get['params']) && $req->get['params'] !== "temp") {
-            if (API::getAPI('system:auth')->ifYouCan('Admin'))
-                $resp = $this->getOrderByID($req->get['params']);
-            else
-                $resp['error'] = 'AccessDenied';
-            return;
-        } else if (isset($req->get['hash'])) {
-            $resp = $this->getOrderByHash($req->get['hash']);
-            return;
+        if (isset($req->get['params'])) {
+            if (is_int($req->get['params']) && $req->get['params'] !== "temp") {
+                if (API::getAPI('system:auth')->ifYouCan('Admin'))
+                    $resp = $this->getOrderByID($req->get['params']);
+                else
+                    $resp['error'] = 'AccessDenied';
+                return;
+            } else {
+                $resp = $this->getOrderByHash($req->get['params']);
+                return;
+            }
         } else if ($app->isToolbox()) {
             $resp = $this->getOrders_List($req->get);
         } else {

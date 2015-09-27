@@ -21,10 +21,11 @@ define([
     'plugins/shop/site/js/view/menuPayment',
     'plugins/shop/site/js/view/menuWarranty',
     'plugins/shop/site/js/view/menuShipping',
+    'plugins/shop/site/js/view/menuOrderTracking',
 
     'plugins/shop/site/js/view/widgetAddress',
     'plugins/shop/site/js/view/widgetExchangeRates',
-    'plugins/shop/site/js/view/orderTrackingButton',
+    'plugins/shop/site/js/view/widgetOrderTrackingButton',
     'plugins/shop/site/js/view/cartEmbedded',
     'plugins/shop/site/js/view/catalogNavigator',
     'plugins/shop/site/js/view/widgetPhonesList',
@@ -52,6 +53,7 @@ define([
     ViewMenuItemPopupInfoPayment,
     ViewMenuItemPopupInfoWarranty,
     ViewMenuItemPopupInfoShipping,
+    ViewMenuItemOrderTracking,
 
     // widgets
     ViewWidgetAddresses,
@@ -234,6 +236,11 @@ define([
             menuShipping.render();
             return menuShipping;
         },
+        menuItemOrderTracking: function () {
+            var menuTracking = new ViewMenuItemOrderTracking();
+            menuTracking.render();
+            return menuTracking;
+        },
 
         // widgets
         widgetAddresses: function () {
@@ -368,7 +375,9 @@ define([
         tracking: function (orderHash) {
             // create new view
             var trackingStatus = new ViewTrackingStatus();
-            trackingStatus.setOrderHash(orderHash);
+            if (orderHash) {
+                trackingStatus.setOrderHash(orderHash);
+            }
             return trackingStatus;
         },
 

@@ -83,7 +83,7 @@ define([
                 toastr.success('Невідомий тип експорту');
                 return;
             }
-            BootstrapDialog.confirm('Generate new feed?', function (rez) {
+            BootstrapDialog.confirm('Згенерувати новий "' + genType + '" фід?', function (rez) {
                 if (rez) {
                     that.generatingFeed = true;
                     that.$('.js-generate-menu').addClass('hidden');

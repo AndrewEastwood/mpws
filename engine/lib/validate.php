@@ -19,7 +19,7 @@ class validate {
         return str_replace('#', 0, self::$FORMAT_PHONE);
     }
     public static function getEmptyEmail () {
-        return 'temp@temp.com';
+        return 'mpws+' . mktime() . '@mailinator.com';
     }
 
     public static function validatePassword ($password) {

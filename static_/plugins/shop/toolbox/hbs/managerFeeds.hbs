@@ -12,28 +12,28 @@
                         {{#ifAny perms.p_CanMaintain perms.p_shop_EXPORT_XLS}}
                         <li>
                             <a href="javascript://" class="js-generate-item" data-type="XLS">
-                                <i class="fa fa-download fa-fw text-info" data-type="XLS"></i>XLS
+                                <i class="fa fa-download fa-fw text-info" data-type="XLS"></i>XLS (MS Excel 2015)
                             </a>
                         </li>
                         {{/ifAny}}
                         {{#ifAny perms.p_CanMaintain perms.p_shop_EXPORT_YML}}
                         <li>
                             <a href="javascript://" class="js-generate-item" data-type="YML">
-                                <i class="fa fa-download fa-fw text-info" data-type="YML"></i>YML
+                                <i class="fa fa-download fa-fw text-info" data-type="YML"></i>YML (Yandex Market Lang)
                             </a>
                         </li>
                         {{/ifAny}}
                         {{#ifAny perms.p_CanMaintain perms.p_shop_EXPORT_XML}}
                         <li>
-                            <a href="javascript://" class="js-generate-item" data-type="XML">
-                                <i class="fa fa-download fa-fw text-info" data-type="XML"></i>XML
+                            <a href="javascript: APP.alert.warning('В процесі розробки')" class="js-generate-item-x disabled" data-type="XML" disabled>
+                                <s><i class="fa fa-download fa-fw text-info" data-type="XML"></i>XML</s>
                             </a>
                         </li>
                         {{/ifAny}}
                         {{#ifAny perms.p_CanMaintain perms.p_shop_EXPORT_JSON}}
                         <li>
-                            <a href="javascript://" class="js-generate-item" data-type="JSON">
-                                <i class="fa fa-download fa-fw text-info" data-type="JSON"></i>JSON
+                            <a href="javascript: APP.alert.warning('В процесі розробки')" class="js-generate-item-x disabled" data-type="JSON" disabled>
+                                <s><i class="fa fa-download fa-fw text-info" data-type="JSON"></i>JSON</s>
                             </a>
                         </li>
                         {{/ifAny}}

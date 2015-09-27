@@ -36,8 +36,10 @@ define([
             'click .shop-cart-do-save': 'doSave',
             'click .shop-cart-product-remove': 'removeProduct',
             'click .shop-cart-clear': 'clearAll',
+            'click .shop-cart-link-back': 'goBack',
         },
         initialize: function (options) {
+            this.activePage = 'edit';
             this.model = ModelOrder.getInstance();
             this.modelSettings = options && options.settings || null;
             if (this.modelSettings) {
@@ -46,7 +48,8 @@ define([
             this.listenTo(this.model, 'sync', this.render);
             this.listenTo(this.model, 'saved', this.renderSuccess);
             this.listenTo(this.model, 'errors', this.render);
-            _.bindAll(this, 'doCheckout', 'doPreview', 'renderSuccess', 'saveUserInfo', 'clearUserInfo', 'collectUserInfo');
+            _.bindAll(this, 'doCheckout', 'doPreview', 'renderSuccess',
+                      'saveUserInfo', 'clearUserInfo', 'collectUserInfo', 'goBack');
         },
         render: function () {
             // debugger
@@ -229,27 +232,22 @@ define([
         doEdit: function () {
             this.$('.shop-cart-page').addClass('hidden');
             this.$('.shop-cart-edit').removeClass('hidden');
+            this.$('.shop-cart-link-back').addClass('hidden');
+            this.activePage = 'edit';
         },
         // navigate to checkout page
         doCheckout: function () {
             this.$('.shop-cart-page').addClass('hidden');
             this.$('.shop-cart-checkout').removeClass('hidden');
-        },
-        // navigate to save page
-        doSave: function () {
-            var $form = this.$('.form-order-create');
-            var result = {},
-                formDataArray = $form.serializeArray();
-            _(formDataArray).each(function (item) {
-                result[item.name] = item.value;
-            });
-            result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
-            this.model.saveOrder(result);
+            this.$('.shop-cart-link-back').removeClass('hidden');
+            this.activePage = 'checkout';
         },
         // navigate to preview page
         doPreview: function () {
             var that = this,
                 bvOptions = that.formValidator.getOptions() || {};
+            this.activePage = 'preview';
+            this.$('.shop-cart-link-back').removeClass('hidden');
             that.$('form.form-order-create .form-control').each(function () {
                 var fldName = $(this).attr('name');
                 if (fldName && bvOptions.fields && bvOptions.fields[fldName]) {
@@ -268,6 +266,30 @@ define([
                 that.$('.shop-cart-page').addClass('hidden');
                 that.$('.shop-cart-preview').removeClass('hidden');
             }
+        },
+        // navigate to save page
+        doSave: function () {
+            var $form = this.$('.form-order-create');
+            var result = {},
+                formDataArray = $form.serializeArray();
+            _(formDataArray).each(function (item) {
+                result[item.name] = item.value;
+            });
+            result.customerCurrencyName = APP.instances.shop.settings._user.activeCurrency;
+            this.model.saveOrder(result);
+        },
+        goBack: function () {
+            // current flow:
+            // edit -> checkout -> preview -> save
+            if (this.activePage === 'preview') {
+                this.doCheckout();
+                return;
+            }
+            if (this.activePage === 'checkout') {
+                this.doEdit();
+                return;
+            }
+            this.doEdit();
         },
         // set new qunatity for specific product
         updateQuantity: function (e) {

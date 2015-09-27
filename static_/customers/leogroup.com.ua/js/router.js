@@ -209,6 +209,7 @@ define([
                 $('.mpws-js-menu-shipping').html(that.plugins.shop.menuItemPopupInfoShipping().$el);
                 $('.mpws-js-menu-compare').html(that.plugins.shop.menuItemCompareList().$el);
                 $('.mpws-js-menu-wishlist').html(that.plugins.shop.menuItemWishList().$el);
+                $('.mpws-js-menu-tracking').html(that.plugins.shop.menuItemOrderTracking().$el);
 
                 // widgets
                 $('.mpws-js-shop-phones').html(that.plugins.shop.widgetPhonesList().$el);
@@ -578,7 +579,16 @@ define([
             this.updateFooter();
             $('section.mpws-js-main-section').html(this.templates.page404());
         },
+        shopTracking: function (orderHash) {
+            this.updateBreadcrumb('Відстеження');
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
+            this.refreshViewedProducts();
+            this.updateFooter();
 
+            var viewTracking = this.plugins.shop.tracking(orderHash);
+            $('section.mpws-js-main-section').html(viewTracking.render().$el);
+        },
         // utils
         refreshViewedProducts: function () {
             // this.views.viewedProducts.collection.fetch({reset: true});
