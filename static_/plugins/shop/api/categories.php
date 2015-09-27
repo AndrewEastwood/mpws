@@ -348,7 +348,8 @@ class categories {
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -357,7 +358,8 @@ class categories {
     }
 
     public function put (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -371,7 +373,8 @@ class categories {
     }
 
     public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
             $resp['error'] = 'AccessDenied';
             return;
         }

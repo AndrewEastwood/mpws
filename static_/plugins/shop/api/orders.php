@@ -846,7 +846,8 @@ class orders {
     // removes particular product or clears whole shopping cart
     public function delete (&$resp, $req) { // ????? we must keep all orders
         // global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER'))) {
             $resp['error'] = "AccessDenied";
             return;
         }

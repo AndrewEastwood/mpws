@@ -193,8 +193,8 @@ define([
         },
 
         customersList: function () {
-            if (!Auth.userData.p_CanMaintain) {
-                // Backbone.history.navigate(this.urls.dashboard, true);
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin')) {
+                Backbone.history.navigate(this.urls.dashboard, true);
                 return null;
             }
             // debugger;
@@ -205,8 +205,8 @@ define([
         },
 
         customersListByStatus: function (status) {
-            if (!Auth.userData.p_CanMaintain) {
-                // Backbone.history.navigate(this.urls.dashboard, true);
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin')) {
+                Backbone.history.navigate(this.urls.dashboard, true);
                 return null;
             }
             // debugger;
@@ -220,6 +220,10 @@ define([
         },
 
         customerEdit: function (id) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin')) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return null;
+            }
             // debugger;
             // create new view
             var viewEditCustomer = new ViewEditCustomer();
@@ -229,9 +233,9 @@ define([
         },
 
         customerCreate: function () {
-            if (!Auth.userData.p_CanMaintain) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin')) {
                 Backbone.history.navigate(this.urls.dashboard, true);
-                return;
+                return null;
             }
             // create new view
             var viewEditCustomer = new ViewEditCustomer();
@@ -240,6 +244,11 @@ define([
         },
 
         userEdit: function (id) {
+            if (Auth.getUserID() !== parseInt(id, 10) ||
+                (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin'))) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return null;
+            }
             // debugger;
             // create new view
             var viewEditUser = new ViewEditUser();
@@ -248,7 +257,11 @@ define([
             return viewEditUser;
         },
 
-        userCreate: function (id) {
+        userCreate: function () {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin')) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return null;
+            }
             // debugger;
             // create new view
             var viewEditUser = new ViewEditUser();
@@ -257,6 +270,10 @@ define([
         },
 
         usersList: function () {
+            if (!Auth.canDo('CanMaintain')) {
+                Backbone.history.navigate(this.urls.dashboard, true);
+                return null;
+            }
             var viewManagerUsers = new ViewManagerUsers();
             viewManagerUsers.collection.fetch({reset: true});
             return viewManagerUsers;

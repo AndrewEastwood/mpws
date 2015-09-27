@@ -2,9 +2,11 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                {{#ifAny perms.p_CanMaintain perms.p_shop_CREATE_PROMO}}
                 <a href="{{bb_link instances.shop.urls.promoCreate asRoot=true}}">
                     <i class="fa fa-plus fa-fw"></i>
                 </a>
+                {{/ifAny}}
                 {{lang.manager_promoCodes_listTitle}}
                 <label class="text-danger pull-right">
                     <small>завершені</small>

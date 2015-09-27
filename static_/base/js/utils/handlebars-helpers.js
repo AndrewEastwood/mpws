@@ -516,6 +516,13 @@ define([
     helpers.default_value = function (value, defaultValue) {
         return _.isUndefined(value) || _.isNull(value) ? defaultValue : value;
     }
+    helpers._if = function (value, options) {
+        if (value.valueOf()) {
+            return options.fn(this);
+        } else{
+            return options.inverse(this);
+        }
+    }
     helpers.bb_link = function (url, options) {
         var config = options && options.hash || options || {};
         url = url || "";

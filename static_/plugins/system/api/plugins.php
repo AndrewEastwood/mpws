@@ -28,7 +28,7 @@ class plugins {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
         $plugins = $customer['Plugins'];
-        $permissions = [];
+        $permissions = array();
         foreach ($plugins as $plgName) {
             $plgSearchApi = API::getApi($plgName . ':permissions');
             if (!empty($plgSearchApi)) {

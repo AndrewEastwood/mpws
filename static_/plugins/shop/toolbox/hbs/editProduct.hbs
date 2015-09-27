@@ -101,7 +101,7 @@
                     <!-- Text input-->
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="price">{{lang.popup_product_section_details_field_Price}}</label>
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             {{#if data.ID}}
                             <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data._prices.price}}">
                             <ul class="list-group shop-product-price-stats">
@@ -126,6 +126,7 @@
                             <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Price}}">
                             {{/if}}
                         </div>
+                        <label class="col-md-1 control-label text-left">{{instances.shop.settings.CUSTOM.BaseCurrency.Label}}</label>
                     </div>
                     <!-- Textarea -->
                     <div class="form-group">

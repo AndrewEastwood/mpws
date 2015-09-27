@@ -916,7 +916,8 @@ class feeds {
     }
 
     public function get (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_FEEDS'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -924,22 +925,21 @@ class feeds {
         // echo gzcompress(print_r($res, true)) . PHP_EOL . PHP_EOL;
         // echo mysql_real_escape_string(gzcompress(print_r($res, true))) . PHP_EOL . PHP_EOL;
         if (isset($req->get['generate'])) {
-            if (!API::getAPI('system:auth')->ifYouCan('shop_EXPORT_' . $req->get['generate'])) {
-                $resp['error'] = "AccessDenied";
+            if (API::getAPI('system:auth')->ifYouCan('Maintain') ||
+                API::getAPI('system:auth')->ifYouCan('shop_EXPORT_' . $req->get['generate'])) {
+                $resp = $this->generateProductFeed($req->get['generate']);
                 return;
+            } else {
+                $resp['error'] = "AccessDenied";
             }
-            $resp = $this->generateProductFeed($req->get['generate']);
         } else {
-            if (!API::getAPI('system:auth')->ifYouCan('shop_MENU_FEEDS')) {
-                $resp['error'] = "AccessDenied";
-                return;
-            }
             $resp = $this->getFeeds();
         }
     }
 
     public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -956,7 +956,8 @@ class feeds {
         }
     }
     public function patch (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -1000,6 +1001,11 @@ class feeds {
     }
 
     public function delete (&$resp, $req) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         $success = false;
         if (isset($req->get['name'])) {
             $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);

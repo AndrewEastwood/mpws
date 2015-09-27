@@ -16,6 +16,7 @@ define([
     'text!./../hbs/categoriesRibbon.hbs',
     'text!./../hbs/productComparisons.hbs',
     'text!./../hbs/productWishlist.hbs',
+    'text!./../hbs/cabinet.hbs',
     'text!./../hbs/search.hbs',
     'owl.carousel',
     'bootstrap',
@@ -30,6 +31,7 @@ define([
      tplCategoriesRibbon,
      tplProductComparisons,
      tplProductWishlist,
+     tplCabinet,
      tplSearch) {
 
         BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_DEFAULT] = 'Повідомлення';
@@ -86,6 +88,7 @@ define([
         page404: $(Handlebars.compile(tplPage404)()),
         catalogBrowser: $(Handlebars.compile(tplCatalogBrowser)()),
         search: $(Handlebars.compile(tplSearch)()),
+        cabinet: $(Handlebars.compile(tplCabinet)()),
     };
 
     function getTemplate (key) {
@@ -129,37 +132,53 @@ define([
             page404: getTemplate('page404'),
             catalogBrowser: getTemplate('catalogBrowser'),
             search: getTemplate('search'),
+            cabinet: getTemplate('cabinet'),
         },
 
         views: {},
 
 
         signin: function () {
+            var that = this;
             // check if user is authenticated
             // if (Auth.verifyStatus()) {
             //     Backbone.history.navigate('!/', true);
             //     return;
             // }
-            var auth = this.plugins.system.authorize();
-            if (auth) {
-                this.toggleCategoryRibbonAndBreadcrumb(true);
-                this.toggleHomeFrame(false);
-                $('section.mpws-js-main-section').html(auth.$el);
-            }
+            Auth.verifyStatusAndThen()
+                .ifRegistered(function () {
+                    Backbone.history.navigate('!/account', true);
+                })
+                .ifNotRegistered(function () {
+                    var auth = that.plugins.system.authorize();
+                    if (auth) {
+                        that.toggleCategoryRibbonAndBreadcrumb(true);
+                        that.toggleHomeFrame(false);
+                        $('section.mpws-js-main-section').html(auth.$el);
+                    }
+                });
         },
 
         account: function () {
+            var that = this;
             // check if user is authenticated
-            // if (!Auth.verifyStatusAndThen()) {
-            //     Backbone.history.navigate('!/', true);
+            Auth.verifyStatusAndThen()
+                .ifRegistered(function () {
+                    var user = that.plugins.system.userPanel();
+                    if (user) {
+                        that.toggleCategoryRibbonAndBreadcrumb(true);
+                        that.toggleHomeFrame(false);
+                        var $tplCabinet = that.templates.cabinet();
+                        $tplCabinet.find('.mpws-js-user-general').html(user.$el);
+                        $('section.mpws-js-main-section').html($tplCabinet);
+                    }
+                })
+                .ifNotRegistered(function () {
+                    Backbone.history.navigate('!/signin', true);
+                });
+            // if (!Auth.verifyStatus()) {
             //     return;
             // }
-            var user = this.plugins.system.userPanel();
-            if (user) {
-                this.toggleCategoryRibbonAndBreadcrumb(true);
-                this.toggleHomeFrame(false);
-                $('section.mpws-js-main-section').html(user.$el);
-            }
         },
 
         initialize: function () {
@@ -169,15 +188,18 @@ define([
             $('img.mpws-js-logo').attr('src', APP.config.URL_PUBLIC_LOGO);
 
             this.on('app:ready', function () {
+
+                Auth.on('registered', function () {
+                    that.plugins.system.menu().render();
+                    Backbone.history.navigate(that.plugins.system.urls.account, true);
+                });
+
+                Auth.on('guest', function () {
+                    that.plugins.system.menu().render();
+                    Backbone.history.navigate('!/', true);
+                });
+
                 Auth.getStatus();
-
-                // Auth.on('registered', function () {
-                //     Backbone.history.navigate(that.plugins.system.urls.account, true);
-                // });
-
-                // Auth.on('guest', function () {
-                //     Backbone.history.navigate('!/', true);
-                // });
                 // that.setPlugin(APP.getPlugin('shop'));
 
                 // menu items

@@ -71,10 +71,14 @@ define([
                 message: $(this.template(Utils.getHBSTemplateData(this))),
                 buttons: [{
                     label: lang.editors.user.buttonClose,
-                    cssClass: 'btn-default btn-link',
+                    cssClass: 'btn-default btn-link' + (!APP.config.ISTOOLBOX ? ' hidden' : ''),
                     action: function (dialog) {
                         // debugger
-                        Backbone.history.navigate(APP.instances.system.urls.usersList, true);
+                        if (APP.config.ISTOOLBOX) {
+                            Backbone.history.navigate(APP.instances.system.urls.usersList, true);
+                        } else {
+                            Backbone.history.navigate(APP.instances.system.urls.account, true);
+                        }
                     }
                 }, {
                     label: lang.editors.user.buttonSave,
@@ -90,15 +94,20 @@ define([
                                 'EMail': that.$('.js-email').val(),
                                 // 'Password': that.$('.js-password').val(),
                                 // 'ConfirmPassword': that.$('.js-passwordverify').val(),
-                                'p_CanAdmin': that.$('.js-p_CanAdmin').is(':checked'),
-                                'p_CanCreate': that.$('.js-p_CanCreate').is(':checked'),
-                                'p_CanEdit': that.$('.js-p_CanEdit').is(':checked'),
-                                'p_CanUpload': that.$('.js-p_CanUpload').is(':checked'),
-                                'p_CanViewReports': that.$('.js-p_CanViewReports').is(':checked'),
-                                'p_CanAddUsers': that.$('.js-p_CanAddUsers').is(':checked'),
-                                'p_CanMaintain': that.$('.js-p_CanMaintain').is(':checked'),
-                                'p_Others': that.$('.js-p_Other:checked').map(function () { return $(this).val(); }).toArray().join(';')
                             };
+
+                            if (APP.config.ISTOOLBOX) {
+                                _.extend(newData, {
+                                    'p_CanAdmin': that.$('.js-p_CanAdmin').is(':checked'),
+                                    'p_CanCreate': that.$('.js-p_CanCreate').is(':checked'),
+                                    'p_CanEdit': that.$('.js-p_CanEdit').is(':checked'),
+                                    'p_CanUpload': that.$('.js-p_CanUpload').is(':checked'),
+                                    'p_CanViewReports': that.$('.js-p_CanViewReports').is(':checked'),
+                                    'p_CanAddUsers': that.$('.js-p_CanAddUsers').is(':checked'),
+                                    'p_CanMaintain': that.$('.js-p_CanMaintain').is(':checked'),
+                                    'p_Others': that.$('.js-p_Other:checked').map(function () { return $(this).val(); }).toArray().join(';')
+                                });
+                            }
 
                         if (pwd || pwdv) {
                             newData.Password = pwd;

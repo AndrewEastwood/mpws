@@ -92,12 +92,13 @@ define([
         },
 
         menu: function (options) {
-            var menu = new ViewMenu(_.extend({}, options || {}));
-            menu.render();
-            return menu;
+            this.viewMenu = this.viewMenu || new ViewMenu(_.extend({}, options || {}));
+            this.viewMenu.render();
+            return this.viewMenu;
         },
 
         authorize: function () {
+            var that = this;
             // debugger;
             // create new view
             if (Auth.verifyStatus()) {

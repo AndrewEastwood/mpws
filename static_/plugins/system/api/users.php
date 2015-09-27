@@ -140,7 +140,7 @@ class users {
             'p_CanViewReports' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'p_CanAddUsers' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
             'p_CanMaintain' => array('bool', 'skipIfUnset', 'defaultValueIfUnset' => 0, 'ifTrueSet' => 1, 'ifFalseSet' => 0),
-            'p_Others' => array('string')
+            'p_Others' => array('array', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -230,7 +230,7 @@ class users {
             'p_CanViewReports' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
             'p_CanAddUsers' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
             'p_CanMaintain' => array('bool', 'skipIfUnset', 'transformToTinyInt'),
-            'p_Others' => array('string')
+            'p_Others' => array('array', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -403,11 +403,21 @@ class users {
     private function _adjustPermissions ($perms) {
         $adjustedPerms = array();
         // adjust permission values
+        // var_dump($perms);
         if (!empty($perms)) {
             foreach ($perms as $field => $value) {
                 if (preg_match("/^Can/", $field) === 1) {
                     $adjustedPerms[$field] = intval($value) === 1;
                 }
+                // if ($field === "Custom") {
+                //     $customPerms = explode(';', $value);
+                //     foreach ($customPerms as $cFiled => $cValue) {
+                //         if (preg_match("/^Can/", $cFiled) === 1) {
+                //             // in custom permission exsists then it's enabled by default
+                //             $adjustedPerms[$cFiled] = true;
+                //         }
+                //     }
+                // }
             }
         }
         $adjustedPerms['Others'] = array_filter(explode(';', $perms['Others'] ?: ''));
@@ -417,7 +427,7 @@ class users {
 
     private function _filterPermissions ($dataPermission) {
         $dataPermission['Others'] = implode(';', array_filter(
-            explode(';', $dataPermission['Others']),
+            $dataPermission['Others'],
             function ($v) {
                 return trim($v);
             }

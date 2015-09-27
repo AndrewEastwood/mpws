@@ -60,11 +60,17 @@ define([
             if (data.EXCHANAGERATESDISPLAY) {
                 var currencyList = {};
                 data.CUSTOM = {currencyList: currencyList};
+                data.CUSTOM.BaseCurrency = null;
                 _(data.EXCHANAGERATESDISPLAY).each(function (exRateItem) {
                     currencyList[exRateItem.CurrencyName] = exRateItem;
                     currencyList[exRateItem.CurrencyName].fromBaseToThis = data.EXCHANAGERATES.availableConversions[exRateItem.CurrencyName];
                     currencyList[exRateItem.CurrencyName].fromThisToBase = data.EXCHANAGERATES.availableMutipliers[exRateItem.CurrencyName];
-
+                    if (exRateItem.CurrencyName === data.MISC.DBPriceCurrencyType) {
+                        data.CUSTOM.BaseCurrency = currencyList[exRateItem.CurrencyName];
+                        currencyList[exRateItem.CurrencyName].isBase = true;
+                    } else {
+                        currencyList[exRateItem.CurrencyName].isBase = false;
+                    }
                 });
             }
             return data;

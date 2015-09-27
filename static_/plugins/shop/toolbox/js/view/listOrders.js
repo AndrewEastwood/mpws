@@ -112,7 +112,7 @@ define([
         var columnStatus = {
             name: "Status",
             label: lang.pluginMenu_Orders_Grid_Column_Status,
-            editable: Auth.canDo('shop_EDIT_ORDER'),
+            editable: Auth.canDo('CanMaintain') || Auth.canDo('shop_EDIT_ORDER'),
             cell: Backgrid.SelectCell.extend({
                 // It's possible to render an option group or use a
                 // function to provide option values too.

@@ -9,7 +9,7 @@
         </a>
     </li>
     <!-- /.nav-second-level -->
-    {{#if data.p_CanMaintain}}
+    {{#if perms.p_CanMaintain}}
     <li class="menu-system-customers">
         <a href="{{bb_link instances.system.urls.customersList}}">
             <i class="fa fa-fw fa-sitemap"></i> {{lang.menu.customers}}
@@ -26,20 +26,20 @@
         </a>
     </li>
     {{else}}
-    {{#if data.p_CanAdmin}}
+    {{#if perms.p_CanAdmin}}
     <li class="menu-system-customers">
         <a href="{{bb_link instances.system.urls.customerEdit id="1"}}">
             <i class="fa fa-fw fa-pencil"></i> {{lang.menu.customerEdit}}
         </a>
     </li>
     {{/if}}
-    {{#or data.p_CanAdmin data.p_AddUsers}}
+    {{#and perms.p_CanAdmin perms.p_AddUsers}}
     <li class="menu-system-users">
         <a href="{{bb_link instances.system.urls.usersList}}">
             <i class="fa fa-fw fa-users"></i> {{lang.menu.users}}
         </a>
     </li>
-    {{/or}}
+    {{/and}}
     {{/if}}
     <li>
         <a href="{{bb_link instances.system.urls.emailList}}">

@@ -48,7 +48,7 @@
     "bootstrap-magnify": "0.3.0",
     "jquery-maskmoney": "3.0.2",
     "jquery": "1.10.2",
-    "cachejs": "0.1.1",
+    "cachejs": "0.1.2",
     "underscore": "1.8.2",
     "echojs": "1.7.1",
     "bootstrap-wysiwyg": "*",

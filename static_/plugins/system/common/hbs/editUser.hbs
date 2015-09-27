@@ -41,11 +41,13 @@
                 <a href="#addresses" aria-controls="addresses" role="tab" data-toggle="tab">Адреси</a>
             </li>
             {{/unless}}
+            {{#and isToolbox perms.p_CanMaintain}}
             <li role="presentation">
                 <a href="#permissions" aria-controls="permissions" role="tab" data-toggle="tab">
                     {{lang.editors.user.permissions.title}}
                 </a>
             </li>
+            {{/and}}
         </ul>
 
         <p></p>
@@ -58,7 +60,7 @@
                 <form class="form-horizontal">
                     <fieldset>
                         <!-- Textarea -->
-                        {{#if data.ID}}
+                        {{#and isToolbox data.ID}}
                         <div class="form-group">
                             <label class="col-md-4 control-label"></label>
                             <div class="col-md-6">
@@ -66,7 +68,7 @@
                                 {{lang.editors.user.labelIsOnline}}
                             </div>
                         </div>
-                        {{/if}}
+                        {{/and}}
                         <!-- Text input-->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="textinput">{{lang.editors.user.labelFirstName}}</label>
@@ -96,14 +98,14 @@
                             </div>
                         </div>
                         <!-- Textarea -->
-                        {{#if data.ValidationString}}
+                        {{#and isToolbox data.ValidationString}}
                         <div class="form-group">
                             <label class="col-md-4 control-label">{{lang.editors.user.labelValidationString}}</label>
                             <div class="col-md-6">
                                 <input class="form-control input-md" value="{{data.ValidationString}}" readonly>
                             </div>
                         </div>
-                        {{/if}}
+                        {{/and}}
                     </fieldset>
                 </form>
 
@@ -176,37 +178,35 @@
 
             </div>
             {{/unless}}
+
+            {{#and isToolbox perms.p_CanMaintain}}
             <div role="tabpanel" class="tab-pane" id="permissions">
+                <div class="list-group js-permissions">
+                {{#each data}}
+                {{#srtStartsWith @key 'p_Can'}}
+                    <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
+                        <input type="checkbox" class="switcher pull-right js-{{@key}}"{{#_if . }} checked{{/_if}}>
+                        <span class="property-label">{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix='label' }}</span>
+                    </a>
+                {{/srtStartsWith}}
+                {{/each}}
+                </div>
 
-
-                    <div class="list-group js-permissions">
-                    {{#each data}}
-                    {{#srtStartsWith @key 'p_Can'}}
-                        <a href="javascript://" class="list-group-item shop-property-{{@key}}" data-property="{{@key}}">
-                            <input type="checkbox" class="switcher pull-right js-{{@key}}"{{#if . }} checked{{/if}}>
-                            <span class="property-label">{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix='label' }}</span>
-                        </a>
-                    {{/srtStartsWith}}
-                    {{/each}}
-                    </div>
-
-                    {{#each data._availableOtherPerms}}
-                    <div class="list-group js-permissions">
-                    {{#if .}}
-                    <h4>{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix="label"}}</h4>  
-                    {{#each .}}
-                        <a href="javascript://" class="list-group-item shop-property-{{.}}" data-property="{{.}}">
-                            <input type="checkbox" class="switcher pull-right js-p_Other js-{{.}}"{{#in_array ../../../data.p_Others . }} checked{{/in_array}} value="{{.}}">
-                            <span class="property-label">{{mpwsGetValueByKey ../../../lang.editors.user key=. prefix='label' }}</span>
-                        </a>
-                    {{/each}}
-                    {{/if}}
-                    </div>
-                    {{/each}}
-
-
-
+                {{#each data._availableOtherPerms}}
+                <div class="list-group js-permissions">
+                {{#if .}}
+                <h4>{{mpwsGetValueByKey ../../lang.editors.user key=@key prefix="label"}}</h4>  
+                {{#each .}}
+                    <a href="javascript://" class="list-group-item shop-property-{{.}}" data-property="{{.}}">
+                        <input type="checkbox" class="switcher pull-right js-p_Other js-{{.}}"{{#in_array ../../../data.p_Others . }} checked{{/in_array}} value="{{.}}">
+                        <span class="property-label">{{mpwsGetValueByKey ../../../lang.editors.user key=. prefix='label' }}</span>
+                    </a>
+                {{/each}}
+                {{/if}}
+                </div>
+                {{/each}}
             </div>
+            {{/and}}
         </div>
 
     </div>

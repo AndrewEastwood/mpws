@@ -1,5 +1,5 @@
 <div class="panel-heading">
-    {{#ifAny perms.p_shop_CREATE_PRODUCT}}
+    {{#ifAny perms.p_CanMaintain perms.p_shop_CREATE_PRODUCT}}
     <a href="{{bb_link instances.shop.urls.productCreate id=data.ID asRoot=true}}">
         <i class="fa fa-plus fa-fw"></i>
     </a>

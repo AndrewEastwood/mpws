@@ -53,7 +53,7 @@ class validate {
         $values = array();
         $errors = array();
         $totalErrors = 0;
-        $dataTypes = array('string', 'int', 'float', 'null', 'bool', 'sqlbool', 'numeric', 'notNull');
+        $dataTypes = array('string', 'int', 'float', 'null', 'bool', 'sqlbool', 'numeric', 'notNull', 'array');
 
         foreach ($dataRules as $keyToValidate => $rules) {
 
@@ -100,6 +100,8 @@ class validate {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNoString";
                 $wrongTypeCount++;
             }
+
+            // array
             if (in_array("array", $rules, true) && !is_array($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotArray";
                 $wrongTypeCount++;

@@ -68,7 +68,7 @@ class auth {
         if ($user) {
             $user = API::getAPI('system:users')->getUserByID($user['ID']);
             $_SESSION[$this->authKey] = $user;
-            $authID = $user['ID'];
+            $authID = $user['ValidationString'];
             if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
                 $this->clearAuthID();
             } else {
@@ -88,6 +88,7 @@ class auth {
     }
 
     public function get (&$resp) {
+        // var_dump($_SESSION[$this->authKey]);
         $resp = $this->getAuthenticatedUser();
         $this->updateSessionAuth();
     }
@@ -99,13 +100,16 @@ class auth {
     }
 
     public function post (&$resp, $req) {
+        global $app;
         // if (isset($req->get['signin'])) {
+
             $password = $req->post['password'];
             $email = $req->post['email'];
             $remember = $req->post['remember'];
 
             if (empty($email) || empty($password)) {
                 $resp['error'] = 'WrongCredentials';
+                $this->updateSessionAuth();
                 return;
             }
 
@@ -116,24 +120,28 @@ class auth {
             // var_dump($user);
             // var_dump($config);
             // return;
-            if (empty($user))
+            if (empty($user)) {
                 $resp['error'] = 'WrongCredentials';
-            else {
+                $this->updateSessionAuth();
+                return;
+            } else {
                 $_SESSION[$this->authKey] = $user;
-                // don't allow non-managment users browse cross-domain sites
-                if ($this->ifYouCan('Admin') || $this->ifYouCan('Maintain')) {
-                    // detect users site
-                    if (!API::getAPI('system:customers')->switchToCustomerByID($user['CustomerID'])) {
+                if ($app->isToolbox()) {
+                    // don't allow non-managment users browse cross-domain sites
+                    if ($this->ifYouCan('Admin') || $this->ifYouCan('Maintain')) {
+                        // detect users site
+                        if (!API::getAPI('system:customers')->switchToCustomerByID($user['CustomerID'])) {
+                            return;
+                        }
+                    } else {
+                        $resp['error'] = 'AccessDenied';
                         $this->clearAuthID();
                         return;
                     }
-                } else {
-                    $this->clearAuthID();
-                    return;
                 }
                 // $UserID = $user['ID'];
                 // var_dump($user);
-                unset($user['Addresses']);
+                // unset($user['Addresses']);
                 // $_SESSION[$this->authKey] = $UserID;
                 // set online state for account
                 API::getAPI('system:users')->setOnline($user['ID']);

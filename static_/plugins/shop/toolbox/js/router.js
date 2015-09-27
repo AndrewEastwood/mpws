@@ -169,7 +169,7 @@ define([
             return dashboard;
         },
         productCreate: function () {
-            if (!Auth.canDo('shop_CREATE_PRODUCT')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_CREATE_PRODUCT')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -178,7 +178,7 @@ define([
             return editProduct;
         },
         productEdit: function (productID) {
-            if (!Auth.canDo('shop_EDIT_PRODUCT')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_EDIT_PRODUCT')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -191,7 +191,7 @@ define([
             return this.contentListByStatus();
         },
         contentListByStatus: function (status) {
-            if (!Auth.canDo('shop_MENU_CONTENT')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_MENU_CONTENT')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -215,7 +215,7 @@ define([
         // orderEmailTracking: function (orderID) {},
         // orderEmailReceipt: function (orderID) {},
         orderEdit: function (orderID) {
-            if (!Auth.canDo('shop_EDIT_ORDER')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_EDIT_ORDER')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -228,7 +228,7 @@ define([
             return this.ordersListByStatus();
         },
         ordersListByStatus: function (status) {
-            if (!Auth.canDo('shop_MENU_ORDERS')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_MENU_ORDERS')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -244,7 +244,7 @@ define([
         },
 
         categoryEdit: function (categoryID) {
-            if (!Auth.canDo('shop_EDIT_CATEGORY')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_EDIT_CATEGORY')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -254,7 +254,7 @@ define([
             return editCategory;
         },
         categoryCreate: function () {
-            if (!Auth.canDo('shop_CREATE_CATEGORY')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_CREATE_CATEGORY')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -263,7 +263,7 @@ define([
             return editCategory;
         },
         originEdit: function (originID) {
-            if (!Auth.canDo('shop_EDIT_ORIGIN')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_EDIT_ORIGIN')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -273,7 +273,7 @@ define([
             return editOrigin;
         },
         originCreate: function () {
-            if (!Auth.canDo('shop_CREATE_ORIGIN')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_CREATE_ORIGIN')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -286,7 +286,7 @@ define([
         },
 
         feeds: function () {
-            if (!Auth.canDo('shop_MENU_FEEDS')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_MENU_FEEDS')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -299,7 +299,7 @@ define([
         },
 
         promo: function () {
-            if (!Auth.canDo('shop_MENU_PROMO')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_MENU_PROMO')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -312,7 +312,7 @@ define([
         },
 
         promoEdit: function (promoID) {
-            if (!Auth.canDo('shop_EDIT_PROMO')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_EDIT_PROMO')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -327,7 +327,7 @@ define([
         },
 
         promoCreate: function () {
-            if (!Auth.canDo('shop_CREATE_PROMO')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_CREATE_PROMO')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
@@ -341,7 +341,7 @@ define([
         },
 
         shopSettings: function () {
-            if (!Auth.canDo('shop_MENU_SETTINGS')) {
+            if (!Auth.canDo('CanMaintain') && !Auth.canDo('shop_MENU_SETTINGS')) {
                 Backbone.history.navigate('!/', true);
                 return;
             }
