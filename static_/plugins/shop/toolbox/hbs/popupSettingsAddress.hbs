@@ -148,19 +148,21 @@
                         </div>
                     </a>
                 {{#for 5}}
-                    <a href="javascript://" class="list-group-item">
+                    <div href="javascript://" class="list-group-item">
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="textinput">
                                 <i class="fa fa-phone-square fa-fw"></i> #{{$indexPlus1}}
                             </label>
                             <div class="col-sm-4">
                                 <input type="text" id="js-Phone{{$indexPlus1}}Label" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Label" empty=""}}">
+                                <a class="label label-success" href="javascript://" data-toggle="imageinsert" data-target="js-Phone{{$indexPlus1}}Label" data-replace="true">+ картинка</a>
                             </div>
                             <div class="col-sm-5">
                                 <input type="text" id="js-Phone{{$indexPlus1}}Value" class="form-control setting" value="{{mpwsGetValueByKey ../data key=$indexPlus1 prefix="Phone" suffix="Value" empty=""}}">
+                                <a class="label label-success" href="javascript://" data-toggle="imageinsert" data-target="js-Phone{{$indexPlus1}}Value" data-replace="true">+ картинка</a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 {{/for}}
                 </div>
             <fieldset>

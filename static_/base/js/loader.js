@@ -15,6 +15,7 @@ require.config({
         'sandbox': 'base/js/utils/sandbox',
         'utils': 'base/js/utils/utils',
         'createPopupTitle': 'base/js/utils/createPopupTitle',
+        'imageInsert': 'base/js/utils/imageInsert',
         // vendors
         'backbone': 'vendors/backbone/backbone',
         'backbone-pageable': 'vendors/backbone-pageable/lib/backbone-pageable',

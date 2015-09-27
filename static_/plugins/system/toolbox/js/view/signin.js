@@ -6,6 +6,7 @@ define([
     'auth',
     'utils',
     'text!plugins/system/toolbox/hbs/signin.hbs',
+    'imageInsert',
     /* lang */
     'i18n!plugins/system/toolbox/nls/translation'
 ], function ($, _, Handlebars, Backbone, Auth, Utils, tpl, lang) {

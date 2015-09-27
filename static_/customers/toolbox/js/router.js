@@ -4,8 +4,9 @@ define([
     'auth',
     'cachejs',
     'toastr',
+    'imageInsert',
     'bootstrap'
-], function ($, _, Auth, Cache, toastr) {
+], function ($, _, Auth, Cache, toastr, imageInsert) {
 
     var shopRoutes = {
         "!/shop/content": "contentList",
@@ -132,7 +133,6 @@ define([
             var that = this,
                 routesWhenUnauthorizedOnly = ['signin'];
 
-
             Auth.on('registered', function () {
                 // debugger
                 that.toggleMenu(true);
@@ -209,6 +209,15 @@ define([
                     that.toggleMenu(false);
                     that.toggleWidgets(false);
                 }
+            });
+
+            ImageInsert.setDefaults({
+                FLD_URL: 'Адреса',
+                FLD_TITLE: 'Заголовок',
+                FLD_WIDTH: 'Ширина',
+                FLD_HEIGHT: 'Висота',
+                FLD_PH_URL: 'вставте адресу зображення',
+                DLG_TITLE: 'Вставка зображення'
             });
 
             // Auth.on('registered', function () {

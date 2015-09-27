@@ -2,8 +2,10 @@
 <li>
     <a href="javascript://" class="phone">
         <i class="fa fa-phone"></i>
-        <span class="preffix">{{label}}:</span>
-        <span class="contact" itemprop="telephone">{{value}}</span>
+        {{#if label}}
+        <span class="preffix">{{{label}}}</span>{{/if}}
+        {{#if value}}
+        <span class="contact" itemprop="telephone">{{value}}</span>{{/if}}
     </a>
 </li>
 {{/each}}
