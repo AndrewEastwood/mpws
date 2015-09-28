@@ -14,8 +14,6 @@ use ArrayObject;
 class products {
 
     private $_listKey_Recent = 'shop:listRecent';
-    private $_statuses = array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
-
 
     public function getProductUploadInnerDir ($productID, $subDir = '') {
         $apiCustomer = API::getAPI('system:customers');
@@ -30,18 +28,6 @@ class products {
     public function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {
         $path = $this->getProductUploadInnerDir($productID, $subDir);
         return $path . $name;
-    }
-    public function getProductStatuses () {
-        return $this->_statuses;
-    }
-    public function getProductStatusesWhenAvailable () {
-        return array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT");
-    }
-    public function getProductStatusesWhenDisabled () {
-        return array("ARCHIVED", "REMOVED");
-    }
-    public function getProductBannerTypes () {
-        return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
     }
     // -----------------------------------------------
     // -----------------------------------------------
@@ -99,8 +85,8 @@ class products {
         $product['viewExtrasInCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
 
         // is available
-        $product['_available'] = in_array($product['Status'], $this->getProductStatusesWhenAvailable());
-        $product['_archived'] = in_array($product['Status'], $this->getProductStatusesWhenDisabled());
+        $product['_available'] = in_array($product['Status'], dbquery::getProductStatusesWhenAvailable());
+        $product['_archived'] = in_array($product['Status'], dbquery::getProductStatusesWhenDisabled());
 
         // promo
         $promo = API::getAPI('shop:promos')->getSessionPromo();
@@ -183,9 +169,7 @@ class products {
 
     public function getProductByName ($productName, $skipRelations = false) {
         global $app;
-        $config = dbquery::shopGetProductItem();
-        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
-        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
+        $config = dbquery::shopGetProductItemByName($productName);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -194,9 +178,7 @@ class products {
 
     public function getProductByModel ($productModel, $skipRelations = false) {
         global $app;
-        $config = dbquery::shopGetProductItem();
-        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
-        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
+        $config = dbquery::shopGetProductItemByModel($productModel);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -205,18 +187,7 @@ class products {
 
     public function getProductByModelAndOriginName ($productModel, $originName, $skipRelations = false) {
         global $app;
-        $config = dbquery::shopGetProductItem();
-        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
-        $config['condition']['OriginName'] = $app->getDB()->createCondition($originName);
-        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
-        $config['additional'] = array(
-            "shop_origins" => array(
-                "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
-                "fields" => array(
-                    "OriginName" => "Name"
-                )
-            )
-        );
+        $config = dbquery::shopGetProductItemByModelAndOriginName($productModel, $originName);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -225,17 +196,7 @@ class products {
 
     public function getProductIDByModelAndOriginName ($productModel, $originName) {
         global $app;
-        $config = dbquery::shopGetProductItem();
-        $config['fields'] = array("ID");
-        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
-        $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
-        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
-        $config['additional'] = array(
-            "shop_origins" => array(
-                "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
-                "fields" => array("Name")
-            )
-        );
+        $config = dbquery::shopGetProductIDByModelAndOriginName($productModel, $originNam);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -245,8 +206,6 @@ class products {
     public function getProductIDByExternalKey ($productExternalKey) {
         global $app;
         $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
-        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
-        $config['additional'] = array();
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -255,10 +214,7 @@ class products {
 
     public function verifyProductByID ($productID) {
         global $app;
-        $config = dbquery::shopGetProductItem();
-        $config['fields'] = array("ID");
-        $config['condition']['ID'] = $app->getDB()->createCondition($productID);
-        $config['condition']['Status'] = $app->getDB()->createCondition($this->getProductStatuses(), 'IN');
+        $config = dbquery::shopGetProductIDbyID();
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -291,7 +247,7 @@ class products {
     public function getProductBanners ($productID) {
         global $app;
         $banners = array();
-        $config = dbquery::shopGetProductAttributes($productID, $this->getProductBannerTypes());
+        $config = dbquery::shopGetProductAttributes($productID, dbquery::getProductBannerTypes());
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -415,6 +371,7 @@ class products {
         return $productInfo;
     }
 
+    // TODO: optimmize list query
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
         global $app;
         $config = dbquery::shopGetProductList($options);
@@ -434,11 +391,12 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getNewProducts_List (array $options = array()) {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
         // var_dump($options);
         $config = dbquery::shopGetProductList($options);
         if (empty($config))
@@ -457,6 +415,7 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getTopProducts_List (array $options = array()) {
         global $app;
         $config = dbquery::shopStat_PopularProducts();
@@ -476,6 +435,7 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getViewedProducts_List () {
         global $app;
         $_items = array();
@@ -487,11 +447,12 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimize list quer
     public function getOnSaleProducts_List (array $options = array()) {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
         $options['_fshop_products.Price'] = 'PrevPrice:>';
         // $options['_fshop_products.Status'] = 'DISCOUNT';
         $config = dbquery::shopGetProductList($options);
@@ -511,11 +472,12 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getFeaturedProducts_List (array $options = array()) {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
         $options['_fIsFeatured'] = true;
         // var_dump($options);
         $config = dbquery::shopGetProductList($options);
@@ -535,11 +497,12 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getOffersProducts_List (array $options = array()) {
         global $app;
         $options['sort'] = 'shop_products.DateUpdated';
         $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
+        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
         $options['_fIsOffer'] = true;
         // $options['_fPrevPrice'] = 'Price:>';
         $config = dbquery::shopGetProductList($options);
@@ -559,6 +522,7 @@ class products {
         return $dataList;
     }
 
+    // TODO: optimmize list query
     public function getSearchProducts_List ($text) {
         return API::getAPI('shop:search')->search($text);
     }
@@ -831,7 +795,7 @@ class products {
                         }
                     }
                     // -- BANNER_XXXX
-                    $bannerTypes = $this->getProductBannerTypes();
+                    $bannerTypes = dbquery::getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
                         if (!empty($attributes["BANNER"][$bannerType])) {
                             $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
@@ -1232,7 +1196,7 @@ class products {
                 // update product banners
                 if ($updateBanners) {
                     $currentBanners = $this->getProductBanners($ProductID);
-                    $bannerTypes = $this->getProductBannerTypes();
+                    $bannerTypes = dbquery::getProductBannerTypes();
 
                     foreach ($bannerTypes as $bannerType) {
                         // if current typ is already set for product
@@ -1278,7 +1242,7 @@ class products {
                         }
                     }
                     // -- BANNER_XXXX
-                    $bannerTypes = $this->getProductBannerTypes();
+                    $bannerTypes = dbquery::getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
                         $config = dbquery::shopClearProductAttributes($ProductID, $bannerType);
                         $app->getDB()->query($config);
@@ -1511,7 +1475,6 @@ class products {
         return $result;
     }
 
-
     public function updateProductSearchTextByID ($productID) {
         global $app;
         $result = array();
@@ -1736,7 +1699,7 @@ class products {
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
-        $availableStatuses = $this->getProductStatuses();
+        $availableStatuses = dbquery::getProductStatuses();
         foreach ($availableStatuses as $key) {
             if (isset($data[$key])) {
                 $res[$key] = intval($data[$key]);

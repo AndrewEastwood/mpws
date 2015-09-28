@@ -20,6 +20,19 @@ class dbquery {
     // var $Table_ShopFeatures = "shop_features";
     // var $Table_ShopSettings = "shop_settings";
 
+    public static function getProductStatuses () {
+        return array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
+    }
+    public static function getProductStatusesWhenAvailable () {
+        return array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT");
+    }
+    public static function getProductStatusesWhenDisabled () {
+        return array("ARCHIVED", "REMOVED");
+    }
+    public static function getProductBannerTypes () {
+        return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
+    }
+
     // products >>>>>
     public static function shopGetProductItem ($ProductID = null) {
         global $app;
@@ -44,6 +57,58 @@ class dbquery {
         return $config;
     }
 
+    public static function shopGetProductItemByName ($productName) {
+        global $app;
+        $config = self::shopGetProductItem();
+        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
+        $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        return $config;
+    }
+    public static function shopGetProductItemByModel ($productModel) {
+        global $app;
+        $config = self::shopGetProductItem();
+        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
+        $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        return $config;
+    }
+    public static function shopGetProductItemByModelAndOriginName ($productModel, $originName) {
+        global $app;
+        $config = self::shopGetProductItem();
+        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
+        $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
+        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        $config['additional'] = array(
+            "shop_origins" => array(
+                "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+                "fields" => array("Name")
+            )
+        );
+        return $config;
+    }
+    public static function shopGetProductIDByModelAndOriginName ($productModel, $originName) {
+        global $app;
+        $config = self::shopGetProductItemByModelAndOriginName();
+        $config['fields'] = array("ID");
+        return $config;
+    }
+    public static function shopGetProductItemByExternalKey ($externalKey) {
+        global $app;
+        $config = self::shopGetProductItem();
+        $config['fields'] = array("ID");
+        $config['condition']["shop_products.ExternalKey"] = $app->getDB()->createCondition($externalKey);
+        $config['condition']['shop_products.Status'] = $app->getDB()->createCondition(dbquery::getProductStatuses(), 'IN');
+        $config['additional'] = array();
+        return $config;
+    }
+    public static function shopGetProductIDbyID ($productID) {
+        global $app;
+        $config = self::shopGetProductItem();
+        $config['fields'] = array("ID");
+        $config['condition']['ID'] = $app->getDB()->createCondition($productID);
+        $config['condition']['Status'] = $app->getDB()->createCondition(dbquery::getProductStatuses(), 'IN');
+        return $config;
+    }
+
     public static function shopGetProductShortInfo ($ProductID) {
         global $app;
         $config = self::shopGetProductItem($ProductID);
@@ -57,13 +122,7 @@ class dbquery {
         return $config;
     }
 
-    public static function shopGetProductItemByExternalKey ($externalKey) {
-        global $app;
-        $config = self::shopGetProductItem();
-        $config['condition']["shop_products.ExternalKey"] = $app->getDB()->createCondition($externalKey);
-        return $config;
-    }
-
+    // TODO: optimmize list query
     public static function shopGetProductList (array $options = array()) {
         global $app;
         $config = self::shopGetProductItem();
@@ -229,49 +288,10 @@ class dbquery {
         return $config;
     }
 
-    // public static function shopGetLatestProductsList () {
-    //     $config = self::shopGetProductItem();
-    //     $config['condition'] = array();
-    //     $config["fields"] = array("ID");
-    //     $config['limit'] = 64;
-    //     $config['group'] = 'shop_products.ID';
-    //     $config['additional'] = array(
-    //         "shop_categories" => array(
-    //             "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
-    //             "fields" => array("@shop_categories.Status AS CategoryStatus")
-    //         ),
-    //         "shop_origins" => array(
-    //             "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
-    //             "fields" => array("@shop_origins.Status AS OriginStatus")
-    //         ),
-    //         "shop_productFeatures" => array(
-    //             "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
-    //             "fields" => array("FeatureID")
-    //         )
-    //     );
-    //     $config['order'] = array(
-    //         "expr" => "shop_products.Status, shop_products.DateCreated DESC"
-    //     );
-    //     unset($config['options']);
-    //     return $config;
-    // }
-
     public static function shopCreateProduct ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
-        // $data["ExternalKey"] = ShopUtils::createProductExternalKey($data);
-        // $ExternalKey = array();
-        // if (isset($data['Name']))
-        //     $ExternalKey[] = $data['Name'];
-        // if (isset($data['Model']))
-        //     $ExternalKey[] = str_replace(' ', '', $data['Model']);
-        // if (isset($data['SKU']))
-        //     $ExternalKey[] = $data['SKU'];
-        // if (!empty($ExternalKey)) {
-        //     $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
-        //     $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        // }
         $data["Name"] = substr($data["Name"], 0, 300);
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
@@ -284,24 +304,9 @@ class dbquery {
     public static function shopUpdateProduct ($ProductID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        // $data["ExternalKey"] = ShopUtils::createProductExternalKey($data);
-        // $ExternalKey = array();
         if (isset($data['Name'])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        // $ExternalKey = array();
-        // if (isset($data['Name'])) {
-        //     $ExternalKey[] = $data['Name'];
-        //     $data["Name"] = substr($data["Name"], 0, 300);
-        // }
-        // if (isset($data['Model']))
-        //     $ExternalKey[] = str_replace(' ', '', $data['Model']);
-        // if (isset($data['SKU']))
-        //     $ExternalKey[] = $data['SKU'];
-        // if (!empty($ExternalKey)) {
-        //     $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
-        //     $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        // }
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
@@ -374,39 +379,14 @@ class dbquery {
         return $config;
     }
 
-    // public static function getShopCategoryProductInfo ($ids) {
-        // global $app;
-    //     $config = self::getShopCategoryProductList($ids);
-    //     $config["fields"] = array("ID", "CategoryID", "OriginID");
-    //     $config['limit'] = 0;
-    //     return $config;
-    // }
-
-    // public static function getShopCategoryProductInfo ($ids) {
-        // global $app;
-    //     $config = self::getShopCategoryProductList($ids);
-    //     $config["fields"] = array("ID", "CategoryID", "OriginID");
-    //     $config['limit'] = 0;
-    //     return $config;
-    // }
-
     public static function getShopCategoryProductInfo () {
-        // global $app;
         $config = self::shopGetProductList();
-        // $config['fields'] = array("ID", "Name");
         $config['fields'] = array("ID");
         $config['limit'] = 0;
         $config['group'] = null;
-        // $config['group'] = "shop_products.ID";
         $config['options'] = null;
-        // array(
-        //     "expandSingleRecord" => true
-        // );
         return $config;
     }
-
-
-
 
     public static function shopGetProductPrice ($id) {
         global $app;
@@ -424,8 +404,6 @@ class dbquery {
             )
         ));
     }
-
-
 
     // Product price stats >>>>>
     public static function shopGetProductPriceStats ($id) {
@@ -600,6 +578,7 @@ class dbquery {
 
     public static function shopAddAttributeToProduct ($data) {
         global $app;
+        $data["DateCreated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_productAttributes",
             "action" => "insert",
@@ -655,17 +634,6 @@ class dbquery {
             )
         ));
     }
-
-    // public static function shopCategoryAllSubCategoriesGet ($categoryID) {
-        // global $app;
-    //     return $app->getDB()->createDBQuery(array(
-    //         "action" => "call",
-    //         "procedure" => array(
-    //             "name" => "getAllShopCategorySubCategories",
-    //             "parameters" => array($categoryID)
-    //         )
-    //     ));
-    // }
 
     public static function getShopCatalogPriceEdges ($categoryID) {
         global $app;
@@ -762,6 +730,7 @@ class dbquery {
         return $config;
     }
 
+    // TODO: optimmize list query
     public static function shopGetCategoryList (array $options = array()) {
         global $app;
         $config = self::shopGetCategoryItem();
@@ -861,6 +830,7 @@ class dbquery {
         return $config;
     }
 
+    // TODO: optimmize list query
     public static function shopGetOriginList (array $options = array()) {
         global $app;
         $config = self::shopGetOriginItem();
@@ -966,6 +936,7 @@ class dbquery {
         return $config;
     }
 
+    // TODO: optimmize list query
     public static function shopGetDeliveriesList (array $options = array()) {
         global $app;
         $config = self::shopGetDeliveryAgencyByID();
@@ -1202,6 +1173,8 @@ class dbquery {
 
         return $config;
     }
+
+    // TODO: optimmize list query
     public static function getShopOrderList (array $options = array()) {
         global $app;
         $config = self::shopGetOrderItem();
@@ -1223,18 +1196,21 @@ class dbquery {
         }
         return $config;
     }
+    // TODO: optimmize list query
     public static function getShopOrderList_Pending () {
         global $app;
         $config = self::getShopOrderList();
         $config['condition']['Status'] = $app->getDB()->createCondition('NEW');
         return $config;
     }
+    // TODO: optimmize list query
     public static function getShopOrderList_Todays () {
         global $app;
         $config = self::getShopOrderList();
         $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d'), ">");
         return $config;
     }
+    // TODO: optimmize list query
     public static function getShopOrderList_Expired () {
         global $app;
         $config = self::getShopOrderList();
@@ -1340,6 +1316,7 @@ class dbquery {
 
 
     // >>>> Shop statistics
+    // TODO: optimmize list query
     public static function shopStat_PopularProducts (array $options = array()) {
         global $app;
         return $app->getDB()->createDBQuery(array(
@@ -1365,6 +1342,7 @@ class dbquery {
         ));
     }
 
+    // TODO: optimmize list query
     public static function shopStat_NonPopularProducts (array $options = array()) {
         global $app;
         return $app->getDB()->createDBQuery(array(
@@ -1526,6 +1504,7 @@ class dbquery {
         return $config;
     }
 
+    // TODO: optimmize list query
     public static function shopGetPromoList (array $options = array()) {
         global $app;
         $config = self::shopGetPromoByID();
@@ -1535,9 +1514,6 @@ class dbquery {
         if (empty($options['expired'])) {
             $config['condition']['DateExpire'] = $app->getDB()->createCondition($app->getDB()->getDate(), '>=');
         }
-        // if (empty($options['future'])) {
-            // $config['condition']['DateStart'] = $app->getDB()->createCondition($app->getDB()->getDate(), '<=');
-        // }
         return $config;
     }
 
@@ -1647,11 +1623,12 @@ class dbquery {
         return $config;
     }
 
+    // TODO: optimmize list query
     public static function shopGetExchangeRatesList (array $options = array()) {
         global $app;
         $config = self::shopGetExchangeRateByID();
         $config['fields'] = array("ID");
-        $config['limit'] = 64;
+        $config['limit'] = 64; // assume that 64 ex.rates nobody will have
         $config['options']['expandSingleRecord'] = false;
         if (isset($options['fields'])) {
             $config['fields'] = $options['fields'];
