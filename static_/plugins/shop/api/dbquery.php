@@ -541,7 +541,7 @@ class dbquery {
             "condition" => array(),
             "fields" => array("ProductID", "Attribute", "Value"),
             "offset" => 0,
-            "limit" => 20,
+            "limit" => 50,
             "options" => array(
                 "expandSingleRecord" => false
             )

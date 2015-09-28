@@ -54,7 +54,7 @@ class feeds {
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*');
+        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*.xls');
     }
 
     private function __adjustFeedItem ($feedFilePath) {
@@ -946,6 +946,9 @@ class feeds {
         if (isset($req->data['name'])) {
             // var_dump($req->data['name']);
             // foreach ($resp['files'] as $tempFileItem) {
+                // var_dump($this->getUploadedFeedName());
+                // var_dump($this->getFeedsUploadInnerDir());
+                // var_dump($req->data['name']);
                 $res = Path::moveTemporaryFile($req->data['name'], $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
                 API::getAPI('system:tasks')->addTask('shop', 'importProductFeed', $res['basename']);
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );

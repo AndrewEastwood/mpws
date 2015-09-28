@@ -4,6 +4,7 @@ RewriteBase /
 DirectoryIndex /engine/controllers/display.php
 #Header set Cache-Control "max-age=7200, must-revalidate"
 SetOutputFilter DEFLATE
+php_value upload_max_filesize 30M
 
 # SEO
 RewriteRule ^sitemap\.xml /engine/controllers/sitemap.php [L]

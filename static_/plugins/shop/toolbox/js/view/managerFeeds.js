@@ -59,6 +59,10 @@ define([
             }).on('fileuploaddone', function (e, data) {
                 var response = data.response();
                 if (response && response.result && response.result.files && response.result.files.length) {
+                    if (response.result.files[0].error) {
+                        toastr.error(response.result.files[0].error);
+                        return;
+                    }
                     that.collection.create({
                         name: response.result.files[0].name
                     }, {
