@@ -17,6 +17,7 @@ define("plugins/shop/site/nls/ua_uk/translation", {
             DISCOUNT: "Знижка",
             DEFECT: "Уцінка",
             WAITING: "Скоро",
+            REMOVED: "Архів",
             PREORDER: "На замов...",
         }
     },
