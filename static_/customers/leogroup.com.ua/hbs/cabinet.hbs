@@ -4,6 +4,20 @@
     <div class="col-xs-12 col-sm-3 no-margin sidebar narrow">
         <div class="widget">
             <h1 class="border">Кабінет</h1>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{{bb_link instances.customer.urls.account}}">Профіль</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{bb_link instances.customer.urls.shopUserOrders}}">Мої Замовлення</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{bb_link instances.customer.urls.shopUserLists}}">Мої Списки</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{bb_link instances.customer.urls.userSubscriptions}}">Мої підписки</a>
+                </li>
+            </ul>
             {{!-- <div class="mpws-js-category-filter"></div> --}}
         </div><!-- /.widget -->
     </div>

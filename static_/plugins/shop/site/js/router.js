@@ -13,7 +13,7 @@ define([
     'plugins/shop/site/js/view/listProductWish',
     'plugins/shop/site/js/view/trackingStatus',
     'plugins/shop/site/js/view/listProducts',
-    // 'plugins/shop/site/js/view/profileOrders',
+    'plugins/shop/site/js/view/listUserOrders',
 
     'plugins/shop/site/js/view/menuCart',
     'plugins/shop/site/js/view/menuWishList',
@@ -44,7 +44,7 @@ define([
     ViewListProductCompare, ViewCartStandalone,
     ViewListProductWish, ViewTrackingStatus,
     ViewListProducts,
-    /* ProfileOrders, */
+    ViewListUserOrders,
 
     // menu views
     ViewMenuItemCart,
@@ -379,6 +379,12 @@ define([
                 trackingStatus.setOrderHash(orderHash);
             }
             return trackingStatus;
+        },
+
+        userOrders: function () {
+            // create new view
+            var listUserOrders = new ViewListUserOrders();
+            return listUserOrders;
         },
 
         // utils 

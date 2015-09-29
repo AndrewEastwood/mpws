@@ -1,11 +1,10 @@
 define([
     'backbone',
     'underscore',
-    'bootstrap-alert',
     'bootstrap-dialog',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
-], function (Backbone, _, BSAlert, BootstrapDialog, lang) {
+], function (Backbone, _, BootstrapDialog, lang) {
 
     var instance = null;
     // debugger;

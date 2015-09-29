@@ -411,6 +411,9 @@
                             plugin = new pluginClass(pluginsConfig[name] || {}, callback);
                             plugin.name = name;
                             APP.instances.customer.plugins[name] = plugin;
+                            if (pluginsConfig[name].urls) {
+                                _.extend(APP.instances.customer.urls, pluginsConfig[name].urls);
+                            }
                             APP.instances[name] = plugin;
                             if (!plugin.pending) {
                                 callback();
@@ -468,6 +471,7 @@
             if (_.isFunction(RouterCustomer)) {
                 var customer = new RouterCustomer();
                 APP.instances.customer = customer;
+                APP.instances.customer.urls = {};
                 customer.plugins = {};
             }
             if (customer && _.isFunction(customer.releasePlugins)) {

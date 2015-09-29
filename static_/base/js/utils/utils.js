@@ -1,9 +1,10 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
+    'backbone',
+    'handlebars'
     /* component implementation */
-], function ($, _, Backbone) {
+], function ($, _, Backbone, Handlebars) {
 
     function Utils() {}
 
@@ -157,6 +158,21 @@ define([
             isToolbox: APP.config.ISTOOLBOX,
             appConfig: APP.config,
             perms: APP.Auth.perms
+        }
+    }
+
+    // TODO: store precompiled templates in locaStorage with version support
+    //       also cleanup old templates when verison is changed (use buildver)
+    var templatesCompiled = {};
+    Utils.preCompileTemplate = function (name, rawTpl) {
+        templatesCompiled[name] = templatesCompiled[name] || Handlebars.compile(rawTpl);
+        return function (ctx) {
+            var data, $el = null;
+            if (_.isFunction(templatesCompiled[name])) {
+                data = Utils.getHBSTemplateData(ctx || {});
+                $el = $(templatesCompiled[name](data));
+            }
+            return $el;
         }
     }
 

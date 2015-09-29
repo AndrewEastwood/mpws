@@ -3,15 +3,15 @@ define([
     'handlebars',
     'plugins/shop/site/js/collection/listProductWish',
     'utils',
-    'text!plugins/shop/site/hbs/listProductWish.hbs',
+    'text!plugins/shop/site/hbs/profileOrders.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, Handlebars, CollWishList, Utils, tpl, lang) {
+], function (Backbone, Handlebars, ColListUserOrders, Utils, tpl, lang) {
 
     var ListProductWish = Backbone.View.extend({
-        collection: CollWishList.getInstance(),
-        className: 'shop-productlist-wish',
+        collection: new ColListUserOrders(),
+        className: 'shop-user-orders',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {

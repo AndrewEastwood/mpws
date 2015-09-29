@@ -45,7 +45,6 @@ define([
             tplData.productIDs = productIDs;
             tplData.showCompareModeLink = this.collection.length > 1;
             this.$el.html(this.template(tplData));
-            this.trigger('shop:rendered');
             return this;
         },
         toggleCompareMode: function (event) {

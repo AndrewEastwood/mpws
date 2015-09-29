@@ -64,7 +64,6 @@ define([
                 this.$el.html($list);
             }
             this.revealNextPage();
-            this.trigger('shop:rendered');
             return this;
         },
         getPageAttributes: function () {

@@ -6,6 +6,7 @@ define([
     'echo',
     'auth',
     'bootstrap-dialog',
+    'utils',
     // page templates
     'text!./../hbs/breadcrumb.hbs',
     'text!./../hbs/homeFrame.hbs',
@@ -21,7 +22,7 @@ define([
     'owl.carousel',
     'bootstrap',
     'icheck'
-], function ($, _, Backbone, Handlebars, echo, Auth, BootstrapDialog,
+], function ($, _, Backbone, Handlebars, echo, Auth, BootstrapDialog, Utils,
      tplBreadcrumb,
      tplHomeFrame,
      tplProductsTab,
@@ -54,14 +55,19 @@ define([
         '!/wishlist': 'shopWishlist',
         '!/compare': 'shopCompare',
         '!/tracking/(:id)': 'shopTracking',
-        '!/search/:text': 'shopSearch'
+        '!/search/:text': 'shopSearch',
+        '!/account/orders': 'shopUserOrders',
+        '!/account/lists': 'shopUserLists',
         // "!/shop/profile/orders": "shop_profile_orders"
     };
 
     var systemUrls = {
         '!/signin': 'signin',
-        '!/account': 'account'
+        '!/account': 'account',
+        '!/account/subscriptions': 'userSubscriptions',
     };
+
+    var routerLocalChache = {};
 
     APP.configurePlugins({
         shop: {
@@ -76,26 +82,6 @@ define([
             }
         }
     });
-
-    var templatesCompiled = {
-        homeFrame: $(Handlebars.compile(tplHomeFrame)()),
-        categoriesRibbon: $(Handlebars.compile(tplCategoriesRibbon)()),
-        breadcrumb: $(Handlebars.compile(tplBreadcrumb)()),
-        viewedProducts: $(Handlebars.compile(tplViewedProducts)()),
-        productComparisons: $(Handlebars.compile(tplProductComparisons)()),
-        productsTab: $(Handlebars.compile(tplProductsTab)()),
-        productWishlist: $(Handlebars.compile(tplProductWishlist)()),
-        page404: $(Handlebars.compile(tplPage404)()),
-        catalogBrowser: $(Handlebars.compile(tplCatalogBrowser)()),
-        search: $(Handlebars.compile(tplSearch)()),
-        cabinet: $(Handlebars.compile(tplCabinet)()),
-    };
-
-    function getTemplate (key) {
-        return function () {
-            return templatesCompiled[key] && templatesCompiled[key].clone();
-        }
-    }
 
     var Router = Backbone.Router.extend({
 
@@ -122,17 +108,17 @@ define([
         elements: {},
 
         templates: {
-            homeFrame: getTemplate('homeFrame'),
-            categoriesRibbon: getTemplate('categoriesRibbon'),
-            breadcrumb: getTemplate('breadcrumb'),
-            viewedProducts: getTemplate('viewedProducts'),
-            productsTab: getTemplate('productsTab'),
-            productComparisons: getTemplate('productComparisons'),
-            productWishlist: getTemplate('productWishlist'),
-            page404: getTemplate('page404'),
-            catalogBrowser: getTemplate('catalogBrowser'),
-            search: getTemplate('search'),
-            cabinet: getTemplate('cabinet'),
+            homeFrame: Utils.preCompileTemplate('HomeFrame', tplHomeFrame),
+            categoriesRibbon: Utils.preCompileTemplate('CategoriesRibbon', tplCategoriesRibbon),
+            breadcrumb: Utils.preCompileTemplate('Breadcrumb', tplBreadcrumb),
+            viewedProducts: Utils.preCompileTemplate('ViewedProducts', tplViewedProducts),
+            productsTab: Utils.preCompileTemplate('ProductComparisons', tplProductComparisons),
+            productComparisons: Utils.preCompileTemplate('ProductsTab', tplProductsTab),
+            productWishlist: Utils.preCompileTemplate('ProductWishlist', tplProductWishlist),
+            page404: Utils.preCompileTemplate('Page404', tplPage404),
+            catalogBrowser: Utils.preCompileTemplate('CatalogBrowser', tplCatalogBrowser),
+            search: Utils.preCompileTemplate('Search', tplSearch),
+            cabinet: Utils.preCompileTemplate('Cabinet', tplCabinet),
         },
 
         views: {},
@@ -164,16 +150,23 @@ define([
             // check if user is authenticated
             Auth.verifyStatusAndThen()
                 .ifRegistered(function () {
-                    var user = that.plugins.system.userPanel();
+                    var user = that.plugins.system.userPanel(),
+                        $tplCabinet;
                     if (user) {
                         that.toggleCategoryRibbonAndBreadcrumb(true);
                         that.toggleHomeFrame(false);
-                        var $tplCabinet = that.templates.cabinet();
+                        if (routerLocalChache.cabinet) {
+                            $tplCabinet = routerLocalChache.cabinet;
+                        } else {
+                            $tplCabinet = that.templates.cabinet();
+                            routerLocalChache.cabinet = $tplCabinet;
+                        }
                         $tplCabinet.find('.mpws-js-user-general').html(user.$el);
                         $('section.mpws-js-main-section').html($tplCabinet);
                     }
                 })
                 .ifNotRegistered(function () {
+                    routerLocalChache.cabinet = null;
                     Backbone.history.navigate('!/signin', true);
                 });
             // if (!Auth.verifyStatus()) {
@@ -588,6 +581,22 @@ define([
 
             var viewTracking = this.plugins.shop.tracking(orderHash);
             $('section.mpws-js-main-section').html(viewTracking.render().$el);
+        },
+        shopUserOrders: function () {
+            var viewUserOrders = this.plugins.shop.userOrders();
+            viewUserOrders.collection.fetch();
+            // routerLocalChache.cabinet
+            $('section.mpws-js-main-section').html(viewUserOrders.render().$el);
+        },
+        shopUserLists: function () {
+            var viewUserFavList = this.plugins.shop.userFavLists();
+            viewUserFavList.collection.fetch();
+            $('section.mpws-js-main-section').html(viewUserFavList.render().$el);
+        },
+        userSubscriptions: function () {
+            var viewUserSubs = this.plugins.system.userSubscriptions();
+            viewUserFavList.model.fetch();
+            $('section.mpws-js-main-section').html(viewUserSubs.render().$el);
         },
         // utils
         refreshViewedProducts: function () {
