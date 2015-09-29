@@ -1,9 +1,11 @@
 define("plugins/shop/site/nls/ua_uk/translation", {
     order_status_NEW: 'Прийняте',
-    order_status_ACTIVE: 'В процесі виконання',
+    order_status_ACTIVE: 'Виконання',
     order_status_LOGISTIC_DELIVERING: 'Відправлено',
-    order_status_LOGISTIC_DELIVERED: 'Вантаж прибув',
+    order_status_LOGISTIC_DELIVERED: 'Відвантажено',
     order_status_SHOP_CLOSED: 'Виконано',
+    order_status_CUSTOMER_CANCELED: "Відмова",
+    order_status_SHOP_REFUNDED: "Відшкодування",
     product_status_ACTIVE: "В наявності",
     product_status_ARCHIVED: "Архівні",
     product_status_DISCOUNT: "Знижені ціни",

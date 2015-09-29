@@ -1,0 +1,145 @@
+<div class="panel">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs hidden" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#all" aria-controls="all" role="tab" data-toggle="tab">Замовлення</a>
+            </li>
+        </ul>
+        <p></p>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="all">
+                {{#if data }}
+                <div class="panel-group" id="accordion">
+                {{#each data }}
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row panel-title" data-toggle="collapse" href="#collapse_{{ID}}">
+                            <div class="col-md-2">
+                                {{#if_eq Status "SHOP_CLOSED" }}
+                                <span class="shop-orderstatus label label-default">
+                                {{else}}
+                                    {{#if_eq Status "NEW" }}
+                                    <span class="shop-orderstatus label label-success">
+                                    {{else}}
+                                    <span class="shop-orderstatus label label-warning">
+                                    {{/if_eq}}
+                                {{/if_eq}}
+                                    {{mpwsGetValueByKey ../../lang key=Status prefix="order_status_" }}
+                                </span>
+                            </div>
+                            <div class="col-md-7">
+                                <a href="javascript://">Замовлення # {{ID}} на суму:</a>
+                            </div>
+                            <div class="col-md-3 text-right">
+                            {{#each totalSummary._subs}}
+                                <strong class="shop-price-value {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                            {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapse_{{ID}}" class="panel-collapse collapse">
+                      <div class="panel-body">
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="prefix">Дата створення:</span>
+                                <span class="label label-success">{{DateCreated}}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="prefix">Дата останнього оновлення:</span>
+                                <span class="label label-success">{{DateUpdated}}</span>
+                            </li>
+                            {{#if Shipping }}
+                            <li class="list-group-item">
+                                <span class="prefix">Перевізник:</span>
+                                <span class="label label-success">
+                                    {{#if_eq Shipping "self" }}
+                                        Самовивіз
+                                    {{else}}
+                                        {{Shipping}}
+                                    {{/if_eq}}
+                                </span>
+                            </li>
+                            {{/if}}
+                            {{#and Shipping Warehouse }}
+                            <li class="list-group-item">
+                                <span class="prefix">Номер складу:</span>
+                                <span class="label label-success">{{Warehouse}}</span>
+                            </li>
+                            {{/and}}
+                            {{#if Comment }}
+                            <li class="list-group-item">
+                                <span class="prefix">Ваш коментар:</span>
+                                <span class="label label-success">{{Comment}}</span>
+                            </li>
+                            {{/if}}
+                            <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
+                            <li class="list-group-item"><a href="{{bb_link ../../instances.customer.urls.shopTracking _id=Hash}}">{{bb_link ../../instances.customer.urls.shopTracking _id=Hash fullUrl=true}}</a></li>
+                        </ul>
+
+                        <div class="shop-user-order-products clearfix well">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-2"></div>
+                                <div class="col-xs-12 col-sm-4"><b>Назва</b></div>
+                                <div class="col-xs-12 col-sm-3"><b>К-сть</b></div>
+                                <div class="col-xs-12 col-sm-3"><b>Сума</b></div>
+                            </div>
+                        {{#each items }}
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-2">
+                                {{#if Images.[0].sm}}
+                                    <a href="{{bb_link ../../../instances.customer.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_displayName}}">
+                                        <img width="73" height="73" alt="{{_displayName}}" class="attachment-shop_thumbnail wp-post-image" src="{{../appConfig.app.baseStaticUrl}}/img/blank.gif" data-echo="{{Images.[0].sm}}">
+                                    </a>
+                                {{/if}}
+                                </div>
+
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="title">
+                                        <a href="{{bb_link ../instances.shop.urls.shopProduct product=ExternalKey asRoot=true}}" title="{{_displayName}}">
+                                            {{_displayName}}
+                                        </a>
+                                    </div>
+                                    <div class="brand"><i><small>Виробник: {{_origin.Name}}</small></i></div>
+                                </div> 
+
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="value">
+                                        {{_orderQuantity}}
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="price">
+                                        {{#each _prices.others}}
+                                        <strong class="shop-price-value {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                        </div>
+
+                        <div class="well">
+                            <label>Всього</label>
+                            <div class="value pull-right">
+                            {{#each totalSummary._totals}}
+                                <strong class="shop-price-value {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../../instances.shop.settings.EXCHANAGERATESDISPLAY}}</strong>
+                            {{/each}}
+                            </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                {{/each}}
+                </div>
+                {{else}}
+                    <div class="alert alert-danger">У вас немає замовлень</div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

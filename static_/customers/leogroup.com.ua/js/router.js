@@ -67,6 +67,20 @@ define([
         '!/account/subscriptions': 'userSubscriptions',
     };
 
+    var templates = {
+        homeFrame: Utils.preCompileTemplate('HomeFrame', tplHomeFrame),
+        categoriesRibbon: Utils.preCompileTemplate('CategoriesRibbon', tplCategoriesRibbon),
+        breadcrumb: Utils.preCompileTemplate('Breadcrumb', tplBreadcrumb),
+        viewedProducts: Utils.preCompileTemplate('ViewedProducts', tplViewedProducts),
+        productsTab: Utils.preCompileTemplate('ProductComparisons', tplProductsTab),
+        productComparisons: Utils.preCompileTemplate('ProductsTab', tplProductComparisons),
+        productWishlist: Utils.preCompileTemplate('ProductWishlist', tplProductWishlist),
+        page404: Utils.preCompileTemplate('Page404', tplPage404),
+        catalogBrowser: Utils.preCompileTemplate('CatalogBrowser', tplCatalogBrowser),
+        search: Utils.preCompileTemplate('Search', tplSearch),
+        cabinet: Utils.preCompileTemplate('Cabinet', tplCabinet),
+    };
+
     var routerLocalChache = {};
 
     APP.configurePlugins({
@@ -107,22 +121,9 @@ define([
 
         elements: {},
 
-        templates: {
-            homeFrame: Utils.preCompileTemplate('HomeFrame', tplHomeFrame),
-            categoriesRibbon: Utils.preCompileTemplate('CategoriesRibbon', tplCategoriesRibbon),
-            breadcrumb: Utils.preCompileTemplate('Breadcrumb', tplBreadcrumb),
-            viewedProducts: Utils.preCompileTemplate('ViewedProducts', tplViewedProducts),
-            productsTab: Utils.preCompileTemplate('ProductComparisons', tplProductComparisons),
-            productComparisons: Utils.preCompileTemplate('ProductsTab', tplProductsTab),
-            productWishlist: Utils.preCompileTemplate('ProductWishlist', tplProductWishlist),
-            page404: Utils.preCompileTemplate('Page404', tplPage404),
-            catalogBrowser: Utils.preCompileTemplate('CatalogBrowser', tplCatalogBrowser),
-            search: Utils.preCompileTemplate('Search', tplSearch),
-            cabinet: Utils.preCompileTemplate('Cabinet', tplCabinet),
-        },
-
         views: {},
 
+        templates: templates,
 
         signin: function () {
             var that = this;
@@ -150,19 +151,11 @@ define([
             // check if user is authenticated
             Auth.verifyStatusAndThen()
                 .ifRegistered(function () {
-                    var user = that.plugins.system.userPanel(),
-                        $tplCabinet;
+                    var user = that.plugins.system.userPanel();
                     if (user) {
                         that.toggleCategoryRibbonAndBreadcrumb(true);
                         that.toggleHomeFrame(false);
-                        if (routerLocalChache.cabinet) {
-                            $tplCabinet = routerLocalChache.cabinet;
-                        } else {
-                            $tplCabinet = that.templates.cabinet();
-                            routerLocalChache.cabinet = $tplCabinet;
-                        }
-                        $tplCabinet.find('.mpws-js-user-general').html(user.$el);
-                        $('section.mpws-js-main-section').html($tplCabinet);
+                        that.showCabinetPage('account', user.$el);
                     }
                 })
                 .ifNotRegistered(function () {
@@ -489,7 +482,6 @@ define([
 
             $('section.mpws-js-main-section').html(view.$el);
             initEchoJS();
-
         },
         // todo:
         // add tabs for extra info
@@ -524,7 +516,6 @@ define([
             });
 
             $('section.mpws-js-main-section').html(productView.$el);
-
         },
 
         // under construction
@@ -578,27 +569,53 @@ define([
             this.toggleHomeFrame(false);
             this.refreshViewedProducts();
             this.updateFooter();
-
             var viewTracking = this.plugins.shop.tracking(orderHash);
             $('section.mpws-js-main-section').html(viewTracking.render().$el);
         },
         shopUserOrders: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
             var viewUserOrders = this.plugins.shop.userOrders();
             viewUserOrders.collection.fetch();
-            // routerLocalChache.cabinet
-            $('section.mpws-js-main-section').html(viewUserOrders.render().$el);
+            this.showCabinetPage('orders', viewUserOrders.render().$el);
         },
         shopUserLists: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
             var viewUserFavList = this.plugins.shop.userFavLists();
             viewUserFavList.collection.fetch();
-            $('section.mpws-js-main-section').html(viewUserFavList.render().$el);
+            this.showCabinetPage('lists', viewUserFavList.render().$el);
         },
         userSubscriptions: function () {
+            this.toggleCategoryRibbonAndBreadcrumb(true);
+            this.toggleHomeFrame(false);
             var viewUserSubs = this.plugins.system.userSubscriptions();
             viewUserFavList.model.fetch();
-            $('section.mpws-js-main-section').html(viewUserSubs.render().$el);
+            this.showCabinetPage('subs', viewUserSubs.render().$el);
         },
-        // utils
+
+        //********** UTILS
+        //======================================
+
+        getCabinetPage: function () {
+            var $cabinet;
+            if (routerLocalChache.cabinet) {
+                $cabinet = routerLocalChache.cabinet;
+            } else {
+                $cabinet = this.templates.cabinet();
+                routerLocalChache.cabinet = $cabinet;
+            }
+            return $cabinet;
+        },
+        showCabinetPage: function (pageName, innerContent) {
+            var $cabinet = this.getCabinetPage();
+            $cabinet.find('.mpws-js-user-general').html(innerContent);
+            $cabinet.find('.list-group-item').removeClass('active');
+            if (pageName) {
+                $cabinet.find('.list-group-item-' + pageName).addClass('active');
+            }
+            $('section.mpws-js-main-section').html($cabinet);
+        },
         refreshViewedProducts: function () {
             // this.views.viewedProducts.collection.fetch({reset: true});
         },
@@ -654,7 +671,7 @@ define([
         },
         toggleHomeFrame: function (show) {
             $('.mpws-js-main-home-frame').toggleClass('hidden', !show);
-        },
+        }
 
     });
 

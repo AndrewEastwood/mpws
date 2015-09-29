@@ -65,7 +65,7 @@ class catalog {
         // var_dump($filterOptionsApplied);
 
         // get all product available statuses
-        $filterOptionsAvailable['filter_commonStatus'] = API::getAPI('shop:products')->getProductStatuses();
+        $filterOptionsAvailable['filter_commonStatus'] = dbquery::getProductStatuses();
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {

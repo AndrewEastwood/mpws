@@ -553,6 +553,13 @@ define([
         }
         return url;
     }
+    helpers.matchState = function (pattern, opt) {
+        if (new RegExp(pattern, 'i').test(location.hash)) {
+            return opt.fn(this);
+        } else {
+            return opt.inverse(this);
+        }
+    }
     helpers.encodeURIComponent = function (val) {
         return encodeURIComponent(val);
     }

@@ -1194,6 +1194,10 @@ class dbquery {
                 }
             }
         }
+        // select for specific user
+        if (!empty($options['_pUser'])) {
+            $config['condition']['UserID'] = $app->getDB()->createCondition($options['_pUser']);
+        }
         return $config;
     }
     // TODO: optimmize list query
@@ -1216,6 +1220,13 @@ class dbquery {
         $config = self::getShopOrderList();
         $config['condition']['Status'] = $app->getDB()->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
         $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
+        return $config;
+    }
+    // TODO: optimmize list query
+    public static function getShopOrderList_ForUser ($userID) {
+        global $app;
+        $config = self::getShopOrderList();
+        $config['condition']['UserID'] = $userID;
         return $config;
     }
     public static function shopCreateOrder ($data) {

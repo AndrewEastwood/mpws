@@ -127,12 +127,13 @@ class orders {
 
     public function getOrders_List (array $options = array()) {
         global $app;
-        // get all orders
-        $config = dbquery::getShopOrderList($options);
-        // check permissions
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
+        // check permissions and adjust params
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Maintain')) {
+            // if user is not either admin or service then we show order for signed in user only
+            $options['_pUser'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
+        // get orders
+        $config = dbquery::getShopOrderList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -768,6 +769,9 @@ class orders {
                     $resp = $this->getOrderByID($req->get['params']);
                 else
                     $resp['error'] = 'AccessDenied';
+                return;
+            } elseif (is_string($req->get['params']) && $req->get['params'] === "activeuser") {
+                $resp = $this->getOrders_List(); // show orders for active user only
                 return;
             } else {
                 $resp = $this->getOrderByHash($req->get['params']);

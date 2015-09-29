@@ -1,23 +1,15 @@
-<div class="container">
+<div class="container mpws-js-cabinet">
 
     <!-- ========== SIDEBAR ========== -->
     <div class="col-xs-12 col-sm-3 no-margin sidebar narrow">
         <div class="widget">
             <h1 class="border">Кабінет</h1>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{{bb_link instances.customer.urls.account}}">Профіль</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{bb_link instances.customer.urls.shopUserOrders}}">Мої Замовлення</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{bb_link instances.customer.urls.shopUserLists}}">Мої Списки</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{bb_link instances.customer.urls.userSubscriptions}}">Мої підписки</a>
-                </li>
-            </ul>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-account" href="{{bb_link instances.customer.urls.account}}">Профіль</a>
+                <a class="list-group-item list-group-item-orders" href="{{bb_link instances.customer.urls.shopUserOrders}}">Мої Замовлення</a>
+                <a class="list-group-item list-group-item-lists" href="{{bb_link instances.customer.urls.shopUserLists}}">Мої Списки</a>
+                <a class="list-group-item list-group-item-subs" href="{{bb_link instances.customer.urls.userSubscriptions}}">Мої підписки</a>
+            </div>
             {{!-- <div class="mpws-js-category-filter"></div> --}}
         </div><!-- /.widget -->
     </div>

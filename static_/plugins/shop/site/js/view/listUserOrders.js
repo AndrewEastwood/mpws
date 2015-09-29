@@ -1,17 +1,18 @@
 define([
     'backbone',
     'handlebars',
-    'plugins/shop/site/js/collection/listProductWish',
+    'plugins/shop/site/js/collection/listUserOrders',
     'utils',
-    'text!plugins/shop/site/hbs/profileOrders.hbs',
+    'bootstrap-dialog',
+    'text!plugins/shop/site/hbs/listUserOrders.hbs',
     /* lang */
     'i18n!plugins/shop/site/nls/translation',
     'jquery.cookie'
-], function (Backbone, Handlebars, ColListUserOrders, Utils, tpl, lang) {
+], function (Backbone, Handlebars, ColListUserOrders, Utils, BootstrapDialog, tpl, lang) {
 
     var ListProductWish = Backbone.View.extend({
         collection: new ColListUserOrders(),
-        className: 'shop-user-orders',
+        className: 'bootstrap-dialog type-primary size-normal plugin-shop-user-orders',
         template: Handlebars.compile(tpl), // check
         lang: lang,
         initialize: function () {
@@ -20,7 +21,18 @@ define([
             Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
         },
         render: function() {
-            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            var $dialog = new BootstrapDialog({
+                closable: false,
+                title: 'Мої Замовлення',
+                message: $(this.template(Utils.getHBSTemplateData(this))),
+                buttons: false
+            });
+            // $dialog.open();
+            $dialog.realize();
+            $dialog.updateMessage();
+            $dialog.updateClosable();
+
+            this.$el.html($dialog.getModalContent());
             return this;
         },
         switchCurrency: function (visibleCurrencyName) {
