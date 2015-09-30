@@ -180,6 +180,9 @@ define({
             messageError: 'Помилка',
             permissions: {
                 title: 'Права доступу'
+            },
+            subscriptions: {
+                title: 'Повідомлення'
             }
         }
     }

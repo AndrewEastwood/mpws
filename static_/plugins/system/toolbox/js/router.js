@@ -244,7 +244,7 @@ define([
         },
 
         userEdit: function (id) {
-            if (Auth.getUserID() !== parseInt(id, 10) ||
+            if (Auth.getUserID() !== id ||
                 (!Auth.canDo('CanMaintain') && !Auth.canDo('CanAdmin'))) {
                 Backbone.history.navigate(this.urls.dashboard, true);
                 return null;
