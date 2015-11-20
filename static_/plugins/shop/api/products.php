@@ -37,7 +37,7 @@ class products {
     // product standalone item (short or full)
     // -----------------------------------------------
 
-    private function __adjustProduct (&$product, $skipRelations = false) {
+    private function __adjustProduct (&$product, $skipRelations = true) {
         global $app;
         // adjusting
         $productID = intval($product['ID']);
@@ -134,19 +134,25 @@ class products {
             $product['Attributes']['PROMO_TEXT'] = str_replace('[DisplayName]', $product['_displayName'], $product['Attributes']['PROMO_TEXT']);
         }
 
-        // save product into recently viewed list
-        $isDirectRequestToProduct = Request::hasInGet('id') || Request::hasInGet('params');
-        if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
-            $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
-            $recentProducts[] = $productID;
-            $_SESSION[$this->_listKey_Recent] = array_unique($recentProducts);
-        }
+        // // save product into recently viewed list
+        // $isDirectRequestToProduct = Request::hasInGet('id') || Request::hasInGet('params');
+        // if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
+        //     $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
+        //     $recentProducts[] = $productID;
+        //     $_SESSION[$this->_listKey_Recent] = array_unique($recentProducts);
+        // }
 
         // var_dump($product);
         return $product;
     }
 
-    public function getProductByID ($productID, $skipRelations = false) {
+    private function _addProductIntoLastViewedList ($productID) {
+        $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
+        $recentProducts[] = $productID;
+        $_SESSION[$this->_listKey_Recent] = array_unique($recentProducts);
+    }
+
+    public function getProductByID ($productID) {
         global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
@@ -154,44 +160,44 @@ class products {
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
-        return $this->__adjustProduct($product, $skipRelations);
+        return $this->__adjustProduct($product);
     }
 
-    public function getProductByExternalKey ($productExternalKey, $skipRelations = false) {
+    public function getProductByExternalKey ($productExternalKey) {
         global $app;
         $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
         $product = $app->getDB()->query($config);
         if (empty($product)) {
             return null;
         }
-        return $this->__adjustProduct($product, $skipRelations);
+        return $this->__adjustProduct($product);
     }
 
-    public function getProductByName ($productName, $skipRelations = false) {
+    public function getProductByName ($productName) {
         global $app;
         $config = dbquery::shopGetProductItemByName($productName);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
-        return $this->__adjustProduct($product, $skipRelations);
+        return $this->__adjustProduct($product);
     }
 
-    public function getProductByModel ($productModel, $skipRelations = false) {
+    public function getProductByModel ($productModel) {
         global $app;
         $config = dbquery::shopGetProductItemByModel($productModel);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
-        return $this->__adjustProduct($product, $skipRelations);
+        return $this->__adjustProduct($product);
     }
 
-    public function getProductByModelAndOriginName ($productModel, $originName, $skipRelations = false) {
+    public function getProductByModelAndOriginName ($productModel, $originName) {
         global $app;
         $config = dbquery::shopGetProductItemByModelAndOriginName($productModel, $originName);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
-        return $this->__adjustProduct($product, $skipRelations);
+        return $this->__adjustProduct($product);
     }
 
     public function getProductIDByModelAndOriginName ($productModel, $originName) {
@@ -354,7 +360,7 @@ class products {
                 $relatedProductID = intval($relationItem['ProductB_ID']);
                 if ($relatedProductID === $productID)
                     continue;
-                $relatedProduct = $this->getProductByID($relatedProductID, true);
+                $relatedProduct = $this->getProductByID($relatedProductID);
                 if (isset($relatedProduct))
                     $relations[] = $relatedProduct;
             }
@@ -372,17 +378,17 @@ class products {
     }
 
     // TODO: optimmize list query
-    public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
+    public function getProducts_List (array $options = array(), $saveIntoRecent = false) {
         global $app;
         $config = dbquery::shopGetProductList($options);
         if (empty($config))
             return null;
         $self = $this;
         $callbacks = array(
-            "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
+            "parse" => function ($items) use($self, $saveIntoRecent) {
                 $_items = array();
                 foreach ($items as $key => $productRawItem) {
-                    $_items[] = $self->getProductByID($productRawItem['ID'], $skipRelations);
+                    $_items[] = $self->getProductByID($productRawItem['ID']);
                 }
                 return $_items;
             }
@@ -394,11 +400,8 @@ class products {
     // TODO: optimmize list query
     public function getNewProducts_List (array $options = array()) {
         global $app;
-        $options['sort'] = 'shop_products.DateUpdated';
-        $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
         // var_dump($options);
-        $config = dbquery::shopGetProductList($options);
+        $config = dbquery::shopGetProductList_NewItems($options);
         if (empty($config))
             return null;
         $self = $this;
@@ -406,7 +409,7 @@ class products {
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                    $_items[] = $self->getProductByID($orderRawItem['ID']);
                 }
                 return $_items;
             }
@@ -426,7 +429,7 @@ class products {
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ProductID'], true);
+                    $_items[] = $self->getProductByID($orderRawItem['ProductID']);
                 }
                 return $_items;
             }
@@ -441,35 +444,47 @@ class products {
         $_items = array();
         $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
         foreach ($viewedProductsIDs as $productID) {
-            $_items[] = $this->getProductByID($productID, true);
+            $_items[] = $this->getProductByID($productID);
         }
         $dataList = $app->getDB()->getDataListFromArray($_items);
         return $dataList;
     }
 
     // TODO: optimize list quer
-    public function getOnSaleProducts_List (array $options = array()) {
-        global $app;
-        $options['sort'] = 'shop_products.DateUpdated';
-        $options['order'] = 'DESC';
-        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
-        $options['_fshop_products.Price'] = 'PrevPrice:>';
+    public function getOnSaleProducts_List (array $listOptions = array()) {
+        // global $app;
+        // $options['sort'] = 'shop_products.DateUpdated';
+        // $options['order'] = 'DESC';
+        // $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
+        // $options['_fshop_products.Price'] = 'PrevPrice:>';
         // $options['_fshop_products.Status'] = 'DISCOUNT';
-        $config = dbquery::shopGetProductList($options);
-        if (empty($config))
-            return null;
+        // $config = dbquery::shopGetProductList_NewItems($options);
+        // if (empty($config))
+        //     return null;
+        // $self = $this;
+        // $callbacks = array(
+        //     "parse" => function ($items) use($self) {
+        //         $_items = array();
+        //         foreach ($items as $key => $orderRawItem) {
+        //             $_items[] = $self->getProductByID($orderRawItem['ID']);
+        //         }
+        //         return $_items;
+        //     }
+        // );
+        // $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        // return $dataList;
+
+
         $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
-                }
-                return $_items;
+        $params = array();
+        $params['list'] = $listOptions;
+        $params['callbacks'] = array(
+            'parse' => function ($dbRawItem) use ($self) {
+                return $self->getProductByID($dbRawItem['ID']);
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
-        return $dataList;
+
+        return dbquery::fetchOnSaleProducts_List($params);
     }
 
     // TODO: optimmize list query
@@ -488,7 +503,7 @@ class products {
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                    $_items[] = $self->getProductByID($orderRawItem['ID']);
                 }
                 return $_items;
             }
@@ -513,7 +528,7 @@ class products {
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                    $_items[] = $self->getProductByID($orderRawItem['ID']);
                 }
                 return $_items;
             }
@@ -1658,7 +1673,7 @@ class products {
 
 
 
-    public function getProducts_TopNonPopular () {
+    public function getProductsArray_TopNonPopular () {
         global $app;
         // get non-popuplar 15 products
         $config = dbquery::shopStat_NonPopularProducts();
@@ -1672,7 +1687,7 @@ class products {
         return $data;
     }
 
-    public function getProducts_TopPopular () {
+    public function getProductsArray_TopPopular () {
         global $app;
         // get top 15 products
         $config = dbquery::shopStat_PopularProducts();
@@ -1714,7 +1729,8 @@ class products {
 
     public function getStats_ProductsIntensityActiveLastMonth () {
         global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Maintain')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+            !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
         $config = dbquery::shopStat_ProductsIntensityLastMonth('ACTIVE');
@@ -1723,7 +1739,8 @@ class products {
     }
     public function getStats_ProductsIntensityPreorderLastMonth () {
         global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Maintain')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+            !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
         $config = dbquery::shopStat_ProductsIntensityLastMonth('PREORDER');
@@ -1732,7 +1749,8 @@ class products {
     }
     public function getStats_ProductsIntensityDiscountLastMonth () {
         global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Maintain')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+            !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
         $config = dbquery::shopStat_ProductsIntensityLastMonth('DISCOUNT');
@@ -1741,14 +1759,18 @@ class products {
     }
 
     public function get (&$resp, $req) {
-        if (!empty($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $ProductID = intval($req->get['params']);
-                $resp = $this->getProductByID($ProductID);
-            } else {
-                $resp = $this->getProductByExternalKey($req->get['params']);
-            }
-        } else {
+        // for specific product item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->getProductByID($req->id);
+            return;
+        }
+        // or by ExternalKey
+        if (Request::hasRequestedExternalKey()) {
+            $this->getProductByExternalKey($req->externalKey);
+        }
+        // for the case when we have to fecth list with products
+        if (Request::noRequestedItem()) {
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
                     case 'new': {
@@ -1783,37 +1805,49 @@ class products {
             } else {
                 $resp = $this->getProducts_List($req->get);
             }
+
         }
+        // TODO: cleanup
+        // if (!empty($req->id)) {
+        //     if (is_numeric($req->id)) {
+        //         $ProductID = intval($req->id);
+        //         $resp = $this->getProductByID($ProductID);
+        //     } else {
+        //         $resp = $this->getProductByExternalKey($req->id);
+        //     }
+        // } else {
+        // }
     }
 
     public function post (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT'))) {
+            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+                !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
         $resp = $this->createProduct($req->data);
-        // $this->_getOrSetCachedState('changed:product', true);
     }
 
     public function put (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
+            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+                !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $ProductID = intval($req->get['params']);
+            $ProductID = intval($req->id);
             $resp = $this->updateProduct($ProductID, $req->data);
-            // $this->_getOrSetCachedState('changed:product', true);
         }
     }
 
     public function delete (&$resp, $req) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
+            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+                !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
             $resp['error'] = "AccessDenied";
             return;
         }

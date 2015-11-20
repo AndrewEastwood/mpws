@@ -182,9 +182,9 @@ class email {
             }
             return;
         }
-        if (!empty($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $EmailID = intval($req->get['params']);
+        if (!empty($req->id)) {
+            if (is_numeric($req->id)) {
+                $EmailID = intval($req->id);
                 $resp = $this->getEmailByID($EmailID);
             }
         } else {
@@ -205,10 +205,10 @@ class email {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $EmailID = intval($req->get['params']);
+            $EmailID = intval($req->id);
             $resp = $this->_updateEmailByID($EmailID, $req->data);
         }
     }

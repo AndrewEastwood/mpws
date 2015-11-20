@@ -143,6 +143,8 @@ define("plugins/shop/toolbox/nls/ua_uk/translation", {
     popup_product_error_atField_Description: 'Помилка в полі Опис',
     popup_product_error_atField_Status: 'Помилка в полі Статус',
     popup_product_error_StatusIsNotExists: 'Виберіть статус товару',
+    popup_product_error_atField_Synopsis: 'Помилка в полі короткого опису',
+    popup_product_error_SynopsisLengthIsGreaterThan_350: 'Довжина перевищує 350 символів',
     popup_product_button_Close: "Назад",
     popup_product_button_Save: "Зберегти",
     // Product list

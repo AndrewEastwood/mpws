@@ -618,8 +618,8 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            if (isset($req->get['params']) && is_numeric($req->get['params'])) {
-                $settingID = intval($req->get['params']);
+            if (isset($req->id) && is_numeric($req->id)) {
+                $settingID = intval($req->id);
                 $resp = $this->createOrUpdateSetting($typeObj->type, $req->data, $settingID);
             } else {
                 $resp['error'] = "WrongSettingsID";
@@ -641,19 +641,19 @@ class settings {
         if ($typeObj->error) {
             $resp['error'] = "WrongSettingsType";
         } else {
-            if (isset($req->get['params']) && is_numeric($req->get['params'])) {
-                $settingID = intval($req->get['params']);
+            if (isset($req->id) && is_numeric($req->id)) {
+                $settingID = intval($req->id);
                 $resp = $this->removeSetting($typeObj->type, $settingID);
             } else {
                 $resp['error'] = "WrongSettingsID";
             }
         }
-        // if (empty($req->get['id'])) {
+        // if (empty($req->id)) {
         //     $resp['error'] = 'MissedParameter_id';
         // } elseif (empty($req->get['type'])) {
         //     $resp['error'] = 'MissedParameter_type';
         // } else {
-        //     $settingID = intval($req->get['id']);
+        //     $settingID = intval($req->id);
         //     $resp = $this->remove($req->get['type'], $settingID);
         // }
     }

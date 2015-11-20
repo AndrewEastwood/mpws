@@ -8,6 +8,19 @@ use RecursiveArrayIterator;
 
 class utils {
 
+    static function getIfIssetOrDefault (array $arr, $key, $defaultValue) {
+        if (isset($arr[$key])) {
+            return $arr[$key];
+        }
+        return $defaultValue;
+    }
+    static function getIfNoEmptyOrDefault (array $arr, $key, $defaultValue) {
+        if (!empty($arr[$key])) {
+            return $arr[$key];
+        }
+        return $defaultValue;
+    }
+
     /**
      * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
      * keys to arrays rather than overwriting the value in the first array with the duplicate

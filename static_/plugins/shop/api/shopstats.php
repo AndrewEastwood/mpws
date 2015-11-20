@@ -45,12 +45,12 @@ class shopstats {
         };
         $sources['products_list_popular'] = function () use ($self) {
             $res = array();
-            $res['items'] = API::getAPI('shop:products')->getProducts_TopPopular();
+            $res['items'] = API::getAPI('shop:products')->getProductsArray_TopPopular();
             return $res;
         };
         $sources['products_list_non_popular'] = function () use ($self) {
             $res = array();
-            $res['items'] = API::getAPI('shop:products')->getProducts_TopNonPopular();
+            $res['items'] = API::getAPI('shop:products')->getProductsArray_TopNonPopular();
             return $res;
         };
         $sources['products_intensity_last_month'] = function () use ($self) {

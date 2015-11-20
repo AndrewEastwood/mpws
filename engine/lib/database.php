@@ -584,7 +584,9 @@ class database {
 
         if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
             $parseFn = $callbacks['parse'];
-            $items = $parseFn($items) ?: array();
+            foreach ($items as $key => $item) {
+                $items[$key] = $parseFn($item, $key, $items) ?: array();
+            }
         }
 
         $rez = array();

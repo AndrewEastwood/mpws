@@ -127,6 +127,8 @@ class uploadHandler
             'image_versions' => array(
                 // The empty image version key defines options for the original image:
                 '' => array(
+                    'max_width' => 1920,
+                    'max_height' => 1080,
                     // Automatically rotate images based on EXIF meta data:
                     'auto_orient' => true
                 ),
@@ -1395,20 +1397,24 @@ class uploadHandler
             $urls = array($urls);
         }
         foreach ($urls as $fileUrl) {
-            $pInfo = pathinfo($fileUrl);
+            $file = null;
             $imgExtension = 'jpg';
-            if (isset($pInfo['extension'])) {
-                $imgExtension = $pInfo['extension'];
-            }
-            $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($imgExtension);
-            $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
             try {
+                if (!$this->checkAvailableMemory($fileUrl)) {
+                    throw new Exception("Image is too big " . $fileUrl, 1);
+                }
+                $pInfo = pathinfo($fileUrl);
+                if (isset($pInfo['extension'])) {
+                    $imgExtension = $pInfo['extension'];
+                }
+                $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($imgExtension);
+                $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
                 $content = @file_get_contents($fileUrl);
                 if (empty($content)) {
-                    continue;
+                    throw new Exception("Cannot read file " . $fileUrl, 1);
                 }
                 $size = file_put_contents($tmpFile, $content);
-                $files[] = $this->handle_file_upload(
+                $file = $this->handle_file_upload(
                     $tmpFile,
                     $this->options['use_unique_hash_for_names'] ? $fileName : $pInfo['basename'],
                     $size,
@@ -1419,11 +1425,51 @@ class uploadHandler
                     true
                 );
             } catch (Exception $e) {
-                
+                error_log($e->getMessage());
+                $file = (object)array('error' => $e->getMessage());
             }
+            $files[] = $file;
         }
         $response = array('web' => $files);
         return $this->generate_response($response, $print_response);
+    }
+
+    public function checkAvailableMemory ($imgUrl) {
+        $imageInfo = getimagesize($imgUrl);
+        $ch = 0;
+        if (isset($imageInfo['channels'])) {
+            $ch = $imageInfo['channels'];
+        }
+
+        $MB = Pow(1024,2);   // number of bytes in 1M
+        $K64 = Pow(2,16);    // number of bytes in 64K
+        $TWEAKFACTOR = 1.8;   // Or whatever works for you
+        $memoryNeeded = round( ( $imageInfo[0] * $imageInfo[1]
+                                                * $imageInfo['bits']
+                                                * $ch / 8
+                                  + $K64
+                                ) * $TWEAKFACTOR
+                             );
+        $memoryHave = memory_get_usage();
+        $memoryLimitMB = (integer) ini_get('memory_limit');
+        $memoryLimit = $memoryLimitMB * $MB;
+
+        // var_dump('Memory needed MB = ' . $memoryNeeded / $MB);
+        // var_dump('Memory used MB = ' . $memoryHave / $MB);
+        // var_dump('memoryLimitMB = ' . $memoryLimitMB);
+
+        if ( function_exists('memory_get_usage') 
+             && $memoryHave + $memoryNeeded > $memoryLimit 
+           ) {
+           // $newLimit = $memoryLimitMB + ceil( ( $memoryHave 
+           //                                    + $memoryNeeded 
+           //                                    - $memoryLimit 
+           //                                    ) / $MB 
+           //                                  );
+           return false;// 'You dont have enough memory';
+        }
+
+        return true;
     }
 
 }

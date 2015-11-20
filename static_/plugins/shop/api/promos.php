@@ -184,10 +184,10 @@ class promos {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp = $this->getPromoCodes_List($req->get);
         } else {
-            $promoID = intval($req->get['params']);
+            $promoID = intval($req->id);
             $resp = $this->getPromoByID($promoID);
         }
     }
@@ -207,10 +207,10 @@ class promos {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $promoID = intval($req->get['params']);
+            $promoID = intval($req->id);
             $resp = $this->updatePromo($promoID, $req->data);
         }
     }
@@ -221,10 +221,10 @@ class promos {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $promoID = intval($req->get['params']);
+            $promoID = intval($req->id);
             $resp = $this->expirePromo($promoID);
         }
     }

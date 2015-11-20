@@ -763,18 +763,18 @@ class orders {
 
     public function get (&$resp, $req) {
         global $app;
-        if (isset($req->get['params'])) {
-            if (is_int($req->get['params']) && $req->get['params'] !== "temp") {
+        if (isset($req->id)) {
+            if (is_int($req->id) && $req->id !== "temp") {
                 if (API::getAPI('system:auth')->ifYouCan('Admin'))
-                    $resp = $this->getOrderByID($req->get['params']);
+                    $resp = $this->getOrderByID($req->id);
                 else
                     $resp['error'] = 'AccessDenied';
                 return;
-            } elseif (is_string($req->get['params']) && $req->get['params'] === "activeuser") {
+            } elseif (is_string($req->id) && $req->id === "activeuser") {
                 $resp = $this->getOrders_List(); // show orders for active user only
                 return;
             } else {
-                $resp = $this->getOrderByHash($req->get['params']);
+                $resp = $this->getOrderByHash($req->id);
                 return;
             }
         } else if ($app->isToolbox()) {
@@ -800,7 +800,7 @@ class orders {
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
         // $options = array();
-        $isTemp = !isset($req->get['params']);
+        $isTemp = !isset($req->id);
 
         if (!$isTemp && $app->isToolbox()) {
             // if (API::getAPI('system:auth')->ifYouCan('Admin')) {
@@ -809,7 +809,7 @@ class orders {
             if (!API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER')) {
                 $resp["error"] = "AccessDenied";
             } else {
-                $resp = $this->updateOrder($req->get['params'], $req->data);
+                $resp = $this->updateOrder($req->id, $req->data);
             }
             // } else {
                 // $resp['error'] = 'AccessDenied';
@@ -819,7 +819,7 @@ class orders {
     }
 
     public function patch (&$resp, $req) {
-        $isTemp = !isset($req->get['params']);
+        $isTemp = !isset($req->id);
         // for temp order (site side only)
         if ($isTemp) {
             if (isset($req->data['productID'])) {
@@ -861,8 +861,8 @@ class orders {
         //     $resp['error'] = 'AccessDenied';
         //     return;
         // }
-        if (!empty($req->get['params'])) {
-            $OrderID = intval($req->get['params']);
+        if (!empty($req->id)) {
+            $OrderID = intval($req->id);
             $resp = $this->disableOrderByID($OrderID);
             return;
         }

@@ -81,7 +81,7 @@ define([
                             OriginID: that.$('#origin').val(),
                             Name: that.$('#name').val(),
                             Model: that.$('#model').val(),
-                            Price: parseFloat(that.$('#price').val().replace( /^\D+/g, ''), 10),
+                            Price: parseFloat(that.$('#price').val().replace( /^\D+/g, ''), 10) || 0,
                             Synopsis: that.$('#synopsis').val(),
                             Description: that.$('#description').val(),
                             IsPromo: that.$('#ispromo').is(':checked'),

@@ -325,7 +325,7 @@ disabled look for disabled choices in the results dropdown
   display: none; }
 
 .select2-more-results.select2-active {
-  background: #f4f4f4 url("../../../images/plugins/select2/select2-spinner.gif") no-repeat 100%; }
+  background: #f4f4f4 ~"url(@{imgPath}select2-spinner.gif)" no-repeat 100%; }
 
 .select2-more-results {
   background: #f4f4f4;
@@ -398,7 +398,7 @@ disabled look for disabled choices in the results dropdown
   background: transparent !important; }
 
 .select2-container-multi .select2-choices .select2-search-field input.select2-active {
-  background: white url("../../../images/plugins/select2/select2-spinner.gif") no-repeat 100% !important; }
+  background: white ~"url(@{imgPath}select2-spinner.gif)" no-repeat 100% !important; }
 
 .select2-default {
   color: #999 !important; }
@@ -504,7 +504,7 @@ disabled look for disabled choices in the results dropdown
 /* Retina-ize icons */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi) {
   .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
-    background-image: url("../../../images/plugins/select2/select2x2.png") !important;
+    background-image: ~"url(@{imgPath}select2x2.png)" !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important; }
 

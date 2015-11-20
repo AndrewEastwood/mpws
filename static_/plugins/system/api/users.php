@@ -463,16 +463,16 @@ class users {
             API::getAPI('system:auth')->ifYouCan('AddUsers') ||
             API::getAPI('system:auth')->ifYouCan('Maintain');
         // var_dump($req);
-        if (empty($req->get['params']) && $allAccess) {
+        if (empty($req->id) && $allAccess) {
             $resp = $this->getUsers_List($req->get);
             return;
         } else {
-            if (is_numeric($req->get['params']) && $allAccess) {
-                $UserID = intval($req->get['params']);
+            if (is_numeric($req->id) && $allAccess) {
+                $UserID = intval($req->id);
                 $resp = $this->getUserByID($UserID);
                 return;
-            } elseif (is_string($req->get['params'])) {
-                $resp = $this->getUserByValidationString($req->get['params']);
+            } elseif (is_string($req->id)) {
+                $resp = $this->getUserByValidationString($req->id);
                 return;
             } elseif (!empty($req->get['activate'])) {
                 $ValidationString = $req->get['activate'];
@@ -498,9 +498,9 @@ class users {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $UserID = intval($req->get['params']);
+        if (!empty($req->id)) {
+            if (is_numeric($req->id)) {
+                $UserID = intval($req->id);
                 $resp = $this->updateUser($UserID, $req->data);
                 return;
             } else {
@@ -516,9 +516,9 @@ class users {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $UserID = intval($req->get['params']);
+        if (!empty($req->id)) {
+            if (is_numeric($req->id)) {
+                $UserID = intval($req->id);
                 $resp = $this->updateUser($UserID, $req->data, true);
                 return;
             } else {
@@ -534,9 +534,8 @@ class users {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->get['id'])) {
-            $UserID = intval($req->get['id']);
-            $resp = $this->disableUserByID($UserID);
+        if (!empty($req->id)) {
+            $resp = $this->disableUserByID($req->id);
             return;
         }
         $resp['error'] = 'UnknownAction';

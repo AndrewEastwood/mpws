@@ -5,6 +5,7 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\utils as Utils;
 use \static_\plugins\shop\api\shoputils as ShopUtils;
 use Exception;
 use ArrayObject;
@@ -234,6 +235,56 @@ class dbquery {
 
         // var_dump($config['condition']);
         return $config;
+    }
+
+    public static function shopGetProductList_NewItems () {
+        $options['sort'] = 'shop_products.DateUpdated';
+        $options['order'] = 'DESC';
+        $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
+        return self::shopGetProductList($options);
+    }
+
+    public static function fetchNewProducts_List () {
+        
+    }
+
+    public static function fetchOnSaleProducts_List (array $options = array()) {
+        global $app;
+        // $options['sort'] = 'shop_products.DateUpdated';
+        // $options['order'] = 'DESC';
+        // $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
+
+        $userListOptions = Utils::getIfIssetOrDefault($options, 'list', array());
+        $callbacks = Utils::getIfIssetOrDefault($options, 'callbacks', array());
+        $listOptions = array();
+
+        // user-available params
+        $listOptions['sort'] = Utils::getIfIssetOrDefault($userListOptions, 'sort', 'shop_products.DateUpdated');
+        $listOptions['order'] = Utils::getIfIssetOrDefault($userListOptions, 'order', 'DESC');
+
+        // hardcoded params
+        $listOptions['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
+        $listOptions['_fshop_products.Price'] = 'PrevPrice:>';
+        $listOptions['_fshop_products.Status'] = 'DISCOUNT';
+
+        $config = self::shopGetProductList($listOptions);
+        if (empty($config))
+            return null;
+
+        // var_dump($config);
+        
+        // $callbacks = array(
+        //     "parse" => function ($items) use($self) {
+        //         $_items = array();
+        //         foreach ($items as $key => $orderRawItem) {
+        //             $_items[] = $self->getProductByID($orderRawItem['ID']);
+        //         }
+        //         return $_items;
+        //     }
+        // );
+        $dataList = $app->getDB()->getDataList($config, $listOptions, $callbacks);
+
+        return $dataList;
     }
 
     public static function updateProductSearchTextByID ($ProductID) {

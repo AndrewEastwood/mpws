@@ -762,6 +762,35 @@ class dbquery {
         return $config;
     }
 
+    public static function getSubscriberByID ($SubscriberID = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "mpws_subscribers",
+            "fields" => array("*"),
+            "limit" => 1,
+            "condition" => array(),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+        if (isset($SubscriberID) && $SubscriberID != null) {
+            $config['condition']['ID'] = $app->getDB()->createCondition($SubscriberID);
+        }
+        return $config;
+    }
+
+    public static function getSubscribersList (array $options = array()) {
+        global $app;
+        $config = self::getSubscriberByID();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        if (empty($options['removed'])) {
+            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
+        }
+        return $config;
+    }
+
 
 }
 

@@ -335,14 +335,14 @@ class categories {
     public function get (&$resp, $req) {
         if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
-        } else if (empty($req->get['params'])) {
+        } else if (empty($req->id)) {
             $resp = $this->getCategories_List($req->get);
         } else {
-            if (is_numeric($req->get['params'])) {
-                $CategoryID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $CategoryID = intval($req->id);
                 $resp = $this->getCategoryByID($CategoryID);
             } else {
-                $resp = $this->getCategoryByExternalKey($req->get['params']);
+                $resp = $this->getCategoryByExternalKey($req->id);
             }
         }
     }
@@ -363,10 +363,10 @@ class categories {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CategoryID = intval($req->get['params']);
+            $CategoryID = intval($req->id);
             $resp = $this->updateCategory($CategoryID, $req->data);
             // $this->_getOrSetCachedState('changed:category', true);
         }
@@ -378,10 +378,10 @@ class categories {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $CategoryID = intval($req->get['params']);
+            $CategoryID = intval($req->id);
             $resp = $this->disableCategory($CategoryID);
             // $this->_getOrSetCachedState('changed:category', true);
         }

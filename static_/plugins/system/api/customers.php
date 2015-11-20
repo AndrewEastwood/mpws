@@ -452,12 +452,12 @@ class customers {
 
     public function get (&$resp, $req) {
         // var_dump($req);
-        if (!empty($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $CustomerID = intval($req->get['params']);
+        if (!empty($req->id)) {
+            if (is_numeric($req->id)) {
+                $CustomerID = intval($req->id);
                 $resp = $this->getCustomerByID($CustomerID);
             } else {
-                $resp = $this->getCustomerByName($req->get['params']);
+                $resp = $this->getCustomerByName($req->id);
             }
         } else {
             $resp = $this->getCustomers_List($req->get);
@@ -497,11 +497,11 @@ class customers {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            if (is_numeric($req->get['params'])) {
-                $CustomerID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $CustomerID = intval($req->id);
                 $resp = $this->updateCustomer($CustomerID, $req->data);
             } else {
                 $resp['error'] = 'WrongParameter_id';
@@ -517,11 +517,11 @@ class customers {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            if (is_numeric($req->get['params'])) {
-                $CustomerID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $CustomerID = intval($req->id);
                 $resp = $this->updateCustomer($CustomerID, $req->data, true);
             } else {
                 $resp['error'] = 'WrongParameter_id';
@@ -536,11 +536,11 @@ class customers {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            if (is_numeric($req->get['params'])) {
-                $CustomerID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $CustomerID = intval($req->id);
                 $resp = $this->archiveCustomer($CustomerID);
             } else {
                 $resp['error'] = 'WrongParameter_id';
@@ -549,12 +549,12 @@ class customers {
     }
 
 /*    public function get (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            if (is_numeric($req->get['id'])) {
-                $ProductID = intval($req->get['id']);
+        if (!empty($req->id)) {
+            if (is_numeric($req->id)) {
+                $ProductID = intval($req->id);
                 $resp = $this->getProductByID($ProductID);
             } else {
-                $resp = $this->getProductByExternalKey($req->get['id']);
+                $resp = $this->getProductByExternalKey($req->id);
             }
         } else {
             if (isset($req->get['type'])) {

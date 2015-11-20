@@ -1,8 +1,11 @@
 <?php
 date_default_timezone_set('UTC');
 define('MPWS_ROOT', dirname(__FILE__) . '/');
-ini_set('memory_limit','512M');
+define('MPWS_MEMORY', 128);
+ini_set('memory_limit', MPWS_MEMORY . 'M');
 ini_set('upload_max_filesize','5M');
+ini_set('max_execution_time','1000');
+// ini_set('always_populate_raw_post_data', -1);
 
 spl_autoload_register(function ($className) {
     $className = ltrim($className, '\\');

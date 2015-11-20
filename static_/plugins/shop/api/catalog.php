@@ -238,7 +238,7 @@ class catalog {
         $products = array();
         if (!empty($dataProducts)) {
             foreach ($dataProducts as $val) {
-                $products[] = API::getAPI('shop:products')->getProductByID($val['ID'], false, false);
+                $products[] = API::getAPI('shop:products')->getProductByID($val['ID']);
             }
         }
         // var_dump($currentProductCount);
@@ -246,7 +246,7 @@ class catalog {
         // $productsInfo = array();
         // if (!empty($dataCategoryInfo))
         //     foreach ($dataCategoryInfo as $val)
-        //         $productsInfo[] = API::getAPI('shop:products')->getProductByID($val['ID'], false, false);
+        //         $productsInfo[] = API::getAPI('shop:products')->getProductByID($val['ID']);
 
         // adjust brands, categories and features
         $brands = array();
@@ -417,12 +417,12 @@ class catalog {
     }
 
     public function get (&$resp, $req) {
-        if (isset($req->get['params'])) {
-            if (is_numeric($req->get['params'])) {
-                $CategoryID = intval($req->get['params']);
+        if (isset($req->id)) {
+            if (is_numeric($req->id)) {
+                $CategoryID = intval($req->id);
                 $resp = $this->getCatalogBrowse($CategoryID);
             } else {
-                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['params']);
+                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
                 if (isset($category['ID'])) {
                     $resp = $this->getCatalogBrowse($category['ID']);
                 } else {
@@ -433,12 +433,12 @@ class catalog {
             $resp['error'] = "WrongSettingsID";
         }
 
-        // if (isset($req->get['id'])) {
-        //     if (is_numeric($req->get['id'])) {
-        //         $CategoryID = intval($req->get['id']);
+        // if (isset($req->id)) {
+        //     if (is_numeric($req->id)) {
+        //         $CategoryID = intval($req->id);
         //         $resp = $this->getCatalogBrowse($CategoryID);
         //     } else {
-        //         $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['id']);
+        //         $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
         //         if (isset($category['ID'])) {
         //             $resp = $this->getCatalogBrowse($category['ID']);
         //         } else {

@@ -220,6 +220,9 @@ class feeds {
         $errorCount = 0;
         $total = count($namedDataArray);
         $processed = 0;
+        $imgNewCount = 0;
+        $imgErrorCount = 0;
+        $imgSuccessCount = 0;
 
         $keysToEncode = array('Name', 'Model', 'CategoryName', 'OriginName',
             'Description', 'Features', 'TAGS', 'WARRANTY');
@@ -330,6 +333,7 @@ class feeds {
                 $productItem['Features'] = $features;
             }
 
+            $currentImportImageResult = array();
             if (!empty($imagesUrls)) {
                 // $currentImportResult[] = "[INFO] " . "downloading images started";
                 //-- echo "[INFO] " . "downloading images" . PHP_EOL;
@@ -344,7 +348,8 @@ class feeds {
                     'print_response' => false,
                     'use_unique_hash_for_names' => true,
                     'correct_image_extensions' => true,
-                    'mkdir_mode' => 0777
+                    'mkdir_mode' => 0777,
+                    'memory_limit' => MPWS_MEMORY
                 );
                 $upload_handler = new JqUploadLib($options, false);
                 foreach ($imagesUrls as $imgUrl) {
@@ -356,25 +361,37 @@ class feeds {
                     // var_dump($urlInfo['host'], $customer['HostName']);
                     if (!empty($urlInfo['host'])) {
                         if ($urlInfo['host'] !== $customer['HostName']) {
+                            $imgNewCount++;
                             // $imagesToDownload[] = $imgUrl;
-                            $currentImportResult[] = "[INFO] " . "importing image: " . $imgUrl;
+                            $currentImportImageResult[] = $imgUrl;
                             //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
-                            set_time_limit(999);
-                            echo '# ... importing image ' . $imgUrl;
+                            set_time_limit(30);
+                            // echo '# ... importing image ' . $imgUrl;
                             $res = null;
                             try {
                                 $res = $upload_handler->importFromUrl($imgUrl, false);
                             } catch (Exception $e) {
                                 $errors[] = $e->getMessage();
                                 echo " [ERROR]";
+                                $currentImportImageResult[] = "[ERROR] " . $e->getMessage();
                             }
                             if (!empty($res['web'])) {
                                 foreach ($res['web'] as $impageUploadInfo) {
-                                    $images[] = $impageUploadInfo->name;
+                                    if ($impageUploadInfo->error) {
+                                        echo " [ERROR]";
+                                        $currentImportImageResult[] = "[ERROR] " . $impageUploadInfo->error;
+                                        $imgErrorCount++;
+                                    } else {
+                                        $images[] = $impageUploadInfo->name;
+                                        echo " [OK]";
+                                        $currentImportImageResult[] = "[OK]";
+                                        $imgSuccessCount++;
+                                    }
                                 }
-                                echo " [OK]";
                             } else {
                                 echo " [ERROR]";
+                                $currentImportImageResult[] = "[ERROR]";
+                                $imgErrorCount++;
                             }
                             echo PHP_EOL;
                         } else {
@@ -407,6 +424,7 @@ class feeds {
             // $currentImportResult[] = "[INFO] " . "saving product";
             // echo "[INFO] " . "saving product" . PHP_EOL;
             $currentImportResult['product'] = $productItem;
+            $currentImportResult['images'] = $currentImportImageResult;
             $res = API::getAPI('shop:products')->updateOrInsertProduct($productItem);
             $currentImportResult[] = $res['ExternalKey'];
             // var_dump("***************** result *****************");
@@ -467,7 +485,10 @@ class feeds {
             'ADDED' => $addedCount,
             'UPDATED' => $updatedCount,
             'ERROR_COUNT' => $errorCount,
-            'STATUS' => empty($errors) ? 'OK' : 'NO'
+            'STATUS' => empty($errors) ? 'OK' : 'NO',
+            'IMGERROR' => $imgErrorCount,
+            'IMGSUCCESS' => $imgSuccessCount,
+            'NEWIMAGES' => $imgNewCount
             // 'errors' => $errors,
             // 'I' => implode(';', $results)
         );

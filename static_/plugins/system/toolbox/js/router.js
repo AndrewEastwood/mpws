@@ -156,7 +156,7 @@ define([
         },
         widgetCustomerSwitcher: function () {
             var customerSwitcherView = null;
-            if (Auth.userData.p_CanMaintain) {
+            if (Auth.canDo('CanMaintain')) {
                 customerSwitcherView = new ViewCustomerSwitcher();
                 customerSwitcherView.render();
             }

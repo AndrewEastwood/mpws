@@ -173,10 +173,10 @@ class delivery {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp = $this->getDeliveries_List($req->get);
         } else {
-            $agencyID = intval($req->get['params']);
+            $agencyID = intval($req->id);
             $resp = $this->getDeliveryAgencyByID($agencyID);
         }
     }
@@ -211,8 +211,8 @@ class delivery {
             return;
         }
         // var_dump($req);
-        if (isset($req->get['params']) && is_numeric($req->get['params'])) {
-            $agencyID = intval($req->get['params']);
+        if (isset($req->id) && is_numeric($req->id)) {
+            $agencyID = intval($req->id);
             $resp = $this->deleteDeliveryAgency($agencyID);
         } else {
             $resp['error'] = 'ID_IsMissing';

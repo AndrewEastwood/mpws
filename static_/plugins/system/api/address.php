@@ -172,7 +172,7 @@ class address {
     public function get () {}
 
     public function put (&$resp, $req) {
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'WrongIDParameter';
         } else {
             $UserID = null;
@@ -187,8 +187,8 @@ class address {
                 $resp['error'] = "AccessDenied";
                 return;
             }
-            if (is_numeric($req->get['params'])) {
-                $addressID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $addressID = intval($req->id);
                 $resp = $this->_updateAddressByID($addressID, $req->data);
             } else {
                 $resp['error'] = 'WrongIDParameter';
@@ -197,16 +197,16 @@ class address {
 
 
 
-        // if (!empty($req->get['id'])) {
-        //     $AddressID = intval($req->get['id']);
+        // if (!empty($req->id)) {
+        //     $AddressID = intval($req->id);
         //     $resp = $this->_updateAddressByID($AddressID, $req->data);
         //     return;
         // }
         // $resp['error'] = 'WrongIDParameter';
     }
     // public function patch (&$resp, $req) {
-    //     if (!empty($req->get['id'])) {
-    //         $AddressID = intval($req->get['id']);
+    //     if (!empty($req->id)) {
+    //         $AddressID = intval($req->id);
     //         $resp = $this->_updateAddressByID($AddressID, $req->data);
     //         return;
     //     }
@@ -235,11 +235,11 @@ class address {
     }
 
     public function delete (&$resp, $req) {
-        if (empty($req->get['params'])) {
+        if (empty($req->id)) {
             $resp['error'] = 'WrongIDParameter';
         } else {
-            if (is_numeric($req->get['params'])) {
-                $addressID = intval($req->get['params']);
+            if (is_numeric($req->id)) {
+                $addressID = intval($req->id);
                 $address = $this->getAddressByID($addressID);
                 if (empty($address)) {
                     $resp['error'] = 'WrongAddressID';
@@ -266,8 +266,8 @@ class address {
 
 
 
-        // if (!empty($req->get['id'])) {
-        //     $AddressID = intval($req->get['id']);
+        // if (!empty($req->id)) {
+        //     $AddressID = intval($req->id);
         //     $resp = $this->disableAddressByID($AddressID);
         //     return;
         // }

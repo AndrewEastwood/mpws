@@ -81,75 +81,41 @@ define([
         elements: {},
 
         views: {},
-        // route: function (route, name, callback) {
-        //     // debugger
-        //     var router = this;
-        //         if (!callback) callback = this[name];
-
-        //     var f = function() {
-        //         // debugger
-        //         if (Auth.verifyStatus() && name === 'signin') {
-        //             Backbone.history.navigate(Cache.get('location') || '!/', true);
-        //             return false;
-        //         }
-
-        //         // redirect user on signin page
-        //         if (!Auth.verifyStatus() && !/signin|signout/.test(name)) {
-        //             Backbone.history.navigate('!/signin', true);
-        //             return false;
-        //         }
-
-        //         callback && callback.apply(router, arguments);
-        //     };
-        //     return Backbone.Router.prototype.route.call(this, route, name, f);
-        // },
 
         signin: function () {
-            // if (Auth.verifyStatus()) {
-            //     Backbone.history.navigate(Cache.get('location') || '!/', true);
-            //     return;
-            // }
             this.toggleMenu(false);
             this.toggleWidgets(false);
             var signin = this.plugins.system.signinForm();
             $('section.mpws-js-main-section').html(signin.render().$el);
         },
 
-        // signout: function () {
-        //     // if (!Auth.verifyStatus()) {
-        //     //     Backbone.history.navigate('!/signin', true);
-        //     //     return;
-        //     // }
-        //     this.toggleMenu(false);
-        //     this.toggleWidgets(false);
-        //     $('section.mpws-js-main-section').empty();
-        //     // logout and then route to signin
-        //     Auth.signout(function () {
-        //         Backbone.history.navigate('!/signin', true);
-        //     });
-        // },
+        getCurrentRouteName: function () {
+            return this.routes[Backbone.history.getFragment()];
+        },
 
         initialize: function () {
 
             var that = this,
                 routesWhenUnauthorizedOnly = ['signin'];
 
+            Auth.on('signin:fail', function () {
+                toastr.error('Помилка авторизації');
+            });
+
             Auth.on('registered', function () {
-                // debugger
                 that.toggleMenu(true);
                 that.toggleWidgets(true);
-            });
 
+            });
 
             Auth.on('guest', function () {
-                // debugger
+                var currRouteName = that.getCurrentRouteName();
                 that.toggleMenu(false);
                 that.toggleWidgets(false);
-                Backbone.history.navigate('!/signin', true);
-            });
-
-            Auth.on('signin:fail', function () {
-                toastr.error('Помилка');
+                if (_(routesWhenUnauthorizedOnly).indexOf(currRouteName) === -1) {
+                    Backbone.history.navigate('!/signin', true);
+                    return;
+                }
             });
 
             this.on('app:ready', function () {
@@ -165,51 +131,43 @@ define([
                 brandTitle[blinkingCharPos].addClass('anim-neonblink');
                 brandTitle[blinkingCharPos2].addClass('anim-neonblink2');
                 $('head title').text(APP.config.TITLE);
-                $('a.mpjs-opensite').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_HOMEPAGE);
+                $('a.mpjs-opensite')
+                    .attr('href', APP.config.URL_PUBLIC_HOMEPAGE)
+                    .html(APP.config.URL_PUBLIC_HOMEPAGE);
                 Auth.getStatus();
             });
 
             this.on('route', function (routeFn, params) {
-
-                // debugger
-                // when we're not authorized and route is no allowed then we go to signin route
-                if (!Auth.verifyStatus() && _(routesWhenUnauthorizedOnly).indexOf(routeFn) === -1) {
-                    Backbone.history.navigate('!/signin', true);
-                    return;
-                }
-
-                // when we're authorized and route is for non-authorized state then we go to homepage
-                if (Auth.verifyStatus() && _(routesWhenUnauthorizedOnly).indexOf(routeFn) !== -1) {
-                    Backbone.history.navigate('!/', true);
-                    return;
-                }
-
-                if (Auth.verifyStatus()) {
-                    that.toggleMenu(true);
-                    that.toggleWidgets(true);
-                    // if (/signin|signout/.test(routeFn)) {
-                    //     return;
-                    // }
-                    var contentItems = [];
-                    // debugger
-                    _(that.plugins).each(function (plg) {
-                        if (_.isFunction(plg[routeFn])) {
-                            var view = plg[routeFn].apply(plg, params);
-                            if (view && view.render) {
-                                contentItems.push(view.render().$el);
+                Auth.verifyStatusAndThen()
+                    .ifRegistered(function () {
+                        if (_(routesWhenUnauthorizedOnly).indexOf(routeFn) > -1) {
+                            Backbone.history.navigate('!/', true);
+                            return;
+                        }
+                        var contentItems = [];
+                        _(that.plugins).each(function (plg) {
+                            if (_.isFunction(plg[routeFn])) {
+                                var view = plg[routeFn].apply(plg, params);
+                                if (view && view.render) {
+                                    contentItems.push(view.render().$el);
+                                }
                             }
+                        });
+                        if (contentItems.length) {
+                            $('section.mpws-js-main-section').empty().append(contentItems);
+                        } else {
+                            Backbone.history.navigate('!/', true);
+                        }
+                    })
+                    .ifNotRegistered(function () {
+                        // debugger
+                        that.toggleMenu(false);
+                        that.toggleWidgets(false);
+                        if (_(routesWhenUnauthorizedOnly).indexOf(routeFn) === -1) {
+                            Backbone.history.navigate('!/signin', true);
+                            return;
                         }
                     });
-                    if (contentItems.length) {
-                        $('section.mpws-js-main-section').empty().append(contentItems);
-                    } else {
-                        Backbone.history.navigate('!/', true);
-                    }
-                    // Cache.set('location', Backbone.history.getFragment());
-                } else {
-                    that.toggleMenu(false);
-                    that.toggleWidgets(false);
-                }
             });
 
             // Setting up defaults
@@ -231,10 +189,6 @@ define([
                 FLD_PH_URL: 'вставте адресу зображення',
                 DLG_TITLE: 'Вставка зображення'
             });
-
-            // Auth.on('registered', function () {
-            //     window.location.reload();
-            // });
         },
         // routes
         home: function () {

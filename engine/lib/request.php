@@ -18,11 +18,42 @@ class request {
     }
 
     static function getRequestData () {
-        return (object) array(
+        $req = array(
             "get" => $_GET,
             "post" => $_POST,
-            "data" => json_decode(self::$PHP_INPUT, true)
+            "data" => json_decode(self::$PHP_INPUT, true),
+            "id" => self::getRequestedID(),
+            "externalKey" => self::getRequestedExternalKey()
         );
+        return (object) $req;
+    }
+
+    static function getRequestedExternalKey () {
+        $req = $_GET;
+        if (isset($req->get['id']) && !is_numeric($req->get['id'])) {
+            return $req->get['id'];
+        }
+        return null;
+    }
+
+    static function getRequestedID () {
+        $req = $_GET;
+        if (isset($req->get['id']) && is_numeric($req->get['id'])) {
+            return intval($req->get['id']);
+        }
+        return null;
+    }
+
+    static function hasRequestedID () {
+        return is_numeric(self::getRequestedID());
+    }
+
+    static function hasRequestedExternalKey () {
+        return !is_numeric(self::getRequestedExternalKey());
+    }
+
+    static function noRequestedItem () {
+        return !isset($_GET['id']);
     }
 
     /* get values */
