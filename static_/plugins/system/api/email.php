@@ -6,7 +6,7 @@ use \engine\lib\validate as Validate;
 use \engine\lib\path as Path;
 use Exception;
 
-class email {
+class email extends API {
 
 
     private function __adjustEmail (&$address) {
@@ -21,7 +21,7 @@ class email {
     public function getEmailByID ($EmailID) {
         global $app;
         $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
-        $email = $app->getDB()->query(dbquery::getEmailByID($EmailID), $useCustomerDataOnly);
+        $email = $app->getDB()->query(data::getEmailByID($EmailID), $useCustomerDataOnly);
         if (!is_null($email))
             $email = $this->__adjustEmail($email);
         return $email;
@@ -29,7 +29,7 @@ class email {
 
     public function getAvailableEmails_List ($options = array()) {
         global $app;
-        $config = dbquery::getEmailList($options);
+        $config = data::getEmailList($options);
         if (empty($config))
             return null;
         $self = $this;
@@ -42,13 +42,13 @@ class email {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getAvailableEmailsSimple_List ($options = array()) {
         global $app;
-        $config = dbquery::getEmailListSimple($options);
+        $config = data::getEmailListSimple($options);
         if (empty($config)) {
             return array();
         }
@@ -81,7 +81,7 @@ class email {
                 $data["Name"] = $validatedValues['Name'];
                 $data["Params"] = $validatedValues['Params'];
 
-                $configCreateEmail = dbquery::createEmail($data);
+                $configCreateEmail = data::createEmail($data);
 
                 $EmaiID = $app->getDB()->query($configCreateEmail) ?: null;
 
@@ -121,7 +121,7 @@ class email {
 
                 $data = $validatedDataObj['values'];
 
-                $configUpdateEmail = dbquery::updateEmail($EmailID, $data);
+                $configUpdateEmail = data::updateEmail($EmailID, $data);
 
                 $app->getDB()->query($configUpdateEmail);
 
@@ -152,7 +152,7 @@ class email {
 
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::archiveEmail($EmailID);
+            $config = data::archiveEmail($EmailID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

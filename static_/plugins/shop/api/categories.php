@@ -11,7 +11,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class categories {
+class categories extends API {
 
     private $_statuses = array('ACTIVE', 'REMOVED');
 
@@ -63,7 +63,7 @@ class categories {
         global $app;
         if (empty($categoryID) || !is_numeric($categoryID))
             return null;
-        $config = dbquery::shopGetCategoryItem($categoryID);
+        $config = data::shopGetCategoryItem($categoryID);
         $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
@@ -72,7 +72,7 @@ class categories {
 
     public function getCategoryByName ($categoryName) {
         global $app;
-        $config = dbquery::shopGetCategoryItem();
+        $config = data::shopGetCategoryItem();
         $config['condition']['Name'] = $app->getDB()->createCondition($categoryName);
         $category = $app->getDB()->query($config);
         if (empty($category))
@@ -82,7 +82,7 @@ class categories {
 
     public function getCategoryByExternalKey ($externalKey) {
         global $app;
-        $config = dbquery::shopGetCategoryItem();
+        $config = data::shopGetCategoryItem();
         $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
         $category = $app->getDB()->query($config);
         if (empty($category))
@@ -92,7 +92,7 @@ class categories {
 
     public function getCategories_List (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetCategoryList($options);
+        $config = data::shopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -102,7 +102,7 @@ class categories {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -146,7 +146,7 @@ class categories {
                 }
                 unset($validatedValues['file1']);
 
-                $configCreateCategory = dbquery::shopCreateCategory($validatedValues);
+                $configCreateCategory = data::shopCreateCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -229,7 +229,7 @@ class categories {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = dbquery::shopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = data::shopUpdateCategory($CategoryID, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -257,7 +257,7 @@ class categories {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::shopDeleteCategory($CategoryID);
+            $config = data::shopDeleteCategory($CategoryID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -282,7 +282,7 @@ class categories {
     public function getCategoryLocationByCategoryID ($categoryID) {
         global $app;
         // var_dump($categoryID);
-        $configLocation = dbquery::shopCategoryLocationGet($categoryID);
+        $configLocation = data::shopCategoryLocationGet($categoryID);
         $location = $app->getDB()->query($configLocation);
         foreach ($location as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
@@ -320,7 +320,7 @@ class categories {
             return $branch;
         }
 
-        $config = dbquery::shopCatalogTree($selectedCategoryID);
+        $config = data::shopCatalogTree($selectedCategoryID);
         $categories = $app->getDB()->query($config);
         $map = array();
         if (!empty($categories))

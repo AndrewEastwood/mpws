@@ -10,7 +10,7 @@ use Exception;
 use ArrayObject;
 use curl_init;
 
-class exchangerates {
+class exchangerates extends API {
 
     private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
     private $_currencies = array('AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN',
@@ -41,7 +41,7 @@ class exchangerates {
 
     public function getExchangeRateByID ($agencyID) {
         global $app;
-        $config = dbquery::shopGetExchangeRateByID($agencyID);
+        $config = data::shopGetExchangeRateByID($agencyID);
         $data = $app->getDB()->query($config);
         $data = $this->__adjustExchangeRate($data);
         return $data;
@@ -49,7 +49,7 @@ class exchangerates {
 
     public function getExchangeRates_List (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetExchangeRatesList($options);
+        $config = data::shopGetExchangeRatesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -59,7 +59,7 @@ class exchangerates {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         $dataList['currencyList'] = $this->getCurrencyList();
         return $dataList;
     }
@@ -88,7 +88,7 @@ class exchangerates {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = dbquery::shopCreateExchangeRate($validatedValues);
+                $configCreateOrigin = data::shopCreateExchangeRate($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $rateID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -138,7 +138,7 @@ class exchangerates {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = dbquery::shopUpdateExchangeRate($id, $validatedValues);
+                $configCreateCategory = data::shopUpdateExchangeRate($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -179,7 +179,7 @@ class exchangerates {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::shopDeleteExchangeRate($id);
+            $config = data::shopDeleteExchangeRate($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -227,14 +227,14 @@ class exchangerates {
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
         global $app;
-        $config = dbquery::shopGetExchangeRateTo_ByCurrencyName($currencyName);
+        $config = data::shopGetExchangeRateTo_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
     public function getExchangeRateFrom_ByCurrencyName ($currencyName) {
         global $app;
-        $config = dbquery::shopGetExchangeRateFrom_ByCurrencyName($currencyName);
+        $config = data::shopGetExchangeRateFrom_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
@@ -280,7 +280,7 @@ class exchangerates {
             $valueCurrencyName = $baseCurrencyName;
         }
 
-        $config = dbquery::shopGetExchangeRatesList(array(
+        $config = data::shopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
@@ -309,7 +309,7 @@ class exchangerates {
     }
     public function getAllUserUniqCurrencyNames () {
         global $app;
-        $config = dbquery::shopGetExchangeRatesList(array(
+        $config = data::shopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
@@ -325,7 +325,7 @@ class exchangerates {
     }
     public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
         global $app;
-        $config = dbquery::shopGetExchangeRateByBothNames($baseCCY, $CCY);
+        $config = data::shopGetExchangeRateByBothNames($baseCCY, $CCY);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }

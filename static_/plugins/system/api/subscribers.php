@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class subscribers {
+class subscribers extends API {
 
     private function __adjustSubscription (&$sub) {
         if (empty($sub))
@@ -23,7 +23,7 @@ class subscribers {
     // public function getEmailByID ($EmailID) {
     //     global $app;
     //     $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
-    //     $email = $app->getDB()->query(dbquery::getEmailByID($EmailID), $useCustomerDataOnly);
+    //     $email = $app->getDB()->query(data::getEmailByID($EmailID), $useCustomerDataOnly);
     //     if (!is_null($email))
     //         $email = $this->__adjustEmail($email);
     //     return $email;
@@ -31,7 +31,7 @@ class subscribers {
 
     // public function getAvailableEmails_List ($options = array()) {
     //     global $app;
-    //     $config = dbquery::getEmailList($options);
+    //     $config = data::getEmailList($options);
     //     if (empty($config))
     //         return null;
     //     $self = $this;
@@ -44,13 +44,13 @@ class subscribers {
     //             return $_items;
     //         }
     //     );
-    //     $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+    //     $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
     //     return $dataList;
     // }
 
     // public function getAvailableEmailsSimple_List ($options = array()) {
     //     global $app;
-    //     $config = dbquery::getEmailListSimple($options);
+    //     $config = data::getEmailListSimple($options);
     //     if (empty($config)) {
     //         return array();
     //     }
@@ -61,7 +61,7 @@ class subscribers {
 
     public function getSubscriptionByID ($SubscriptionID) {
         global $app;
-        $sub = $app->getDB()->query(dbquery::getSubscriptionByID($SubscriptionID));
+        $sub = $app->getDB()->query(data::getSubscriptionByID($SubscriptionID));
         if (!is_null($sub))
             $sub = $this->__adjustSubscription($sub);
         return $sub;
@@ -69,7 +69,7 @@ class subscribers {
 
     public function getSubscriptionByToken ($SubscriptionToken) {
         global $app;
-        $sub = $app->getDB()->query(dbquery::getSubscriptionByToken($SubscriptionToken));
+        $sub = $app->getDB()->query(data::getSubscriptionByToken($SubscriptionToken));
         if (!is_null($sub))
             $sub = $this->__adjustSubscription($sub);
         return $sub;
@@ -77,8 +77,8 @@ class subscribers {
 
     public function getActiveByContentSubscribers_List (array $options = array()) {
         global $app;
-        // $options['_fshop_products.Status'] = join(',', dbquery::getProductStatusesWhenAvailable()) . ':IN';
-        $config = dbquery::getSubscribersList($options);
+        // $options['_fshop_products.Status'] = join(',', data::getProductStatusesWhenAvailable()) . ':IN';
+        $config = data::getSubscribersList($options);
         if (empty($config))
             return null;
         $self = $this;
@@ -91,13 +91,13 @@ class subscribers {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getSubscribers_List (array $options = array()) {
         global $app;
-        $config = dbquery::getSubscribersList($options);
+        $config = data::getSubscribersList($options);
         if (empty($config))
             return null;
         $self = $this;
@@ -110,7 +110,7 @@ class subscribers {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -138,7 +138,7 @@ class subscribers {
                 $data["Name"] = $validatedValues['Name'];
                 $data["Params"] = $validatedValues['Params'];
 
-                $configCreateEmail = dbquery::createEmail($data);
+                $configCreateEmail = data::createEmail($data);
 
                 $EmaiID = $app->getDB()->query($configCreateEmail) ?: null;
 
@@ -178,7 +178,7 @@ class subscribers {
 
                 $data = $validatedDataObj['values'];
 
-                $configUpdateEmail = dbquery::updateEmail($EmailID, $data);
+                $configUpdateEmail = data::updateEmail($EmailID, $data);
 
                 $app->getDB()->query($configUpdateEmail);
 
@@ -209,7 +209,7 @@ class subscribers {
 
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::archiveEmail($EmailID);
+            $config = data::archiveEmail($EmailID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

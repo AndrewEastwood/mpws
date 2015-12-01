@@ -12,7 +12,7 @@ use PHPExcel_Style_Color as PHPExcel_Style_Color;
 use PHPExcel_Style_Border as PHPExcel_Style_Border;
 use XMLWriter;
 
-class feeds {
+class feeds extends API {
 
     public function getDirNameFeeds () {
         return 'feeds';
@@ -675,7 +675,7 @@ class feeds {
             $objValidation->setError('Value is not in list.');
             $objValidation->setPromptTitle('Pick from list');
             $objValidation->setPrompt('Please pick a value from the drop-down list.');
-            $objValidation->setFormula1('"' . join(',', dbquery::getProductStatuses()) . '"'); //note this!
+            $objValidation->setFormula1('"' . join(',', data::getProductStatuses()) . '"'); //note this!
         }
         // foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(40);

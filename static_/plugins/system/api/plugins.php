@@ -4,7 +4,7 @@ namespace static_\plugins\system\api;
 use \engine\lib\path as Path;
 use \engine\lib\api as API;
 
-class plugins {
+class plugins extends API {
 
     public function getInstalledPlugins () {
         $pathToPlugins = Path::getPluginDir();

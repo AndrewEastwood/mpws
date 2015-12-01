@@ -11,7 +11,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class catalog {
+class catalog extends API {
 
     private function getCategoriesFromCategoryTree ($categoryTree, $selectedCategoryID, &$list = array(), $inSelectedNode = false) {
         foreach ($categoryTree as $key => $node) {
@@ -65,7 +65,7 @@ class catalog {
         // var_dump($filterOptionsApplied);
 
         // get all product available statuses
-        $filterOptionsAvailable['filter_commonStatus'] = dbquery::getProductStatuses();
+        $filterOptionsAvailable['filter_commonStatus'] = data::getProductStatuses();
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
@@ -125,7 +125,7 @@ class catalog {
 
         // var_dump($activeTree);
         //filter: get category price edges
-        $dataConfigCategoryPriceEdges = dbquery::getShopCatalogPriceEdges(implode(',', $categoriesIDs));
+        $dataConfigCategoryPriceEdges = data::getShopCatalogPriceEdges(implode(',', $categoriesIDs));
         $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
         $filterOptionsAvailable['filter_commonPriceMax'] = intval(floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval(floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10);
@@ -135,7 +135,7 @@ class catalog {
         // var_dump($dataConfigCategoryPriceEdges);
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = dbquery::shopCatalogBrands(implode(',', $categoriesIDs));
+        $dataConfigCategoryAllBrands = data::shopCatalogBrands(implode(',', $categoriesIDs));
         $dataCategoryAllBrands = $app->getDB()->query($dataConfigCategoryAllBrands);
         if ($dataCategoryAllBrands)
             foreach ($dataCategoryAllBrands as $key => $brandItem) {
@@ -152,11 +152,11 @@ class catalog {
         // return;
 
         // get catalog features
-        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($categoriesIDs);
+        $dataConfigAllMatchedProducts = data::getShopCatalogProductList($categoriesIDs);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
         foreach ($catalogProductIDs as $productItemID) {
-            $featureItems = API::getAPI('shop:products')->getProductFeatures($productItemID);
+            $featureItems = API::getAPI('shop:products')->fetchProductFeatures($productItemID);
             foreach ($featureItems as $featureGroup => $featureList) {
                 if (!isset($features[$featureGroup])) {
                     $filterOptionsAvailable['filter_commonFeatures'][$featureGroup] = array();
@@ -169,7 +169,7 @@ class catalog {
 
         // set data source
         // ---
-        $dataConfigProducts = dbquery::getShopCatalogProductList($categoriesIDs);
+        $dataConfigProducts = data::getShopCatalogProductList($categoriesIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -218,7 +218,7 @@ class catalog {
         $dataProducts = $app->getDB()->query($dataConfigProducts);
 
         // get products count for current filter
-        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($categoriesIDs);
+        $dataConfigAllMatchedProducts = data::getShopCatalogProductList($categoriesIDs);
         $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
@@ -238,7 +238,7 @@ class catalog {
         $products = array();
         if (!empty($dataProducts)) {
             foreach ($dataProducts as $val) {
-                $products[] = API::getAPI('shop:products')->getProductByID($val['ID']);
+                $products[] = data::fetchSingleProductByID($val['ID']);
             }
         }
         // var_dump($currentProductCount);
@@ -246,7 +246,7 @@ class catalog {
         // $productsInfo = array();
         // if (!empty($dataCategoryInfo))
         //     foreach ($dataCategoryInfo as $val)
-        //         $productsInfo[] = API::getAPI('shop:products')->getProductByID($val['ID']);
+        //         $productsInfo[] = data::fetchSingleProductByID($val['ID']);
 
         // adjust brands, categories and features
         $brands = array();
@@ -255,7 +255,7 @@ class catalog {
         $features = array();
         // var_dump($filterOptionsApplied['filter_categoryBrands']);
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
-            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($brand['ID']);
             if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
@@ -291,7 +291,7 @@ class catalog {
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $categoryID => $categoryItem) {
             // $count = 0;
-            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($categoryID) + $categoryItem['SubIDs'];
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
@@ -324,7 +324,7 @@ class catalog {
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             // $count = 0;
-            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($status);
             if (!empty($filterOptionsApplied['filter_commonStatus'])) {
@@ -360,7 +360,7 @@ class catalog {
         foreach ($filterOptionsAvailable['filter_commonFeatures'] as $featureGroup => $featureList) {
             $group = array();
             foreach ($featureList as $key => $featureName) {
-                $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
+                $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
                 $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
                 $arrValues = array($key);
                 if (!empty($filterOptionsApplied['filter_commonFeatures'])) {

@@ -1,9 +1,9 @@
 <?php
 namespace static_\plugins\shop\api;
 
-class shoputils {
+class shoputils extends API {
 
-    public static function createProductExternalKey ($data) {
+    public static function genProductExternalKey ($data) {
         $ExternalKey = array();
         if (isset($data['OriginName']))
             $ExternalKey[] = $data['OriginName'];

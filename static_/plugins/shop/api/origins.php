@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class origins {
+class origins extends API {
 
 
     private $_statuses = array('ACTIVE', 'REMOVED');
@@ -29,7 +29,7 @@ class origins {
         global $app;
         if (empty($originID) || !is_numeric($originID))
             return null;
-        $config = dbquery::shopGetOriginItem($originID);
+        $config = data::shopGetOriginItem($originID);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
@@ -38,7 +38,7 @@ class origins {
 
     public function getOriginByName ($originName) {
         global $app;
-        $config = dbquery::shopGetOriginItem();
+        $config = data::shopGetOriginItem();
         $config['condition']['Name'] = $app->getDB()->createCondition($originName);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
@@ -48,7 +48,7 @@ class origins {
 
     public function getOriginByExternalKey ($externalKey) {
         global $app;
-        $config = dbquery::shopGetOriginItem();
+        $config = data::shopGetOriginItem();
         $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
@@ -58,7 +58,7 @@ class origins {
 
     public function getOrigins_List (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetOriginList($options);
+        $config = data::shopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -68,7 +68,7 @@ class origins {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -92,7 +92,7 @@ class origins {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = dbquery::shopCreateOrigin($validatedValues);
+                $configCreateOrigin = data::shopCreateOrigin($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $OriginID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -139,7 +139,7 @@ class origins {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = dbquery::shopUpdateOrigin($OriginID, $validatedValues);
+                    $configCreateCategory = data::shopUpdateOrigin($OriginID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -169,7 +169,7 @@ class origins {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::shopDeleteOrigin($OriginID);
+            $config = data::shopDeleteOrigin($OriginID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

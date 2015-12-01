@@ -10,7 +10,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class search {
+class search extends API {
 
     public function search ($text) {
         return "ok";

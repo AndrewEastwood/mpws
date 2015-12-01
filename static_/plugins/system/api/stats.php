@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class stats {
+class stats extends API {
     public function get (&$resp, $req) {
         $self = $this;
         $sources = array();

@@ -4,7 +4,7 @@ namespace static_\plugins\system\api;
 use \engine\lib\api as API;
 use \engine\lib\secure as Secure;
 
-class auth {
+class auth extends API {
 
     private $authKey = 'auth';
 

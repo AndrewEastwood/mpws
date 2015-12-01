@@ -7,7 +7,7 @@ use \engine\lib\validate as Validate;
 use \engine\lib\utils as Utils;
 use Exception;
 
-class users {
+class users extends API {
 
     public function getEmptyUserName () {
         return 'No Name';
@@ -17,7 +17,7 @@ class users {
         $UserID = intval($user['ID']);
         // get user info
         // get user addresses
-        // $configPermissions = dbquery::getPermissions($UserID);
+        // $configPermissions = data::getPermissions($UserID);
         // $user['Permissions'] = $app->getDB()->query($configPermissions, true) ?: array();
         $user['Addresses'] = API::getAPI('system:address')->getAddresses($UserID);
 
@@ -59,7 +59,7 @@ class users {
 
     public function getUserByValidationString ($ValidationString) {
         global $app;
-        $config = dbquery::getUserByValidationString($ValidationString);
+        $config = data::getUserByValidationString($ValidationString);
         $user = $app->getDB()->query($config);
         // var_dump('getUserByValidationString', $config);
         if (is_null($user)) {
@@ -71,7 +71,7 @@ class users {
 
     public function getUserByID ($UserID) {
         global $app;
-        $user = $app->getDB()->query(dbquery::getUserByID($UserID), !$app->isToolbox());
+        $user = $app->getDB()->query(data::getUserByID($UserID), !$app->isToolbox());
         // var_dump('getUserByID', $UserID);
         if (!is_null($user))
             $user = $this->__attachUserDetails($user);
@@ -80,7 +80,7 @@ class users {
 
     public function getUsers_List (array $options = array()) {
         global $app;
-        $config = dbquery::getUserList($options);
+        $config = data::getUserList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -94,13 +94,13 @@ class users {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
             $options['useCustomerID'] = true;
         }
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getActiveUserByCredentials ($login, $password, $withCustomerID = false) {
         global $app;
-        $query = dbquery::getUserByCredentials($login, $password);
+        $query = data::getUserByCredentials($login, $password);
         // avoid removed account
         // $query["fields"] = array("ID");
         $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
@@ -114,7 +114,7 @@ class users {
 
     public function isEmailAllowedToRegister ($email) {
         global $app;
-        $userWithEmail = $app->getDB()->query(dbquery::getUserByEMail($email));
+        $userWithEmail = $app->getDB()->query(data::getUserByEMail($email));
         return empty($userWithEmail);
     }
 
@@ -170,7 +170,7 @@ class users {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateUser = dbquery::addUser($dataUser);
+                $configCreateUser = data::addUser($dataUser);
                 $UserID = $app->getDB()->query($configCreateUser) ?: null;
 
                 if (empty($UserID)) {
@@ -259,7 +259,7 @@ class users {
                         $dataUser['Password'] = Secure::EncodeUserPassword($validatedValues['Password']);
                         unset($dataUser['ConfirmPassword']);
                     }
-                    $configUpdateUser = dbquery::updateUser($UserID, $dataUser);
+                    $configUpdateUser = data::updateUser($UserID, $dataUser);
                     $app->getDB()->query($configUpdateUser);
                 }
 
@@ -296,7 +296,7 @@ class users {
         $errors = array();
         $success = false;
         try {
-            $app->getDB()->query(dbquery::activateUser($ValidationString));
+            $app->getDB()->query(data::activateUser($ValidationString));
         } catch (Exception $e) {
             $app->getDB()->rollBack();
             $errors[] = $e->getMessage();
@@ -325,7 +325,7 @@ class users {
             }
             $app->getDB()->enableTransactions();
 
-            $config = dbquery::disableUser($UserID);
+            $config = data::disableUser($UserID);
             $app->getDB()->query($config, false);
 
             $app->getDB()->commit();
@@ -345,19 +345,19 @@ class users {
 
     public function setOffline ($UserID) {
         global $app;
-        $app->getDB()->query(dbquery::setUserOffline($UserID));
+        $app->getDB()->query(data::setUserOffline($UserID));
     }
 
     public function setOnline ($UserID) {
         global $app;
-        $app->getDB()->query(dbquery::setUserOnline($UserID));
+        $app->getDB()->query(data::setUserOnline($UserID));
     }
 
     // permissions
     // -----------------------------------------------
     private function getUserPermissionsByUserID ($UserID) {
         global $app;
-        $query = dbquery::getUserPermissionsByUserID($UserID);
+        $query = data::getUserPermissionsByUserID($UserID);
         $userPermissions = $app->getDB()->query($query, false);
         return $this->_adjustPermissions($userPermissions);
     }
@@ -369,7 +369,7 @@ class users {
         $success = false;
         $PermissionID = null;
         try {
-            $query = dbquery::createUserPermissions($UserID, $data);
+            $query = data::createUserPermissions($UserID, $data);
             $PermissionID = $app->getDB()->query($query, false) ?: null;
             $success = true;
         } catch (Exception $e) {
@@ -387,7 +387,7 @@ class users {
         $errors = array();
         $success = false;
         try {
-            $query = dbquery::updateUserPermissions($UserID, $data);
+            $query = data::updateUserPermissions($UserID, $data);
             $app->getDB()->query($query, false) ?: null;
             $success = true;
         } catch (Exception $e) {
@@ -443,7 +443,7 @@ class users {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = dbquery::stat_UsersOverview();
+        $config = data::stat_UsersOverview();
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -453,7 +453,7 @@ class users {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = dbquery::stat_UsersIntensityLastMonth($status);
+        $config = data::stat_UsersIntensityLastMonth($status);
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }

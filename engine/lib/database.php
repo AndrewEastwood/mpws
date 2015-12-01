@@ -93,299 +93,12 @@ class database {
         return !$this->disableTransactions;
     }
 
-    public function getDataJSON($config) {
-        if (is_string($config))
-            return json_encode(array("message" => $config));
-        return json_encode($this->_fetchData($config));
-    }
-
     public function getLastInsertId () {
         return $this->dbo->mpwsGetLastInsertId();
     }
 
-    public function query ($config, $useCustomerID = true) {
-        global $app;
-        // $customerInfo = $this->getCustomerInfo();
-        // var_dump($config);
-        if ($useCustomerID) {
-            $runtimeCustomerID = $app->getSite()->getRuntimeCustomerID();
-            if ($runtimeCustomerID >= 0) {
-                $source = $config["source"];
-                $key = $source . '.CustomerID';
-                // $addCustomerID = false;
-                if (isset($config["condition"]["CustomerID"])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                    unset($config["condition"]["CustomerID"]);
-                } else if (!isset($config["condition"][$key])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                }
-            }
-        }
-        return $this->_fetchData($config);
-    }
-
     public function getSqlBooleanValue ($boolval) {
         return $boolval ? 1 : 0;
-    }
-
-    private function _getDefaultObject () {
-        return array("error" => null, "data" => null);
-    }
-
-    private function _fetchData ($config) {
-        // $_result = $this->_getDefaultObject();
-
-        // $config = $this->extendConfig($params)->getConfig();
-
-        
-        // var_dump($this->getConfig());
-        // $_db_dataObj = $ctx->contextCustomer->getDBO()->mpwsFetchData($this->getConfig());
-
-        $this->dbo->mpwsReset();
-
-        $action = $config['action'];
-        $source = $config['source'];
-        $saveOptions = isset($config['saveOptions']) ? $config['saveOptions'] : array();
-        $fieldsToSelectFromDB = $config['fields'] ?: array();
-
-        // prepend ID column
-        // if (!in_array("ID", $fieldsToSelectFromDB))
-        //     array_unshift($fieldsToSelectFromDB, 'ID');
-
-        if ($config['useFieldPrefix']) {
-            $fieldsToSelectFromDBClear = array();
-            // just to avoid mysql error: XXXX in field list is ambiguous
-            foreach ($fieldsToSelectFromDB as $key => $value) {
-                // var_dump($value);
-                if ($value[0] === '@')
-                    $this->dbo->select_expr(substr($value, 1));
-                elseif (!strstr($value, '.'))
-                    $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
-            }
-        } else
-            $fieldsToSelectFromDBClear = $fieldsToSelectFromDB;
-
-        $this->dbo->mpwsTable($source);
-
-        if (!empty($fieldsToSelectFromDBClear))
-            $this->dbo->select_many($fieldsToSelectFromDBClear);
-
-        // var_dump($fieldsToSelectFromDBClear);
-
-        if (!empty($config['additional']))
-            foreach ($config['additional'] as $addSource => $addConfig) {
-                if (empty($addConfig['fields']))
-                    continue;
-
-                $this->dbo->join($addSource, $addConfig['constraint']);
-
-                if (!empty($addConfig['fields'])) {
-                    $fieldsToSelect = $addConfig['fields'];
-                    $fieldsToSelectClear = array();
-
-                    foreach ($fieldsToSelect as $key => $value) {
-                        if ($value[0] === '@')
-                            $this->dbo->select_expr(substr($value, 1));
-                            // $fieldsToSelect[$key] = substr($value, 1);
-                        elseif (!strstr($value, '.'))
-                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
-                        else
-                            $fieldsToSelectClear[$key] = $value;
-                    }
-
-                    $this->dbo->select_many($fieldsToSelectClear);
-                }
-                // var_dump($fieldsToSelectClear);
-            }
-
-        $_fieldOptionsWorkerFn = function ($context, $fieldName, $fieldOptions, $type = 'where') {
-            // var_dump($type . '_like');
-            // var_export($context->dbo->where_like);
-            switch (strtolower($fieldOptions['comparator'])) {
-                case '>':
-                    $context->dbo->{$type . '_gt'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case '>=':
-                    $context->dbo->{$type . '_gte'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case '<':
-                    $context->dbo->{$type . '_lt'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case '<=':
-                    $context->dbo->{$type . '_lte'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case 'is null':
-                    $context->dbo->{$type . '_null'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case 'is not null':
-                    $context->dbo->{$type . '_not_null'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case '=':
-                    $context->dbo->{$type . '_equal'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case '!=':
-                    $context->dbo->{$type . '_not_equal'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case 'like':
-                    $context->dbo->{$type . '_like'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case 'not like':
-                    $context->dbo->{$type . '_not_like'}($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
-                    break;
-                case 'in':
-                    // var_dump('using WHERE_IN', $fieldOptions['value']);
-                    $context->dbo->{$type . '_in'}($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
-                    break;
-                case 'not in':
-                    $context->dbo->{$type . '_not_in'}($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
-                    break;
-                default:
-                    var_dump('Unknown condition statement occured');
-                    break;
-            }
-        };
-
-        // condition
-        // var_dump($fieldsToSelectFromDBClear);
-        if (!empty($config['condition'])) {
-            if (is_string($config['condition'])) {
-                $context->dbo->where_raw($config['condition']);
-            } else {
-                // var_dump($config['condition']);
-                // translate condition filter string
-                foreach ($config['condition'] as $fieldName => $fieldOptions) {
-                    if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
-                        // var_dump($fieldOptions);
-                        foreach ($fieldOptions as $fieldOption)
-                            $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption);
-                    } else {
-                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions);
-                    }
-                }
-            }
-        }
-
-        if (!empty($config['having'])) {
-            // translate having filter string
-            foreach ($config['having'] as $fieldName => $fieldOptions) {
-                if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
-                    foreach ($fieldOptions as $fieldOption)
-                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption, 'having');
-                } else {
-                    $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions, 'having');
-                }
-            }
-        }
-
-        if (!empty($config['group']))
-            $this->dbo->group_by($config['group']);
-
-        if (!empty($config['offset']) && $config['offset'] >= 0)
-            $this->dbo->offset($config['offset']);
-
-        if (!empty($config['limit']) && $config['limit'] >= 0)
-            $this->dbo->limit($config['limit']);
-
-        if (!empty($config['order'])) {
-            if (!empty($config['order']['expr'])) {
-                $this->dbo->order_by_expr($config['order']['expr']);
-            } elseif (!empty($config['order']['field'])) {
-                if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
-                    $this->dbo->order_by_desc($config['order']['field']);
-                else
-                    $this->dbo->order_by_asc($config['order']['field']);
-            }
-        }
-
-        // echo '>>>>>>>>>>>>>>>>>>>>>>>.dbo:';
-        // var_dump($this->dbo);
-        // echo '<<<<<<<<<<<<<<<<<<<<<<';
-        $dbData = null;
-
-        switch ($action) {
-            case 'call':
-                $proc = $config['procedure'];
-                if (!empty($proc))
-                    $dbData = $this->dbo->mpwsProcedureCall($proc['name'], $proc['parameters']);
-                break;
-            case 'update':
-                // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
-                $this->dbo->update($config['data']);
-                // echo 'libraryDataObject update DB';
-                $this->dbo->save($saveOptions);
-                break;
-            case 'delete':
-                $this->dbo->delete_many();
-                break;
-            case 'insert':
-                $this->dbo->create($config['data']);
-                $this->dbo->save($saveOptions);
-                break;
-            case 'select':
-            default:
-                // fetch data
-                $dbData = $this->dbo->find_array();
-                break;
-        }
-
-        // var_dump($dbData);
-
-        $_opt_expandSingleRecord = false;
-
-        // apply data transformation options
-        if (!empty($config['options']))
-            foreach ($config['options'] as $key => $_options)
-                switch ($key) {
-                    case 'expandSingleRecord':
-                        if (is_bool($_options))
-                            $_opt_expandSingleRecord = $_options;
-                        break;
-                    case "asDict":
-                        $dict = array();
-                        $keyForKey = null;
-                        $keyForVal = null;
-                        if (is_string($_options))
-                            $keyForKey = $_options;
-                        elseif (is_array($_options)) {
-                            $keyForKey = $_options['keys'] ?: null;
-                            $keyForVal = $_options['values'] ?: null;
-                        }
-                        if (!empty($keyForKey))
-                            foreach ($dbData as $key => $val) {
-                                if ($keyForVal)
-                                    $dict[$val[$keyForKey]] = $val[$keyForVal] ?: null;
-                                else
-                                    $dict[$val[$keyForKey]] = $val;
-                            }
-                        $dbData = $dict;
-                        break;
-                    default:
-                        # code...
-                        break;
-                }
-
-        if ($action === 'insert')
-            return $this->getLastInsertId();
-
-        //var_dump($dbData);
-        // var_dump($config['options']);
-        // echo "do expand single record ? " . ($_opt_expandSingleRecord ? 'true' : 'false');
-        // echo print_r($config['options'], true) . PHP_EOL;
-        // echo 'count($dbData)'. count($dbData) . PHP_EOL;
-        // create libraryDataObject object
-        $data = null;
-        if (count($dbData) === 1) {
-            // echo print_r($dbData, true) . PHP_EOL;
-            //echo '_opt_expandSingleRecord: ' . ($_opt_expandSingleRecord ? 'Y': 'N') . PHP_EOL;
-            if ($_opt_expandSingleRecord && isset($dbData[0]))
-                $data = $dbData[0];
-            else
-                $data = $dbData;
-        }
-        if (count($dbData) > 1)
-            $data = $dbData;
-
-        return $data;
     }
 
     public function getDate ($strDate = '') {
@@ -406,10 +119,29 @@ class database {
             $condition['comparator'] = $this->DEFAULT_COMPARATOR;
         if (!is_string($condition['concatenate']))
             $condition['concatenate'] = $this->DEFAULT_CONCATENATE;
+        if (is_array($value) && empty($comparator)) {
+            $condition['comparator'] = 'IN';
+        }
+        if (is_string($value) && empty($comparator) && $value[0] == '%' && $value[strlen($value) - 1] == '%') {
+            $condition['comparator'] = 'like';
+        }
         return $condition;
     }
 
-    public function createDBQuery ($queryExtend = null) {
+    public function createSortOrder ($fld, $desc = false) {
+        return array(
+            'field' => $fld,
+            'ordering' => $desc ? 'DESC' : 'ASC'
+        );
+    }
+
+    public function createOrGetQuery ($name) {
+        if (dbquery::exists($name)) {
+            return dbquery::get($name);
+        }
+        return new dbquery($name);
+
+
         $queryDefault = array(
             "source" => "",
             "action" => "select",
@@ -453,8 +185,8 @@ class database {
         return Utils::array_merge_recursive_distinct ($queryDefault, $queryExtend);
     }
 
-    public function getTableRecordsCount ($table, $condition = array()) {
-        return $this->createDBQuery(array(
+    public function xxx_getTableRecordsCount ($table, $condition = array()) {
+        return $this->createOrGetQuery(array(
             "action" => "select",
             "source" => $table,
             "condition" => $condition,
@@ -467,8 +199,25 @@ class database {
         ));
     }
 
-    public function getDataListParamsFromRequest ($req) {
-        $keys = array('limit', 'page', 'sort', 'order', '_f([a-zA-Z\._]+)');
+    public function xxxx_getTableRecordsCount ($dbq) {
+        $config = $this->createOrGetQuery(array(
+            "action" => "select",
+            "source" => $table,
+            "condition" => $condition,
+            "fields" => array("@COUNT(*) AS ItemsCount"),
+            "offset" => 0,
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+        $countData = $this->query($configCount, $useCustomerID);
+        $count = intval($countData["ItemsCount"]);
+        return $count;
+    }
+
+    public function xxx_pickDataListParamsFromRequest ($req) {
+        $keys = array('limit', 'page', 'sort', 'order', '_f([a-zA-Z\._]+)', '_p([a-zA-Z]+)');
         $options = array();
         foreach ($req->get as $queryKey => $queryParam) {
             foreach ($keys as $keyToGrab) {
@@ -480,13 +229,18 @@ class database {
         }
         return $options;
     }
-    public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
-        $dsConfig = $dsConfig ?: array();
+    // public function addQueryConditionsFrom
+    public function xxx_queryMatchedIDs (array $dsConfig = array()) {
+        if (empty($dsConfig)) {
+            throw new Exception("Empty dbConfig in queryMatchedIDs", 1);
+        }
         $limit = isset($dsConfig['limit']) ? $dsConfig['limit'] : 0;
         $page = 1;
         $items = array();
         $useCustomerID = true;
-        if (isset($options['useCustomerID'])) {
+        $dsConfig['fields'] = array('ID');
+        $options = $dsConfig['options'] ?: array();
+        if (isset($options['useCustomerID']) && is_bool($options['useCustomerID'])) {
             $useCustomerID = $options['useCustomerID'];
         }
 
@@ -501,6 +255,8 @@ class database {
                 // echo $key;
                 $field = $matches[1];
                 // parse value
+                $isArray = strpos($value, ',') > 0;
+                // $hasComparator = strpos($value, ':') > 0;
                 $parsedValue = array();
                 preg_match("/([0-9A-Za-z%\,_-]+)\:(.*)$/", $value, $parsedValue);
                 // var_dump($field);
@@ -510,10 +266,13 @@ class database {
                 // var_dump($count);
                 if ($count === 0)
                     $dsConfig['condition'][$field] = $this->createCondition($value);
-                elseif ($count === 3) {
+                elseif ($count > 2) {
                     $value = $parsedValue[1];
-                    $comparator = $parsedValue[2];
-                    if (strtolower($comparator) === 'in')
+                    $comparator = null;
+                    if (isset($parsedValue[2]))
+                        $comparator = $parsedValue[2];
+                    // if (strtolower($comparator) === 'in')
+                    if ($isArray)
                         $value = explode(',', $parsedValue[1]);
                     $dsConfig['condition'][$field] = $this->createCondition($value, $comparator);
                 }
@@ -540,91 +299,143 @@ class database {
         $countData = $this->query($configCount, $useCustomerID);
         $count = intval($countData["ItemsCount"]);
 
-        if (!empty($options)) {
+        // if (!empty($options)) {
 
-            if (isset($options['sort']) || isset($options['order'])) {
-                $dsConfig['order'] = array();
-                if (isset($options['sort'])) {
-                    if (strpos($options['sort'], '.') === false)
-                        $dsConfig['order']['field'] = $dsConfig['source'] . '.' . $options['sort'];
-                    else
-                        $dsConfig['order']['field'] = $options['sort'];
-                }
-                if (isset($options['order'])) {
-                    $dsConfig['order']['ordering'] = $options['order'];
-                }
-            }
+        //     if (isset($options['sort']) || isset($options['order'])) {
+        //         $dsConfig['order'] = array();
+        //         if (isset($options['sort'])) {
+        //             if (strpos($options['sort'], '.') === false)
+        //                 $dsConfig['order']['field'] = $dsConfig['source'] . '.' . $options['sort'];
+        //             else
+        //                 $dsConfig['order']['field'] = $options['sort'];
+        //         }
+        //         if (isset($options['order'])) {
+        //             $dsConfig['order']['ordering'] = $options['order'];
+        //         }
+        //     }
 
-            if (isset($options['page']))
-                $page = intval($options['page']);
-            if (isset($options['limit']))
-                $limit = intval($options['limit']);
+        //     if (isset($options['page']))
+        //         $page = intval($options['page']);
+        //     if (isset($options['limit']))
+        //         $limit = intval($options['limit']);
 
-            if ($count > 0) {
-                if ($limit >= 1) {
-                    $dsConfig['limit'] = $limit;
-                }
-                if ($limit === 0) {
-                    unset($dsConfig['limit']);
-                }
-                if ($page >= 1 && $limit >= 1) {
-                    if ($page > round($count / $limit + 0.49)) {
-                        $page = round($count / $limit + 0.49);
-                    }
-                    $dsConfig['offset'] = ($page - 1) * $limit;
-                } elseif ($page === 0)
-                    $page = 1;
-            }
-        }
+        //     if ($count > 0) {
+        //         if ($limit >= 1) {
+        //             $dsConfig['limit'] = $limit;
+        //         }
+        //         if ($limit === 0) {
+        //             unset($dsConfig['limit']);
+        //         }
+        //         if ($page >= 1 && $limit >= 1) {
+        //             if ($page > round($count / $limit + 0.49)) {
+        //                 $page = round($count / $limit + 0.49);
+        //             }
+        //             $dsConfig['offset'] = ($page - 1) * $limit;
+        //         } elseif ($page === 0)
+        //             $page = 1;
+        //     }
+        // }
+
+        // if (isset($dsConfig['sort']) || isset($dsConfig['order'])) {
+        //     $dsConfig['order'] = array();
+        //     if (isset($dsConfig['sort'])) {
+        //         if (strpos($dsConfig['sort'], '.') === false)
+        //             $dsConfig['order']['field'] = $dsConfig['source'] . '.' . $dsConfig['sort'];
+        //         else
+        //             $dsConfig['order']['field'] = $dsConfig['sort'];
+        //     }
+        //     if (isset($dsConfig['order'])) {
+        //         $dsConfig['order']['ordering'] = $dsConfig['order'];
+        //     }
+        // }
+
+        // if (isset($dsConfig['page']))
+        //     $page = intval($dsConfig['page']);
+        // if (isset($dsConfig['limit']))
+        //     $limit = intval($dsConfig['limit']);
+
+        // if ($count > 0) {
+        //     if ($limit >= 1) {
+        //         $dsConfig['limit'] = $limit;
+        //     }
+        //     if ($limit === 0) {
+        //         unset($dsConfig['limit']);
+        //     }
+        //     if ($page >= 1 && $limit >= 1) {
+        //         if ($page > round($count / $limit + 0.49)) {
+        //             $page = round($count / $limit + 0.49);
+        //         }
+        //         $dsConfig['offset'] = ($page - 1) * $limit;
+        //     } elseif ($page === 0)
+        //         $page = 1;
+        // }
 
         // var_dump($dsConfig);
         // get data
         $items = $this->query($dsConfig, $useCustomerID) ?: array();
+
+
+        $itemsIDs = array();
         // var_dump($items);
 
-        if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
-            $parseFn = $callbacks['parse'];
-            foreach ($items as $key => $item) {
-                $items[$key] = $parseFn($item, $key, $items) ?: array();
+        // if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
+        //     $parseFn = $callbacks['parse'];
+            foreach ($items as $item) {
+                if (isset($item['ID'])) {
+                    $itemsIDs[] = $item['ID'];
+                }
+                // $items[$key] = $parseFn($item, $key, $items) ?: array();
             }
-        }
+        // }
 
         $rez = array();
+        $orderBy = null;
+        $order = null;
 
+        // if (isset($dsConfig['order']['field'])) {
+        //     $orderBy = $dsConfig['order']['field'];
+        // }
+
+        // if (isset($dsConfig['order']['ordering'])) {
+        //     $order = $dsConfig['order']['ordering'] === 'ASC';
+        // }
+
+        $rez = $this->arrayToDataList($itemsIDs ?: array(),
+            $count, $page, $limit, $orderBy, $order);
+        // $rez["type"] = "list";
+        // $rez["info"] = $listInfo;
+        // $rez["items"] = $items ?: array();
+        // $rez['ids'] = $itemsIDs;
+        return $rez;
+    }
+
+    public function xxx_arrayToDataList (array $ids, $count = 0,
+        $page = 0, $limit = 0, $orderBy = null, $order = null) {
+        
+        $total_pages = empty($limit) ? 1 : round($count / $limit + 0.49);
         $listInfo = array(
+            "ids" => $ids,
             "page" => $page,
             "limit" => $limit,
-            "total_pages" => empty($limit) ? 1 : round($count / $limit + 0.49),
-            "total_entries" => $count
+            "total_pages" => $total_pages,// empty($limit) ? 1 : round($count / $limit + 0.49),
+            "total_entries" => empty($count) ? count($ids) : $count,
+            "order_by" => $orderBy,
+            "order" => $order
         );
 
-        if (isset($dsConfig['order']['field'])) {
-            $listInfo["order_by"] = $dsConfig['order']['field'];
-        }
-
-        if (isset($dsConfig['order']['ordering'])) {
-            $listInfo["order"] = $dsConfig['order']['ordering'];
-        }
-
-        $rez["type"] = "list";
-        $rez["info"] = $listInfo;
-        $rez["items"] = $items ?: array();
-
-        return $rez;
+        // $listInfo = !empty($info) ? $info : array(
+        //     "page" => 0,
+        //     "limit" => 0,
+        //     "total_pages" => 1,
+        //     "total_entries" => count($items)
+        // );
+        // $rez["type"] = "list";
+        // $rez["info"] = $listInfo;
+        // $rez["items"] = array_values($items) ?: array();
+        return $listInfo;
     }
 
-    public function getDataListFromArray (array $items) {
-        $listInfo = array(
-            "page" => 0,
-            "limit" => 0,
-            "total_pages" => 1,
-            "total_entries" => count($items)
-        );
-        $rez["type"] = "list";
-        $rez["info"] = $listInfo;
-        $rez["items"] = array_values($items) ?: array();
-        return $rez;
-    }
+    public function query () {}
 
 }
 

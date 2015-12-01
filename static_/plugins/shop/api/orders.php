@@ -11,7 +11,7 @@ use Exception;
 use ArrayObject;
 use Mandrill as Mandrill;
 
-class orders {
+class orders extends API {
 
     private $_listKey_Cart = 'shop:cart';
     private $_statuses = array(
@@ -28,7 +28,7 @@ class orders {
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
         global $app;
-        $config = dbquery::shopGetOrderItem($orderID);
+        $config = data::shopGetOrderItem($orderID);
         $order = null;
         $order = $app->getDB()->query($config);
         if (empty($order)) {
@@ -47,7 +47,7 @@ class orders {
 
     public function getOrderByHash ($orderHash) {
         global $app;
-        $config = dbquery::getShopOrderByHash($orderHash);
+        $config = data::getShopOrderByHash($orderHash);
         $order = $app->getDB()->query($config);
 
         if (empty($order)) {
@@ -65,7 +65,7 @@ class orders {
     public function getOrders_ListExpired (array $options = array()) {
         global $app;
         // get expired orders
-        $config = dbquery::getShopOrderList_Expired();
+        $config = data::getShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -79,14 +79,14 @@ class orders {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getOrders_ListTodays (array $options = array()) {
         global $app;
         // get todays orders
-        $config = dbquery::getShopOrderList_Todays();
+        $config = data::getShopOrderList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -100,14 +100,14 @@ class orders {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getOrders_ListPending (array $options = array()) {
         global $app;
         // get expired orders
-        $config = dbquery::getShopOrderList_Pending();
+        $config = data::getShopOrderList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -121,7 +121,7 @@ class orders {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -133,7 +133,7 @@ class orders {
             $options['_pUser'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         // get orders
-        $config = dbquery::getShopOrderList($options);
+        $config = data::getShopOrderList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -144,7 +144,7 @@ class orders {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
 
         if (isset($options['_pStats']))
             $dataList['stats'] = $this->getStats_OrdersOverview();
@@ -310,7 +310,7 @@ class orders {
             // var_dump($dataOrder);
             // return;
 
-            $configOrder = dbquery::shopCreateOrder($dataOrder);
+            $configOrder = data::shopCreateOrder($dataOrder);
             $orderID = $app->getDB()->query($configOrder);
 
             if (empty($orderID)) {
@@ -332,7 +332,7 @@ class orders {
                 $dataBought["SellingPrice"] = $productItem["_prices"]["actual"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = dbquery::shopCreateOrderBought($dataBought);
+                $configBought = data::shopCreateOrderBought($dataBought);
                 $boughtID = $app->getDB()->query($configBought);
 
                 // check for created bought
@@ -389,7 +389,7 @@ class orders {
 
                     $validatedValues = $validatedDataObj['values'];
 
-                    $configUpdateOrder = dbquery::shopUpdateOrder($OrderID, $validatedValues);
+                    $configUpdateOrder = data::shopUpdateOrder($OrderID, $validatedValues);
 
                     $app->getDB()->query($configUpdateOrder, true);
 
@@ -419,7 +419,7 @@ class orders {
 
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::shopDisableOrder($OrderID);
+            $config = data::shopDisableOrder($OrderID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -517,11 +517,11 @@ class orders {
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = API::getAPI('shop:delivery')->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
-            $configBoughts = dbquery::shopGetOrderBoughts($orderID);
+            $configBoughts = data::shopGetOrderBoughts($orderID);
             $boughts = $app->getDB()->query($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
-                    $product = API::getAPI('shop:products')->getProductByID($soldItem['ProductID']);
+                    $product = data::fetchSingleProductByID($soldItem['ProductID']);
                     
                     $soldItem['Price'] = floatval($soldItem['Price']);
                     $soldItem['SellingPrice'] = floatval($soldItem['SellingPrice']);
@@ -575,7 +575,7 @@ class orders {
             // get product items
             foreach ($sessionOrderProducts as $purchasingProduct) {
                 // get product
-                $product = API::getAPI('shop:products')->getProductByID($purchasingProduct['ID']);
+                $product = data::fetchSingleProductByID($purchasingProduct['ID']);
                 if (!empty($product)) {
                     // get purchased product quantity
                     $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
@@ -718,7 +718,7 @@ class orders {
             return null;
         }
         // get orders count for each states
-        $config = dbquery::shopStat_OrdersOverview();
+        $config = data::shopStat_OrdersOverview();
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
@@ -740,7 +740,7 @@ class orders {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = dbquery::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $config = data::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -750,7 +750,7 @@ class orders {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = dbquery::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+        $config = data::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }

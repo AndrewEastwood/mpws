@@ -2,17 +2,65 @@
 
 namespace static_\plugins\system\api;
 
-class dbquery {
+class data {
 
     public static $statusCustomer = array('ACTIVE','REMOVED');
     public static $statusCustomerSettings = array('ACTIVE','DISABLED');
+
+
+    function __construct () {
+        global $app;
+        // create required queries
+
+        // ==== TASKS
+        $app->getDB()->createOrGetQuery('systemTask:Add')
+            ->willInsert('mpws_tasks');
+
+        $app->getDB()->createOrGetQuery('systemTask:Schedule')
+            ->willUpdate('mpws_tasks')
+            ->setData(array(
+                'Scheduled' => 1,
+                'IsRunning' => 0,
+                'Complete' => 0,
+                'ManualCancel' => 0
+            ));
+
+        $app->getDB()->createOrGetQuery('systemTask:Start')
+            ->willUpdate('mpws_tasks')
+            ->setData(array(
+                'Scheduled' => 0,
+                'IsRunning' => 1,
+                'Complete' => 0,
+                'ManualCancel' => 0
+            ));
+
+        $app->getDB()->createOrGetQuery('systemTask:Stop')
+            ->willUpdate('mpws_tasks')
+            ->setData(array(
+                'Scheduled' => 0,
+                'IsRunning' => 0,
+                'Complete' => 0,
+                'ManualCancel' => 1
+            ));
+
+        $app->getDB()->createOrGetQuery('systemTask:Complete')
+            ->willUpdate('mpws_tasks')
+            ->setData(array(
+                'Scheduled' => 0,
+                'IsRunning' => 0,
+                'Complete' => 1,
+                'ManualCancel' => 0
+            ));
+
+
+    }
 
     // TASKS
     public static function addTask ($data) {
         global $app;
         $data["DateCreated"] = $app->getDB()->getDate();
         $params = isset($data['Params']) ? $data['Params'] : '';
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "insert",
             "data" => array(
@@ -31,7 +79,7 @@ class dbquery {
 
     public static function scheduleTask ($hash) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "update",
             'condition' => array(
@@ -49,7 +97,7 @@ class dbquery {
 
     public static function startTask ($hash) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "update",
             'condition' => array(
@@ -67,7 +115,7 @@ class dbquery {
 
     public static function getGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "select",
             'condition' => array(
@@ -89,7 +137,7 @@ class dbquery {
 
     public static function stopTask ($id) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "update",
             'condition' => array(
@@ -107,7 +155,7 @@ class dbquery {
 
     public static function setTaskResult ($id, $result) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "update",
             'condition' => array(
@@ -126,7 +174,7 @@ class dbquery {
 
     public static function getTaskByHash ($hash) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "select",
             'condition' => array(
@@ -141,7 +189,7 @@ class dbquery {
 
     public static function deleteTaskByHash ($hash) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "delete",
             'condition' => array(
@@ -153,7 +201,7 @@ class dbquery {
 
     public static function getNextTaskToProcess ($group, $name) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_tasks",
             "action" => "select",
             'condition' => array(
@@ -178,7 +226,7 @@ class dbquery {
 
     public static function getCustomer ($id = null) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_customer",
             "fields" => array("*"),
             "limit" => 1,
@@ -239,7 +287,7 @@ class dbquery {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_customer",
             "action" => "insert",
             "data" => $data,
@@ -250,7 +298,7 @@ class dbquery {
     public static function updateCustomer ($CustomerID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_customer",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($CustomerID)
@@ -265,7 +313,7 @@ class dbquery {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["Status"] = "REMOVED";
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_customer",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($CustomerID)
@@ -286,7 +334,7 @@ class dbquery {
 
     public static function getUser () {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "fields" => array("*"),
             "limit" => 1,
@@ -413,7 +461,7 @@ class dbquery {
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $data["DateLastAccess"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "insert",
             "data" => $data,
@@ -424,7 +472,7 @@ class dbquery {
     public static function updateUser ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
@@ -437,7 +485,7 @@ class dbquery {
 
     public static function disableUser ($UserID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
@@ -453,7 +501,7 @@ class dbquery {
 
     public static function activateUser ($ValidationString) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
@@ -469,7 +517,7 @@ class dbquery {
 
     public static function setUserOnline ($UserID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
@@ -485,7 +533,7 @@ class dbquery {
 
     public static function setUserOffline ($UserID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
@@ -507,7 +555,7 @@ class dbquery {
     // -----------------------------------------------
     public static function getUserPermissionsByUserID ($UserID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_permissions",
             "fields" => array("*"),
             "condition" => array(
@@ -525,7 +573,7 @@ class dbquery {
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $data['UserID'] = $UserID;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_permissions",
             "action" => "insert",
             "data" => $data,
@@ -536,7 +584,7 @@ class dbquery {
     public static function updateUserPermissions ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_permissions",
             "action" => "update",
             "condition" => array(
@@ -555,7 +603,7 @@ class dbquery {
     // -----------------------------------------------
     public static function getAddress ($AddressID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_userAddresses",
             "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
@@ -569,7 +617,7 @@ class dbquery {
 
     public static function getUserAddresses ($UserID, $withRemoved = false) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_userAddresses",
             "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
@@ -588,7 +636,7 @@ class dbquery {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_userAddresses",
             "action" => "insert",
             "data" => $data,
@@ -599,7 +647,7 @@ class dbquery {
     public static function updateAddress ($AddressID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_userAddresses",
             "action" => "update",
             "condition" => array(
@@ -612,7 +660,7 @@ class dbquery {
 
     public static function disableAddress ($AddressID) {
         global $app;
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_userAddresses",
             "action" => "update",
             "condition" => array(
@@ -678,7 +726,7 @@ class dbquery {
 
     public static function getEmailByID ($EmailID = null) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_emails",
             "fields" => array("*"),
             "limit" => 1,
@@ -717,7 +765,7 @@ class dbquery {
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_emails",
             "action" => "insert",
             "data" => $data,
@@ -731,7 +779,7 @@ class dbquery {
         if (isset($data['Name'])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        return $app->getDB()->createDBQuery(array(
+        return $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_emails",
             "action" => "update",
             "condition" => array(
@@ -744,7 +792,7 @@ class dbquery {
 
     public static function archiveEmail ($EmailID) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_emails",
             "action" => "update",
             "condition" => array(
@@ -764,7 +812,7 @@ class dbquery {
 
     public static function getSubscriberByID ($SubscriberID = null) {
         global $app;
-        $config = $app->getDB()->createDBQuery(array(
+        $config = $app->getDB()->createOrGetQuery(array(
             "source" => "mpws_subscribers",
             "fields" => array("*"),
             "limit" => 1,

@@ -6,7 +6,7 @@ use engine\lib\path as Path;
 use RecursiveIteratorIterator;
 use RecursiveArrayIterator;
 
-class utils {
+class utils extends util {
 
     static function getIfIssetOrDefault (array $arr, $key, $defaultValue) {
         if (isset($arr[$key])) {

@@ -6,7 +6,7 @@ use \engine\lib\validate as Validate;
 use \engine\lib\path as Path;
 use Exception;
 
-class customers {
+class customers extends API {
 
     var $customersCache = array();
     private $_statuses = array('ACTIVE', 'REMOVED');
@@ -206,14 +206,14 @@ class customers {
 
     public function getCustomerByID ($ID) {
         global $app;
-        $config = dbquery::getCustomer($ID);
+        $config = data::getCustomer($ID);
         $customer = $app->getDB()->query($config, false);
         return $this->__adjustCustomer($customer);
     }
 
     public function getCustomerByName ($customerName) {
         global $app;
-        $config = dbquery::getCustomer();
+        $config = data::getCustomer();
         $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
         $customer = $app->getDB()->query($config, false);
         // echo 2121212;
@@ -226,7 +226,7 @@ class customers {
 
     public function getCustomers_List (array $options = array()) {
         global $app;
-        $config = dbquery::getCustomerList($options);
+        $config = data::getCustomerList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -238,7 +238,7 @@ class customers {
             }
         );
         $options['useCustomerID'] = false;
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -297,7 +297,7 @@ class customers {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCustomer = dbquery::createCustomer($validatedValues);
+                $configCreateCustomer = data::createCustomer($validatedValues);
                 $CustomerID = $app->getDB()->query($configCreateCustomer, false) ?: null;
 
                 if (empty($CustomerID))
@@ -405,7 +405,7 @@ class customers {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCustomer = dbquery::updateCustomer($CustomerID, $validatedValues);
+                $configCreateCustomer = data::updateCustomer($CustomerID, $validatedValues);
                 $app->getDB()->query($configCreateCustomer, false) ?: null;
 
                 $app->getDB()->commit();
@@ -433,7 +433,7 @@ class customers {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::archiveCustomer($CustomerID);
+            $config = data::archiveCustomer($CustomerID);
             $app->getDB()->query($config, false);
 
             $app->getDB()->commit();

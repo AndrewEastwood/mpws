@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class permissions {
+class permissions extends API {
 
     private $_permissions = array(
     	// PRODUCTS, ORIGINS, CATEGORIES

@@ -10,7 +10,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class services {
+class services extends API {
 
     public function removeDuplicatedProducts () {
         

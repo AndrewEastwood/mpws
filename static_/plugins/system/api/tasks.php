@@ -1,7 +1,9 @@
 <?php
 namespace static_\plugins\system\api;
 
-class tasks {
+use \engine\lib\api as API;
+
+class tasks extends API {
 
     public function addTask ($group, $name, $params) {
         global $app;
@@ -9,7 +11,7 @@ class tasks {
         $success = false;
         $errors = array();
         // echo 1111;
-        $config = dbquery::addTask(array(
+        $config = data::addTask(array(
             'CustomerID' => $app->getSite()->getRuntimeCustomerID(),
             'Group' => $group,
             'Name' => $name,
@@ -36,7 +38,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = dbquery::startTask(md5($group.$name.$params));
+        $config = data::startTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $app->getDB()->query($config);
@@ -57,7 +59,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = dbquery::scheduleTask(md5($group.$name.$params));
+        $config = data::scheduleTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $app->getDB()->query($config);
@@ -78,7 +80,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = dbquery::stopTask($id);
+        $config = data::stopTask($id);
         try {
             $app->getDB()->beginTransaction();
             $app->getDB()->query($config);
@@ -98,7 +100,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = dbquery::setTaskResult($id, $taskResult);
+        $config = data::setTaskResult($id, $taskResult);
         try {
             $app->getDB()->beginTransaction();
             $app->getDB()->query($config);
@@ -117,7 +119,7 @@ class tasks {
     public function isTaskAdded ($group, $name, $params) {
         global $app;
         $result = array();
-        $config = dbquery::getTaskByHash(md5($group . $name . $params));
+        $config = data::getTaskByHash(md5($group . $name . $params));
         $result = $app->getDB()->query($config);
         $this->__adjustTask($result);
         return $result;
@@ -132,7 +134,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = dbquery::deleteTaskByHash($hash);
+        $config = data::deleteTaskByHash($hash);
         try {
             $app->getDB()->beginTransaction();
             $result = $app->getDB()->query($config);
@@ -150,7 +152,7 @@ class tasks {
     public function getActiveTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = dbquery::getGroupTasks($groupName, true, false, false);
+        $config = data::getGroupTasks($groupName, true, false, false);
         $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -163,7 +165,7 @@ class tasks {
     public function getCompletedTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = dbquery::getGroupTasks($groupName, false, true, false);
+        $config = data::getGroupTasks($groupName, false, true, false);
         $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -176,7 +178,7 @@ class tasks {
     public function getNewTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = dbquery::getGroupTasks($groupName, false, false, false);
+        $config = data::getGroupTasks($groupName, false, false, false);
         $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -189,7 +191,7 @@ class tasks {
     public function getCanceledTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = dbquery::getGroupTasks($groupName, false, false, true);
+        $config = data::getGroupTasks($groupName, false, false, true);
         $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -202,7 +204,7 @@ class tasks {
     public function getNextNewTaskToProcess ($group, $name) {
         global $app;
         $result = array();
-        $config = dbquery::getNextTaskToProcess($group, $name);
+        $config = data::getNextTaskToProcess($group, $name);
         $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {

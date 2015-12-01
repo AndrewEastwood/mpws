@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class shopstats {
+class shopstats extends API {
 
     public function get (&$resp, $req) {
         global $app;
@@ -20,15 +20,15 @@ class shopstats {
         //     return $self->getOrders_ListPending($req);
         // };
         $sources['orders_list_pending'] = function ($req) use ($self, $app) {
-            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            $options = $app->getDB()->pickDataListParamsFromRequest($req);
             return API::getAPI('shop:orders')->getOrders_ListPending($options);
         };
         $sources['orders_list_todays'] = function ($req) use ($self, $app) {
-            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            $options = $app->getDB()->pickDataListParamsFromRequest($req);
             return API::getAPI('shop:orders')->getOrders_ListTodays($options);
         };
         $sources['orders_list_expired'] = function ($req) use ($self, $app) {
-            $options = $app->getDB()->getDataListParamsFromRequest($req);
+            $options = $app->getDB()->pickDataListParamsFromRequest($req);
             return API::getAPI('shop:orders')->getOrders_ListExpired($options);
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {

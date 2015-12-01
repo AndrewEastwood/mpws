@@ -6,7 +6,7 @@ use \engine\lib\api as API;
 use \engine\lib\path as Path;
 use Exception;
 
-class address {
+class address extends API {
 
     private function __adjustAddress (&$address) {
         if (empty($address))
@@ -19,7 +19,7 @@ class address {
 
     public function getAddressByID ($AddressID) {
         global $app;
-        $config = dbquery::getAddress($AddressID);
+        $config = data::getAddress($AddressID);
         $address = $app->getDB()->query($config);
         // adjust values
         return $this->__adjustAddress($address);
@@ -27,7 +27,7 @@ class address {
 
     public function getAddresses ($UserID) {
         global $app;
-        $configAddresses = dbquery::getUserAddresses($UserID, $app->isToolbox());
+        $configAddresses = data::getUserAddresses($UserID, $app->isToolbox());
         $addresses = $app->getDB()->query($configAddresses) ?: array();
         foreach ($addresses as &$item) {
             $this->__adjustAddress($item);
@@ -76,7 +76,7 @@ class address {
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateAddr = dbquery::createAddress($data);
+                $configCreateAddr = data::createAddress($data);
 
                 $AddressID = $app->getDB()->query($configCreateAddr) ?: null;
 
@@ -119,7 +119,7 @@ class address {
 
                 $data = $validatedDataObj['values'];
 
-                $configUpdateAddress = dbquery::updateAddress($AddressID, $data);
+                $configUpdateAddress = data::updateAddress($AddressID, $data);
 
                 $app->getDB()->query($configUpdateAddress);
 
@@ -150,7 +150,7 @@ class address {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::disableAddress($AddressID);
+            $config = data::disableAddress($AddressID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

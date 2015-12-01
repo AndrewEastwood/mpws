@@ -12,7 +12,7 @@ use Exception;
 use ArrayObject;
 use Mandrill as Mandrill;
 
-class notifications {
+class notifications extends API {
 
 
     public function notify ($type, $data) {

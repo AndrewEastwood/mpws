@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class delivery {
+class delivery extends API {
 
     private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
     // -----------------------------------------------
@@ -19,7 +19,7 @@ class delivery {
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
         global $app;
-        $config = dbquery::shopGetDeliveryAgencyByID($agencyID);
+        $config = data::shopGetDeliveryAgencyByID($agencyID);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
@@ -29,7 +29,7 @@ class delivery {
 
     public function getDeliveries_List (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetDeliveriesList($options);
+        $config = data::shopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -39,7 +39,7 @@ class delivery {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -62,7 +62,7 @@ class delivery {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = dbquery::shopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = data::shopCreateDeliveryAgent($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $deliveryID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -107,7 +107,7 @@ class delivery {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = dbquery::shopUpdateDeliveryAgent($id, $validatedValues);
+                $configCreateCategory = data::shopUpdateDeliveryAgent($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -135,7 +135,7 @@ class delivery {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = dbquery::shopDeleteDeliveryAgent($id);
+            $config = data::shopDeleteDeliveryAgent($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

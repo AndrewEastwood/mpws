@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class productfeatures {
+class productfeatures extends API {
 
     public function createFeature ($itemData) {
         global $app;
@@ -18,7 +18,7 @@ class productfeatures {
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
-        $config = dbquery::shopCreateFeature($data);
+        $config = data::shopCreateFeature($data);
         $featureID = $app->getDB()->query($config);
         return $featureID;
     }
@@ -26,7 +26,7 @@ class productfeatures {
     public function getFeatures () {
         global $app;
         $tree = array();
-        $config = dbquery::shopGetFeatures();
+        $config = data::shopGetFeatures();
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {

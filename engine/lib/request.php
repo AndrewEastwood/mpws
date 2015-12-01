@@ -49,7 +49,7 @@ class request {
     }
 
     static function hasRequestedExternalKey () {
-        return !is_numeric(self::getRequestedExternalKey());
+        return !empty(self::getRequestedExternalKey()) && !is_numeric(self::getRequestedExternalKey());
     }
 
     static function noRequestedItem () {

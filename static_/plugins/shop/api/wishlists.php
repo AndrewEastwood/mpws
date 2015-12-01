@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class wishlists {
+class wishlists extends API {
 
     private $_productsLimit = 10;
     private $_listKey_Wish = 'shop:wishList';
@@ -36,7 +36,7 @@ class wishlists {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = API::getAPI('shop:products')->getProductByID($productID);
+                $product = data::fetchSingleProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $items;
             }

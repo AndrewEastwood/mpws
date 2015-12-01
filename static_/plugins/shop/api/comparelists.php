@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class comparelists {
+class comparelists extends API {
 
     private $_productsLimit = 10;
     private $_listKey_Compare = 'shop:listCompare';
@@ -32,7 +32,7 @@ class comparelists {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = API::getAPI('shop:products')->getProductByID($productID);
+                $product = data::fetchSingleProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Compare] = $items;
             }

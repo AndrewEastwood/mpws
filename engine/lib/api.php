@@ -5,13 +5,14 @@ use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\route as Route;
 use \engine\lib\utils as Utils;
+use ReflectionClass;
 
 class api {
 
     private static $cacheApis = array();
 
     // apiKey must in the following format "pluginName:apiName"
-    static public function getAPI ($apiKey = false) {
+    static public function getAPI ($apiKey = false, $forRequest = true) {
         if (empty($apiKey)) {
             $apiKey = Request::pickFromGET('api');
         }
@@ -24,13 +25,16 @@ class api {
             }
             $parts = explode(':', $apiKey);
             $apiClass = Utils::getApiClassName($parts[0], $parts[1]);
+
+            // var_dump($apiKey);
             // echo $apiClass . '.php';
             // if (!file_exists($apiClass . '.php')) {
             //     return null;
             // }
-            self::$cacheApis[$apiKey] = new $apiClass();
+            self::$cacheApis[$apiKey] = new $apiClass($parts[0]);
+
             $api = self::$cacheApis[$apiKey];
-            if (empty($api)) {
+            if (empty($api) && $forRequest) {
                 header("HTTP/1.0 404 Not Found");
                 die();
             }
@@ -54,6 +58,19 @@ class api {
             header("HTTP/1.0 404 Not Found");
             die();
         }
+    }
+
+    var $data = null;
+    var $pluginApiName = null;
+
+    function __construct ($pluginApiName) {
+        $c = new ReflectionClass($this);
+        if (Utils::ends_with($c->getName(), '\\data')) {
+            throw new Exception("Data class cannot be extended from API class", 1);
+        }
+        // bind plugin owner and data class
+        $this->pluginApiName = $pluginApiName;
+        $this->data = API::getAPI($pluginApiName . ':data');
     }
 
 }

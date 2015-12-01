@@ -9,7 +9,7 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class promos {
+class promos extends API {
 
     private $_listKey_Promo = 'shop:promo';
     // -----------------------------------------------
@@ -19,7 +19,7 @@ class promos {
     // -----------------------------------------------
     public function getPromoByID ($promoID) {
         global $app;
-        $config = dbquery::shopGetPromoByID($promoID);
+        $config = data::shopGetPromoByID($promoID);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
@@ -31,7 +31,7 @@ class promos {
 
     public function getPromoByHash ($hash, $activeOnly = false) {
         global $app;
-        $config = dbquery::shopGetPromoByHash($hash, $activeOnly);
+        $config = data::shopGetPromoByHash($hash, $activeOnly);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
@@ -40,7 +40,7 @@ class promos {
 
     public function getPromoCodes_List (array $options = array()) {
         global $app;
-        $config = dbquery::shopGetPromoList($options);
+        $config = data::shopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -50,7 +50,7 @@ class promos {
                 return $_items;
             }
         );
-        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
         return $dataList;
     }
 
@@ -74,7 +74,7 @@ class promos {
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreatePromo = dbquery::shopCreatePromo($validatedValues);
+                $configCreatePromo = data::shopCreatePromo($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $promoID = $app->getDB()->query($configCreatePromo) ?: null;
@@ -119,7 +119,7 @@ class promos {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = dbquery::shopUpdatePromo($promoID, $validatedValues);
+                    $configCreateCategory = data::shopUpdatePromo($promoID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -147,7 +147,7 @@ class promos {
 
         try {
             $app->getDB()->beginTransaction();
-            $config = dbquery::shopExpirePromo($promoID);
+            $config = data::shopExpirePromo($promoID);
             $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;

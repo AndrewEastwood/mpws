@@ -9,10 +9,10 @@ use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class settings {
+class settings extends API {
 
     public function __construct () {
-        $types = array_keys(dbquery::$SETTING_TYPE_TO_DBTABLE_MAP);
+        $types = array_keys(data::$SETTING_TYPE_TO_DBTABLE_MAP);
         $this->SETTING_TYPE_ARRAY = $types;
         $this->SETTING_TYPE = (object)array_combine($types, $types);
     }
@@ -25,7 +25,7 @@ class settings {
 
     public function getSettingsAddress ($addressID) {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByID($this->SETTING_TYPE->ADDRESS, $addressID));
+        $item = $app->getDB()->query(data::shopGetSettingByID($this->SETTING_TYPE->ADDRESS, $addressID));
         if (empty($item)) {
             return null;
         }
@@ -36,9 +36,9 @@ class settings {
         global $app;
         $config = null;
         if ($app->isToolbox()) {
-            $config = dbquery::shopGetSettingByType($this->SETTING_TYPE->ADDRESS);
+            $config = data::shopGetSettingByType($this->SETTING_TYPE->ADDRESS);
         } else {
-            $config = dbquery::shopGetSettingsAddressActive();
+            $config = data::shopGetSettingsAddressActive();
         }
         $items = $app->getDB()->query($config) ?: array();
         foreach ($items as &$value) {
@@ -49,7 +49,7 @@ class settings {
     public function getSettingsAddressPhones ($addressID) {
         global $app;
         // phones
-        $config = dbquery::shopGetSettingsAddressPhones($addressID);
+        $config = data::shopGetSettingsAddressPhones($addressID);
         $items = $app->getDB()->query($config) ?: array();
         foreach ($items as &$value)
             $value = $this->__adjustSettingItem($this->SETTING_TYPE->PHONES, $value);
@@ -58,19 +58,19 @@ class settings {
     public function getSettingsAddressOpenHours ($addressID) {
         global $app;
         // open hours
-        $config = dbquery::shopGetSettingsAddressOpenHours($addressID);
+        $config = data::shopGetSettingsAddressOpenHours($addressID);
         $item = $app->getDB()->query($config) ?: array();
         return $this->__adjustSettingItem($this->SETTING_TYPE->OPENHOURS, $item);
     }
     public function getSettingsAddressInfo ($addressID) {
         global $app;
-        $config = dbquery::shopGetSettingsAddressInfo($addressID);
+        $config = data::shopGetSettingsAddressInfo($addressID);
         $item = $app->getDB()->query($config) ?: array();
         return $this->__adjustSettingItem($this->SETTING_TYPE->INFO, $item);
     }
     public function getSettingsAlerts () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->ALERTS));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->ALERTS));
         $this->__adjustSettingItem($this->SETTING_TYPE->ALERTS, $item);
         if (empty($item))
             return $item;
@@ -79,7 +79,7 @@ class settings {
     public function getSettingsExchangeRates () {}
     public function getSettingsExchangeRatesDisplay () {
         global $app;
-        $items = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->EXCHANAGERATESDISPLAY)) ?: array();
+        $items = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->EXCHANAGERATESDISPLAY)) ?: array();
         foreach ($items as &$value) {
             if (empty($value['CurrencyName'])) {
                 $rez = $this->removeSetting($this->SETTING_TYPE->EXCHANAGERATESDISPLAY, $value['ID']);
@@ -92,12 +92,12 @@ class settings {
     }
     public function getSettingsMisc () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->MISC));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->MISC));
         return $this->__adjustSettingItem($this->SETTING_TYPE->MISC, $item) ?: array();
     }
     public function getSettingsProduct () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->PRODUCT));
         $this->__adjustSettingItem($this->SETTING_TYPE->PRODUCT, $item) ?: array();
         if (empty($item))
             return $item;
@@ -105,12 +105,12 @@ class settings {
     }
     public function getSettingsSeo () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->SEO));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->SEO));
         return $this->__adjustSettingItem($this->SETTING_TYPE->SEO, $item) ?: array();
     }
     public function getSettingsFormOrder () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->FORMORDER));
         $this->__adjustSettingItem($this->SETTING_TYPE->FORMORDER, $item) ?: array();
         if (empty($item))
             return $item;
@@ -118,14 +118,14 @@ class settings {
     }
     public function getSettingsWebsite () {
         global $app;
-        $item = $app->getDB()->query(dbquery::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
+        $item = $app->getDB()->query(data::shopGetSettingByType($this->SETTING_TYPE->WEBSITE));
         return $this->__adjustSettingItem($this->SETTING_TYPE->WEBSITE, $item) ?: array();
     }
     public function getSettingByID ($type, $id) {
         global $app;
         $item = null;
         try {
-            $item = $app->getDB()->query(dbquery::shopGetSettingByID($type, $id));
+            $item = $app->getDB()->query(data::shopGetSettingByID($type, $id));
         } catch (Exception $ex) { }
         return $this->__adjustSettingItem($type, $item);
     }
@@ -227,13 +227,13 @@ class settings {
 
         try {
 
-            $type = dbquery::getVerifiedSettingsType($type);
+            $type = data::getVerifiedSettingsType($type);
             if (empty($type)) {
                 throw new Exception("WrongSettingsType", 1);
             }
 
             $count = $this->getCustomerSettingsCount($type);
-            $mustBeSingle = dbquery::isOneForCustomer($type);
+            $mustBeSingle = data::isOneForCustomer($type);
 
             if ($mustBeSingle && $count > 0 && !$isUpdate) {
                 throw new Exception("PropertyAlreadyExistsUsePatchMethod", 1);
@@ -378,10 +378,10 @@ class settings {
 
                     if ($isUpdate) {
                         unset($validatedValues['ID']);
-                        $config = dbquery::shopUpdateSetting($type, $settingID, $validatedValues);
+                        $config = data::shopUpdateSetting($type, $settingID, $validatedValues);
                         $app->getDB()->query($config);
                     } else {
-                        $config = dbquery::shopCreateSetting($type, $validatedValues);
+                        $config = data::shopCreateSetting($type, $validatedValues);
                         $settingID = $app->getDB()->query($config) ?: null;
                     }
 
@@ -426,12 +426,12 @@ class settings {
 
         try {
 
-            $type = dbquery::getVerifiedSettingsType($type);
+            $type = data::getVerifiedSettingsType($type);
             if (empty($type)) {
                 throw new Exception("WrongSettingsType", 1);
             }
 
-            $canBeRemoved = dbquery::settingCanBeRemoved($type);
+            $canBeRemoved = data::settingCanBeRemoved($type);
 
             if (!$canBeRemoved) {
                 throw new Exception("SettingIsLockedForRemoval", 1);
@@ -444,7 +444,7 @@ class settings {
 
             try {
                 $app->getDB()->beginTransaction();
-                $config = dbquery::shopRemoveSetting($type, $settingID);
+                $config = data::shopRemoveSetting($type, $settingID);
                 $app->getDB()->query($config);
                 $app->getDB()->commit();
                 $success = true;
@@ -471,12 +471,12 @@ class settings {
         if (!isset($req->get['type'])) {
             $typeObj['error'] = 'MissedParameter_type';
         } else {
-            $type = dbquery::getVerifiedSettingsType($req->get['type']);
+            $type = data::getVerifiedSettingsType($req->get['type']);
             $typeObj['type'] = $type;
             if (is_null($type)) {
                 $typeObj['error'] = 'WrongSettingsType_' . $req->get['type'];
             } else {
-                $typeObj['single'] = dbquery::isOneForCustomer($type);
+                $typeObj['single'] = data::isOneForCustomer($type);
             }
         }
         return (object)$typeObj;
@@ -490,7 +490,7 @@ class settings {
 
     public function getCustomerSettingsCount ($type) {
         global $app;
-        $config = dbquery::customerSettingsCount($type);
+        $config = data::customerSettingsCount($type);
         $sCount = $app->getDB()->query($config);
         if (empty($sCount)) {
             return null;
@@ -507,7 +507,7 @@ class settings {
 
     public function createDefaultSettingsIfNotExist () {
         foreach ($this->SETTING_TYPE_ARRAY as $type) {
-            $sqlTableName = dbquery::getSettingsDBTableNameByType($type);
+            $sqlTableName = data::getSettingsDBTableNameByType($type);
             if (!empty($sqlTableName)) {
                 $count = $this->getCustomerSettingsCount($type);
                 if ($count === 0) {
