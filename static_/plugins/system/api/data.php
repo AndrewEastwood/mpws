@@ -14,7 +14,8 @@ class data {
 
         // ==== TASKS
         $app->getDB()->createOrGetQuery('systemTask:Add')
-            ->willInsert('mpws_tasks');
+            ->willInsert('mpws_tasks')
+            ->addConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
 
         $app->getDB()->createOrGetQuery('systemTask:Schedule')
             ->willUpdate('mpws_tasks')
@@ -52,87 +53,106 @@ class data {
                 'ManualCancel' => 0
             ));
 
+        $app->getDB()->createOrGetQuery('systemTask:getRunning')
+            ->willSelect('mpws_tasks')
+            ->addCondition('IsRunning', 1);
 
+        $app->getDB()->createOrGetQuery('systemTask:getComplete')
+            ->willSelect('mpws_tasks')
+            ->addCondition('Complete', 1);
+
+        $app->getDB()->createOrGetQuery('systemTask:getCanceled')
+            ->willSelect('mpws_tasks')
+            ->addCondition('ManualCancel', 1);
+
+
+        $r = $app->getDB()->createOrGetQuery('systemTask:getComplete')
+            ->queryAsDataList();
+
+
+        var_dump($r);
+        var_dump(12121);
+        die();
     }
 
     // TASKS
     public static function addTask ($data) {
-        global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
-        $params = isset($data['Params']) ? $data['Params'] : '';
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "mpws_tasks",
-            "action" => "insert",
-            "data" => array(
-                'CustomerID' => $data['CustomerID'],
-                'Group' => $data['Group'],
-                'Name' => $data['Name'],
-                'Hash' => md5($data['Group'] . $data['Name'] . $params),
-                'PrcPath' => isset($data['PrcPath']) ? $data['PrcPath'] : '',
-                'PID' => isset($data['PID']) ? $data['PID'] : '',
-                'Params' => $params,
-                'DateCreated' => $data["DateCreated"]
-            ),
-            "options" => null
-        ));
+        // global $app;
+        // $data["DateCreated"] = $app->getDB()->getDate();
+        // $params = isset($data['Params']) ? $data['Params'] : '';
+        // return $app->getDB()->createOrGetQuery(array(
+        //     "source" => "mpws_tasks",
+        //     "action" => "insert",
+        //     "data" => array(
+        //         'CustomerID' => $data['CustomerID'],
+        //         'Group' => $data['Group'],
+        //         'Name' => $data['Name'],
+        //         'Hash' => md5($data['Group'] . $data['Name'] . $params),
+        //         'PrcPath' => isset($data['PrcPath']) ? $data['PrcPath'] : '',
+        //         'PID' => isset($data['PID']) ? $data['PID'] : '',
+        //         'Params' => $params,
+        //         'DateCreated' => $data["DateCreated"]
+        //     ),
+        //     "options" => null
+        // ));
     }
 
     public static function scheduleTask ($hash) {
-        global $app;
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "mpws_tasks",
-            "action" => "update",
-            'condition' => array(
-                'Hash' => $app->getDB()->createCondition($hash)
-            ),
-            "data" => array(
-                'Scheduled' => 1,
-                'IsRunning' => 0,
-                'Complete' => 0,
-                'ManualCancel' => 0
-            ),
-            "options" => null
-        ));
+        // global $app;
+        // return $app->getDB()->createOrGetQuery(array(
+        //     "source" => "mpws_tasks",
+        //     "action" => "update",
+        //     'condition' => array(
+        //         'Hash' => $app->getDB()->createCondition($hash)
+        //     ),
+        //     "data" => array(
+        //         'Scheduled' => 1,
+        //         'IsRunning' => 0,
+        //         'Complete' => 0,
+        //         'ManualCancel' => 0
+        //     ),
+        //     "options" => null
+        // ));
     }
 
     public static function startTask ($hash) {
-        global $app;
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "mpws_tasks",
-            "action" => "update",
-            'condition' => array(
-                'Hash' => $app->getDB()->createCondition($hash)
-            ),
-            "data" => array(
-                'Scheduled' => 0,
-                'IsRunning' => 1,
-                'Complete' => 0,
-                'ManualCancel' => 0
-            ),
-            "options" => null
-        ));
+        // global $app;
+        // return $app->getDB()->createOrGetQuery(array(
+        //     "source" => "mpws_tasks",
+        //     "action" => "update",
+        //     'condition' => array(
+        //         'Hash' => $app->getDB()->createCondition($hash)
+        //     ),
+        //     "data" => array(
+        //         'Scheduled' => 0,
+        //         'IsRunning' => 1,
+        //         'Complete' => 0,
+        //         'ManualCancel' => 0
+        //     ),
+        //     "options" => null
+        // ));
     }
 
     public static function getGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
-        global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
-            "source" => "mpws_tasks",
-            "action" => "select",
-            'condition' => array(
-                'Group' => $app->getDB()->createCondition($groupName)
-            ),
-            "options" => null
-        ));
-        if ($active) {
-            $config['condition']['IsRunning'] = $app->getDB()->createCondition(1);
-        }
-        if ($completed) {
-            $config['condition']['Complete'] = $app->getDB()->createCondition(1);
-        }
-        if ($canceled) {
-            $config['condition']['ManualCancel'] = $app->getDB()->createCondition(1);
-        }
-        return $config;
+        // global $app;
+        // $config = $app->getDB()->createOrGetQuery(array(
+        //     "source" => "mpws_tasks",
+        //     "action" => "select",
+        //     'condition' => array(
+        //         'Group' => $app->getDB()->createCondition($groupName)
+        //     ),
+        //     "options" => null
+        // ));
+        // if ($active) {
+        //     $config['condition']['IsRunning'] = $app->getDB()->createCondition(1);
+        // }
+        // if ($completed) {
+        //     $config['condition']['Complete'] = $app->getDB()->createCondition(1);
+        // }
+        // if ($canceled) {
+        //     $config['condition']['ManualCancel'] = $app->getDB()->createCondition(1);
+        // }
+        // return $config;
     }
 
     public static function stopTask ($id) {

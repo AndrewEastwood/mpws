@@ -2,6 +2,9 @@
 
 namespace engine\lib;
 
+use Exception;
+use ArrayObject;
+
 class dbquery {
     // $queryDefault = array(
     //     "source" => "",
@@ -59,10 +62,14 @@ class dbquery {
     var $having = null;
     var $procedureName = null;
     var $procedureParams = array();
-    var $useCustomerID = true;
+    var $customerID = null;
 
     function __construct ($queryName, $props = null) {
-        if (self::exists($queryName)) {
+        if (!is_string($queryName)) {
+            throw new Exception("Query name must be a string", 1);
+            return;
+        }
+        if (dbquery::exists($queryName)) {
             throw new Exception("Query '$queryName' already exists", 1);
         }
         $this->name = $queryName;
@@ -74,7 +81,7 @@ class dbquery {
                 }
             }
         } // #A <<
-        self::$queryNameToInstanceMap[$queryName] = self;
+        dbquery::$queryNameToInstanceMap[$queryName] = $this;
     }
 
     function __clone () {
@@ -93,12 +100,12 @@ class dbquery {
         return $props;
     }
 
-    public static function exists ($name) {
-        return isset(self::$queryNameToInstanceMap[$name]);
+    public static function exists ($qName) {
+        return isset(dbquery::$queryNameToInstanceMap[$qName]);
     }
 
     public function cloneQuery ($newQueryName) {
-        if (self::exists($newQueryName)) {
+        if (dbquery::exists($newQueryName)) {
             throw new Exception("Query '$newQueryName' already exists. Use ::getQueryByName function", 1);
         }
         if (empty($newQueryName)) {
@@ -110,19 +117,30 @@ class dbquery {
     }
 
     public static function get ($queryName) {
-        return self::$queryNameToInstanceMap[$queryName];
+        return dbquery::$queryNameToInstanceMap[$queryName] ?: null;
     }
 
     public function setSource ($src) {
         $this->source = $src;
         return $this;
     }
+    public function getSource () {
+        return $this->source;
+    }
     public function setAction ($action) {
         $this->action = $action;
         return $this;
     }
     public function addCondition ($field, $value, $comparator = null, $concatenate = null) {
-        $this->conditions[$this->setFieldSource($filed)] = $this->createCondition($value, $comparator, $concatenate);
+        $this->conditions[$this->setFieldSource($field)] = $this->createCondition($value, $comparator, $concatenate);
+        return $this;
+    }
+    // public function addRawCondition ($field, $condition) {
+    //     $this->conditions[$this->setFieldSource($field)] = $condition;
+    //     return $this;
+    // }
+    public function addConditionFn ($field, $callParams) {
+        $this->conditions[$this->setFieldSource($field)] = array('fn' => $callParams);
         return $this;
     }
     public function clearAllConditions () {
@@ -184,12 +202,12 @@ class dbquery {
         $this->having = $having;
         return $this;
     }
-    public function addJoin ($src, $constraint, array $fileds) {
+    public function addJoin ($src, $constraint, array $fields) {
         $constraint = explode('=', $constraint);
         array_splice($constraint, 1, 0, array('='));
         $this->join[$src] = array(
-            'constraint' = $constraint,
-            'fields' = $fields
+            'constraint' => $constraint,
+            'fields' => $fields
         );
         return $this;
     }
@@ -206,7 +224,7 @@ class dbquery {
         }
         $this->order = array(
             'field' => $field,
-            'ordering' => $desc
+            'desc' => $desc
         );
         return $this;
     }
@@ -217,20 +235,32 @@ class dbquery {
         return $this;
     }
 
-    public function willBeSingleRow () {
+    public function querySingleItem () {
         $this->limit(1);
         $this->options['expandSingleRecord'] = true;
-        $this->options['asList'] = false;
-        return $this;
+        $this->options['asDataList'] = false;
+        $this->options['asArray'] = false;
+        return $this->query();
     }
 
-    public function willBeList ($limit = null) {
+    public function queryAsArray ($limit = null) {
         $this->options['expandSingleRecord'] = false;
-        $this->options['asList'] = true;
+        $this->options['asDataList'] = false;
+        $this->options['asArray'] = true;
         if (!is_null($limit)) {
             $this->limit($limit);
         }
-        return $this;
+        return $this->query();
+    }
+    public function queryAsDataList ($limit = null) {
+        $this->options['expandSingleRecord'] = false;
+        $this->options['asDataList'] = true;
+        $this->options['asArray'] = false;
+        $this->queryCount();
+        if (!is_null($limit)) {
+            $this->limit($limit);
+        }
+        return $this->query();
     }
 
     public function queryCount () {
@@ -316,7 +346,7 @@ class dbquery {
         if (!empty($source)) { $this->setSource($source); }
         return $this;
     }
-    public function willUpdate ($source, array $data) {
+    public function willUpdate ($source, array $data = array()) {
         $this->action = 'update';
         if (!empty($source)) { $this->setSource($source); }
         if (!empty($data)) {
@@ -324,7 +354,7 @@ class dbquery {
         }
         return $this;
     }
-    public function willInsert ($source, array $data) {
+    public function willInsert ($source, array $data = array()) {
         $this->action = 'insert';
         if (!empty($source)) { $this->setSource($source); }
         if (!empty($data)) {
@@ -346,15 +376,18 @@ class dbquery {
     }
 
     private function createCondition ($value, $comparator = null, $concatenate = null) {
+        $DEFAULT_COMPARATOR = '=';
+        $DEFAULT_CONCATENATE = 'AND';
+
         $condition = array(
             "comparator" => $comparator,
             "value" => $value,
             "concatenate" => $concatenate
         );
         if (!is_string($condition['comparator']))
-            $condition['comparator'] = $this->DEFAULT_COMPARATOR;
+            $condition['comparator'] = $DEFAULT_COMPARATOR;
         if (!is_string($condition['concatenate']))
-            $condition['concatenate'] = $this->DEFAULT_CONCATENATE;
+            $condition['concatenate'] = $DEFAULT_CONCATENATE;
         if (is_array($value) && empty($comparator)) {
             $condition['comparator'] = 'IN';
         }
@@ -383,26 +416,38 @@ class dbquery {
         return implode('.', array($fldSrc, $fldName));
     }
 
-    public function query (dbquery $config, $useCustomerID = true) {
+    var $saveOptions = array();
+    public function setSaveOption ($k, $v) {
+        $this->saveOptions[$k] = $v;
+        return $this;
+    }
+    public function getSaveOption ($k) {
+        return $this->saveOptions[$k];
+    }
+    public function getOptions () {
+        return $this->saveOptions;
+    }
+
+    public function query () {
         global $app;
 
-        $db = $app->getDB()
+        $db = $app->getDB()->getDBO();
         // $customerInfo = $this->getCustomerInfo();
         // var_dump($config);
-        if ($useCustomerID) {
-            $runtimeCustomerID = $app->getSite()->getRuntimeCustomerID();
-            if ($runtimeCustomerID >= 0) {
-                $source = $config["source"];
-                $key = $source . '.CustomerID';
-                // $addCustomerID = false;
-                if (isset($config["condition"]["CustomerID"])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                    unset($config["condition"]["CustomerID"]);
-                } else if (!isset($config["condition"][$key])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                }
-            }
-        }
+        // if ($this->useCustomerID) {
+        //     $runtimeCustomerID = $app->getSite()->getRuntimeCustomerID();
+        //     if ($runtimeCustomerID >= 0) {
+        //         $source = $config["source"];
+        //         $key = $source . '.CustomerID';
+        //         // $addCustomerID = false;
+        //         if (isset($config["condition"]["CustomerID"])) {
+        //             $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
+        //             unset($config["condition"]["CustomerID"]);
+        //         } else if (!isset($config["condition"][$key])) {
+        //             $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
+        //         }
+        //     }
+        // }
         // $_result = $this->_getDefaultObject();
 
         // $config = $this->extendConfig($params)->getConfig();
@@ -413,44 +458,53 @@ class dbquery {
 
         $db->mpwsReset();
 
-        $action = $config['action'];
-        $source = $config['source'];
-        $saveOptions = isset($config['saveOptions']) ? $config['saveOptions'] : array();
-        $fieldsToSelectFromDB = $config['fields'] ?: array();
+        // $action = $this->action;
+        // $source = $this->source;
+        // $saveOptions = isset($config['saveOptions']) ? $config['saveOptions'] : array();
+        // $fieldsToSelectFromDB = $this->fields ?: array();
 
         // prepend ID column
         // if (!in_array("ID", $fieldsToSelectFromDB))
         //     array_unshift($fieldsToSelectFromDB, 'ID');
 
-        if ($config['useFieldPrefix']) {
-            $fieldsToSelectFromDBClear = array();
-            // just to avoid mysql error: XXXX in field list is ambiguous
-            foreach ($fieldsToSelectFromDB as $key => $value) {
-                // var_dump($value);
-                if ($value[0] === '@')
-                    $db->select_expr(substr($value, 1));
-                elseif (!strstr($value, '.'))
-                    $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
-            }
-        } else
-            $fieldsToSelectFromDBClear = $fieldsToSelectFromDB;
+        // if ($config['useFieldPrefix']) {
+        //     $fieldsToSelectFromDBClear = array();
+        //     // just to avoid mysql error: XXXX in field list is ambiguous
+        //     foreach ($fieldsToSelectFromDB as $key => $value) {
+        //         // var_dump($value);
+        //         if ($value[0] === '@')
+        //             $db->select_expr(substr($value, 1));
+        //         elseif (!strstr($value, '.'))
+        //             $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
+        //     }
+        // } else
+        //     $fieldsToSelectFromDBClear = $fieldsToSelectFromDB;
 
-        $db->mpwsTable($source);
+        // set source
+        $db->mpwsTable($this->source);
 
-        if (!empty($fieldsToSelectFromDBClear))
-            $db->select_many($fieldsToSelectFromDBClear);
+        // add fields to select
+        foreach ($this->fields as $key => $value) {
+            if ($value[0] === '@')
+                $db->select_expr(substr($value, 1));
+            else
+                $db->select($value);
+        }
+
+        // if (!empty($fieldsToSelectFromDBClear))
+        //     $db->select_many($fieldsToSelectFromDBClear);
 
         // var_dump($fieldsToSelectFromDBClear);
 
-        if (!empty($config['additional']))
-            foreach ($config['additional'] as $addSource => $addConfig) {
-                if (empty($addConfig['fields']))
+        if (!empty($this->join))
+            foreach ($this->join as $joinSource => $joinData) {
+                if (empty($joinData['fields']))
                     continue;
 
-                $db->join($addSource, $addConfig['constraint']);
+                $db->join($joinSource, $joinData['constraint']);
 
-                if (!empty($addConfig['fields'])) {
-                    $fieldsToSelect = $addConfig['fields'];
+                if (!empty($joinData['fields'])) {
+                    $fieldsToSelect = $joinData['fields'];
                     $fieldsToSelectClear = array();
 
                     foreach ($fieldsToSelect as $key => $value) {
@@ -458,7 +512,7 @@ class dbquery {
                             $db->select_expr(substr($value, 1));
                             // $fieldsToSelect[$key] = substr($value, 1);
                         elseif (!strstr($value, '.'))
-                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
+                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $joinSource, $value);
                         else
                             $fieldsToSelectClear[$key] = $value;
                     }
@@ -515,55 +569,75 @@ class dbquery {
             }
         };
 
+        foreach ($this->conditions as $fieldName => $condition) {
+            if (isset($condition['fn'])) {
+                $condition = $this->createCondition(call_user_func($condition['fn']));
+            }
+            $_fieldOptionsWorkerFn($db, $fieldName, $condition);
+            // if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+            //     // var_dump($fieldOptions);
+            //     foreach ($fieldOptions as $fieldOption)
+            //         $_fieldOptionsWorkerFn($db, $fieldName, $fieldOption);
+            // } else {
+            //     $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions);
+            // }
+        }
+
+
         // condition
         // var_dump($fieldsToSelectFromDBClear);
-        if (!empty($config['condition'])) {
-            if (is_string($config['condition'])) {
-                $db->where_raw($config['condition']);
-            } else {
-                // var_dump($config['condition']);
-                // translate condition filter string
-                foreach ($config['condition'] as $fieldName => $fieldOptions) {
-                    if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
-                        // var_dump($fieldOptions);
-                        foreach ($fieldOptions as $fieldOption)
-                            $_fieldOptionsWorkerFn($db, $fieldName, $fieldOption);
-                    } else {
-                        $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions);
-                    }
-                }
-            }
-        }
+        // if (!empty($this->conditions)) {
+        //     if (is_string($this->conditions)) {
+        //         $db->where_raw($this->conditions);
+        //     } else {
+        //         // var_dump($this->conditions);
+        //         // translate condition filter string
+        //         foreach ($this->conditions as $fieldName => $fieldOptions) {
 
-        if (!empty($config['having'])) {
-            // translate having filter string
-            foreach ($config['having'] as $fieldName => $fieldOptions) {
-                if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
-                    foreach ($fieldOptions as $fieldOption)
-                        $_fieldOptionsWorkerFn($db, $fieldName, $fieldOption, 'having');
-                } else {
-                    $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions, 'having');
-                }
-            }
-        }
 
-        if (!empty($config['group']))
-            $db->group_by($config['group']);
 
-        if (!empty($config['offset']) && $config['offset'] >= 0)
-            $db->offset($config['offset']);
+        //             if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+        //                 // var_dump($fieldOptions);
 
-        if (!empty($config['limit']) && $config['limit'] >= 0)
-            $db->limit($config['limit']);
 
-        if (!empty($config['order'])) {
-            if (!empty($config['order']['expr'])) {
-                $db->order_by_expr($config['order']['expr']);
-            } elseif (!empty($config['order']['field'])) {
-                if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
-                    $db->order_by_desc($config['order']['field']);
+        //                 foreach ($fieldOptions as $fieldOption)
+        //                     $_fieldOptionsWorkerFn($db, $fieldName, $fieldOption);
+        //             } else {
+        //                 $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions);
+        //             }
+        //         }
+        //     }
+        // }
+
+        // if (!empty($this->having)) {
+        //     // translate having filter string
+        //     foreach ($this->having as $fieldName => $fieldOptions) {
+        //         if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+        //             foreach ($fieldOptions as $fieldOption)
+        //                 $_fieldOptionsWorkerFn($db, $fieldName, $fieldOption, 'having');
+        //         } else {
+        //             $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions, 'having');
+        //         }
+        //     }
+        // }
+
+        if (!empty($this->group))
+            $db->group_by($this->group);
+
+        if (!empty($this->offset) && $this->offset >= 0)
+            $db->offset($this->offset);
+
+        if (!empty($this->limit) && $this->limit >= 0)
+            $db->limit($this->limit);
+
+        if (!empty($this->order)) {
+            if (!empty($this->order['expr'])) {
+                $db->order_by_expr($this->order['expr']);
+            } elseif (!empty($this->order['field'])) {
+                if ($this->order['desc'])
+                    $db->order_by_desc($this->order['field']);
                 else
-                    $db->order_by_asc($config['order']['field']);
+                    $db->order_by_asc($this->order['field']);
             }
         }
 
@@ -572,24 +646,23 @@ class dbquery {
         // echo '<<<<<<<<<<<<<<<<<<<<<<';
         $dbData = null;
 
-        switch ($action) {
+        switch ($this->action) {
             case 'call':
-                $proc = $config['procedure'];
-                if (!empty($proc))
-                    $dbData = $db->mpwsProcedureCall($proc['name'], $proc['parameters']);
+                if (!empty($this->procedureName))
+                    $dbData = $db->mpwsProcedureCall($this->procedureName, $this->procedureParams);
                 break;
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
-                $db->update($config['data']);
+                $db->update($this->data);
                 // echo 'libraryDataObject update DB';
-                $db->save($saveOptions);
+                $db->save($this->saveOptions);
                 break;
             case 'delete':
                 $db->delete_many();
                 break;
             case 'insert':
-                $db->create($config['data']);
-                $db->save($saveOptions);
+                $db->create($this->data);
+                $db->save($this->saveOptions);
                 break;
             case 'select':
             default:
@@ -634,7 +707,7 @@ class dbquery {
                         break;
                 }
 
-        if ($action === 'insert')
+        if ($this->action === 'insert')
             return $db->getLastInsertId();
 
         //var_dump($dbData);

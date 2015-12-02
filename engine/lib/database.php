@@ -9,8 +9,6 @@ class database {
     var $transactionIsActive = false;
     var $disableTransactions = false;
     public $DATE_FORMAT = 'Y-m-d H:i:s';
-    public $DEFAULT_COMPARATOR = '=';
-    public $DEFAULT_CONCATENATE = 'AND';
 
     public function __construct($config = false) {
         $this->config = $config;
