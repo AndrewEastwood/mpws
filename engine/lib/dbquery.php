@@ -48,6 +48,8 @@ class dbquery {
 
     static $queryNameToInstanceMap = array();
 
+    var $defaultLimit = 32;
+
     var $name;
     var $source = null;
     var $action = null;
@@ -56,7 +58,7 @@ class dbquery {
     var $order = array();
     var $fields = array();
     var $data = array();
-    var $limit = 100;
+    var $limit = 32;
     var $offset = 0;
     var $group = null;
     var $having = null;
@@ -184,12 +186,12 @@ class dbquery {
         }
         return $this;
     }
-    public function limit ($limit = 100/*, $offset = 0*/) {
+    public function setLimit ($limit = 100/*, $offset = 0*/) {
         $this->limit = intval($limit);
         // $this->offset = intval($offset);
         return $this;
     }
-    public function offset (/*$limit = 100, */$offset = 0) {
+    public function setOffset (/*$limit = 100, */$offset = 0) {
         // $this->limit = intval($limit);
         $this->offset = intval($offset);
         return $this;
@@ -236,7 +238,7 @@ class dbquery {
     }
 
     public function querySingleItem () {
-        $this->limit(1);
+        $this->setLimit(1);
         $this->options['expandSingleRecord'] = true;
         $this->options['asDataList'] = false;
         $this->options['asArray'] = false;
@@ -248,30 +250,37 @@ class dbquery {
         $this->options['asDataList'] = false;
         $this->options['asArray'] = true;
         if (!is_null($limit)) {
-            $this->limit($limit);
+            $this->setLimit($limit);
         }
         return $this->query();
     }
-    public function queryAsDataList ($limit = null) {
+    public function queryAsDataList ($page = null, $limit = null) {
         $this->options['expandSingleRecord'] = false;
         $this->options['asDataList'] = true;
         $this->options['asArray'] = false;
         $this->queryCount();
         if (!is_null($limit)) {
-            $this->limit($limit);
+            $this->setLimit($limit);
+        } else {
+            $this->setLimit($this->defaultLimit);
+        }
+        if (!is_null($page)) {
+            $this->setOffset($this->limit * intval($page));
+        } else {
+            $this->setOffset(0);
         }
         return $this->query();
     }
 
     public function queryCount () {
-        $this->options['addCount'] = true;
+        $this->options['asCount'] = true;
         return $this;
     }
 
-    public function setPage ($pageNo = 0) {
-        $this->offset($this->limit * intval($pageNo));
-        return $this;
-    }
+    // public function setPage ($pageNo = 0) {
+        // $this->setOffset($this->limit * intval($pageNo));
+    //     return $this;
+    // }
 
     public function addParams (array $params = array()) {
         // $keys = array('limit', 'page', 'sort', 'order', '_f([a-zA-Z\._]+)');
@@ -289,7 +298,7 @@ class dbquery {
         foreach ($params as $key => $value) {
             $matches = array();
             if ($key == 'limit') {
-                $this->limit($value);
+                $this->setLimit($value);
                 continue;
             }
             if ($key == 'page') {
@@ -571,6 +580,7 @@ class dbquery {
 
         foreach ($this->conditions as $fieldName => $condition) {
             if (isset($condition['fn'])) {
+                // var_dump($condition);
                 $condition = $this->createCondition(call_user_func($condition['fn']));
             }
             $_fieldOptionsWorkerFn($db, $fieldName, $condition);
@@ -582,7 +592,6 @@ class dbquery {
             //     $_fieldOptionsWorkerFn($db, $fieldName, $fieldOptions);
             // }
         }
-
 
         // condition
         // var_dump($fieldsToSelectFromDBClear);
@@ -644,6 +653,7 @@ class dbquery {
         // echo '>>>>>>>>>>>>>>>>>>>>>>>.dbo:';
         // var_dump($db);
         // echo '<<<<<<<<<<<<<<<<<<<<<<';
+
         $dbData = null;
 
         switch ($this->action) {
@@ -674,14 +684,17 @@ class dbquery {
         // var_dump($dbData);
 
         $_opt_expandSingleRecord = false;
-
+        $data = null;
         // apply data transformation options
-        if (!empty($config['options']))
-            foreach ($config['options'] as $key => $_options)
+        if (!empty($this->options))
+            foreach ($this->options as $key => $_options)
                 switch ($key) {
                     case 'expandSingleRecord':
-                        if (is_bool($_options))
-                            $_opt_expandSingleRecord = $_options;
+                        if (count($dbData) === 1 && isset($dbData[0])) {
+                            $data = $dbData[0];
+                        } else {
+                            $data = $dbData;
+                        }
                         break;
                     case "asDict":
                         $dict = array();
@@ -702,6 +715,37 @@ class dbquery {
                             }
                         $dbData = $dict;
                         break;
+                    case "asDataList":
+                        $count = 100;
+                        $total_pages = empty($this->limit) ? 1 : round($count / $this->limit + 0.49);
+                        $data = array(
+                            "items" => $dbData,
+                            "page" => round($this->offset / $this->limit),
+                            "limit" => $this->limit,
+                            "total_pages" => $total_pages,// empty($limit) ? 1 : round($count / $limit + 0.49),
+                            "total_entries" => $count,
+                            "order_by" => isset($this->order['field']) ? $this->order['field'] : null,
+                            "desc" => isset($this->order['desc']) ? $this->order['desc'] : null
+                        );
+                        // $dict = array();
+                        // $keyForKey = null;
+                        // $keyForVal = null;
+                        // if (is_string($_options))
+                        //     $keyForKey = $_options;
+                        // elseif (is_array($_options)) {
+                        //     $keyForKey = $_options['keys'] ?: null;
+                        //     $keyForVal = $_options['values'] ?: null;
+                        // }
+                        // if (!empty($keyForKey))
+                        //     foreach ($dbData as $key => $val) {
+                        //         if ($keyForVal)
+                        //             $dict[$val[$keyForKey]] = $val[$keyForVal] ?: null;
+                        //         else
+                        //             $dict[$val[$keyForKey]] = $val;
+                        //     }
+                        // $dbData = $dict;
+                        break;
+                    // case "asArray":
                     default:
                         # code...
                         break;
@@ -716,17 +760,7 @@ class dbquery {
         // echo print_r($config['options'], true) . PHP_EOL;
         // echo 'count($dbData)'. count($dbData) . PHP_EOL;
         // create libraryDataObject object
-        $data = null;
-        if (count($dbData) === 1) {
-            // echo print_r($dbData, true) . PHP_EOL;
-            //echo '_opt_expandSingleRecord: ' . ($_opt_expandSingleRecord ? 'Y': 'N') . PHP_EOL;
-            if ($_opt_expandSingleRecord && isset($dbData[0]))
-                $data = $dbData[0];
-            else
-                $data = $dbData;
-        }
-        if (count($dbData) > 1)
-            $data = $dbData;
+
 
         return $data;
     }
