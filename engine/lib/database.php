@@ -8,7 +8,6 @@ class database {
     var $dbo;
     var $transactionIsActive = false;
     var $disableTransactions = false;
-    public $DATE_FORMAT = 'Y-m-d H:i:s';
 
     public function __construct($config = false) {
         $this->config = $config;
@@ -97,14 +96,6 @@ class database {
 
     public function getSqlBooleanValue ($boolval) {
         return $boolval ? 1 : 0;
-    }
-
-    public function getDate ($strDate = '') {
-        if (!empty($strDate)) {
-            $time = strtotime($strDate);
-            return date($this->DATE_FORMAT, $time);
-        }
-        return date($this->DATE_FORMAT);
     }
 
     public function createCondition ($value, $comparator = null, $concatenate = null) {

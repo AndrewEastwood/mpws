@@ -2,15 +2,18 @@
 
 namespace static_\plugins\system\api;
 
+use \engine\lib\validate as Validate;
+use \engine\lib\path as Path;
 use \engine\lib\dbquery as dbQuery;
 use \engine\lib\data as BaseData;
+use \engine\lib\result as Result;
 
 class data extends BaseData {
 
-    public static $statusCustomer = array('ACTIVE','REMOVED');
-    public static $statusCustomerSettings = array('ACTIVE','DISABLED');
+    // public static $statusCustomer = array('ACTIVE','REMOVED');
+    // public static $statusCustomerSettings = array('ACTIVE','DISABLED');
 
-
+    var $source_customer = 'mpws_customer';
     var $source_tasks = 'mpws_tasks';
 
     function __construct () {
@@ -24,6 +27,12 @@ class data extends BaseData {
         // $filter = ;
         
         // create required queries
+        // ==== CUSTOMERS
+        $this->db->createQuery('systemCustomer_Get', $this->source_customer);
+        
+        $this->db->createQuery('systemCustomer_Add', $this->source_customer)
+            ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
+
         // ==== TASKS
         $this->db->createQuery('systemTask_Get', $this->source_tasks);
 
@@ -90,6 +99,24 @@ class data extends BaseData {
             $task['Scheduled'] = intval($task['Scheduled']) === 1;
         }, 'systemTask_.*');
 
+        dbQuery::setQueryFilter(function (&$customer) {
+            // adjusting
+            $ID = intval($customer['ID']);
+            $customer['ID'] = $ID;
+            // $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
+            $customer['isBlocked'] = $customer['Status'] != 'ACTIVE';
+            $customer['Plugins'] = explode(",", $customer['Plugins']);
+            // var_dump($customer);
+            if (!empty($customer['Logo'])) {
+                $customer['Logo'] = array(
+                    'name' => $customer['Logo'],
+                    'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
+                    'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
+                    'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
+                );
+            }
+        }, 'systemCustomer_.*');
+
         // $r = $this->db->getQuery('systemTask_getComplete')
             // ->addConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'))
             // ->selectSingleItem();
@@ -100,21 +127,45 @@ class data extends BaseData {
         die();
     }
 
+    // public function getCustomerStatuses () {
+    //     return $this->_statuses;
+    // }
+
+    public function getCustomerUploadInnerDir ($host, $subDir = '') {
+        global $app;
+        $path = '';
+        if (empty($subDir))
+            $path = Path::createDirPath($host, 'customers');
+        else
+            $path = Path::createDirPath($host, 'customers', $subDir);
+        return $path;
+    }
+    public function getCustomerUploadInnerImagePath ($host, $name, $subDir = false) {
+        $path = $this->getCustomerUploadInnerDir($host, $subDir);
+        return $path . $name;
+    }
+
     // TASKS
     public function addTask ($data) {
-        global $app;
-        $result = array();
+        // global $app;
+        // $itemID = null;
+        $r = new Result();
         try {
             $this->db->beginTransaction();
-            $taskId = dbQuery::systemTask_Stop()
+            $itemID = dbQuery::systemTask_Stop()
                 ->insert($data);
             $this->db->commit();
-            $result = $this->getSuccessResultObject($taskId);
+            $r->success()
+                ->setResult($itemID);
+            // $result = $this->getSuccessResultObject($taskId);
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
+        // return $itemID;
         // $result['errors'] = $errors;
         // $result['success'] = $success;
         // $data["DateCreated"] = $this->db->getDate();
@@ -137,20 +188,24 @@ class data extends BaseData {
     }
 
     public static function scheduleTask ($hash) {
-        global $app;
-        $result = array();
+        // global $app;
+        $r = new Result();
+        // $result = array();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Schedule()
                 ->setCondition('Hash', $hash)
                 ->update();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $r->success();
+            // $result = $this->getSuccessResultObject();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
         // global $app;
         // return $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -169,20 +224,24 @@ class data extends BaseData {
     }
 
     public static function startTask ($hash) {
-        global $app;
-        $result = array();
+        // global $app;
+        $r = new Result();
+        // $result = array();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Start()
                 ->setCondition('Hash', $hash)
                 ->update();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $r->success();
+            // $result = $this->getSuccessResultObject();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
         // global $app;
         // return $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -201,28 +260,24 @@ class data extends BaseData {
     }
 
     public static function getGroupTasksArray ($groupName, $active = false, $completed = false, $canceled = false) {
-        global $app;
+        // global $app;
         $result = array();
-        try {
-            if ($active) {
-                $result = dbQuery::systemTask_getRunning()
-                    ->setCondition('Group', $groupName)
-                    ->selectAsArray();
-            } else if ($completed) {
-                $result = dbQuery::systemTask_getComplete()
-                    ->setCondition('Group', $groupName)
-                    ->selectAsArray();
-            } else if ($canceled) {
-                $result = dbQuery::systemTask_getCanceled()
-                    ->setCondition('Group', $groupName)
-                    ->selectAsArray();
-            } else {
-                $result = dbQuery::systemTask_getNew()
-                    ->setCondition('Group', $groupName)
-                    ->selectAsArray();
-                }
-        } catch (Exception $e) {
-            $result = $this->getFailedResultObject($e->getMessage());
+        if ($active) {
+            $result = dbQuery::systemTask_getRunning()
+                ->setCondition('Group', $groupName)
+                ->selectAsArray();
+        } else if ($completed) {
+            $result = dbQuery::systemTask_getComplete()
+                ->setCondition('Group', $groupName)
+                ->selectAsArray();
+        } else if ($canceled) {
+            $result = dbQuery::systemTask_getCanceled()
+                ->setCondition('Group', $groupName)
+                ->selectAsArray();
+        } else {
+            $result = dbQuery::systemTask_getNew()
+                ->setCondition('Group', $groupName)
+                ->selectAsArray();
         }
         return $result;
 
@@ -248,20 +303,24 @@ class data extends BaseData {
     }
 
     public static function stopTask ($id) {
-        global $app;
-        $result = array();
+        // global $app;
+        $r = new Result();
+        // $result = array();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Stop()
                 ->setCondition('ID', $id)
                 ->update();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $r->success();
+            // $result = $this->getSuccessResultObject();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
         // global $app;
         // return $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -280,8 +339,9 @@ class data extends BaseData {
     }
 
     public static function completeTask ($id, $result) {
-        global $app;
-        $result = array();
+        // global $app;
+        // $result = array();
+        $r = new Result();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Complete()
@@ -289,12 +349,15 @@ class data extends BaseData {
                 ->addDataItem('Result', $result)
                 ->update();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $r->success();
+            // $result = $this->getSuccessResultObject();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
         // global $app;
         // return $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -314,20 +377,24 @@ class data extends BaseData {
     }
 
     public static function getTaskByHash ($hash) {
-        global $app;
-        $result = array();
+        // global $app;
+        // $result = array();
+        $r = new Result();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Get()
                 ->setCondition('Hash', $hash)
                 ->select();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            // $result = $this->getSuccessResultObject();
+            $r->success();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
 
         // global $app;
         // $config = $this->db->createOrGetQuery(array(
@@ -344,20 +411,24 @@ class data extends BaseData {
     }
 
     public static function deleteTaskByHash ($hash) {
-        global $app;
-        $result = array();
+        // global $app;
+        // $result = array();
+        $r = new Result();
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Delete()
                 ->setCondition('Hash', $hash)
                 ->delete();
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $r->success();
+            // $result = $this->getSuccessResultObject();
         } catch (Exception $e) {
             $this->db->rollBack();
-            $result = $this->getFailedResultObject($e->getMessage());
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $result;
+        return $r;
         // global $app;
         // return $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -369,24 +440,24 @@ class data extends BaseData {
         // ));
     }
 
-    public static function getNextTaskToProcess ($group, $name) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_tasks",
-            "action" => "select",
-            'condition' => array(
-                'Group' => $this->db->createCondition($group),
-                'Name' => $this->db->createCondition($name)
-            ),
-            "order" => array(
-                "field" => "DateCreated",
-                "ordering" => "ASC"
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
+    // public static function getNextTaskToProcess ($group, $name) {
+    //     global $app;
+    //     return $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_tasks",
+    //         "action" => "select",
+    //         'condition' => array(
+    //             'Group' => $this->db->createCondition($group),
+    //             'Name' => $this->db->createCondition($name)
+    //         ),
+    //         "order" => array(
+    //             "field" => "DateCreated",
+    //             "ordering" => "ASC"
+    //         ),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    // }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -394,43 +465,37 @@ class data extends BaseData {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public static function getCustomer ($id = null) {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_customer",
-            "fields" => array("*"),
-            "limit" => 1,
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-        if ($id !== null) {
-            $config['condition']['ID'] = $this->db->createCondition($id);
-        }
-        return $config;
+    public static function fetchCustomerByID ($id) {
+        return dbQuery::systemCustomer_Get()
+            ->setCondition('ID', $id)
+            ->selectSingleItem();
     }
 
-    public static function getCustomerList (array $options = array()) {
-        global $app;
-        $config = self::getCustomer();
-        $config['condition'] = array();
-        $config["fields"] = array("ID");
-        $config['limit'] = 64;
-        $config['group'] = 'mpws_customer.ID';
-        unset($config['options']);
+    public static function fetchCustomerByName ($name) {
+        return dbQuery::systemCustomer_Get()
+            ->setCondition('HostName', $name)
+            ->selectSingleItem();
+    }
+
+    public static function fetchCustomerDataList (array $options = array()) {
+        $q = dbQuery::systemCustomer_Get()
+            ->setCondition('ID', $id)
+            ->groupBy('mpws_customer.ID')
+            ->addParams($options);
 
         if (!empty($options['_pSearch'])) {
-            if (is_string($options['_pSearch'])) {
-                $config['condition']["mpws_customer.HostName"] = $this->db->createCondition('%' . $options['_pSearch'] . '%', 'like');
-            } elseif (is_array($options['_pSearch'])) {
-                foreach ($options['_pSearch'] as $value) {
+            $searchData = $options['_pSearch'];
+
+            if (is_string($searchData)) {
+                $q->addCondition('HostName', '%' . $searchData . '%');
+            } elseif (is_array($searchData)) {
+                foreach ($searchData as $value) {
                     $chunks = explode('=', $value);
-                    // var_dump($chunks);
                     if (count($chunks) === 2) {
                         $keyToSearch = strtolower($chunks[0]);
                         $valToSearch = $chunks[1];
                         $conditionField = '';
-                        $conditionOp = '=';
+                        // $conditionOp = '=';
                         switch ($keyToSearch) {
                             case 'id':
                                 $conditionField = "mpws_customer.ID";
@@ -439,59 +504,141 @@ class data extends BaseData {
                             case 'n':
                                 $conditionField = "mpws_customer.HostName";
                                 $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
+                                // $conditionOp = 'like';
                                 break;
                         }
                         if (!empty($conditionField)) {
-                            $config['condition'][$conditionField] = $this->db->createCondition($valToSearch, $conditionOp);
+                            $q->addCondition($conditionField, $valToSearch);
+                            // $config['condition'][$conditionField] = $this->db->createCondition($valToSearch, $conditionOp);
                         }
                     }
                 }
             }
         }
+        return $q->selectAsDataList();
 
-        return $config;
+
+
+
+        // global $app;
+        // $config = self::getCustomer();
+        // $config['condition'] = array();
+        // $config["fields"] = array("ID");
+        // $config['limit'] = 64;
+        // $config['group'] = 'mpws_customer.ID';
+        // unset($config['options']);
+
+        // if (!empty($options['_pSearch'])) {
+        //     if (is_string($options['_pSearch'])) {
+        //         $config['condition']["mpws_customer.HostName"] = $this->db->createCondition('%' . $options['_pSearch'] . '%', 'like');
+        //     } elseif (is_array($options['_pSearch'])) {
+        //         foreach ($options['_pSearch'] as $value) {
+        //             $chunks = explode('=', $value);
+        //             // var_dump($chunks);
+        //             if (count($chunks) === 2) {
+        //                 $keyToSearch = strtolower($chunks[0]);
+        //                 $valToSearch = $chunks[1];
+        //                 $conditionField = '';
+        //                 $conditionOp = '=';
+        //                 switch ($keyToSearch) {
+        //                     case 'id':
+        //                         $conditionField = "mpws_customer.ID";
+        //                         $valToSearch = intval($valToSearch);
+        //                         break;
+        //                     case 'n':
+        //                         $conditionField = "mpws_customer.HostName";
+        //                         $valToSearch = '%' . $valToSearch . '%';
+        //                         $conditionOp = 'like';
+        //                         break;
+        //                 }
+        //                 if (!empty($conditionField)) {
+        //                     $config['condition'][$conditionField] = $this->db->createCondition($valToSearch, $conditionOp);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // return $config;
     }
 
     public static function createCustomer ($data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["DateCreated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_customer",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemCustomer_Add()
+                ->setData($data)
+                ->addStandardDateFileds()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+            // $result = $this->getSuccessResultObject($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+            // $result = $this->getFailedResultObject($e->getMessage());
+        }
+        return $itemID;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // $data["DateCreated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_customer",
+        //     "action" => "insert",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function updateCustomer ($CustomerID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_customer",
-            "condition" => array(
-                "ID" => $this->db->createCondition($CustomerID)
-            ),
-            "action" => "update",
-            "data" => $data,
-            "options" => null
-        ));
+    public function updateCustomer ($customerID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            dbQuery::systemCustomer_Add()
+                ->setCondition('ID', $customerID)
+                ->setData($data)
+                ->addStandardDateUpdatedFiled()
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+            // $r = $this->getFailedResultObject($e->getMessage());
+        }
+        return $r;
+
+
+
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_customer",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($CustomerID)
+        //     ),
+        //     "action" => "update",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function archiveCustomer ($CustomerID) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["Status"] = "REMOVED";
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_customer",
-            "condition" => array(
-                "ID" => $this->db->createCondition($CustomerID)
-            ),
-            "action" => "update",
-            "data" => $data,
-            "options" => null
-        ));
+    public function archiveCustomer ($customerID) {
+        return $this->updateCustomer($customerID, array('Status' => 'REMOVED'));
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // $data["Status"] = "REMOVED";
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_customer",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($CustomerID)
+        //     ),
+        //     "action" => "update",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
 

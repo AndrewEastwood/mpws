@@ -2,12 +2,14 @@
 
 namespace engine\lib;
 
+use \engine\lib\data as BaseData;
 use Exception;
 use ArrayObject;
 
 class dbquery {
 
     static $queryNameToInstanceMap = array();
+    static $DATE_FORMAT = 'Y-m-d H:i:s';
 
     var $defaultLimit = 32;
 
@@ -68,6 +70,14 @@ class dbquery {
 
     public static function get ($queryName) {
         return dbquery::$queryNameToInstanceMap[$queryName];
+    }
+
+    public static function getDate ($strDate = '') {
+        if (!empty($strDate)) {
+            $time = strtotime($strDate);
+            return date(dbquery::$DATE_FORMAT, $time);
+        }
+        return date(dbquery::$DATE_FORMAT);
     }
 
     /**  As of PHP 5.3.0  */
@@ -281,6 +291,22 @@ class dbquery {
         }
 
         // return $options;
+        return $this;
+    }
+
+    public function addStandardDateFileds () {
+        $this->addStandardDateCreatedFiled();
+        $this->addStandardDateUpdatedFiled();
+        return $this;
+    }
+
+    public function addStandardDateCreatedFiled () {
+        $this->addDataItem('DateCreated', dbquery::getDate());
+        return $this;
+    }
+
+    public function addStandardDateUpdatedFiled () {
+        $this->addDataItem('DateUpdated', dbquery::getDate());
         return $this;
     }
 

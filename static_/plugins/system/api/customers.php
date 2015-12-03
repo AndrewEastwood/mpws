@@ -4,30 +4,14 @@ namespace static_\plugins\system\api;
 use \engine\lib\api as API;
 use \engine\lib\validate as Validate;
 use \engine\lib\path as Path;
+use \engine\lib\request as Request;
 use Exception;
 
 class customers extends API {
 
     var $customersCache = array();
-    private $_statuses = array('ACTIVE', 'REMOVED');
+    // private $_statuses = array('ACTIVE', 'REMOVED');
 
-    public function getCustomerUploadInnerDir ($host, $subDir = '') {
-        global $app;
-        $path = '';
-        if (empty($subDir))
-            $path = Path::createDirPath($host, 'customers');
-        else
-            $path = Path::createDirPath($host, 'customers', $subDir);
-        return $path;
-    }
-    public function getCustomerUploadInnerImagePath ($host, $name, $subDir = false) {
-        $path = $this->getCustomerUploadInnerDir($host, $subDir);
-        return $path . $name;
-    }
-
-    public function getCustomerStatuses () {
-        return $this->_statuses;
-    }
 
     public function setCustomerSessionID ($id) {
         $_SESSION['site_id'] = $id;
@@ -185,69 +169,73 @@ class customers extends API {
         return (object)$settings;
     }
 
-    private function __adjustCustomer (&$customer) {
-        // adjusting
-        $ID = intval($customer['ID']);
-        $customer['ID'] = $ID;
-        // $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
-        $customer['isBlocked'] = $customer['Status'] != 'ACTIVE';
-        $customer['Plugins'] = explode(",", $customer['Plugins']);
-        // var_dump($customer);
-        if (!empty($customer['Logo'])) {
-            $customer['Logo'] = array(
-                'name' => $customer['Logo'],
-                'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
-                'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
-                'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
-            );
-        }
-        return $customer;
-    }
+    // private function __adjustCustomer (&$customer) {
+    //     // adjusting
+    //     $ID = intval($customer['ID']);
+    //     $customer['ID'] = $ID;
+    //     // $customer['Settings'] = API::getAPI('system:settings')->getSettingsByCustomerID($ID);
+    //     $customer['isBlocked'] = $customer['Status'] != 'ACTIVE';
+    //     $customer['Plugins'] = explode(",", $customer['Plugins']);
+    //     // var_dump($customer);
+    //     if (!empty($customer['Logo'])) {
+    //         $customer['Logo'] = array(
+    //             'name' => $customer['Logo'],
+    //             'normal' => '/' . Path::getUploadDirectory() . $this->data->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
+    //             'sm' => '/' . Path::getUploadDirectory() . $this->data->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
+    //             'xs' => '/' . Path::getUploadDirectory() . $this->data->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
+    //         );
+    //     }
+    //     return $customer;
+    // }
 
     public function getCustomerByID ($ID) {
-        global $app;
-        $config = data::getCustomer($ID);
-        $customer = $app->getDB()->query($config, false);
-        return $this->__adjustCustomer($customer);
+        return $this->data->fetchCustomerByID($ID);
+        // global $app;
+        // $config = $this->data->getCustomer($ID);
+        // $customer = $app->getDB()->query($config, false);
+        // return $this->__adjustCustomer($customer);
     }
 
     public function getCustomerByName ($customerName) {
-        global $app;
-        $config = data::getCustomer();
-        $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
-        $customer = $app->getDB()->query($config, false);
-        // echo 2121212;
-        // var_dump($customer);
-        if (empty($customer)) {
-            return null;
-        }
-        return $this->__adjustCustomer($customer);
+        return $this->data->fetchCustomerByName($customerName);
+        // global $app;
+        // $config = $this->data->getCustomer();
+        // $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
+        // $customer = $app->getDB()->query($config, false);
+        // // echo 2121212;
+        // // var_dump($customer);
+        // if (empty($customer)) {
+        //     return null;
+        // }
+        // return $this->__adjustCustomer($customer);
     }
 
     public function getCustomers_List (array $options = array()) {
-        global $app;
-        $config = data::getCustomerList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getCustomerByID($orderRawItem['ID']);
-                }
-                return $_items;
-            }
-        );
-        $options['useCustomerID'] = false;
-        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        return $dataList;
+        return $this->data->fetchCustomerDataList($options);
+        // global $app;
+        // $config = $this->data->getCustomerList($options);
+        // $self = $this;
+        // $callbacks = array(
+        //     "parse" => function ($items) use($self) {
+        //         $_items = array();
+        //         foreach ($items as $key => $orderRawItem) {
+        //             $_items[] = $self->getCustomerByID($orderRawItem['ID']);
+        //         }
+        //         return $_items;
+        //     }
+        // );
+        // $options['useCustomerID'] = false;
+        // $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+        // return $dataList;
     }
 
     public function createCustomer ($reqData) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        $CustomerID = null;
+        // global $app;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        // $CustomerID = null;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'HostName' => array('string', 'notEmpty', 'max' => 100),
@@ -275,9 +263,9 @@ class customers extends API {
                     $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getCustomerUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getCustomerUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getCustomerUploadInnerDir(), $newFileName);
                     $validatedValues['Logo'] = $uploadInfo['filename'];
                 }
                 unset($validatedValues['file1']);
@@ -295,37 +283,43 @@ class customers extends API {
                 }
                 $validatedValues['Plugins'] = implode(',', $pList);
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
-                $configCreateCustomer = data::createCustomer($validatedValues);
-                $CustomerID = $app->getDB()->query($configCreateCustomer, false) ?: null;
+                $r = $this->data->createCustomer($validatedValues);
+                // $app->getDB()->query($configCreateCustomer, false) ?: null;
 
-                if (empty($CustomerID))
+                if ($r->isEmptyResult())
                     throw new Exception('CustomerCreateError');
 
-                $app->getDB()->commit();
+                // $app->getDB()->commit();
 
-                $success = true;
+                // $success = true;
             } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
+                // $app->getDB()->rollBack();
+                // $errors[] = $e->getMessage();
+                $r->addError($e->getMessage());
             }
-        else
-            $errors = $validatedDataObj["errors"];
+        else {
+            // $errors = $validatedDataObj["errors"];
+            $r->addErrors($validatedDataObj["errors"]);
+        }
 
-        if ($success && !empty($CustomerID))
-            $result = $this->getCustomerByID($CustomerID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        if ($r->hasResult()) {
+            $customer = $this->getCustomerByID($r->getResult());
+            $r->setResult($customer);
+        }
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
 
-        return $result;
+        return $r->toArray();
     }
 
     public function updateCustomer ($CustomerID, $reqData, $isPatch = false) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+        // global $app;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'HostName' => array('string', 'skipIfUnset', 'max' => 100),
@@ -360,9 +354,9 @@ class customers extends API {
 
                     if ($newFileName !== $currentFileName) {
                         if (empty($newFileName) && !empty($currentFileName)) {
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'sm'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'xs'));
-                            Path::deleteUploadedFile($this->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName));
+                            Path::deleteUploadedFile($this->data->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'sm'));
+                            Path::deleteUploadedFile($this->data->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName, 'xs'));
+                            Path::deleteUploadedFile($this->data->getCustomerUploadInnerImagePath($customer['HostName'], $currentFileName));
                             $validatedValues['Logo'] = null;
                         }
                         if (!empty($newFileName)) {
@@ -371,9 +365,9 @@ class customers extends API {
                             $smImagePath = 'sm' . Path::getDirectorySeparator() . $currentFileName;
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
                             $normalImagePath = $currentFileName;
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCustomerUploadInnerDir($customer['HostName'], 'sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCustomerUploadInnerDir($customer['HostName'], 'xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCustomerUploadInnerDir($customer['HostName']), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getCustomerUploadInnerDir($customer['HostName'], 'sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getCustomerUploadInnerDir($customer['HostName'], 'xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getCustomerUploadInnerDir($customer['HostName']), $newFileName);
                             $validatedValues['Logo'] = $uploadInfo['filename'];
                         }
                     }
@@ -403,65 +397,102 @@ class customers extends API {
                     }
                 }
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
-                $configCreateCustomer = data::updateCustomer($CustomerID, $validatedValues);
-                $app->getDB()->query($configCreateCustomer, false) ?: null;
+                // $configCreateCustomer = 
+                $r = $this->data->updateCustomer($CustomerID, $validatedValues);
+                // $app->getDB()->query($configCreateCustomer, false) ?: null;
 
-                $app->getDB()->commit();
+                // $app->getDB()->commit();
 
-                $success = true;
+                // $success = true;
             } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
+                $r->fail()
+                    ->addError($e->getMessage());
+                // $app->getDB()->rollBack();
+                // $errors[] = $e->getMessage();
             }
-        else
-            $errors = $validatedDataObj["errors"];
+        else {
+            // $errors = $validatedDataObj["errors"];
+            $r->addErrors($validatedDataObj["errors"]);
+        }
 
-        $result = $this->getCustomerByID($CustomerID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        $customer = $this->getCustomerByID($CustomerID);
+        $r->setResult($customer);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
 
-        return $result;
+        return $r->toArray();
+
+        // $result = $this->getCustomerByID($CustomerID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+
+        // return $result;
     }
 
     public function archiveCustomer ($CustomerID) {
-        global $app;
-        $errors = array();
-        $success = false;
+        // global $app;
+        // $errors = array();
+        // $success = false;
 
-        try {
-            $app->getDB()->beginTransaction();
 
-            $config = data::archiveCustomer($CustomerID);
-            $app->getDB()->query($config, false);
-
-            $app->getDB()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = 'CustomerArchiveError';
+        $r = $this->data->archiveCustomer($CustomerID);
+        if ($r->hasResult()) {
+            $customer = $this->getCustomerByID($r->getResult());
+            $r->setResult($customer);
         }
+        return $r->toArray();
 
-        $result = $this->getCustomerByID($CustomerID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+
+        // try {
+        //     $app->getDB()->beginTransaction();
+
+        //     $config = $this->data->archiveCustomer($CustomerID);
+        //     $app->getDB()->query($config, false);
+
+        //     $app->getDB()->commit();
+
+        //     $success = true;
+        // } catch (Exception $e) {
+        //     $app->getDB()->rollBack();
+        //     $errors[] = 'CustomerArchiveError';
+        // }
+
+        // $result = $this->getCustomerByID($CustomerID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // return $result;
     }
 
     public function get (&$resp, $req) {
         // var_dump($req);
-        if (!empty($req->id)) {
-            if (is_numeric($req->id)) {
-                $CustomerID = intval($req->id);
-                $resp = $this->getCustomerByID($CustomerID);
-            } else {
-                $resp = $this->getCustomerByName($req->id);
-            }
-        } else {
+
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->getCustomerByID($req->id);
+            return;
+        }
+        // or by ExternalKey
+        if (Request::hasRequestedExternalKey()) {
+            $resp = $this->getCustomerByName($req->externalKey);
+            return;
+        }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
             $resp = $this->getCustomers_List($req->get);
         }
+        // if (!empty($req->id)) {
+        //     if (is_numeric($req->id)) {
+        //         $CustomerID = intval($req->id);
+        //         $resp = $this->getCustomerByID($CustomerID);
+        //     } else {
+        //         $resp = $this->getCustomerByName($req->id);
+        //     }
+        // } else {
+        //     $resp = $this->getCustomers_List($req->get);
+        // }
     }
 
     public function post (&$resp, $req) {
@@ -497,17 +528,31 @@ class customers extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            if (is_numeric($req->id)) {
-                $CustomerID = intval($req->id);
-                $resp = $this->updateCustomer($CustomerID, $req->data);
-            } else {
-                $resp['error'] = 'WrongParameter_id';
-            }
-            // $this->_getOrSetCachedState('changed:product', true);
+
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->updateCustomer($req->id, $req->data);
+            return;
         }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp['error'] = 'MissedParameter_id';
+            return;
+        }
+
+        $resp['error'] = 'WrongParameter_id';
+        // if (empty($req->id)) {
+        //     $resp['error'] = 'MissedParameter_id';
+        // } else {
+        //     if (is_numeric($req->id)) {
+        //         $CustomerID = intval($req->id);
+        //         $resp = $this->updateCustomer($CustomerID, $req->data);
+        //     } else {
+        //         $resp['error'] = 'WrongParameter_id';
+        //     }
+        //     // $this->_getOrSetCachedState('changed:product', true);
+        // }
     }
 
     public function patch (&$resp, $req) {
@@ -517,16 +562,29 @@ class customers extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            if (is_numeric($req->id)) {
-                $CustomerID = intval($req->id);
-                $resp = $this->updateCustomer($CustomerID, $req->data, true);
-            } else {
-                $resp['error'] = 'WrongParameter_id';
-            }
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->updateCustomer($req->id, $req->data, true);
+            return;
         }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp['error'] = 'MissedParameter_id';
+            return;
+        }
+
+        $resp['error'] = 'WrongParameter_id';
+        // if (empty($req->id)) {
+        //     $resp['error'] = 'MissedParameter_id';
+        // } else {
+        //     if (is_numeric($req->id)) {
+        //         $CustomerID = intval($req->id);
+        //         $resp = $this->updateCustomer($CustomerID, $req->data, true);
+        //     } else {
+        //         $resp['error'] = 'WrongParameter_id';
+        //     }
+        // }
     }
 
     public function delete (&$resp, $req) {
@@ -536,16 +594,29 @@ class customers extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            if (is_numeric($req->id)) {
-                $CustomerID = intval($req->id);
-                $resp = $this->archiveCustomer($CustomerID);
-            } else {
-                $resp['error'] = 'WrongParameter_id';
-            }
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->archiveCustomer($req->id);
+            return;
         }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp['error'] = 'MissedParameter_id';
+            return;
+        }
+
+        $resp['error'] = 'WrongParameter_id';
+        // if (empty($req->id)) {
+        //     $resp['error'] = 'MissedParameter_id';
+        // } else {
+        //     if (is_numeric($req->id)) {
+        //         $CustomerID = intval($req->id);
+        //         $resp = $this->archiveCustomer($CustomerID);
+        //     } else {
+        //         $resp['error'] = 'WrongParameter_id';
+        //     }
+        // }
     }
 
 /*    public function get (&$resp, $req) {

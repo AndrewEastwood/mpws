@@ -149,18 +149,18 @@ class tasks extends API {
         return $this->data->getGroupTasksArray($groupName, false, false, true);
     }
 
-    public function getNextNewTaskToProcess ($group, $name) {
-        global $app;
-        $result = array();
-        $config = data::getNextTaskToProcess($group, $name);
-        $result = $app->getDB()->query($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
-        return $result;
-    }
+    // public function getNextNewTaskToProcess ($group, $name) {
+    //     global $app;
+    //     $result = array();
+    //     $config = data::getNextTaskToProcess($group, $name);
+    //     $result = $app->getDB()->query($config);
+    //     if ($result) {
+    //         foreach ($result as &$value) {
+    //             $this->__adjustTask($value);
+    //         }
+    //     }
+    //     return $result;
+    // }
 
 
 }
