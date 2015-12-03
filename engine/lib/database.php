@@ -133,6 +133,14 @@ class database {
         );
     }
 
+    public function createQuery ($name, $source) {
+        return new dbquery($name, $source);
+    }
+
+    public function getQuery ($name) {
+        return dbquery::get($name);
+    }
+
     public function createOrGetQuery ($name) {
         if (dbquery::exists($name)) {
             return dbquery::get($name);
