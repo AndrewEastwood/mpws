@@ -30,7 +30,7 @@ class data extends BaseData {
         $this->db->createQuery('systemTask_Delete', $this->source_tasks);
 
         $this->db->createQuery('systemTask_Add', $this->source_tasks)
-            ->addConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
+            ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
 
         $this->db->createQuery('systemTask_Schedule', $this->source_tasks)
             ->setData(array(
@@ -65,13 +65,13 @@ class data extends BaseData {
             ));
 
         $this->db->createQuery('systemTask_getRunning', $this->source_tasks)
-            ->addCondition('IsRunning', 1);
+            ->setCondition('IsRunning', 1);
 
         $this->db->createQuery('systemTask_getComplete', $this->source_tasks)
-            ->addCondition('Complete', 1);
+            ->setCondition('Complete', 1);
 
         $this->db->createQuery('systemTask_getCanceled', $this->source_tasks)
-            ->addCondition('ManualCancel', 1);
+            ->setCondition('ManualCancel', 1);
 
         dbQuery::setQueryFilter(function (&$task) {
             if (empty($task))
@@ -84,11 +84,11 @@ class data extends BaseData {
             $task['Scheduled'] = intval($task['Scheduled']) === 1;
         }, 'systemTask_.*');
 
-        $r = $this->db->getQuery('systemTask_getComplete')
+        // $r = $this->db->getQuery('systemTask_getComplete')
             // ->addConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'))
-            ->selectSingleItem();
+            // ->selectSingleItem();
 
-        var_dump($r);
+        // var_dump($r);
         // var_dump(dbQuery::systemTask_getComplete());
         // var_dump(dbQuery::$queryNameToInstanceMap);
         die();
@@ -136,7 +136,7 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Schedule()
-                ->addCondition('Hash', $hash)
+                ->setCondition('Hash', $hash)
                 ->update();
             $this->db->commit();
             $result = $this->getSuccessResultObject();
@@ -168,7 +168,7 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Start()
-                ->addCondition('Hash', $hash)
+                ->setCondition('Hash', $hash)
                 ->update();
             $this->db->commit();
             $result = $this->getSuccessResultObject();
@@ -222,7 +222,7 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Stop()
-                ->addCondition('ID', $id)
+                ->setCondition('ID', $id)
                 ->update();
             $this->db->commit();
             $result = $this->getSuccessResultObject();
@@ -254,8 +254,8 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Complete()
-                ->addCondition('ID', $id)
-                ->appendDataItem('Result', $result)
+                ->setCondition('ID', $id)
+                ->addDataItem('Result', $result)
                 ->update();
             $this->db->commit();
             $result = $this->getSuccessResultObject();
@@ -288,7 +288,7 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Get()
-                ->addCondition('Hash', $hash)
+                ->setCondition('Hash', $hash)
                 ->select();
             $this->db->commit();
             $result = $this->getSuccessResultObject();

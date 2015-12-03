@@ -102,27 +102,35 @@ class dbquery {
         $this->action = $action;
         return $this;
     }
+    public function setCondition ($field, $value, $comparator = null, $concatenate = null) {
+        $this->clearConditions();
+        return $this->addCondition($field, $value, $comparator, $concatenate);
+    }
     public function addCondition ($field, $value, $comparator = null, $concatenate = null) {
         $this->conditions[$this->setFieldSource($field)] = $this->createCondition($value, $comparator, $concatenate);
         return $this;
+    }
+    public function setConditionFn ($field, $callParams) {
+        $this->clearConditions();
+        return $this->addConditionFn($field, $callParams);
     }
     public function addConditionFn ($field, $callParams) {
         $this->conditions[$this->setFieldSource($field)] = array('fn' => $callParams);
         return $this;
     }
-    public function clearAllConditions () {
+    public function clearConditions () {
         $this->conditions = array();
         return $this;
     }
-    public function setData ($data) {
+    public function setData (array $data) {
         $this->data = $data;
         return $this;
     }
-    public function appendData ($data) {
+    public function addData (array $data) {
         $this->data += $data;
         return $this;
     }
-    public function appendDataItem ($key, $value) {
+    public function addDataItem ($key, $value) {
         $this->data[$key] = $value;
         return $this;
     }
@@ -131,6 +139,10 @@ class dbquery {
         return $this;
     }
     public function setFields () {
+        $this->fields = array();
+        return $this->addFields(func_get_args());
+    }
+    public function addFields () {
         $fileds = func_get_args();
         if (isset($fileds) && count($fileds) == 0 && is_array($fileds[0])) {
             $fileds = func_get_arg(0);
@@ -138,7 +150,6 @@ class dbquery {
         if (empty($fileds)) {
             throw new Exception("setFields got empty array", 1);
         }
-        $this->fields = array();
         foreach ($fields as $fld) {
             $this->fields[] = $this->setFieldSource($fld);
         }
@@ -156,9 +167,13 @@ class dbquery {
         $this->group = $group;
         return $this;
     }
-    public function addHaving ($having) {
+    public function setHaving ($having) {
         $this->having = $having;
         return $this;
+    }
+    public function setJoin ($src, $constraint, array $fields) {
+        $this->join = array();
+        return $this->addJoin($src, $constraint, $fields);
     }
     public function addJoin ($src, $constraint, array $fields) {
         $constraint = explode('=', $constraint);
@@ -168,6 +183,9 @@ class dbquery {
             'fields' => $fields
         );
         return $this;
+    }
+    public function clearJoins () {
+        $this->join = array();
     }
     public function ordering ($field, $desc = false) {
         if ($field[0] == '-') {
