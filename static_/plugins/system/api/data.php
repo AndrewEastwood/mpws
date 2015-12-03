@@ -73,6 +73,12 @@ class data extends BaseData {
         $this->db->createQuery('systemTask_getCanceled', $this->source_tasks)
             ->setCondition('ManualCancel', 1);
 
+        $this->db->createQuery('systemTask_getNew', $this->source_tasks)
+            ->setCondition('Scheduled', 0)
+            ->setCondition('IsRunning', 0)
+            ->setCondition('Complete', 0)
+            ->setCondition('ManualCancel', 0);
+
         dbQuery::setQueryFilter(function (&$task) {
             if (empty($task))
                 return null;
@@ -100,10 +106,10 @@ class data extends BaseData {
         $result = array();
         try {
             $this->db->beginTransaction();
-            dbQuery::systemTask_Stop()
+            $taskId = dbQuery::systemTask_Stop()
                 ->insert($data);
             $this->db->commit();
-            $result = $this->getSuccessResultObject();
+            $result = $this->getSuccessResultObject($taskId);
         } catch (Exception $e) {
             $this->db->rollBack();
             $result = $this->getFailedResultObject($e->getMessage());
@@ -194,7 +200,32 @@ class data extends BaseData {
         // ));
     }
 
-    public static function getGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
+    public static function getGroupTasksArray ($groupName, $active = false, $completed = false, $canceled = false) {
+        global $app;
+        $result = array();
+        try {
+            if ($active) {
+                $result = dbQuery::systemTask_getRunning()
+                    ->setCondition('Group', $groupName)
+                    ->selectAsArray();
+            } else if ($completed) {
+                $result = dbQuery::systemTask_getComplete()
+                    ->setCondition('Group', $groupName)
+                    ->selectAsArray();
+            } else if ($canceled) {
+                $result = dbQuery::systemTask_getCanceled()
+                    ->setCondition('Group', $groupName)
+                    ->selectAsArray();
+            } else {
+                $result = dbQuery::systemTask_getNew()
+                    ->setCondition('Group', $groupName)
+                    ->selectAsArray();
+                }
+        } catch (Exception $e) {
+            $result = $this->getFailedResultObject($e->getMessage());
+        }
+        return $result;
+
         // global $app;
         // $config = $this->db->createOrGetQuery(array(
         //     "source" => "mpws_tasks",
@@ -318,7 +349,7 @@ class data extends BaseData {
         try {
             $this->db->beginTransaction();
             dbQuery::systemTask_Delete()
-                ->addCondition('Hash', $hash)
+                ->setCondition('Hash', $hash)
                 ->delete();
             $this->db->commit();
             $result = $this->getSuccessResultObject();

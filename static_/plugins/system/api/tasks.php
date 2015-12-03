@@ -102,12 +102,10 @@ class tasks extends API {
     }
 
     public function isTaskAdded ($group, $name, $params) {
-        global $app;
-        $result = array();
-        $config = data::getTaskByHash(md5($group . $name . $params));
-        $result = $app->getDB()->query($config);
-        $this->__adjustTask($result);
-        return $result;
+        return $this->data->getTaskByHash(md5($group . $name . $params));
+        // $result = $app->getDB()->query($config);
+        // $this->__adjustTask($result);
+        // return $result;
     }
 
     public function deleteTaskByParams ($group, $name, $params) {
@@ -115,75 +113,40 @@ class tasks extends API {
     }
 
     public function deleteTaskByHash ($hash) {
-        global $app;
-        $result = array();
-        $success = false;
-        $errors = array();
-        $config = data::deleteTaskByHash($hash);
-        try {
-            $app->getDB()->beginTransaction();
-            $result = $app->getDB()->query($config);
-            $app->getDB()->commit();
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+        return $this->data->deleteTaskByHash($hash);
+        // global $app;
+        // $result = array();
+        // $success = false;
+        // $errors = array();
+        // $config = data::deleteTaskByHash($hash);
+        // try {
+        //     $app->getDB()->beginTransaction();
+        //     $result = $app->getDB()->query($config);
+        //     $app->getDB()->commit();
+        //     $success = true;
+        // } catch (Exception $e) {
+        //     $app->getDB()->rollBack();
+        //     $errors[] = $e->getMessage();
+        // }
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // return $result;
     }
 
     public function getActiveTasksByGroupName ($groupName) {
-        global $app;
-        $result = array();
-        $config = data::getGroupTasks($groupName, true, false, false);
-        $result = $app->getDB()->query($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
-        return $result;
+        return $this->data->getGroupTasksArray($groupName, true, false, false);
     }
 
     public function getCompletedTasksByGroupName ($groupName) {
-        global $app;
-        $result = array();
-        $config = data::getGroupTasks($groupName, false, true, false);
-        $result = $app->getDB()->query($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
-        return $result;
+        return $this->data->getGroupTasksArray($groupName, false, true, false);
     }
 
     public function getNewTasksByGroupName ($groupName) {
-        global $app;
-        $result = array();
-        $config = data::getGroupTasks($groupName, false, false, false);
-        $result = $app->getDB()->query($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
-        return $result;
+        return $this->data->getGroupTasksArray($groupName, false, false, false);
     }
 
     public function getCanceledTasksByGroupName ($groupName) {
-        global $app;
-        $result = array();
-        $config = data::getGroupTasks($groupName, false, false, true);
-        $result = $app->getDB()->query($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
-        return $result;
+        return $this->data->getGroupTasksArray($groupName, false, false, true);
     }
 
     public function getNextNewTaskToProcess ($group, $name) {
