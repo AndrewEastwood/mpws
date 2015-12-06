@@ -33,6 +33,13 @@ class result {
         $this->errors += $errors;
         return $this;
     }
+    public function getErrors () {
+        return $this->errors;
+    }
+    public function copyErrorsFrom (result $r) {
+        $this->addErrors($r->getErrors());
+        return $this;
+    }
 
     // public function setResultSimple ($r) {
     //     if (!is_array($r)) {

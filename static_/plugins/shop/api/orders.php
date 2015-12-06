@@ -183,7 +183,7 @@ class orders extends API {
         try {
 
             $app->getDB()->beginTransaction();
-            $app->getDB()->disableTransactions();
+            $app->getDB()->lockTransaction();
 
             // check if matches
             if ($userToken !== $formAccountToken)
@@ -343,12 +343,12 @@ class orders extends API {
             // if (empty($userID) || empty($addressID))
             //     throw new Exception("UnableToLinkAccountOrAddress", 1);
 
-            $app->getDB()->enableTransactions();
+            $app->getDB()->unlockTransaction();
             $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $app->getDB()->enableTransactions();
+            $app->getDB()->unlockTransaction();
             $app->getDB()->rollBack();
             $errors['Order'][] = $e->getMessage();
             $success = false;

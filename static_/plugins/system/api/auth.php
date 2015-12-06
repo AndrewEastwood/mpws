@@ -46,18 +46,71 @@ class auth extends API {
         $this->updateSessionAuth();
     }
 
-    public function ifYouCan ($action) {
+    // public function ifYouCan (/* action or actions */) {
+    //     $actions = func_get_args();
+    //     $user = $this->getAuthenticatedUser();
+    //     if (empty($user)) {
+    //         return false;
+    //     }
+    //     $youCan = true;
+
+    //     foreach ($action as $action) {
+    //         if (!isset($user['p_Can' . $action])) {
+    //             if (isset($user['p_Others']) && in_array($action, $user['p_Others'])) {
+    //                 return true;
+    //             }
+    //             return false;
+    //         }
+    //         $youCan = $youCan && $user['p_Can' . $action];
+    //     }
+        
+    //     return $youCan;
+    // }
+
+    public function ifYouCan ($p) {
+        return $this->ifYouCanAll($p);
+    }
+
+    public function ifYouCanAny (/* action or actions */) {
+        $actions = func_get_args();
         $user = $this->getAuthenticatedUser();
         if (empty($user)) {
             return false;
         }
-        if (!isset($user['p_Can' . $action])) {
-            if (isset($user['p_Others']) && in_array($action, $user['p_Others'])) {
-                return true;
+        $youCan = false;
+
+        foreach ($action as $action) {
+            if (isset($user['p_Can' . $action])) {
+                // return false;
+                $youCan = $youCan || $user['p_Can' . $action];
             }
+            if (isset($user['p_Others']) && in_array($action, $user['p_Others'])) {
+                // return true;
+                $youCan = true;
+            }
+        }
+        return $youCan;
+    }
+    public function ifYouCanAll (/* action or actions */) {
+        $actions = func_get_args();
+        $user = $this->getAuthenticatedUser();
+        if (empty($user)) {
             return false;
         }
-        return $user['p_Can' . $action];
+        $youCan = true;
+
+        foreach ($action as $action) {
+            if (isset($user['p_Can' . $action])) {
+                // return false;
+                $youCan = $youCan && $user['p_Can' . $action];
+            }
+            if (isset($user['p_Others']) && in_array($action, $user['p_Others'])) {
+                // return true;
+                $youCan = $youCan && true;
+            }
+        }
+        
+        return $youCan;
     }
 
     public function updateSessionAuth () {

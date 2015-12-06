@@ -7,14 +7,19 @@ use \engine\lib\path as Path;
 use \engine\lib\dbquery as dbQuery;
 use \engine\lib\data as BaseData;
 use \engine\lib\result as Result;
+use \engine\lib\api as API;
 
 class data extends BaseData {
 
-    // public static $statusCustomer = array('ACTIVE','REMOVED');
-    // public static $statusCustomerSettings = array('ACTIVE','DISABLED');
+    // public $statusCustomer = array('ACTIVE','REMOVED');
+    // public $statusCustomerSettings = array('ACTIVE','DISABLED');
 
     var $source_customer = 'mpws_customer';
     var $source_tasks = 'mpws_tasks';
+    var $source_users = 'mpws_users';
+    var $source_permissions = 'mpws_permissions';
+    var $source_address = 'mpws_userAddresses';
+    var $source_emails = 'mpws_emails';
 
     function __construct () {
         global $app;
@@ -25,22 +30,18 @@ class data extends BaseData {
         // when you do select any task and process
         // raw db value before output
         // $filter = ;
-        
+
         // create required queries
         // ==== CUSTOMERS
-        $this->db->createQuery('systemCustomer_Get', $this->source_customer);
-        
-        $this->db->createQuery('systemCustomer_Add', $this->source_customer)
-            ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
+        $this->db->createQuery('systemCustomer', $this->source_customer);
+        // $this->db->createQuery('systemCustomer_Add', $this->source_customer)
+            // ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
 
         // ==== TASKS
-        $this->db->createQuery('systemTask_Get', $this->source_tasks);
-
-        $this->db->createQuery('systemTask_Delete', $this->source_tasks);
-
-        $this->db->createQuery('systemTask_Add', $this->source_tasks)
-            ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
-
+        $this->db->createQuery('systemTask', $this->source_tasks);
+        // $this->db->createQuery('systemTask_Delete', $this->source_tasks);
+        // $this->db->createQuery('systemTask_Add', $this->source_tasks)
+            // ->setConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'));
         $this->db->createQuery('systemTask_Schedule', $this->source_tasks)
             ->setData(array(
                 'Scheduled' => 1,
@@ -48,7 +49,6 @@ class data extends BaseData {
                 'Complete' => 0,
                 'ManualCancel' => 0
             ));
-
         $this->db->createQuery('systemTask_Start', $this->source_tasks)
             ->setData(array(
                 'Scheduled' => 0,
@@ -56,7 +56,6 @@ class data extends BaseData {
                 'Complete' => 0,
                 'ManualCancel' => 0
             ));
-
         $this->db->createQuery('systemTask_Stop', $this->source_tasks)
             ->setData(array(
                 'Scheduled' => 0,
@@ -64,7 +63,6 @@ class data extends BaseData {
                 'Complete' => 0,
                 'ManualCancel' => 1
             ));
-
         $this->db->createQuery('systemTask_Complete', $this->source_tasks)
             ->setData(array(
                 'Scheduled' => 0,
@@ -72,21 +70,41 @@ class data extends BaseData {
                 'Complete' => 1,
                 'ManualCancel' => 0
             ));
-
         $this->db->createQuery('systemTask_getRunning', $this->source_tasks)
             ->setCondition('IsRunning', 1);
-
         $this->db->createQuery('systemTask_getComplete', $this->source_tasks)
             ->setCondition('Complete', 1);
-
         $this->db->createQuery('systemTask_getCanceled', $this->source_tasks)
             ->setCondition('ManualCancel', 1);
-
         $this->db->createQuery('systemTask_getNew', $this->source_tasks)
             ->setCondition('Scheduled', 0)
             ->setCondition('IsRunning', 0)
             ->setCondition('Complete', 0)
             ->setCondition('ManualCancel', 0);
+
+        // ==== USERS
+        $this->db->createQuery('systemUsers', $this->source_users);
+        // $this->db->createQuery('systemUsers_GetByCreds', $this->source_users);
+        // $this->db->createQuery('systemUsers_GetByHash', $this->source_users);
+        // $this->db->createQuery('systemUsers_GetByEmil', $this->source_users);
+        // $this->db->createQuery('systemUsers_Add', $this->source_users);
+        // $this->db->createQuery('systemUsers_Update', $this->source_users);
+
+        // ==== PERMISSIONS
+        $this->db->createQuery('systemUserPerms', $this->source_permissions);
+        // $this->db->createQuery('systemUserPerms_Add', $this->source_permissions);
+        // $this->db->createQuery('systemUserPerms_Update', $this->source_permissions);
+
+        // ==== ADDRESS
+        $this->db->createQuery('systemAddress', $this->source_address)
+            ->setFields("ID", "UserID", "Address", "POBox",
+                "Country", "City", "Status", "DateCreated", "DateUpdated");
+            // ->cloneQuery('systemAddress_GetForUser');
+        // $this->db->createQuery('systemAddress_GetForUser', $this->source_address);
+        // $this->db->createQuery('systemAddress_Update', $this->source_address)
+        // $this->db->createQuery('systemAddress_Add', $this->source_address)
+        // $this->db->createQuery('systemAddress_Archive', $this->source_address)
+
 
         dbQuery::setQueryFilter(function (&$task) {
             if (empty($task))
@@ -97,7 +115,7 @@ class data extends BaseData {
             $task['Complete'] = intval($task['Complete']) === 1;
             $task['ManualCancel'] = intval($task['ManualCancel']) === 1;
             $task['Scheduled'] = intval($task['Scheduled']) === 1;
-        }, 'systemTask_.*');
+        }, 'systemTask');
 
         dbQuery::setQueryFilter(function (&$customer) {
             // adjusting
@@ -115,7 +133,75 @@ class data extends BaseData {
                     'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
                 );
             }
-        }, 'systemCustomer_.*');
+        }, 'systemCustomer');
+
+        dbQuery::setQueryFilter(function (&$user) {
+            // adjusting
+            $ID = intval($user['ID']);
+            $user['ID'] = $ID;
+            $user['IsOnline'] = intval($user['IsOnline']) === 1;
+            $user['IsTemp'] = $user['Status'] === "TEMP";
+            $user['isBlocked'] = $user['Status'] === "REMOVED";
+            unset($user['Password']);
+
+            // attach addresses
+            $user['Addresses'] = $this-> API::getAPI('system:address')->getAddresses($UserID);
+
+
+            // append user's permissions
+            $permissions = $this->fetchUserPermissionsByUserID($ID);
+            unset($permissions['ID']);
+            unset($permissions['UserID']);
+            unset($permissions['DateUpdated']);
+            unset($permissions['DateCreated']);
+            foreach ($permissions as $key => $value) {
+                $user['p_' . $key] = $value;
+            }
+            // attach plugin's permissions
+            $plugins = API::getAPI('system:plugins');
+            $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
+
+            // customizations
+            $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
+            $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
+                return !$v['isRemoved'];
+            }));
+        }, 'systemUsers');
+
+        dbQuery::setQueryFilter(function (&$perms) {
+            // $adjustedPerms = array();
+            // adjust permission values
+            // var_dump($perms);
+            if (!empty($perms)) {
+                foreach ($perms as $field => $value) {
+                    if (preg_match("/^Can/", $field) === 1) {
+                        $perms[$field] = intval($value) === 1;
+                    }
+                    // if ($field === "Custom") {
+                    //     $customPerms = explode(';', $value);
+                    //     foreach ($customPerms as $cFiled => $cValue) {
+                    //         if (preg_match("/^Can/", $cFiled) === 1) {
+                    //             // in custom permission exsists then it's enabled by default
+                    //             $adjustedPerms[$cFiled] = true;
+                    //         }
+                    //     }
+                    // }
+                }
+            }
+            $perms['Others'] = array_filter(explode(';', $perms['Others'] ?: ''));
+            // $this->permissions = $listOfDOs;
+            // $perms = $adjustedPerms;
+        }, 'systemUserPerms');
+
+        dbQuery::setBeforeSaveFilter(function ($dataToInsert) {
+            $dataToInsert['Others'] = isset($dataToInsert['Others']) ? $dataToInsert['Others'] : array();
+            $dataToInsert['Others'] = implode(';', array_filter(
+                $dataToInsert['Others'],
+                function ($v) {
+                    return trim($v);
+                }
+            ));
+        }, 'systemUserPerms');
 
         // $r = $this->db->getQuery('systemTask_getComplete')
             // ->addConditionFn('CustomerID', array($app->getSite(), 'getRuntimeCustomerID'))
@@ -187,7 +273,7 @@ class data extends BaseData {
         // ));
     }
 
-    public static function scheduleTask ($hash) {
+    public function scheduleTask ($hash) {
         // global $app;
         $r = new Result();
         // $result = array();
@@ -223,7 +309,7 @@ class data extends BaseData {
         // ));
     }
 
-    public static function startTask ($hash) {
+    public function startTask ($hash) {
         // global $app;
         $r = new Result();
         // $result = array();
@@ -259,23 +345,27 @@ class data extends BaseData {
         // ));
     }
 
-    public static function getGroupTasksArray ($groupName, $active = false, $completed = false, $canceled = false) {
+    public function getGroupTasksArray ($groupName, $active = false, $completed = false, $canceled = false) {
         // global $app;
         $result = array();
         if ($active) {
             $result = dbQuery::systemTask_getRunning()
+                ->setAllFields()
                 ->setCondition('Group', $groupName)
                 ->selectAsArray();
         } else if ($completed) {
             $result = dbQuery::systemTask_getComplete()
+                ->setAllFields()
                 ->setCondition('Group', $groupName)
                 ->selectAsArray();
         } else if ($canceled) {
             $result = dbQuery::systemTask_getCanceled()
+                ->setAllFields()
                 ->setCondition('Group', $groupName)
                 ->selectAsArray();
         } else {
             $result = dbQuery::systemTask_getNew()
+                ->setAllFields()
                 ->setCondition('Group', $groupName)
                 ->selectAsArray();
         }
@@ -302,7 +392,7 @@ class data extends BaseData {
         // return $config;
     }
 
-    public static function stopTask ($id) {
+    public function stopTask ($id) {
         // global $app;
         $r = new Result();
         // $result = array();
@@ -338,7 +428,7 @@ class data extends BaseData {
         // ));
     }
 
-    public static function completeTask ($id, $result) {
+    public function completeTask ($id, $result) {
         // global $app;
         // $result = array();
         $r = new Result();
@@ -376,25 +466,26 @@ class data extends BaseData {
         // ));
     }
 
-    public static function getTaskByHash ($hash) {
+    public function fetchTaskByHash ($hash) {
         // global $app;
         // $result = array();
-        $r = new Result();
-        try {
-            $this->db->beginTransaction();
-            dbQuery::systemTask_Get()
+        // $r = new Result();
+        // try {
+        //     $this->db->beginTransaction();
+            return dbQuery::systemTask()
+                ->setAllFields()
                 ->setCondition('Hash', $hash)
-                ->select();
-            $this->db->commit();
-            // $result = $this->getSuccessResultObject();
-            $r->success();
-        } catch (Exception $e) {
-            $this->db->rollBack();
-            $r->fail()
-                ->addError($e->getMessage());
-            // $result = $this->getFailedResultObject($e->getMessage());
-        }
-        return $r;
+                ->selectSingleItem();
+        //     $this->db->commit();
+        //     // $result = $this->getSuccessResultObject();
+        //     $r->success();
+        // } catch (Exception $e) {
+        //     $this->db->rollBack();
+        //     $r->fail()
+        //         ->addError($e->getMessage());
+        //     // $result = $this->getFailedResultObject($e->getMessage());
+        // }
+        // return $r;
 
         // global $app;
         // $config = $this->db->createOrGetQuery(array(
@@ -410,7 +501,7 @@ class data extends BaseData {
         // return $config;
     }
 
-    public static function deleteTaskByHash ($hash) {
+    public function deleteTaskByHash ($hash) {
         // global $app;
         // $result = array();
         $r = new Result();
@@ -440,7 +531,7 @@ class data extends BaseData {
         // ));
     }
 
-    // public static function getNextTaskToProcess ($group, $name) {
+    // public function getNextTaskToProcess ($group, $name) {
     //     global $app;
     //     return $this->db->createOrGetQuery(array(
     //         "source" => "mpws_tasks",
@@ -465,22 +556,25 @@ class data extends BaseData {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public static function fetchCustomerByID ($id) {
-        return dbQuery::systemCustomer_Get()
+    public function fetchCustomerByID ($id) {
+        return dbQuery::systemCustomer()
+            ->setAllFields()
             ->setCondition('ID', $id)
             ->selectSingleItem();
     }
 
-    public static function fetchCustomerByName ($name) {
-        return dbQuery::systemCustomer_Get()
+    public function fetchCustomerByName ($name) {
+        return dbQuery::systemCustomer()
+            ->setAllFields()
             ->setCondition('HostName', $name)
             ->selectSingleItem();
     }
 
-    public static function fetchCustomerDataList (array $options = array()) {
-        $q = dbQuery::systemCustomer_Get()
+    public function fetchCustomerDataList (array $options = array()) {
+        $q = dbQuery::systemCustomer()
+            ->setAllFields()
             ->setCondition('ID', $id)
-            ->groupBy('mpws_customer.ID')
+            ->groupBy('ID')
             ->addParams($options);
 
         if (!empty($options['_pSearch'])) {
@@ -516,89 +610,35 @@ class data extends BaseData {
             }
         }
         return $q->selectAsDataList();
-
-
-
-
-        // global $app;
-        // $config = self::getCustomer();
-        // $config['condition'] = array();
-        // $config["fields"] = array("ID");
-        // $config['limit'] = 64;
-        // $config['group'] = 'mpws_customer.ID';
-        // unset($config['options']);
-
-        // if (!empty($options['_pSearch'])) {
-        //     if (is_string($options['_pSearch'])) {
-        //         $config['condition']["mpws_customer.HostName"] = $this->db->createCondition('%' . $options['_pSearch'] . '%', 'like');
-        //     } elseif (is_array($options['_pSearch'])) {
-        //         foreach ($options['_pSearch'] as $value) {
-        //             $chunks = explode('=', $value);
-        //             // var_dump($chunks);
-        //             if (count($chunks) === 2) {
-        //                 $keyToSearch = strtolower($chunks[0]);
-        //                 $valToSearch = $chunks[1];
-        //                 $conditionField = '';
-        //                 $conditionOp = '=';
-        //                 switch ($keyToSearch) {
-        //                     case 'id':
-        //                         $conditionField = "mpws_customer.ID";
-        //                         $valToSearch = intval($valToSearch);
-        //                         break;
-        //                     case 'n':
-        //                         $conditionField = "mpws_customer.HostName";
-        //                         $valToSearch = '%' . $valToSearch . '%';
-        //                         $conditionOp = 'like';
-        //                         break;
-        //                 }
-        //                 if (!empty($conditionField)) {
-        //                     $config['condition'][$conditionField] = $this->db->createCondition($valToSearch, $conditionOp);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // return $config;
     }
 
-    public static function createCustomer ($data) {
+    public function createCustomer ($data) {
         $r = new result();
         try {
             $this->db->beginTransaction();
-            $itemID = dbQuery::systemCustomer_Add()
+            $itemID = dbQuery::systemCustomer()
                 ->setData($data)
-                ->addStandardDateFileds()
+                ->addStandardDateFields()
                 ->insert();
             $this->db->commit();
             $r->success()
                 ->setResult($itemID);
-            // $result = $this->getSuccessResultObject($itemID);
         } catch (Exception $e) {
             $this->db->rollBack();
             $r->fail()
                 ->addError($e->getMessage());
-            // $result = $this->getFailedResultObject($e->getMessage());
         }
-        return $itemID;
-        // $data["DateUpdated"] = $this->db->getDate();
-        // $data["DateCreated"] = $this->db->getDate();
-        // return $this->db->createOrGetQuery(array(
-        //     "source" => "mpws_customer",
-        //     "action" => "insert",
-        //     "data" => $data,
-        //     "options" => null
-        // ));
+        return $r;
     }
 
     public function updateCustomer ($customerID, $data) {
         $r = new result();
         try {
             $this->db->beginTransaction();
-            dbQuery::systemCustomer_Add()
+            dbQuery::systemCustomer()
                 ->setCondition('ID', $customerID)
                 ->setData($data)
-                ->addStandardDateUpdatedFiled()
+                ->addStandardDateUpdatedField()
                 ->update();
             $this->db->commit();
             $r->success();
@@ -606,39 +646,12 @@ class data extends BaseData {
             $this->db->rollBack();
             $r->fail()
                 ->addError($e->getMessage());
-            // $r = $this->getFailedResultObject($e->getMessage());
         }
         return $r;
-
-
-
-        // global $app;
-        // $data["DateUpdated"] = $this->db->getDate();
-        // return $this->db->createOrGetQuery(array(
-        //     "source" => "mpws_customer",
-        //     "condition" => array(
-        //         "ID" => $this->db->createCondition($CustomerID)
-        //     ),
-        //     "action" => "update",
-        //     "data" => $data,
-        //     "options" => null
-        // ));
     }
 
     public function archiveCustomer ($customerID) {
         return $this->updateCustomer($customerID, array('Status' => 'REMOVED'));
-        // global $app;
-        // $data["DateUpdated"] = $this->db->getDate();
-        // $data["Status"] = "REMOVED";
-        // return $this->db->createOrGetQuery(array(
-        //     "source" => "mpws_customer",
-        //     "condition" => array(
-        //         "ID" => $this->db->createCondition($CustomerID)
-        //     ),
-        //     "action" => "update",
-        //     "data" => $data,
-        //     "options" => null
-        // ));
     }
 
 
@@ -649,35 +662,32 @@ class data extends BaseData {
     // -----------------------------------------------
 
 
-    public static function getUser () {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "fields" => array("*"),
-            "limit" => 1,
-            "condition" => array(),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-        return $config;
+    public function fetchUserByID ($userID) {
+        return dbQuery::systemUsers()
+            ->setAllFields()
+            ->setCondition('ID', $userID)
+            ->selectSingleItem();
     }
 
-    public static function getUserList (array $options = array()) {
+    public function fetchUserDataList (array $options = array()) {
         global $app;
-        $config = self::getUser();
-        $config['condition'] = array();
-        $config["fields"] = array("ID");
-        $config['limit'] = 64;
-        $config['group'] = 'mpws_users.ID';
-        unset($config['options']);
+
+        $q = dbQuery::systemUsers()
+            ->setAllFields()
+            ->groupBy('ID')
+            ->addParams($options);
+
+        $q->addConditionFnByFlag(
+            !API::getAPI('system:auth')->ifYouCan('Maintain')
+            'CustomerID', $app->getSite()->getRuntimeCustomerID());
 
         if (!empty($options['_pSearch'])) {
-            if (is_string($options['_pSearch'])) {
-                $config['condition']["mpws_users.FirstName"] = $this->db->createCondition('%' . $options['_pSearch'] . '%', 'like');
+            $searchData = $options['_pSearch'];
+            if (is_string($searchData)) {
+                $config['condition']["mpws_users.FirstName"] = $this->db->createCondition('%' . $searchData . '%', 'like');
                 // $config['condition']["Model"] = $this->db->createCondition('%' . $options['search'] . '%', 'like');
                 // $config['condition']["SKU"] = $this->db->createCondition('%' . $options['search'] . '%', 'like');
-            } elseif (is_array($options['_pSearch'])) {
+            } elseif (is_array($searchData)) {
                 foreach ($options['_pSearch'] as $value) {
                     $chunks = explode('=', $value);
                     // var_dump($chunks);
@@ -685,7 +695,7 @@ class data extends BaseData {
                         $keyToSearch = strtolower($chunks[0]);
                         $valToSearch = $chunks[1];
                         $conditionField = '';
-                        $conditionOp = '=';
+                        // $conditionOp = '=';
                         switch ($keyToSearch) {
                             case 'id':
                                 $conditionField = "mpws_users.ID";
@@ -694,22 +704,22 @@ class data extends BaseData {
                             case 'n':
                                 $conditionField = "mpws_users.FirstName";
                                 $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
+                                // $conditionOp = 'like';
                                 break;
                             case 'ln':
                                 $conditionField = "mpws_users.LastName";
                                 $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
+                                // $conditionOp = 'like';
                                 break;
                             case 'email':
                                 $conditionField = "mpws_users.EMail";
                                 $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
+                                // $conditionOp = 'like';
                                 break;
                             case 'p':
                                 $conditionField = "mpws_users.Phone";
                                 $valToSearch = '%' . $valToSearch . '%';
-                                $conditionOp = 'like';
+                                // $conditionOp = 'like';
                                 break;
                             // case 'd':
                             //     $conditionField = "mpws_users.Description";
@@ -721,7 +731,8 @@ class data extends BaseData {
                         // var_dump($valToSearch);
                         // var_dump($conditionOp);
                         if (!empty($conditionField)) {
-                            $config['condition'][$conditionField] = $this->db->createCondition($valToSearch, $conditionOp);
+                            $q->addCondition($conditionField, $valToSearch);
+                            // $config['condition'][$conditionField] = $this->db->createCondition($valToSearch);
                         }
                     }
                     // $config['condition']["mpws_users.Name"] = $this->db->createCondition('%' . $value . '%', 'like');
@@ -734,134 +745,158 @@ class data extends BaseData {
             }
         }
 
-        // var_dump($config['condition']);
-        return $config;
+        return $q->selectAsDataList();
     }
 
-    public static function getUserByCredentials ($login, $password) {
-        global $app;
-        $config = self::getUser();
-        $config["condition"]["EMail"] = $this->db->createCondition($login);
-        $config["condition"]["Password"] = $this->db->createCondition($password);
-        return $config;
+    public function fetchUserByCredentials ($login, $password, $withCustomerID = false) {
+        return dbQuery::systemUsers()
+            ->setAllFields()
+            ->setCondition('EMAil', $login)
+            ->addCondition('Password', $password)
+            ->addConditionByFlag($withCustomerID, 'CustomerID', $password)
+            ->selectSingleItem();
     }
 
-    public static function getUserByID ($id) {
-        global $app;
-        $config = self::getUser();
-        $config["condition"] = array(
-            "ID" => $this->db->createCondition($id)
-        );
-        return $config;
+    public function fetchUserByEMail ($email) {
+        return dbQuery::systemUsers()
+            ->setAllFields()
+            ->setCondition('Password', $email)
+            ->selectSingleItem();
     }
 
-    public static function getUserByEMail ($email) {
-        global $app;
-        $config = self::getUser();
-        $config["condition"] = array(
-            "EMail" => $this->db->createCondition($email)
-        );
-        return $config;
+    public function fetchUserByValidationString ($ValidationString) {
+        return dbQuery::systemUsers()
+            ->setAllFields()
+            ->setCondition('ValidationString', $ValidationString)
+            ->selectSingleItem();
     }
 
-    public static function getUserByValidationString ($ValidationString) {
-        global $app;
-        $config = self::getUser();
-        $config["condition"] = array(
-            "ValidationString" => $this->db->createCondition($ValidationString)
-        );
-        return $config;
+    public function createUser ($data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemUsers_Add()
+                ->setData($data)
+                ->addStandardDateFields()
+                ->addStandardDateNowFiled('DateLastactivateUserAccess')
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
     }
 
-    public static function addUser ($data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["DateCreated"] = $this->db->getDate();
-        $data["DateLastAccess"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
+    public function updateUser ($userID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            dbQuery::systemUsers_Update()
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->setCondition('ID', $userID)
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_users",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function updateUser ($UserID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($UserID)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
+    public function disableUser ($userID) {
+        return $this->updateUser($userID, array(
+                'Status' => 'REMOVED'
+            ));
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_users",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "data" => array(
+        //         "Status" => 'REMOVED',
+        //         "DateUpdated" => $this->db->getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
 
-    public static function disableUser ($UserID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($UserID)
-            ),
-            "data" => array(
-                "Status" => 'REMOVED',
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
+    public function activateUser ($validationString) {
+        return $this->updateUser($userID, array(
+                'ValidationString' => $validationString,
+                'Status' => 'ACTIVE'
+            ));
+
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_users",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ValidationString" => $this->db->createCondition($ValidationString)
+        //     ),
+        //     "data" => array(
+        //         "Status" => "ACTIVE",
+        //         "DateUpdated" => $this->db->getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
 
-    public static function activateUser ($ValidationString) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "update",
-            "condition" => array(
-                "ValidationString" => $this->db->createCondition($ValidationString)
-            ),
-            "data" => array(
-                "Status" => "ACTIVE",
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
+    public function setUserOnline ($userID) {
+        return $this->updateUser($userID, array(
+            'IsOnline' => true
+            ));
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_users",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "data" => array(
+        //         "IsOnline" => true,
+        //         "DateUpdated" => $this->db->getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
 
-    public static function setUserOnline ($UserID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($UserID)
-            ),
-            "data" => array(
-                "IsOnline" => true,
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
-    }
-
-    public static function setUserOffline ($UserID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_users",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($UserID)
-            ),
-            "data" => array(
-                "IsOnline" => true,
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
+    public function setUserOffline ($userID) {
+        return $this->updateUser($userID, array(
+            'IsOnline' => false
+            ));
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_users",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "data" => array(
+        //         "IsOnline" => true,
+        //         "DateUpdated" => $this->db->getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
 
 
@@ -870,46 +905,84 @@ class data extends BaseData {
     // USER PERMISSIONS
     // -----------------------------------------------
     // -----------------------------------------------
-    public static function getUserPermissionsByUserID ($UserID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_permissions",
-            "fields" => array("*"),
-            "condition" => array(
-                "UserID" => $this->db->createCondition($UserID)
-            ),
-            "limit" => 1,
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
+    public function fetchUserPermissionsByUserID ($userID) {
+        return dbQuery::systemUserPerms()
+            ->setAllFields()
+            ->setCondition('UserID', $userID)
+            ->selectSingleItem();
+    //     global $app;
+    //     return $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_permissions",
+    //         "fields" => array("*"),
+    //         "condition" => array(
+    //             "UserID" => $this->db->createCondition($UserID)
+    //         ),
+    //         "limit" => 1,
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
     }
 
-    public static function createUserPermissions ($UserID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["DateCreated"] = $this->db->getDate();
-        $data['UserID'] = $UserID;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_permissions",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
+    public function createUserPermissions ($userID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemUserPerms()
+                ->setCondition('UserID', $userID)
+                ->setData($data)
+                ->addStandardDateFields()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // $data["DateCreated"] = $this->db->getDate();
+        // $data['UserID'] = $UserID;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_permissions",
+        //     "action" => "insert",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function updateUserPermissions ($UserID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_permissions",
-            "action" => "update",
-            "condition" => array(
-                "UserID" => $this->db->createCondition($UserID)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
+    public function updateUserPermissions ($userID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemUserPerms()
+                ->setCondition('UserID', $userID)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_permissions",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "UserID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
 
@@ -918,77 +991,122 @@ class data extends BaseData {
     // USER ADDRESSES
     // -----------------------------------------------
     // -----------------------------------------------
-    public static function getAddress ($AddressID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_userAddresses",
-            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
-            "condition" => array(
-                "ID" => $this->db->createCondition($AddressID),
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
+    public function fetchAddress ($addressID) {
+        return dbQuery::systemAddress()
+            ->setAllFields()
+            ->setCondition('ID', $addressID)
+            ->selectSingleItem();
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_userAddresses",
+        //     "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($AddressID),
+        //     ),
+        //     "options" => array(
+        //         "expandSingleRecord" => true
+        //     )
+        // ));
     }
 
-    public static function getUserAddresses ($UserID, $withRemoved = false) {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_userAddresses",
-            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
-            "condition" => array(
-                "UserID" => $this->db->createCondition($UserID)
-            ),
-            "options" => array(
-                "asDict" => "ID"
-            )
-        ));
-        if (!$withRemoved)
-            $config['condition']["Status"] = $this->db->createCondition("ACTIVE");
-        return $config;
+    public function fetchUserAddresses ($userID) {
+        return dbQuery::systemAddress()
+            ->setAllFields()
+            ->setCondition('UserID', $userID)
+            ->addCondition('Status', "ACTIVE")
+            ->selectAsDict("ID");
+        // global $app;
+        // $config = $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_userAddresses",
+        //     "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
+        //     "condition" => array(
+        //         "UserID" => $this->db->createCondition($UserID)
+        //     ),
+        //     "options" => array(
+        //         "asDict" => "ID"
+        //     )
+        // ));
+        // if (!$withRemoved)
+        //     $config['condition']["Status"] = $this->db->createCondition("ACTIVE");
+        // return $config;
     }
 
-    public static function createAddress ($data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["DateCreated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_userAddresses",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
+    public function createAddress ($data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemAddress()
+                ->setData($data)
+                ->addStandardDateFields()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // $data["DateCreated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_userAddresses",
+        //     "action" => "insert",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function updateAddress ($AddressID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_userAddresses",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($AddressID)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
+    public function updateAddress ($addressID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::systemAddress()
+                ->setCondition('ID', $addressID)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = $this->db->getDate();
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_userAddresses",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($AddressID)
+        //     ),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function disableAddress ($AddressID) {
-        global $app;
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_userAddresses",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($AddressID)
-            ),
-            "data" => array(
-                "Status" => 'REMOVED',
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
+    public function disableAddress ($addressID) {
+        return $this->updateAddress($addressID, array(
+                'Status' => 'REMOVED'
+            ));
+        // global $app;
+        // return $this->db->createOrGetQuery(array(
+        //     "source" => "mpws_userAddresses",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => $this->db->createCondition($AddressID)
+        //     ),
+        //     "data" => array(
+        //         "Status" => 'REMOVED',
+        //         "DateUpdated" => $this->db->getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
 
     // -----------------------------------------------
@@ -996,41 +1114,52 @@ class data extends BaseData {
     // USER STATS
     // -----------------------------------------------
     // -----------------------------------------------
-    public static function stat_UsersOverview () {
-        global $app;
-        $config = self::getUser();
-        $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
-        $config['group'] = "Status";
-        $config['limit'] = 0;
-        $config['options'] = array(
-            'asDict' => array(
-                'keys' => 'Status',
-                'values' => 'ItemsCount'
-            )
-        );
-        unset($config['condition']);
-        unset($config['additional']);
-        return $config;
+    public function stat_UsersOverview () {
+        return dbQuery::systemUserPerms()
+            ->setFileds("@COUNT(*) AS ItemsCount", "Status")
+            ->groupBy('Status')
+            ->selectAsDict('Status', 'ItemsCount');
+
+        // global $app;
+        // $config = self::getUser();
+        // $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
+        // $config['group'] = "Status";
+        // $config['limit'] = 0;
+        // $config['options'] = array(
+        //     'asDict' => array(
+        //         'keys' => 'Status',
+        //         'values' => 'ItemsCount'
+        //     )
+        // );
+        // unset($config['condition']);
+        // unset($config['additional']);
+        // return $config;
     }
 
-    public static function stat_UsersIntensityLastMonth ($status) {
-        global $app;
-        $config = self::getUser();
-        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
-        $config['condition'] = array(
-            'Status' => $this->db->createCondition($status),
-            'DateCreated' => $this->db->createCondition(date('Y-m-d', strtotime("-10 month")), ">")
-        );
-        $config['options'] = array(
-            'asDict' => array(
-                'keys' => 'IncomeDate',
-                'values' => 'ItemsCount'
-            )
-        );
-        $config['group'] = 'Date(DateCreated)';
-        $config['limit'] = 0;
-        unset($config['additional']);
-        return $config;
+    public function stat_UsersIntensityLastMonth ($status) {
+        return dbQuery::systemUserPerms()
+            ->setFileds("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate")
+            ->groupBy('Date(DateCreated)')
+            ->setCondition('Status', $status)
+            ->addCondition('DateCreated', date('Y-m-d', strtotime("-10 month")))
+            ->selectAsDict('IncomeDate', 'ItemsCount');
+        // global $app;
+        // $config = self::getUser();
+        // $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        // $config['condition'] = array(
+        //     'Status' => $this->db->createCondition($status),
+        //     'DateCreated' => $this->db->createCondition(date('Y-m-d', strtotime("-10 month")), ">")
+        // );
+        // $config['options'] = array(
+        //     'asDict' => array(
+        //         'keys' => 'IncomeDate',
+        //         'values' => 'ItemsCount'
+        //     )
+        // );
+        // $config['group'] = 'Date(DateCreated)';
+        // $config['limit'] = 0;
+        // unset($config['additional']);
+        // return $config;
     }
 
 
@@ -1041,120 +1170,120 @@ class data extends BaseData {
     // -----------------------------------------------
 
 
-    public static function getEmailByID ($EmailID = null) {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_emails",
-            "fields" => array("*"),
-            "limit" => 1,
-            "condition" => array(),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-        if (isset($EmailID) && $EmailID != null) {
-            $config['condition']['ID'] = $this->db->createCondition($EmailID);
-        }
-        return $config;
-    }
+    // public function getEmailByID ($EmailID = null) {
+    //     global $app;
+    //     $config = $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_emails",
+    //         "fields" => array("*"),
+    //         "limit" => 1,
+    //         "condition" => array(),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    //     if (isset($EmailID) && $EmailID != null) {
+    //         $config['condition']['ID'] = $this->db->createCondition($EmailID);
+    //     }
+    //     return $config;
+    // }
 
-    public static function getEmailList (array $options = array()) {
-        global $app;
-        $config = self::getEmailByID();
-        $config['fields'] = array("ID");
-        $config['limit'] = 64;
-        $config['options']['expandSingleRecord'] = false;
-        if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->db->createCondition('ACTIVE');
-        }
-        return $config;
-    }
+    // public function getEmailList (array $options = array()) {
+    //     global $app;
+    //     $config = self::getEmailByID();
+    //     $config['fields'] = array("ID");
+    //     $config['limit'] = 64;
+    //     $config['options']['expandSingleRecord'] = false;
+    //     if (empty($options['removed'])) {
+    //         $config['condition']['Status'] = $this->db->createCondition('ACTIVE');
+    //     }
+    //     return $config;
+    // }
 
-    public static function getEmailListSimple (array $options = array()) {
-        global $app;
-        $config = self::getEmailList($options);
-        $config['fields'] = array("ID", "Name");
-        return $config;
-    }
+    // public function getEmailListSimple (array $options = array()) {
+    //     global $app;
+    //     $config = self::getEmailList($options);
+    //     $config['fields'] = array("ID", "Name");
+    //     return $config;
+    // }
 
-    public static function createEmail ($data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        $data["DateCreated"] = $this->db->getDate();
-        $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_emails",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
+    // public function createEmail ($data) {
+    //     global $app;
+    //     $data["DateUpdated"] = $this->db->getDate();
+    //     $data["DateCreated"] = $this->db->getDate();
+    //     $data["Name"] = substr($data["Name"], 0, 300);
+    //     return $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_emails",
+    //         "action" => "insert",
+    //         "data" => $data,
+    //         "options" => null
+    //     ));
+    // }
 
-    public static function updateEmail ($EmailID, $data) {
-        global $app;
-        $data["DateUpdated"] = $this->db->getDate();
-        if (isset($data['Name'])) {
-            $data["Name"] = substr($data["Name"], 0, 300);
-        }
-        return $this->db->createOrGetQuery(array(
-            "source" => "mpws_emails",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $this->db->createCondition($EmailID)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
-    }
+    // public function updateEmail ($EmailID, $data) {
+    //     global $app;
+    //     $data["DateUpdated"] = $this->db->getDate();
+    //     if (isset($data['Name'])) {
+    //         $data["Name"] = substr($data["Name"], 0, 300);
+    //     }
+    //     return $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_emails",
+    //         "action" => "update",
+    //         "condition" => array(
+    //             "ID" => $this->db->createCondition($EmailID)
+    //         ),
+    //         "data" => $data,
+    //         "options" => null
+    //     ));
+    // }
 
-    public static function archiveEmail ($EmailID) {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_emails",
-            "action" => "update",
-            "condition" => array(
-                "Status" => $this->db->createCondition("REMOVED", "!="),
-            ),
-            "data" => array(
-                "Status" => 'ARCHIVED',
-                "DateUpdated" => $this->db->getDate()
-            ),
-            "options" => null
-        ));
-        if (isset($EmailID) && $EmailID != null) {
-            $config['condition']['ID'] = $this->db->createCondition($EmailID);
-        }
-        return $config;
-    }
+    // public function archiveEmail ($EmailID) {
+    //     global $app;
+    //     $config = $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_emails",
+    //         "action" => "update",
+    //         "condition" => array(
+    //             "Status" => $this->db->createCondition("REMOVED", "!="),
+    //         ),
+    //         "data" => array(
+    //             "Status" => 'ARCHIVED',
+    //             "DateUpdated" => $this->db->getDate()
+    //         ),
+    //         "options" => null
+    //     ));
+    //     if (isset($EmailID) && $EmailID != null) {
+    //         $config['condition']['ID'] = $this->db->createCondition($EmailID);
+    //     }
+    //     return $config;
+    // }
 
-    public static function getSubscriberByID ($SubscriberID = null) {
-        global $app;
-        $config = $this->db->createOrGetQuery(array(
-            "source" => "mpws_subscribers",
-            "fields" => array("*"),
-            "limit" => 1,
-            "condition" => array(),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-        if (isset($SubscriberID) && $SubscriberID != null) {
-            $config['condition']['ID'] = $this->db->createCondition($SubscriberID);
-        }
-        return $config;
-    }
+    // public function getSubscriberByID ($SubscriberID = null) {
+    //     global $app;
+    //     $config = $this->db->createOrGetQuery(array(
+    //         "source" => "mpws_subscribers",
+    //         "fields" => array("*"),
+    //         "limit" => 1,
+    //         "condition" => array(),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    //     if (isset($SubscriberID) && $SubscriberID != null) {
+    //         $config['condition']['ID'] = $this->db->createCondition($SubscriberID);
+    //     }
+    //     return $config;
+    // }
 
-    public static function getSubscribersList (array $options = array()) {
-        global $app;
-        $config = self::getSubscriberByID();
-        $config['fields'] = array("ID");
-        $config['limit'] = 64;
-        $config['options']['expandSingleRecord'] = false;
-        if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->db->createCondition('ACTIVE');
-        }
-        return $config;
-    }
+    // public function getSubscribersList (array $options = array()) {
+    //     global $app;
+    //     $config = self::getSubscriberByID();
+    //     $config['fields'] = array("ID");
+    //     $config['limit'] = 64;
+    //     $config['options']['expandSingleRecord'] = false;
+    //     if (empty($options['removed'])) {
+    //         $config['condition']['Status'] = $this->db->createCondition('ACTIVE');
+    //     }
+    //     return $config;
+    // }
 
 
 }

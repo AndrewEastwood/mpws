@@ -13,116 +13,118 @@ class users extends API {
         return 'No Name';
     }
 
-    private function __attachUserDetails ($user, $withCustomerID = false) {
-        $UserID = intval($user['ID']);
-        // get user info
-        // get user addresses
-        // $configPermissions = data::getPermissions($UserID);
-        // $user['Permissions'] = $app->getDB()->query($configPermissions, true) ?: array();
-        $user['Addresses'] = API::getAPI('system:address')->getAddresses($UserID);
+    // private function __attachUserDetails ($user, $withCustomerID = false) {
+    //     $UserID = intval($user['ID']);
+    //     // get user info
+    //     // get user addresses
+    //     // $configPermissions = data::getPermissions($UserID);
+    //     // $user['Permissions'] = $app->getDB()->query($configPermissions, true) ?: array();
+    //     $user['Addresses'] = API::getAPI('system:address')->getAddresses($UserID);
 
-        // adjust values
-        $user['ID'] = $UserID;
-        // $user['CustomerID'] = intval($user['CustomerID']);
-        // $user['PermissionID'] = intval($user['PermissionID']);
-        $user['IsOnline'] = intval($user['IsOnline']) === 1;
-        $user['IsTemp'] = $user['Status'] === "TEMP";
-        $user['isBlocked'] = $user['Status'] === "REMOVED";
-        $user['isCurrent'] = API::getAPI('system:auth')->getAuthenticatedUserID() === $UserID;
-        if (!$withCustomerID) {
-            unset($user['CustomerID']);
-        }
-        unset($user['Password']);
+    //     // adjust values
+    //     $user['ID'] = $UserID;
+    //     // $user['CustomerID'] = intval($user['CustomerID']);
+    //     // $user['PermissionID'] = intval($user['PermissionID']);
+    //     $user['IsOnline'] = intval($user['IsOnline']) === 1;
+    //     $user['IsTemp'] = $user['Status'] === "TEMP";
+    //     $user['isBlocked'] = $user['Status'] === "REMOVED";
+    //     $user['isCurrent'] = API::getAPI('system:auth')->getAuthenticatedUserID() === $UserID;
+    //     if (!$withCustomerID) {
+    //         unset($user['CustomerID']);
+    //     }
+    //     unset($user['Password']);
 
 
-        $permissions = $this->getUserPermissionsByUserID($UserID);
-        unset($permissions['ID']);
-        unset($permissions['UserID']);
-        unset($permissions['DateUpdated']);
-        unset($permissions['DateCreated']);
+    //     $permissions = $this->getUserPermissionsByUserID($UserID);
+    //     unset($permissions['ID']);
+    //     unset($permissions['UserID']);
+    //     unset($permissions['DateUpdated']);
+    //     unset($permissions['DateCreated']);
 
-        foreach ($permissions as $key => $value) {
-            $user['p_' . $key] = $value;
-        }
+    //     foreach ($permissions as $key => $value) {
+    //         $user['p_' . $key] = $value;
+    //     }
 
-        // attach plugin's permissions
-        $plugins = API::getAPI('system:plugins');
-        $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
+    //     // attach plugin's permissions
+    //     $plugins = API::getAPI('system:plugins');
+    //     $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
 
-        // customizations
-        $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
-        $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
-            return !$v['isRemoved'];
-        }));
-        return $user;
-    }
+    //     // customizations
+    //     $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
+    //     $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
+    //         return !$v['isRemoved'];
+    //     }));
+    //     return $user;
+    // }
 
-    public function getUserByValidationString ($ValidationString) {
-        global $app;
-        $config = data::getUserByValidationString($ValidationString);
-        $user = $app->getDB()->query($config);
-        // var_dump('getUserByValidationString', $config);
-        if (is_null($user)) {
-            return null;
-        }
-        $user = $this->__attachUserDetails($user);
-        return $user;
-    }
+    // public function getUserByValidationString ($validationString) {
+    //     return $this->data->fetchUserByValidationString($validationString);
+    //     // global $app;
+    //     // $config = data::getUserByValidationString($ValidationString);
+    //     // $user = $app->getDB()->query($config);
+    //     // // var_dump('getUserByValidationString', $config);
+    //     // if (is_null($user)) {
+    //     //     return null;
+    //     // }
+    //     // $user = $this->__attachUserDetails($user);
+    //     // return $user;
+    // }
 
-    public function getUserByID ($UserID) {
-        global $app;
-        $user = $app->getDB()->query(data::getUserByID($UserID), !$app->isToolbox());
-        // var_dump('getUserByID', $UserID);
-        if (!is_null($user))
-            $user = $this->__attachUserDetails($user);
-        return $user;
-    }
+    // public function getUserByID ($userID) {
+    //     return $this->data->fetchUserByID($userID);
+    // }
 
-    public function getUsers_List (array $options = array()) {
-        global $app;
-        $config = data::getUserList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $item) {
-                    $_items[] = $self->getUserByID($item['ID']);
-                }
-                return $_items;
-            }
-        );
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
-            $options['useCustomerID'] = true;
-        }
-        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        return $dataList;
-    }
+    // public function getUsers_List (array $options = array()) {
+    //     return $this->data->fetchUserDataList($options);
+
+    //     // global $app;
+    //     // $config = data::getUserList($options);
+    //     // $self = $this;
+    //     // $callbacks = array(
+    //     //     "parse" => function ($items) use($self) {
+    //     //         $_items = array();
+    //     //         foreach ($items as $key => $item) {
+    //     //             $_items[] = $self->getUserByID($item['ID']);
+    //     //         }
+    //     //         return $_items;
+    //     //     }
+    //     // );
+    //     // if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
+    //     //     $options['useCustomerID'] = true;
+    //     // }
+    //     // $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+    //     // return $dataList;
+    // }
 
     public function getActiveUserByCredentials ($login, $password, $withCustomerID = false) {
-        global $app;
-        $query = data::getUserByCredentials($login, $password);
-        // avoid removed account
-        // $query["fields"] = array("ID");
-        $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
-        $user = $app->getDB()->query($query, !$app->isToolbox());
-        // var_dump($user);
-        if (!is_null($user)) {
-            $user = $this->__attachUserDetails($user, $withCustomerID);
-        }
-        return $user;
+        return $this->data->fetchUserByCredentials($login, $password, $withCustomerID = false);
+        // global $app;
+        // $query = data::getUserByCredentials($login, $password);
+        // // avoid removed account
+        // // $query["fields"] = array("ID");
+        // $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
+        // $user = $app->getDB()->query($query, !$app->isToolbox());
+        // // var_dump($user);
+        // if (!is_null($user)) {
+        //     $user = $this->__attachUserDetails($user, $withCustomerID);
+        // }
+        // return $user;
     }
 
     public function isEmailAllowedToRegister ($email) {
-        global $app;
-        $userWithEmail = $app->getDB()->query(data::getUserByEMail($email));
-        return empty($userWithEmail);
+        return empty($this->data->fetchUserByEMail($email));
+        // global $app;
+        // $userWithEmail = $app->getDB()->query(data::getUserByEMail($email));
+        // return empty($userWithEmail);
     }
 
     public function createUser ($reqData) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        $r = null;
+        $rP = null;
 
         $autoPwd = Secure::generateStrongPassword();
         $validatedDataObj = Validate::getValidData($reqData, array(
@@ -159,61 +161,75 @@ class users extends API {
                         $dataUser[$field] = $value;
                 }
                 // filter permissions
-                $dataPermission = $this->_filterPermissions($dataPermission);
+                // $dataPermission = $this->_filterPermissions($dataPermission);
                 $dataUser["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $dataUser["Password"] = Secure::EncodeUserPassword($validatedValues['Password']);
                 $dataUser["ValidationString"] = Secure::EncodeUserPassword(time());
-                if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
+
+                if (!$this->isEmailAllowedToRegister($validatedValues['EMail'])) {
                     throw new Exception("EmailAlreadyInUse", 1);
+                }
                 
                 unset($dataUser['ConfirmPassword']);
 
-                $app->getDB()->beginTransaction();
+                $app->getDB()->beginTransaction()
+                    ->lockTransaction();
 
-                $configCreateUser = data::addUser($dataUser);
-                $UserID = $app->getDB()->query($configCreateUser) ?: null;
+                $r = $this->data->createUser($dataUser);
 
-                if (empty($UserID)) {
+                // $configCreateUser = data::addUser($dataUser);
+                // $UserID = $app->getDB()->query($configCreateUser) ?: null;
+
+                if ($r->isEmptyResult()) {
                     throw new Exception('UserCreateError');
                 }
 
                 // create permission (admins only)
-                if (API::getAPI('system:auth')->ifYouCan('Admin') && (
-                    API::getAPI('system:auth')->ifYouCan('AddUsers') ||
-                    API::getAPI('system:auth')->ifYouCan('Maintain')
-                )) {
-                    $Permission = $this->createUserPermissions($UserID, $dataPermission);
-                    if (!$Permission['success']) {
-                        throw new Exception(implode(';', $Permission['errors']));
-                    }
+                if (API::getAPI('system:auth')->ifYouCan('Admin') &&
+                    API::getAPI('system:auth')->ifYouCanAny('AddUsers', 'Maintain')) {
+                    $rP = $this->data->createUserPermissions($UserID, $dataPermission);
                 } else {
-                    $Permission = $this->createUserPermissions($UserID, array());
+                    $rP = $this->data->createUserPermissions($UserID, array());
                 }
 
-                $app->getDB()->commit();
+                if ($rP->isEmptyResult()) {
+                    $r->copyErrorsFrom($rP);
+                    throw new Exception('UserPermissionsCreateError');
+                }
 
-                $result = $this->getUserByID($UserID);
+                $app->getDB()->unlockTransaction()
+                    ->commit();
 
-                $success = true;
+                // $result = $this->getUserByID($UserID);
+
+                // $success = true;
             } catch (Exception $e) {
                 $app->getDB()->rollBack();
-                $errors = Utils::formatExceptionMsgForResponse($e->getMessage());
+                $r->addError($e->getMessage());
             }
-        else
-            $errors = $validatedDataObj["errors"];
+        else {
+            // $errors = $validatedDataObj["errors"];
+            $r->addErrors($validatedDataObj["errors"]);
+        }
 
-        if ($success && !empty($UserID))
-            $result = $this->getUserByID($UserID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        if ($r->hasResult()) {
+            $customer = $this->data->fetchUserByID($r->getResult());
+            $r->setResult($customer);
+        }
+
+        // if ($success && !empty($UserID))
+        //     $result = $this->getUserByID($UserID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
         return $result;
     }
 
-    public function updateUser ($UserID, $reqData, $isUpdate = false) {
+    public function updateUser ($userID, $reqData/*, $isUpdate = false*/) {
         global $app;
 
-        $errors = array();
-        $success = false;
+        // $errors = array();
+        // $success = false;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
@@ -238,12 +254,13 @@ class users extends API {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $app->getDB()->beginTransaction();
+                // for multiple inserts use lockTransaction before
+                $app->getDB()->beginTransaction()
+                    ->lockTransaction();
 
                 // separate data
                 $dataUser = array();
                 $dataPermission = array();
-
                 foreach ($validatedValues as $field => $value) {
                     if (preg_match("/^p_/", $field) === 1)
                         $dataPermission[substr($field, strlen("p_"))] = $value;
@@ -252,237 +269,313 @@ class users extends API {
                 }
 
                 // filter permissions
-                $dataPermission = $this->_filterPermissions($dataPermission);
+                // $dataPermission = $this->_filterPermissions($dataPermission);
 
                 if (!empty($dataUser)) {
                     if (isset($dataUser['Password'])) {
                         $dataUser['Password'] = Secure::EncodeUserPassword($validatedValues['Password']);
                         unset($dataUser['ConfirmPassword']);
                     }
-                    $configUpdateUser = data::updateUser($UserID, $dataUser);
-                    $app->getDB()->query($configUpdateUser);
+                    $r = $this->data->updateUser($userID, $dataUser);
+                    // $configUpdateUser = data::updateUser($userID, $dataUser);
+                    // $app->getDB()->query($configUpdateUser);
                 }
 
                 if (!empty($dataPermission)) {
-                    $Permission = $this->updateUserPermissions($UserID, $dataPermission);
-                    if (!$Permission['success']) {
-                        throw new Exception(implode(';', $Permission['errors']));
-                    }
+                    $rP = $this->data->updateUserPermissions($userID, $dataPermission);
                 }
 
-                $app->getDB()->commit();
+                if ($rP->isEmptyResult()) {
+                    $r->copyErrorsFrom($rP);
+                    throw new Exception("UserPermissionsUpdateError", 1);
+                    // throw new Exception(implode(';', $Permission['errors']));
+                }
 
-                $success = true;
+                $app->getDB()->unlockTransaction()
+                    ->commit();
+
+                // $success = true;
             } catch (Exception $e) {
-                $app->getDB()->rollBack();
+                $app->getDB()->unlockTransaction()
+                    ->rollBack();
                 // echo $app->getDB()->getLastErrorCode();
                 // echo $e;
-                $errors[] = 'UserUpdateError';
-                $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
+                $r->addError('UserUpdateError');
+                $r->addError($e->getMessage());
+                // $errors[] = 'UserUpdateError';
+                // $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
             }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getUserByID($UserID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function activateUserByValidationStyring ($ValidationString) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        try {
-            $app->getDB()->query(data::activateUser($ValidationString));
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = $e->getMessage();
+        else {
+            // $errors = $validatedDataObj["errors"];
+            $r->addErrors($validatedDataObj["errors"]);
         }
-        $result = $this->getUserByValidationString($ValidationString);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+
+        if ($r->hasResult()) {
+            $user = $this->data->fetchUserByID($userID);
+            $r->setResult($user);
+        }
+        // $result = $this->getUserByID($userID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        return $r->toArray();
     }
 
-    public function disableUserByID ($UserID) {
+    public function activateUserByValidationStyring ($validationString) {
+        
+        $r = $this->data->activateUser($validationString);
+        if ($r->isSuccess()) {
+            $r->setResult($this->data->fetchUserByValidationString($validationString));
+        }
+
+        return $r->toArray();
+        
+        // global $app;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        // try {
+        //     $app->getDB()->query(data::activateUser($ValidationString));
+        // } catch (Exception $e) {
+        //     $app->getDB()->rollBack();
+        //     $errors[] = $e->getMessage();
+        // }
+        // $result = $this->data->fetchUserByValidationString($ValidationString);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // return $result;
+    }
+
+    public function disableUserByID ($userID) {
+
+        // $r = $this->data->disableUser($CustomerID);
+        // if ($r->hasResult()) {
+        //     $customer = $this->data->fetchUserByID($userID);
+        //     $r->setResult($customer);
+        // }
+        // return $r->toArray();
+
+
         global $app;
-        $errors = array();
-        $success = false;
+        // $errors = array();
+        // $success = false;
+        $r = null;
 
         try {
-            $user = $this->getUserByID($UserID);
-            $app->getDB()->beginTransaction();
+            $user = $this->data->fetchUserByID($userID);
+            $app->getDB()->beginTransaction()
+                ->lockTransaction();
 
-            $app->getDB()->disableTransactions();
             // disable all related addresses
             if ($user['Addresses']) {
                 foreach ($user['Addresses'] as $addr) {
-                    API::getAPI('system:address')->disableAddressByID($addr['ID']);
+                    $this->data->disableAddress($addr['ID']);
                 }
             }
-            $app->getDB()->enableTransactions();
+            // $config = data::disableUser($userID);
+            // $app->getDB()->query($config, false);
+            $r = $this->data->disableUser($userID);
 
-            $config = data::disableUser($UserID);
-            $app->getDB()->query($config, false);
+            $app->getDB()->unlockTransaction()
+                ->commit();
 
-            $app->getDB()->commit();
-
-            $success = true;
+            // $success = true;
         } catch (Exception $e) {
-            $app->getDB()->enableTransactions();
-            $app->getDB()->rollBack();
-            $errors[] = 'UserDisableError';
+            $app->getDB()->unlockTransaction()
+                ->rollBack();
+            $r->addError($e->getMessage());
+            // $errors[] = 'UserDisableError';
         }
 
-        $result = $this->getUserByID($UserID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+        $user = $this->data->fetchUserByID($userID);
+        $r->setResult($user);
+        // $result = $this->getUserByID($userID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        return $r->toArray();
     }
 
-    public function setOffline ($UserID) {
-        global $app;
-        $app->getDB()->query(data::setUserOffline($UserID));
-    }
+    // public function setOffline ($userID) {
+    //     $this->data->setUserOffline($userID);
+    //     // global $app;
+    //     // $app->getDB()->query(data::setUserOffline($UserID));
+    // }
 
-    public function setOnline ($UserID) {
-        global $app;
-        $app->getDB()->query(data::setUserOnline($UserID));
-    }
+    // public function setOnline ($userID) {
+    //     $this->data->setUserOnline($userID);
+    //     // global $app;
+    //     // $app->getDB()->query(data::setUserOnline($UserID));
+    // }
 
     // permissions
     // -----------------------------------------------
-    private function getUserPermissionsByUserID ($UserID) {
-        global $app;
-        $query = data::getUserPermissionsByUserID($UserID);
-        $userPermissions = $app->getDB()->query($query, false);
-        return $this->_adjustPermissions($userPermissions);
-    }
+    // private function getUserPermissionsByUserID ($UserID) {
+    //     return $this->data->fetchUserPermissionsByUserID($UserID);
+    //     // global $app;
+    //     // $query = data::getUserPermissionsByUserID($UserID);
+    //     // $userPermissions = $app->getDB()->query($query, false);
+    //     // return $this->_adjustPermissions($userPermissions);
+    // }
 
-    private function createUserPermissions ($UserID, $data = array()) {
-        global $app;
-        // $perms = self::getNewPermissions($permissions);
-        $errors = array();
-        $success = false;
-        $PermissionID = null;
-        try {
-            $query = data::createUserPermissions($UserID, $data);
-            $PermissionID = $app->getDB()->query($query, false) ?: null;
-            $success = true;
-        } catch (Exception $e) {
-            $errors[] = 'PermissionsCreateError';
-        }
-        if ($success && !empty($PermissionID))
-            $result = $this->getUserPermissionsByUserID($UserID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
-    }
+    // private function createUserPermissions ($UserID, $data = array()) {
+    //     $r = $this->data->createUserPermissions($UserID, $data);
+    //     if ($r->isSuccess()) {
+    //         $r->setResult($this->data->fetchUserPermissionsByUserID($UserID));
+    //     }
+    //     return $r->toArray();
+    //     // global $app;
+    //     // // $perms = self::getNewPermissions($permissions);
+    //     // $errors = array();
+    //     // $success = false;
+    //     // $PermissionID = null;
+    //     // try {
+    //     //     $query = data::createUserPermissions($UserID, $data);
+    //     //     $PermissionID = $app->getDB()->query($query, false) ?: null;
+    //     //     $success = true;
+    //     // } catch (Exception $e) {
+    //     //     $errors[] = 'PermissionsCreateError';
+    //     // }
+    //     // if ($success && !empty($PermissionID))
+    //     //     $result = $this->getUserPermissionsByUserID($UserID);
+    //     // $result['errors'] = $errors;
+    //     // $result['success'] = $success;
+    //     // return $result;
+    // }
 
-    private function updateUserPermissions ($UserID, $data = array()) {
-        global $app;
-        $errors = array();
-        $success = false;
-        try {
-            $query = data::updateUserPermissions($UserID, $data);
-            $app->getDB()->query($query, false) ?: null;
-            $success = true;
-        } catch (Exception $e) {
-            $errors[] = 'PermissionsUpdateError';
-            $errors[] = $e->getMessage();
-        }
-        $result = $this->getUserPermissionsByUserID($UserID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
-    }
+    // private function updateUserPermissions ($UserID, $data = array()) {
+    //     $r = $this->data->updateUserPermissions($UserID, $data);
+    //     if ($r->isSuccess()) {
+    //         $r->setResult($this->data->fetchUserPermissionsByUserID($UserID));
+    //     }
+    //     return $r->toArray();
+    //     // global $app;
+    //     // $errors = array();
+    //     // $success = false;
+    //     // try {
+    //     //     $query = data::updateUserPermissions($UserID, $data);
+    //     //     $app->getDB()->query($query, false) ?: null;
+    //     //     $success = true;
+    //     // } catch (Exception $e) {
+    //     //     $errors[] = 'PermissionsUpdateError';
+    //     //     $errors[] = $e->getMessage();
+    //     // }
+    //     // $result = $this->getUserPermissionsByUserID($UserID);
+    //     // $result['errors'] = $errors;
+    //     // $result['success'] = $success;
+    //     // return $result;
+    // }
 
-    private function _adjustPermissions ($perms) {
-        $adjustedPerms = array();
-        // adjust permission values
-        // var_dump($perms);
-        if (!empty($perms)) {
-            foreach ($perms as $field => $value) {
-                if (preg_match("/^Can/", $field) === 1) {
-                    $adjustedPerms[$field] = intval($value) === 1;
-                }
-                // if ($field === "Custom") {
-                //     $customPerms = explode(';', $value);
-                //     foreach ($customPerms as $cFiled => $cValue) {
-                //         if (preg_match("/^Can/", $cFiled) === 1) {
-                //             // in custom permission exsists then it's enabled by default
-                //             $adjustedPerms[$cFiled] = true;
-                //         }
-                //     }
-                // }
-            }
-        }
-        $adjustedPerms['Others'] = array_filter(explode(';', $perms['Others'] ?: ''));
-        // $this->permissions = $listOfDOs;
-        return $adjustedPerms;
-    }
+    // private function _adjustPermissions ($perms) {
+    //     $adjustedPerms = array();
+    //     // adjust permission values
+    //     // var_dump($perms);
+    //     if (!empty($perms)) {
+    //         foreach ($perms as $field => $value) {
+    //             if (preg_match("/^Can/", $field) === 1) {
+    //                 $adjustedPerms[$field] = intval($value) === 1;
+    //             }
+    //             // if ($field === "Custom") {
+    //             //     $customPerms = explode(';', $value);
+    //             //     foreach ($customPerms as $cFiled => $cValue) {
+    //             //         if (preg_match("/^Can/", $cFiled) === 1) {
+    //             //             // in custom permission exsists then it's enabled by default
+    //             //             $adjustedPerms[$cFiled] = true;
+    //             //         }
+    //             //     }
+    //             // }
+    //         }
+    //     }
+    //     $adjustedPerms['Others'] = array_filter(explode(';', $perms['Others'] ?: ''));
+    //     // $this->permissions = $listOfDOs;
+    //     return $adjustedPerms;
+    // }
 
-    private function _filterPermissions ($dataPermission) {
-        $dataPermission['Others'] = isset($dataPermission['Others']) ? $dataPermission['Others'] : array();
-        $dataPermission['Others'] = implode(';', array_filter(
-            $dataPermission['Others'],
-            function ($v) {
-                return trim($v);
-            }
-        ));
-        return $dataPermission;
-    }
+    // private function _filterPermissions ($dataPermission) {
+    //     $dataPermission['Others'] = isset($dataPermission['Others']) ? $dataPermission['Others'] : array();
+    //     $dataPermission['Others'] = implode(';', array_filter(
+    //         $dataPermission['Others'],
+    //         function ($v) {
+    //             return trim($v);
+    //         }
+    //     ));
+    //     return $dataPermission;
+    // }
 
     // stats
     // -----------------------------------------------
     public function getStats_UsersOverview () {
-        global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
+        // global $app;
+        if (!API::getAPI('system:auth')->ifYouCanAll('Admin')) {
             return null;
         }
-        $config = data::stat_UsersOverview();
-        $data = $app->getDB()->query($config) ?: array();
-        return $data;
+        return $this->data->stat_UsersOverview();
+        // $config = data::stat_UsersOverview();
+        // $data = $app->getDB()->query($config) ?: array();
+        // return $data;
     }
 
     public function getStats_UsersIntensityLastMonth ($status) {
-        global $app;
-        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
+        // global $app;
+        if (!API::getAPI('system:auth')->ifYouCanAll('Admin')) {
             return null;
         }
-        $config = data::stat_UsersIntensityLastMonth($status);
-        $data = $app->getDB()->query($config) ?: array();
-        return $data;
+        return $this->data->stat_UsersIntensityLastMonth($status);
+        // $config = data::stat_UsersIntensityLastMonth($status);
+        // $data = $app->getDB()->query($config) ?: array();
+        // return $data;
     }
 
     public function get (&$resp, $req) {
-        $allAccess = API::getAPI('system:auth')->ifYouCan('Admin') ||
-            API::getAPI('system:auth')->ifYouCan('AddUsers') ||
-            API::getAPI('system:auth')->ifYouCan('Maintain');
-        // var_dump($req);
-        if (empty($req->id) && $allAccess) {
-            $resp = $this->getUsers_List($req->get);
+        $allAccess = API::getAPI('system:auth')->ifYouCanAny('Admin', 'AddUsers', 'Maintain');
+         // ||
+         //    API::getAPI('system:auth')->ifYouCan('AddUsers') ||
+         //    API::getAPI('system:auth')->ifYouCan('Maintain');
+
+
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID() && $allAccess) {
+            $resp = $this->data->fetchUserByID($req->id);
             return;
-        } else {
-            if (is_numeric($req->id) && $allAccess) {
-                $UserID = intval($req->id);
-                $resp = $this->getUserByID($UserID);
-                return;
-            } elseif (is_string($req->id)) {
-                $resp = $this->getUserByValidationString($req->id);
-                return;
-            } elseif (!empty($req->get['activate'])) {
-                $ValidationString = $req->get['activate'];
-                $resp = $this->activateUserByValidationStyring($ValidationString);
-                return;
-            } else {
-                $resp['error'] = "AccessDenied";
-                return;
-            }
         }
+        // or by ExternalKey
+        if (Request::hasRequestedExternalKey()) {
+            $resp = $this->data->fetchUserByValidationString($req->externalKey);
+            return;
+        }
+        // or activate user
+        if (empty($req->get['activate'])) {
+            $resp = $this->data->activateUser($req->get['activate']);
+            return;
+        }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem() && $allAccess) {
+            $resp = $this->data->fetchUserDataList($req->get);
+        }
+
+        $resp['error'] = "AccessDenied";
+
+
+        // // var_dump($req);
+        // if (empty($req->id) && $allAccess) {
+        //     $resp = $this->getUsers_List($req->get);
+        //     return;
+        // } else {
+        //     if (is_numeric($req->id) && $allAccess) {
+        //         $UserID = intval($req->id);
+        //         $resp = $this->getUserByID($UserID);
+        //         return;
+        //     } elseif (is_string($req->id)) {
+        //         $resp = $this->data->fetchUserByValidationString($req->id);
+        //         return;
+        //     } elseif (!empty($req->get['activate'])) {
+        //         $ValidationString = $req->get['activate'];
+        //         $resp = $this->activateUserByValidationStyring($ValidationString);
+        //         return;
+        //     } else {
+        //         $resp['error'] = "AccessDenied";
+        //         return;
+        //     }
+        // }
     }
 
     public function post (&$resp, $req) {
@@ -498,16 +591,29 @@ class users extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->id)) {
-            if (is_numeric($req->id)) {
-                $UserID = intval($req->id);
-                $resp = $this->updateUser($UserID, $req->data);
-                return;
-            } else {
-                $resp['error'] = "MissedParameter_id";
-                return;
-            }
+
+        // for specific user item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->data->updateUser($req->id, $req->data);
+            return;
         }
+
+        // for the case when we have to fecth list with user
+        if (Request::noRequestedItem()) {
+            $resp['error'] = "MissedParameter_id";
+            return;
+        }
+        // if (!empty($req->id)) {
+        //     if (is_numeric($req->id)) {
+        //         $UserID = intval($req->id);
+        //         $resp = $this->updateUser($UserID, $req->data);
+        //         return;
+        //     } else {
+        //         $resp['error'] = "MissedParameter_id";
+        //         return;
+        //     }
+        // }
         $resp['error'] = 'UnknownAction';
     }
 
@@ -516,16 +622,30 @@ class users extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->id)) {
-            if (is_numeric($req->id)) {
-                $UserID = intval($req->id);
-                $resp = $this->updateUser($UserID, $req->data, true);
-                return;
-            } else {
-                $resp['error'] = "MissedParameter_id";
-                return;
-            }
+
+        // for specific user item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->data->updateUser($req->id, $req->data, true);
+            return;
         }
+
+        // for the case when we have to fecth list with user
+        if (Request::noRequestedItem()) {
+            $resp['error'] = "MissedParameter_id";
+            return;
+        }
+
+        // if (!empty($req->id)) {
+        //     if (is_numeric($req->id)) {
+        //         $UserID = intval($req->id);
+        //         $resp = $this->updateUser($UserID, $req->data, true);
+        //         return;
+        //     } else {
+        //         $resp['error'] = "MissedParameter_id";
+        //         return;
+        //     }
+        // }
         $resp['error'] = 'UnknownAction';
     }
 
@@ -534,10 +654,25 @@ class users extends API {
             $resp['error'] = "AccessDenied";
             return;
         }
-        if (!empty($req->id)) {
-            $resp = $this->disableUserByID($req->id);
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp = $this->data->disableUser($req->id);
             return;
         }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp['error'] = 'MissedParameter_id';
+            return;
+        }
+
+        // $resp['error'] = 'WrongParameter_id';
+
+
+        // if (!empty($req->id)) {
+        //     $resp = $this->disableUserByID($req->id);
+        //     return;
+        // }
         $resp['error'] = 'UnknownAction';
     }
 }

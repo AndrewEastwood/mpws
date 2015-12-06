@@ -7,7 +7,7 @@ class database {
     var $config;
     var $dbo;
     var $transactionIsActive = false;
-    var $disableTransactions = false;
+    var $lockTransaction = false;
 
     public function __construct($config = false) {
         $this->config = $config;
@@ -46,10 +46,10 @@ class database {
     }
 
     public function beginTransaction () {
-        if (!$this->isTransactionsAllowed())
-            return false;
+        if (!$this->isTransactionLocked())
+            return $this;
         if ($this->transactionIsActive)
-            return false;
+            return $this;
         // echo 3;
         try {
             $this->getDBLink()->beginTransaction();
@@ -58,39 +58,45 @@ class database {
         }
         $this->transactionIsActive = true;
         // echo 4;
+        return $this;
     }
 
     public function commit () {
-        if (!$this->isTransactionsAllowed())
+        if (!$this->isTransactionLocked())
             return false;
         if ($this->transactionIsActive) {
             $this->getDBLink()->commit();
             $this->transactionIsActive = false;
         }
+        return $this;
     }
 
     public function rollback () {
-        if (!$this->isTransactionsAllowed())
-            return false;
+        if (!$this->isTransactionLocked())
+            return $this;
         if ($this->transactionIsActive) {
             $this->getDBLink()->rollBack();
             $this->transactionIsActive = false;
         }
+        return $this;
     }
 
-    public function disableTransactions () {
-        $this->disableTransactions = true;
+    public function lockTransaction () {
+        $this->lockTransaction = true;
+        return $this;
     }
 
-    public function enableTransactions () {
-        $this->disableTransactions = false;
+    public function unlockTransaction () {
+        $this->lockTransaction = false;
+        return $this;
     }
 
-    public function isTransactionsAllowed () {
-        return !$this->disableTransactions;
+    public function isTransactionLocked () {
+        return !$this->lockTransaction;
+        return $this;
     }
 
-    public function getLastInsertId () {
+    public function xxx_getLastInsertId () {
         return $this->dbo->mpwsGetLastInsertId();
     }
 
@@ -98,7 +104,7 @@ class database {
         return $boolval ? 1 : 0;
     }
 
-    public function createCondition ($value, $comparator = null, $concatenate = null) {
+    public function xxx_createCondition ($value, $comparator = null, $concatenate = null) {
         $condition = array(
             "comparator" => $comparator,
             "value" => $value,
@@ -117,7 +123,7 @@ class database {
         return $condition;
     }
 
-    public function createSortOrder ($fld, $desc = false) {
+    public function xxx_createSortOrder ($fld, $desc = false) {
         return array(
             'field' => $fld,
             'ordering' => $desc ? 'DESC' : 'ASC'
@@ -132,7 +138,7 @@ class database {
         return dbquery::get($name);
     }
 
-    public function createOrGetQuery ($name) {
+    public function xxx_createOrGetQuery ($name) {
         if (dbquery::exists($name)) {
             return dbquery::get($name);
         }

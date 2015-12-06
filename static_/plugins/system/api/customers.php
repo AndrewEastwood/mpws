@@ -50,7 +50,7 @@ class customers extends API {
         if (empty($customerName)) {
             return false;
         }
-        $customer = $this->getCustomerByName($customerName);
+        $customer = $this->data->fetchCustomerByName($customerName);
         if (!isset($customer)) {
             return false;
         }
@@ -72,7 +72,7 @@ class customers extends API {
             return false;
         }
         // try to load customer by given ID
-        $customer = $this->getCustomerByID($ID);
+        $customer = $this->data->fetchCustomerByID($ID);
         if (!isset($customer)) {
             return false;
         }
@@ -90,7 +90,7 @@ class customers extends API {
         if (isset($this->customersCache[$customerName])) {
             return $this->customersCache[$customerName];
         }
-        $customer = $this->getCustomerByName($customerName);
+        $customer = $this->data->fetchCustomerByName($customerName);
         if (!isset($customer)) {
             return false;
         }
@@ -113,16 +113,16 @@ class customers extends API {
             }
             $customer = $this->customersCache[$ID];
             // if ($activeCustomerID >= 0)
-            //     $customer = $this->getCustomerByID($activeCustomerID);
+            //     $customer = $this->data->fetchCustomerByID($activeCustomerID);
             // else {
-            //     $customer = $this->getCustomerByName($app->customerName());
+            //     $customer = $this->data->fetchCustomerByName($app->customerName());
             //     if (isset($customer['ID'])) {
             //         $this->setCustomerSessionID($customers['ID']);
             //         // $_SESSION['site_id'] = $customers['ID'];
             //     }
             // }
         } else {
-            $customer = $this->getCustomerByName($app->customerName());
+            $customer = $this->data->fetchCustomerByName($app->customerName());
         }
         return $customer;
     }
@@ -188,46 +188,46 @@ class customers extends API {
     //     return $customer;
     // }
 
-    public function getCustomerByID ($ID) {
-        return $this->data->fetchCustomerByID($ID);
-        // global $app;
-        // $config = $this->data->getCustomer($ID);
-        // $customer = $app->getDB()->query($config, false);
-        // return $this->__adjustCustomer($customer);
-    }
+    // public function getCustomerByID ($ID) {
+    //     return $this->data->fetchCustomerByID($ID);
+    //     // global $app;
+    //     // $config = $this->data->getCustomer($ID);
+    //     // $customer = $app->getDB()->query($config, false);
+    //     // return $this->__adjustCustomer($customer);
+    // }
 
-    public function getCustomerByName ($customerName) {
-        return $this->data->fetchCustomerByName($customerName);
-        // global $app;
-        // $config = $this->data->getCustomer();
-        // $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
-        // $customer = $app->getDB()->query($config, false);
-        // // echo 2121212;
-        // // var_dump($customer);
-        // if (empty($customer)) {
-        //     return null;
-        // }
-        // return $this->__adjustCustomer($customer);
-    }
+    // public function getCustomerByName ($customerName) {
+    //     return $this->data->fetchCustomerByName($customerName);
+    //     // global $app;
+    //     // $config = $this->data->getCustomer();
+    //     // $config['condition']['HostName'] = $app->getDB()->createCondition($customerName);
+    //     // $customer = $app->getDB()->query($config, false);
+    //     // // echo 2121212;
+    //     // // var_dump($customer);
+    //     // if (empty($customer)) {
+    //     //     return null;
+    //     // }
+    //     // return $this->__adjustCustomer($customer);
+    // }
 
-    public function getCustomers_List (array $options = array()) {
-        return $this->data->fetchCustomerDataList($options);
-        // global $app;
-        // $config = $this->data->getCustomerList($options);
-        // $self = $this;
-        // $callbacks = array(
-        //     "parse" => function ($items) use($self) {
-        //         $_items = array();
-        //         foreach ($items as $key => $orderRawItem) {
-        //             $_items[] = $self->getCustomerByID($orderRawItem['ID']);
-        //         }
-        //         return $_items;
-        //     }
-        // );
-        // $options['useCustomerID'] = false;
-        // $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        // return $dataList;
-    }
+    // public function getCustomers_List (array $options = array()) {
+    //     return $this->data->fetchCustomerDataList($options);
+    //     // global $app;
+    //     // $config = $this->data->getCustomerList($options);
+    //     // $self = $this;
+    //     // $callbacks = array(
+    //     //     "parse" => function ($items) use($self) {
+    //     //         $_items = array();
+    //     //         foreach ($items as $key => $orderRawItem) {
+    //     //             $_items[] = $this->data->fetchCustomerByID($orderRawItem['ID']);
+    //     //         }
+    //     //         return $_items;
+    //     //     }
+    //     // );
+    //     // $options['useCustomerID'] = false;
+    //     // $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+    //     // return $dataList;
+    // }
 
     public function createCustomer ($reqData) {
         // global $app;
@@ -288,8 +288,9 @@ class customers extends API {
                 $r = $this->data->createCustomer($validatedValues);
                 // $app->getDB()->query($configCreateCustomer, false) ?: null;
 
-                if ($r->isEmptyResult())
+                if ($r->isEmptyResult()) {
                     throw new Exception('CustomerCreateError');
+                }
 
                 // $app->getDB()->commit();
 
@@ -305,7 +306,7 @@ class customers extends API {
         }
 
         if ($r->hasResult()) {
-            $customer = $this->getCustomerByID($r->getResult());
+            $customer = $this->data->fetchCustomerByID($r->getResult());
             $r->setResult($customer);
         }
         // $result['errors'] = $errors;
@@ -343,7 +344,7 @@ class customers extends API {
 
                 // update logo
                 if (isset($reqData['file1'])) {
-                    $customer = $this->getCustomerByID($CustomerID);
+                    $customer = $this->data->fetchCustomerByID($CustomerID);
 
                     $currentFileName = empty($customer['Logo']) ? "" : $customer['Logo']['name'];
                     $newFileName = null;
@@ -417,14 +418,14 @@ class customers extends API {
             $r->addErrors($validatedDataObj["errors"]);
         }
 
-        $customer = $this->getCustomerByID($CustomerID);
+        $customer = $this->data->fetchCustomerByID($CustomerID);
         $r->setResult($customer);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
 
         return $r->toArray();
 
-        // $result = $this->getCustomerByID($CustomerID);
+        // $result = $this->data->fetchCustomerByID($CustomerID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
 
@@ -439,7 +440,7 @@ class customers extends API {
 
         $r = $this->data->archiveCustomer($CustomerID);
         if ($r->hasResult()) {
-            $customer = $this->getCustomerByID($r->getResult());
+            $customer = $this->data->fetchCustomerByID($r->getResult());
             $r->setResult($customer);
         }
         return $r->toArray();
@@ -459,7 +460,7 @@ class customers extends API {
         //     $errors[] = 'CustomerArchiveError';
         // }
 
-        // $result = $this->getCustomerByID($CustomerID);
+        // $result = $this->data->fetchCustomerByID($CustomerID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
         // return $result;
@@ -471,27 +472,27 @@ class customers extends API {
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->getCustomerByID($req->id);
+            $resp = $this->data->fetchCustomerByID($req->id);
             return;
         }
         // or by ExternalKey
         if (Request::hasRequestedExternalKey()) {
-            $resp = $this->getCustomerByName($req->externalKey);
+            $resp = $this->data->fetchCustomerByName($req->externalKey);
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp = $this->getCustomers_List($req->get);
+            $resp = $this->data->fetchCustomerDataList($req->get);
         }
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $CustomerID = intval($req->id);
-        //         $resp = $this->getCustomerByID($CustomerID);
+        //         $resp = $this->data->fetchCustomerByID($CustomerID);
         //     } else {
-        //         $resp = $this->getCustomerByName($req->id);
+        //         $resp = $this->data->fetchCustomerByName($req->id);
         //     }
         // } else {
-        //     $resp = $this->getCustomers_List($req->get);
+        //     $resp = $this->data->fetchCustomerDataList($req->get);
         // }
     }
 

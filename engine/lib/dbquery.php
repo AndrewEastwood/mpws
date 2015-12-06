@@ -25,7 +25,8 @@ class dbquery {
     var $offset = 0;
     var $group = null;
     var $having = null;
-    var $filterFn = null;
+    var $filters = array();
+    var $result = null;
 
     function __construct ($queryName, $source, $props = null) {
         if (!is_string($queryName)) {
@@ -60,6 +61,7 @@ class dbquery {
         $props['fields'] = clone $this->fields;
         $props['data'] = clone $this->data;
         $props['saveOptions'] = clone $this->saveOptions;
+        unlink($props['result']);
         unlink($props['name']);
         return $props;
     }
@@ -89,7 +91,39 @@ class dbquery {
     public static function setQueryFilter ($filter, $queryNameLookup) {
         foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
             if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
-                $queryInstance->setFilter($filter);
+                $queryInstance->setFilter('fetch', $filter);
+            }
+        }
+    }
+
+    public static function setBeforeCallFilter ($filter, $queryNameLookup) {
+        foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
+            if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
+                $queryInstance->setFilter('call', $filter);
+            }
+        }
+    }
+
+    public static function setBeforeSaveFilter ($filter, $queryNameLookup) {
+        foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
+            if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
+                $queryInstance->setFilter('save', $filter);
+            }
+        }
+    }
+
+    public static function setBeforeInsertFilter ($filter, $queryNameLookup) {
+        foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
+            if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
+                $queryInstance->setFilter('insert', $filter);
+            }
+        }
+    }
+
+    public static function setBeforeUpdateFilter ($filter, $queryNameLookup) {
+        foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
+            if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
+                $queryInstance->setFilter('update', $filter);
             }
         }
     }
@@ -112,22 +146,42 @@ class dbquery {
         $this->action = $action;
         return $this;
     }
+
+
     public function setCondition ($field, $value, $comparator = null, $concatenate = null) {
         $this->clearConditions();
         return $this->addCondition($field, $value, $comparator, $concatenate);
+    }
+    public function setConditionByFlag ($flag, $field, $value, $comparator = null, $concatenate = null) {
+        if (!$flag) return $this;
+        return $this->setCondition($field, $value, $comparator, $concatenate);
     }
     public function addCondition ($field, $value, $comparator = null, $concatenate = null) {
         $this->conditions[$this->setFieldSource($field)] = $this->createCondition($value, $comparator, $concatenate);
         return $this;
     }
+    public function addConditionByFlag ($flag, $field, $value, $comparator = null, $concatenate = null) {
+        if (!$flag) return $this;
+        return $this->setCondition($field, $value, $comparator, $concatenate);
+    }
     public function setConditionFn ($field, $callParams) {
         $this->clearConditions();
         return $this->addConditionFn($field, $callParams);
+    }
+    public function setConditionFnByFlag ($field, $callParams) {
+        if (!$flag) return $this;
+        return $this->setConditionFn($field, $callParams);
     }
     public function addConditionFn ($field, $callParams) {
         $this->conditions[$this->setFieldSource($field)] = array('fn' => $callParams);
         return $this;
     }
+    public function addConditionFnByFlag ($flag, $field, $callParams) {
+        if (!$flag) return $this;
+        return $this->addConditionFn($field, $callParams);
+    }
+
+
     public function clearConditions () {
         $this->conditions = array();
         return $this;
@@ -152,12 +206,16 @@ class dbquery {
         $this->fields = array();
         return $this->addFields(func_get_args());
     }
+    public function setAllFields () {
+        $this->fields = array("*");
+        return $this;
+    }
     public function addFields () {
-        $fileds = func_get_args();
-        if (isset($fileds) && count($fileds) == 0 && is_array($fileds[0])) {
-            $fileds = func_get_arg(0);
+        $fields = func_get_args();
+        if (isset($fields) && count($fields) == 1 && is_array($fields[0])) {
+            $fields = func_get_arg(0);
         }
-        if (empty($fileds)) {
+        if (empty($fields)) {
             throw new Exception("setFields got empty array", 1);
         }
         foreach ($fields as $fld) {
@@ -175,6 +233,10 @@ class dbquery {
     }
     public function groupBy ($group) {
         $this->group = $group;
+        return $this;
+    }
+    public function dontGroup () {
+        $this->group = null;
         return $this;
     }
     public function setHaving ($having) {
@@ -221,8 +283,8 @@ class dbquery {
         return $this;
     }
 
-    public function setFilter (&$filter) {
-        $this->filterFn = $filter;
+    public function setFilter ($type, &$filter) {
+        $this->filters[$type] = $filter;
         return $this;
     }
 
@@ -294,19 +356,29 @@ class dbquery {
         return $this;
     }
 
-    public function addStandardDateFileds () {
-        $this->addStandardDateCreatedFiled();
-        $this->addStandardDateUpdatedFiled();
+    public function addStandardDateFields () {
+        $this->addStandardDateCreatedField();
+        $this->addStandardDateUpdatedField();
         return $this;
     }
 
-    public function addStandardDateCreatedFiled () {
+    public function addStandardDateCreatedField () {
         $this->addDataItem('DateCreated', dbquery::getDate());
         return $this;
     }
 
-    public function addStandardDateUpdatedFiled () {
+    public function addStandardDateUpdatedField () {
         $this->addDataItem('DateUpdated', dbquery::getDate());
+        return $this;
+    }
+
+    public function addStandardDateNowField ($fldName) {
+        $this->addDataItem($fldName, dbquery::getDate());
+        return $this;
+    }
+
+    public function addStandardDateField ($fldName, $date) {
+        $this->addDataItem($fldName, dbquery::getDate($date));
         return $this;
     }
 
@@ -339,6 +411,7 @@ class dbquery {
         if ($fld[0] == '@') { // for expressions
             return $fld;
         }
+        // var_dump($fld);
         $fldParts = explode('.', $fld);
         $fldHasSrc = count($fldParts) == 2;
         $fldSrc = $fldHasSrc ? $fldParts[0] : null;
@@ -414,17 +487,17 @@ class dbquery {
         return $this->select();
     }
 
-    public function selectAsDict ($dictKey, $dictValue, $limit = null) {
+    public function selectAsDict ($dictKey, $dictValue = null, $limit = null) {
         if (!is_null($limit)) {
             $this->setLimit($limit);
         }
         $dbData = $this->select();
         $data = null;
         foreach ($dbData as $key => $val) {
-            if ($dictValue)
+            if ($dictValue) // peak specific value from a object
                 $data[$val[$dictKey]] = $val[$dictValue] ?: null;
             else
-                $data[$val[$dictKey]] = $val;
+                $data[$val[$dictKey]] = $val; // use whole item as value
         }
         return $data;
     }
@@ -465,6 +538,14 @@ class dbquery {
             $count = $dbData[0]['ItemsCount'];
         }
         return $count;
+    }
+
+    // results
+    private function getLastResult ($r) {
+        return $this->result;
+    }
+    private function setLastResult ($r) {
+        $this->result = $r;
     }
 
     // private region
@@ -623,9 +704,28 @@ class dbquery {
 
         switch ($this->action) {
             case 'call':
+                if (!empty($this->filters['call'])) {
+                    $filter = $this->filters['call'];
+                    $filter($this->data);
+                }
                 $dbData = $db->mpwsProcedureCall($this->source, $this->data);
+                // filter fetched data using filter function
+                if (!empty($this->filters['query'])) {
+                    $filter = $this->filters['query'];
+                    foreach ($dbData as $key => &$value) {
+                        $filter($value);
+                    }
+                }
                 break;
             case 'update':
+                if (!empty($this->filters['update'])) {
+                    $filter = $this->filters['update'];
+                    $filter($this->data);
+                }
+                if (!empty($this->filters['save'])) {
+                    $filter = $this->filters['save'];
+                    $filter($this->data);
+                }
                 $db->update($this->data);
                 $db->save($this->saveOptions);
                 break;
@@ -633,24 +733,36 @@ class dbquery {
                 $db->delete_many();
                 break;
             case 'insert':
+                // filter fetched data using filter function
+                if (!empty($this->filters['insert'])) {
+                    $filter = $this->filters['insert'];
+                    $filter($this->data);
+                }
+                if (!empty($this->filters['save'])) {
+                    $filter = $this->filters['save'];
+                    $filter($this->data);
+                }
                 $db->create($this->data);
                 $db->save($this->saveOptions);
+                $dbData = $db->mpwsGetLastInsertId();
                 break;
             case 'select':
             default:
                 // fetch data
                 $dbData = $db->find_array();
+                // filter fetched data using filter function
+                if (!empty($this->filters['query'])) {
+                    $filter = $this->filters['query'];
+                    foreach ($dbData as $key => &$value) {
+                        $filter($value);
+                    }
+                }
                 break;
         }
 
         // var_dump($dbData);
-        // filter fetched data using filter function
-        if (!empty($this->filterFn)) {
-            foreach ($dbData as $key => &$value) {
-                $filter = $this->filterFn;
-                $filter($value);
-            }
-        }
+
+        $this->setLastResult($dbData);
 
         return $dbData;
     }
