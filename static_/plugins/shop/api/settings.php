@@ -326,7 +326,7 @@ class settings extends API {
                         'Status' => array('string', 'skipIfUnset')
                     );
                     $validatedDataObj = Validate::getValidData($reqData, $dataRules);
-                    // var_dump($validatedDataObj['values']);
+                    // var_dump($validatedDataObj->validData);
                     // $dataRules = $this->getSettingsAddresses();
                     break;
                 case 'MISC':
@@ -366,10 +366,10 @@ class settings extends API {
             // var_dump($type);
             // var_dump($validatedDataObj);
 
-            if (!empty($validatedDataObj) && $validatedDataObj["totalErrors"] == 0 && empty($errors)) {
+            if (!empty($validatedDataObj) && $$validatedDataObj->errorsCount == 0 && empty($errors)) {
                 try {
 
-                    $validatedValues = $validatedDataObj['values'];
+                    $validatedValues = $validatedDataObj->validData;
                     // var_dump($validatedValues);
 
                     $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
@@ -397,8 +397,8 @@ class settings extends API {
                     $errors[] = $e->getMessage();
                 }
             } else {
-                if (isset($validatedDataObj["errors"])) {
-                    $errors += $validatedDataObj["errors"];
+                if (isset($$validatedDataObj->errorMessages)) {
+                    $errors += $$validatedDataObj->errorMessages;
                 }
             }
 

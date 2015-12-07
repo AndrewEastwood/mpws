@@ -105,7 +105,6 @@ class data extends BaseData {
         // $this->db->createQuery('systemAddress_Add', $this->source_address)
         // $this->db->createQuery('systemAddress_Archive', $this->source_address)
 
-
         dbQuery::setQueryFilter(function (&$task) {
             if (empty($task))
                 return null;
@@ -135,6 +134,14 @@ class data extends BaseData {
             }
         }, 'systemCustomer');
 
+        dbQuery::setQueryFilter(function (&$address) {
+            if (empty($address))
+                return null;
+            $address['ID'] = intval($address['ID']);
+            $address['UserID'] = intval($address['UserID']);
+            $address['isRemoved'] = $address['Status'] === 'REMOVED';
+        }, 'systemAddress');
+
         dbQuery::setQueryFilter(function (&$user) {
             // adjusting
             $ID = intval($user['ID']);
@@ -145,8 +152,7 @@ class data extends BaseData {
             unset($user['Password']);
 
             // attach addresses
-            $user['Addresses'] = $this-> API::getAPI('system:address')->getAddresses($UserID);
-
+            $user['Addresses'] = $this->fetchUserAddresses($ID);
 
             // append user's permissions
             $permissions = $this->fetchUserPermissionsByUserID($ID);
@@ -159,13 +165,14 @@ class data extends BaseData {
             }
             // attach plugin's permissions
             $plugins = API::getAPI('system:plugins');
-            $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
+            $user['_availableOtherPerms'] = $plugins->getPluginsPermissons();
 
             // customizations
             $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
-            $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
-                return !$v['isRemoved'];
-            }));
+            $user['ActiveAddressesCount'] = count($user['Addresses']);//
+            // $user['ActiveAddressesCount'] = count(array_filter($user['Addresses'], function ($v) {
+            //     return !$v['isRemoved'];
+            // }));
         }, 'systemUsers');
 
         dbQuery::setQueryFilter(function (&$perms) {
@@ -677,8 +684,8 @@ class data extends BaseData {
             ->groupBy('ID')
             ->addParams($options);
 
-        $q->addConditionFnByFlag(
-            !API::getAPI('system:auth')->ifYouCan('Maintain')
+        $q->addCondition(
+            // !API::getAPI('system:auth')->ifYouCan('Maintain')
             'CustomerID', $app->getSite()->getRuntimeCustomerID());
 
         if (!empty($options['_pSearch'])) {
@@ -748,12 +755,13 @@ class data extends BaseData {
         return $q->selectAsDataList();
     }
 
-    public function fetchUserByCredentials ($login, $password, $withCustomerID = false) {
+    public function fetchUserByCredentials ($login, $password) {
+        global $app;
         return dbQuery::systemUsers()
             ->setAllFields()
             ->setCondition('EMAil', $login)
             ->addCondition('Password', $password)
-            ->addConditionByFlag($withCustomerID, 'CustomerID', $password)
+            ->addConditionByFlag(!$app->isToolbox(), 'CustomerID', $app->getSite()->getRuntimeCustomerID())
             ->selectSingleItem();
     }
 
@@ -1029,6 +1037,13 @@ class data extends BaseData {
         // if (!$withRemoved)
         //     $config['condition']["Status"] = $this->db->createCondition("ACTIVE");
         // return $config;
+    }
+
+    public function fetchUserAddressesCount ($userID) {
+        return dbQuery::systemAddress()
+            ->setCondition('UserID', $userID)
+            ->addCondition('Status', "ACTIVE")
+            ->selectCount("ID");
     }
 
     public function createAddress ($data) {

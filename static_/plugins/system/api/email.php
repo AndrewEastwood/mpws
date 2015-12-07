@@ -7,219 +7,217 @@ use \engine\lib\path as Path;
 use Exception;
 
 class email extends API {
+    // private function __adjustEmail (&$address) {
+    //     if (empty($address))
+    //         return null;
+    //     $address['ID'] = intval($address['ID']);
+    //     $address['UserID'] = intval($address['UserID']);
+    //     $address['isRemoved'] = $address['Status'] === 'REMOVED';
+    //     return $address;
+    // }
+
+    // public function getEmailByID ($EmailID) {
+    //     global $app;
+    //     $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
+    //     $email = $app->getDB()->query(data::getEmailByID($EmailID), $useCustomerDataOnly);
+    //     if (!is_null($email))
+    //         $email = $this->__adjustEmail($email);
+    //     return $email;
+    // }
+
+    // public function getAvailableEmails_List ($options = array()) {
+    //     global $app;
+    //     $config = data::getEmailList($options);
+    //     if (empty($config))
+    //         return null;
+    //     $self = $this;
+    //     $callbacks = array(
+    //         "parse" => function ($items) use($self) {
+    //             $_items = array();
+    //             foreach ($items as $key => $orderRawItem) {
+    //                 $_items[] = $self->getEmailByID($orderRawItem['ID']);
+    //             }
+    //             return $_items;
+    //         }
+    //     );
+    //     $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+    //     return $dataList;
+    // }
+
+    // public function getAvailableEmailsSimple_List ($options = array()) {
+    //     global $app;
+    //     $config = data::getEmailListSimple($options);
+    //     if (empty($config)) {
+    //         return array();
+    //     }
+    //     $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
+    //     $simpleList = $app->getDB()->query($config, $useCustomerDataOnly);
+    //     return $simpleList;
+    // }
 
 
-    private function __adjustEmail (&$address) {
-        if (empty($address))
-            return null;
-        $address['ID'] = intval($address['ID']);
-        $address['UserID'] = intval($address['UserID']);
-        $address['isRemoved'] = $address['Status'] === 'REMOVED';
-        return $address;
-    }
+    // public function createEmail ($reqData) {
+    //     global $app;
+    //     $result = array();
+    //     $errors = array();
+    //     $success = false;
 
-    public function getEmailByID ($EmailID) {
-        global $app;
-        $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
-        $email = $app->getDB()->query(data::getEmailByID($EmailID), $useCustomerDataOnly);
-        if (!is_null($email))
-            $email = $this->__adjustEmail($email);
-        return $email;
-    }
+    //     $validatedDataObj = Validate::getValidData($reqData, array(
+    //         'Name' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
+    //         'Params' => array('string')
+    //     ));
 
-    public function getAvailableEmails_List ($options = array()) {
-        global $app;
-        $config = data::getEmailList($options);
-        if (empty($config))
-            return null;
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getEmailByID($orderRawItem['ID']);
-                }
-                return $_items;
-            }
-        );
-        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        return $dataList;
-    }
+    //     if ($$validatedDataObj->errorsCount == 0)
+    //         try {
 
-    public function getAvailableEmailsSimple_List ($options = array()) {
-        global $app;
-        $config = data::getEmailListSimple($options);
-        if (empty($config)) {
-            return array();
-        }
-        $useCustomerDataOnly = !API::getAPI('system:auth')->ifYouCan('Maintain');
-        $simpleList = $app->getDB()->query($config, $useCustomerDataOnly);
-        return $simpleList;
-    }
+    //             $app->getDB()->beginTransaction();
 
+    //             $validatedValues = $validatedDataObj->validData;
 
-    public function createEmail ($reqData) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+    //             $data = array();
+    //             $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+    //             $data["Name"] = $validatedValues['Name'];
+    //             $data["Params"] = $validatedValues['Params'];
 
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
-            'Params' => array('string')
-        ));
+    //             $configCreateEmail = data::createEmail($data);
 
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
+    //             $EmaiID = $app->getDB()->query($configCreateEmail) ?: null;
 
-                $app->getDB()->beginTransaction();
+    //             $app->getDB()->commit();
 
-                $validatedValues = $validatedDataObj['values'];
+    //             $result = $this->getAddressByID($EmaiID);
 
-                $data = array();
-                $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
-                $data["Name"] = $validatedValues['Name'];
-                $data["Params"] = $validatedValues['Params'];
+    //             $success = true;
+    //         } catch (Exception $e) {
+    //             $app->getDB()->rollBack();
+    //             $errors[] = 'EmailCreateError';
+    //             $errors[] = $e->getMessage();
+    //         }
+    //     else
+    //         $errors = $$validatedDataObj->errorMessages;
 
-                $configCreateEmail = data::createEmail($data);
+    //     $result['errors'] = $errors;
+    //     $result['success'] = $success;
 
-                $EmaiID = $app->getDB()->query($configCreateEmail) ?: null;
+    //     return $result;
+    // }
 
-                $app->getDB()->commit();
+    // private function _updateEmailByID ($EmailID, $reqData) {
+    //     global $app;
+    //     $errors = array();
+    //     $success = false;
 
-                $result = $this->getAddressByID($EmaiID);
+    //     $validatedDataObj = Validate::getValidData($reqData, array(
+    //         'Name' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
+    //         'Params' => array('skipIfUnset')
+    //     ));
 
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = 'EmailCreateError';
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
+    //     if ($$validatedDataObj->errorsCount == 0)
+    //         try {
 
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+    //             $app->getDB()->beginTransaction();
 
-        return $result;
-    }
+    //             $data = $validatedDataObj->validData;
 
-    private function _updateEmailByID ($EmailID, $reqData) {
-        global $app;
-        $errors = array();
-        $success = false;
+    //             $configUpdateEmail = data::updateEmail($EmailID, $data);
 
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
-            'Params' => array('skipIfUnset')
-        ));
+    //             $app->getDB()->query($configUpdateEmail);
 
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
+    //             $app->getDB()->commit();
 
-                $app->getDB()->beginTransaction();
+    //             $success = true;
+    //         } catch (Exception $e) {
+    //             $app->getDB()->rollBack();
+    //             // return glWrap("error", 'AddressUpdateError');
+    //             $errors[] = 'EmailUpdateError';
+    //         }
+    //     else
+    //         $errors = $$validatedDataObj->errorMessages;
 
-                $data = $validatedDataObj['values'];
+    //     $result = $this->getEmailByID($AddressID);
+    //     $result['errors'] = $errors;
+    //     $result['success'] = $success;
 
-                $configUpdateEmail = data::updateEmail($EmailID, $data);
+    //     return $result;
+    // }
 
-                $app->getDB()->query($configUpdateEmail);
+    // public function archiveEmail ($EmailID) {
+    //     global $app;
+    //     $result = array();
+    //     $errors = array();
+    //     $success = false;
+    //     try {
 
-                $app->getDB()->commit();
+    //         $app->getDB()->beginTransaction();
 
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                // return glWrap("error", 'AddressUpdateError');
-                $errors[] = 'EmailUpdateError';
-            }
-        else
-            $errors = $validatedDataObj["errors"];
+    //         $config = data::archiveEmail($EmailID);
+    //         $app->getDB()->query($config);
 
-        $result = $this->getEmailByID($AddressID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+    //         $app->getDB()->commit();
 
-        return $result;
-    }
+    //         $success = true;
+    //     } catch (Exception $e) {
+    //         $app->getDB()->rollBack();
+    //         $errors[] = $e->getMessage();
+    //     }
 
-    public function archiveEmail ($EmailID) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        try {
+    //     $result = $this->getEmailByID($EmailID);
+    //     $result['errors'] = $errors;
+    //     $result['success'] = $success;
 
-            $app->getDB()->beginTransaction();
-
-            $config = data::archiveEmail($EmailID);
-            $app->getDB()->query($config);
-
-            $app->getDB()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-
-        $result = $this->getEmailByID($EmailID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
+    //     return $result;
+    // }
 
 
-    public function get (&$resp, $req) {
-        // var_dump($req);
-        if (isset($req->get['type'])) {
-            switch ($req->get['type']) {
-                case 'simplelist': {
-                    $resp = $this->getAvailableEmailsSimple_List($req->get);
-                    break;
-                }
-            }
-            return;
-        }
-        if (!empty($req->id)) {
-            if (is_numeric($req->id)) {
-                $EmailID = intval($req->id);
-                $resp = $this->getEmailByID($EmailID);
-            }
-        } else {
-            $resp = $this->getAvailableEmails_List($req->get);
-        }
-    }
+    // public function get (&$resp, $req) {
+    //     // var_dump($req);
+    //     if (isset($req->get['type'])) {
+    //         switch ($req->get['type']) {
+    //             case 'simplelist': {
+    //                 $resp = $this->getAvailableEmailsSimple_List($req->get);
+    //                 break;
+    //             }
+    //         }
+    //         return;
+    //     }
+    //     if (!empty($req->id)) {
+    //         if (is_numeric($req->id)) {
+    //             $EmailID = intval($req->id);
+    //             $resp = $this->getEmailByID($EmailID);
+    //         }
+    //     } else {
+    //         $resp = $this->getAvailableEmails_List($req->get);
+    //     }
+    // }
 
-    public function post (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->createEmail($req->data);
-    }
+    // public function post (&$resp, $req) {
+    //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
+    //         $resp['error'] = "AccessDenied";
+    //         return;
+    //     }
+    //     $resp = $this->createEmail($req->data);
+    // }
 
-    public function put (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $EmailID = intval($req->id);
-            $resp = $this->_updateEmailByID($EmailID, $req->data);
-        }
-    }
+    // public function put (&$resp, $req) {
+    //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+    //         $resp['error'] = "AccessDenied";
+    //         return;
+    //     }
+    //     if (empty($req->id)) {
+    //         $resp['error'] = 'MissedParameter_id';
+    //     } else {
+    //         $EmailID = intval($req->id);
+    //         $resp = $this->_updateEmailByID($EmailID, $req->data);
+    //     }
+    // }
 
-    public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->archiveEmail($req->data);
-    }
+    // public function delete (&$resp, $req) {
+    //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
+    //         $resp['error'] = "AccessDenied";
+    //         return;
+    //     }
+    //     $resp = $this->archiveEmail($req->data);
+    // }
 }
 
 ?>

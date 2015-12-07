@@ -248,12 +248,12 @@ class validate {
                 $totalErrors += count($errors[$keyToValidate]);
         }
 
-        return array(
-            "values" => $values,
-            "errors" => $errors,
-            "totalErrors" => $totalErrors,
-            "count" => count($values)
+        $rez = array(
+            "validData" => $values,
+            "errorMessages" => $errors,
+            "errorsCount" => $totalErrors
         );
+        return (object) $rez;
     }
 
     public static function eachValueIsNotEmpty ($values, $keySToCheck = null) {

@@ -126,12 +126,12 @@ class subscribers extends API {
             'Params' => array('string')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
                 $app->getDB()->beginTransaction();
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $data = array();
                 $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
@@ -153,7 +153,7 @@ class subscribers extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -171,12 +171,12 @@ class subscribers extends API {
             'Params' => array('skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
                 $app->getDB()->beginTransaction();
 
-                $data = $validatedDataObj['values'];
+                $data = $validatedDataObj->validData;
 
                 $configUpdateEmail = data::updateEmail($EmailID, $data);
 
@@ -191,7 +191,7 @@ class subscribers extends API {
                 $errors[] = 'EmailUpdateError';
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result = $this->getEmailByID($AddressID);
         $result['errors'] = $errors;

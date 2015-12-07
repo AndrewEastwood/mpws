@@ -533,7 +533,7 @@ class dbquery {
         $this->setLimit(1);
         $this->setOffset(0);
         $dbData = $this->select();
-        $count = 0;
+        $count = null;
         if (isset($dbData[0])) {
             $count = $dbData[0]['ItemsCount'];
         }

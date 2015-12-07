@@ -10,7 +10,6 @@ use Exception;
 class customers extends API {
 
     var $customersCache = array();
-    // private $_statuses = array('ACTIVE', 'REMOVED');
 
 
     public function setCustomerSessionID ($id) {
@@ -251,10 +250,10 @@ class customers extends API {
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfEmpty' => 'system')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 // set logo
                 if (!empty($validatedValues['Logo'])) {
@@ -301,12 +300,12 @@ class customers extends API {
                 $r->addError($e->getMessage());
             }
         else {
-            // $errors = $validatedDataObj["errors"];
-            $r->addErrors($validatedDataObj["errors"]);
+            // $errors = $$validatedDataObj->errorMessages;
+            $r->addErrors($$validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
-            $customer = $this->data->fetchCustomerByID($r->getResult());
+            $customer = $this->data->fetchAddress($r->getResult());
             $r->setResult($customer);
         }
         // $result['errors'] = $errors;
@@ -337,10 +336,10 @@ class customers extends API {
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 // update logo
                 if (isset($reqData['file1'])) {
@@ -414,8 +413,8 @@ class customers extends API {
                 // $errors[] = $e->getMessage();
             }
         else {
-            // $errors = $validatedDataObj["errors"];
-            $r->addErrors($validatedDataObj["errors"]);
+            // $errors = $$validatedDataObj->errorMessages;
+            $r->addErrors($$validatedDataObj->errorMessages);
         }
 
         $customer = $this->data->fetchCustomerByID($CustomerID);

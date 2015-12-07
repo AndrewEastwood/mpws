@@ -120,10 +120,10 @@ class categories extends API {
             'file1' => array('string', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $app->getDB()->beginTransaction();
 
@@ -160,7 +160,7 @@ class categories extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         if ($success && !empty($CategoryID))
             $result = $this->getCategoryByID($CategoryID);
@@ -184,10 +184,10 @@ class categories extends API {
             'file1' => array('string', 'skipIfEmpty')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 if (isset($reqData['file1'])) {
                     $category = $this->getCategoryByID($CategoryID);
@@ -240,7 +240,7 @@ class categories extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result = $this->getCategoryByID($CategoryID);
         $result['errors'] = $errors;

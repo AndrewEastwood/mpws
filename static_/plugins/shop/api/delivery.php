@@ -55,10 +55,10 @@ class delivery extends API {
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300, 'defaultValueIfUnset' => '')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
@@ -78,7 +78,7 @@ class delivery extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         if ($success && !empty($deliveryID))
             $result = $this->getDeliveryAgencyByID($deliveryID);
@@ -100,10 +100,10 @@ class delivery extends API {
             'Status' => array('string', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $app->getDB()->beginTransaction();
 
@@ -118,7 +118,7 @@ class delivery extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result = $this->getDeliveryAgencyByID($id);
         $result['errors'] = $errors;

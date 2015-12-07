@@ -47,7 +47,7 @@ class users extends API {
 
     //     // attach plugin's permissions
     //     $plugins = API::getAPI('system:plugins');
-    //     $user['_availableOtherPerms'] = $plugins->getPlugnisPermissons();
+    //     $user['_availableOtherPerms'] = $plugins->getPluginsPermissons();
 
     //     // customizations
     //     $user['FullName'] = $user['FirstName'] . ' ' . $user['LastName'];
@@ -96,8 +96,8 @@ class users extends API {
     //     // return $dataList;
     // }
 
-    public function getActiveUserByCredentials ($login, $password, $withCustomerID = false) {
-        return $this->data->fetchUserByCredentials($login, $password, $withCustomerID = false);
+    public function getActiveUserByCredentials ($login, $password) {
+        return $this->data->fetchUserByCredentials($login, $password);
         // global $app;
         // $query = data::getUserByCredentials($login, $password);
         // // avoid removed account
@@ -145,10 +145,10 @@ class users extends API {
             'p_Others' => array('array', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 // separate data
                 $dataUser = array();
@@ -208,8 +208,8 @@ class users extends API {
                 $r->addError($e->getMessage());
             }
         else {
-            // $errors = $validatedDataObj["errors"];
-            $r->addErrors($validatedDataObj["errors"]);
+            // $errors = $$validatedDataObj->errorMessages;
+            $r->addErrors($$validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -249,10 +249,10 @@ class users extends API {
             'p_Others' => array('array', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 // for multiple inserts use lockTransaction before
                 $app->getDB()->beginTransaction()
@@ -306,8 +306,8 @@ class users extends API {
                 // $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
             }
         else {
-            // $errors = $validatedDataObj["errors"];
-            $r->addErrors($validatedDataObj["errors"]);
+            // $errors = $$validatedDataObj->errorMessages;
+            $r->addErrors($$validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {

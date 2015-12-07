@@ -8,38 +8,39 @@ use Exception;
 
 class address extends API {
 
-    private function __adjustAddress (&$address) {
-        if (empty($address))
-            return null;
-        $address['ID'] = intval($address['ID']);
-        $address['UserID'] = intval($address['UserID']);
-        $address['isRemoved'] = $address['Status'] === 'REMOVED';
-        return $address;
-    }
+    // private function __adjustAddress (&$address) {
+    //     if (empty($address))
+    //         return null;
+    //     $address['ID'] = intval($address['ID']);
+    //     $address['UserID'] = intval($address['UserID']);
+    //     $address['isRemoved'] = $address['Status'] === 'REMOVED';
+    //     return $address;
+    // }
 
-    public function getAddressByID ($AddressID) {
-        global $app;
-        $config = data::getAddress($AddressID);
-        $address = $app->getDB()->query($config);
-        // adjust values
-        return $this->__adjustAddress($address);
-    }
+    // public function getAddressByID ($AddressID) {
+    //     global $app;
+    //     $config = data::getAddress($AddressID);
+    //     $address = $app->getDB()->query($config);
+    //     // adjust values
+    //     return $this->__adjustAddress($address);
+    // }
 
-    public function getAddresses ($UserID) {
-        global $app;
-        $configAddresses = data::getUserAddresses($UserID, $app->isToolbox());
-        $addresses = $app->getDB()->query($configAddresses) ?: array();
-        foreach ($addresses as &$item) {
-            $this->__adjustAddress($item);
-        }
-        return $addresses;
-    }
+    // public function getAddresses ($UserID) {
+    //     global $app;
+    //     $configAddresses = data::getUserAddresses($UserID, $app->isToolbox());
+    //     $addresses = $app->getDB()->query($configAddresses) ?: array();
+    //     foreach ($addresses as &$item) {
+    //         $this->__adjustAddress($item);
+    //     }
+    //     return $addresses;
+    // }
 
     public function createAddress ($UserID, $reqData, $allowStandalone = false) {
-        global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+        // global $app;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Address' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
@@ -48,15 +49,15 @@ class address extends API {
             'City' => array('string', 'min' => 2, 'max' => 100)
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
                 // TODO: if user is authorized and do not have maximum addresses
                 // we must link new address to the user otherwise create unlinked user
-                $user = API::getAPI('system:users')->getUserByID($UserID);
-                if (empty($user)) {
+                $userAddressesCount = $this->data->fetchUserAddressesCount($UserID);
+                if (is_null($userAddressesCount)) {
                     throw new Exception("WrongUser", 1);
-                } elseif ($user['ActiveAddressesCount'] >= 3) {
+                } elseif ($userAddressesCount >= 3) {
                     if (!$allowStandalone) {
                         throw new Exception("AddressLimitExceeded", 1);
                     } else {
@@ -64,9 +65,9 @@ class address extends API {
                     }
                 }
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $data = array();
                 $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
@@ -76,34 +77,43 @@ class address extends API {
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateAddr = data::createAddress($data);
+                $r = $this->data->createAddress($data);
 
-                $AddressID = $app->getDB()->query($configCreateAddr) ?: null;
+                // $app->getDB()->commit();
+                if ($r->isEmptyResult()) {
+                    throw new Exception('AddressCreateError');
+                }
 
-                $app->getDB()->commit();
+                // $result = $this->getAddressByID($AddressID);
 
-                $result = $this->getAddressByID($AddressID);
-
-                $success = true;
+                // $success = true;
             } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = 'UserAddressCreateError';
-                $errors[] = $e->getMessage();
+                $r->addError($e->getMessage());
+                // $app->getDB()->rollBack();
+                // $errors[] = 'UserAddressCreateError';
+                // $errors[] = $e->getMessage();
             }
-        else
-            $errors = $validatedDataObj["errors"];
+        else {
+            // $errors = $$validatedDataObj->errorMessages;
+            $r->addErrors($$validatedDataObj->errorMessages);
+        }
 
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        $result['success_address'] = $success;
+        if ($r->hasResult()) {
+            $addr = $this->data->fetchAddress($r->getResult());
+            $r->setResult($addr);
+        }
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // $result['success_address'] = $success;
 
-        return $result;
+        return $r->toArray();
     }
 
     private function _updateAddressByID ($AddressID, $reqData) {
-        global $app;
-        $errors = array();
-        $success = false;
+        // global $app;
+        // $errors = array();
+        // $success = false;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Address' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
@@ -112,60 +122,72 @@ class address extends API {
             'City' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100)
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
-                $data = $validatedDataObj['values'];
+                $data = $validatedDataObj->validData;
 
-                $configUpdateAddress = data::updateAddress($AddressID, $data);
+                $r = $this->data->updateAddress($AddressID, $data);
 
-                $app->getDB()->query($configUpdateAddress);
+                // $app->getDB()->query($configUpdateAddress);
 
-                $app->getDB()->commit();
+                // $app->getDB()->commit();
 
-                $success = true;
+                // $success = true;
             } catch (Exception $e) {
-                $app->getDB()->rollBack();
+                // $app->getDB()->rollBack();
                 // return glWrap("error", 'AddressUpdateError');
-                $errors[] = 'AddressUpdateError';
+                // $errors[] = 'AddressUpdateError';
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
-        $result = $this->getAddressByID($AddressID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        $result['success_address'] = $success;
+        if ($r->hasResult()) {
+            $addr = $this->data->fetchAddress($AddressID);
+            $r->setResult($addr);
+        }
+
+        // $result = $this->getAddressByID($AddressID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // $result['success_address'] = $success;
 
         return $result;
     }
 
     public function disableAddressByID ($AddressID) {
-        global $app;
-        $errors = array();
-        $success = false;
+        // global $app;
+        // $errors = array();
+        // $success = false;
+        $r = $this->data->disableAddress($AddressID);
 
-        try {
-            $app->getDB()->beginTransaction();
-
-            $config = data::disableAddress($AddressID);
-            $app->getDB()->query($config);
-
-            $app->getDB()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = 'AddressDisableError';
+        if ($r->hasResult()) {
+            $addr = $this->data->fetchAddress($AddressID);
+            $r->setResult($addr);
         }
 
-        $result = $this->getAddressByID($AddressID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        $result['success_address'] = $success;
-        return $result;
+        return $r->toArray();
+        // try {
+        //     // $app->getDB()->beginTransaction();
+
+        //     // $config = data::disableAddress($AddressID);
+        //     // $app->getDB()->query($config);
+
+        //     // $app->getDB()->commit();
+
+        //     // $success = true;
+        // } catch (Exception $e) {
+        //     $app->getDB()->rollBack();
+        //     $errors[] = 'AddressDisableError';
+        // }
+
+        // $result = $this->getAddressByID($AddressID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // $result['success_address'] = $success;
+        // return $result;
     }
 
     // we don't allow get user address

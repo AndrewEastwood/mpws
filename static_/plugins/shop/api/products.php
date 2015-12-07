@@ -237,9 +237,9 @@ class products extends API {
             'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
                 $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
@@ -509,7 +509,7 @@ class products extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors += $validatedDataObj["errors"];
+            $errors += $$validatedDataObj->errorMessages;
 
         if ($success && !empty($ProductID)) {
             $result = data::fetchSingleProductByID($ProductID);
@@ -572,10 +572,10 @@ class products extends API {
             'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
                 $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
@@ -959,7 +959,7 @@ class products extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors += $validatedDataObj["errors"];
+            $errors += $$validatedDataObj->errorMessages;
 
         $result = data::fetchSingleProductByID($ProductID);
         $result['errors'] = $errors;

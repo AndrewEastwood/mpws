@@ -85,10 +85,10 @@ class origins extends API {
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
@@ -109,7 +109,7 @@ class origins extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         if ($success && !empty($OriginID))
             $result = $this->getOriginByID($OriginID);
@@ -132,10 +132,10 @@ class origins extends API {
             'Status' => array('string', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
@@ -150,7 +150,7 @@ class origins extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;

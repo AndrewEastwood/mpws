@@ -382,12 +382,12 @@ class orders extends API {
 
         // return;
         if ($validatedDataObj['count'] > 0) {
-            if ($validatedDataObj["totalErrors"] == 0)
+            if ($$validatedDataObj->errorsCount == 0)
                 try {
 
                     $app->getDB()->beginTransaction();
 
-                    $validatedValues = $validatedDataObj['values'];
+                    $validatedValues = $validatedDataObj->validData;
 
                     $configUpdateOrder = data::shopUpdateOrder($OrderID, $validatedValues);
 
@@ -401,7 +401,7 @@ class orders extends API {
                     $errors[] = 'OrderUpdateError';
                 }
             else
-                $errors = $validatedDataObj["errors"];
+                $errors = $$validatedDataObj->errorMessages;
         }
 
         $result = $this->getOrderByID($OrderID);

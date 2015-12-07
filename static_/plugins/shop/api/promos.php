@@ -67,10 +67,10 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
@@ -90,7 +90,7 @@ class promos extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         if ($success && !empty($promoID))
             $result = $this->getPromoByID($promoID);
@@ -112,10 +112,10 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($validatedDataObj["totalErrors"] == 0)
+        if ($$validatedDataObj->errorsCount == 0)
             try {
 
-                $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj->validData;
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
@@ -130,7 +130,7 @@ class promos extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj["errors"];
+            $errors = $$validatedDataObj->errorMessages;
 
         $result = $this->getPromoByID($promoID);
         $result['errors'] = $errors;

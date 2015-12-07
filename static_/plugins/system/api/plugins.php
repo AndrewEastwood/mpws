@@ -24,7 +24,7 @@ class plugins extends API {
         $resp = $this->getInstalledPlugins();
     }
 
-    public function getPlugnisPermissons () {
+    public function getPluginsPermissons () {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
         $plugins = $customer['Plugins'];
