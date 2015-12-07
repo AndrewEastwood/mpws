@@ -49,7 +49,7 @@ class address extends API {
             'City' => array('string', 'min' => 2, 'max' => 100)
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 // TODO: if user is authorized and do not have maximum addresses
@@ -94,8 +94,8 @@ class address extends API {
                 // $errors[] = $e->getMessage();
             }
         else {
-            // $errors = $$validatedDataObj->errorMessages;
-            $r->addErrors($$validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -122,27 +122,22 @@ class address extends API {
             'City' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100)
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
+            // $app->getDB()->beginTransaction();
 
-                // $app->getDB()->beginTransaction();
+            // $data = $validatedDataObj->validData;
 
-                $data = $validatedDataObj->validData;
+            $r = $this->data->updateAddress($AddressID, $validatedDataObj->validData);
 
-                $r = $this->data->updateAddress($AddressID, $data);
+            // $app->getDB()->query($configUpdateAddress);
 
-                // $app->getDB()->query($configUpdateAddress);
+            // $app->getDB()->commit();
 
-                // $app->getDB()->commit();
-
-                // $success = true;
-            } catch (Exception $e) {
-                // $app->getDB()->rollBack();
-                // return glWrap("error", 'AddressUpdateError');
-                // $errors[] = 'AddressUpdateError';
-            }
-        else
-            $errors = $$validatedDataObj->errorMessages;
+            // $success = true;
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+        }
 
         if ($r->hasResult()) {
             $addr = $this->data->fetchAddress($AddressID);
@@ -194,28 +189,50 @@ class address extends API {
     public function get () {}
 
     public function put (&$resp, $req) {
-        if (empty($req->id)) {
-            $resp['error'] = 'WrongIDParameter';
+        $UserID = null;
+        if (is_numeric($req->data['UserID'])) {
+            $UserID = intval($req->data['UserID']);
         } else {
-            $UserID = null;
-            if (is_numeric($req->data['UserID'])) {
-                $UserID = intval($req->data['UserID']);
-            } else {
-                $resp['error'] = 'EmptyUserID';
-                return;
-            }
-            ;
-            if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-                $resp['error'] = "AccessDenied";
-                return;
-            }
-            if (is_numeric($req->id)) {
-                $addressID = intval($req->id);
-                $resp = $this->_updateAddressByID($addressID, $req->data);
-            } else {
-                $resp['error'] = 'WrongIDParameter';
-            }
+            $resp['error'] = 'EmptyUserID';
+            return;
         }
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (Request::hasRequestedID()) {
+            $resp = $this->createAddress($UserID, $req->data);
+            return;
+        } else {
+            $resp['error'] = 'WrongIDParameter';
+        }
+        // $resp = $this->createAddress($UserID, $req->data);
+
+
+        // if (Request::noRequestedItem()) {
+        //     $resp['error'] = 'WrongIDParameter';
+        // } else {
+        //     $UserID = null;
+        //     if (is_numeric($req->data['UserID'])) {
+        //         $UserID = intval($req->data['UserID']);
+        //     } else {
+        //         $resp['error'] = 'EmptyUserID';
+        //         return;
+        //     }
+        //     ;
+        //     if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+        //         !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
+        //         $resp['error'] = "AccessDenied";
+        //         return;
+        //     }
+        //     if (Request::hasRequestedID()) {
+        //         $resp = $this->_updateAddressByID($req->id, $req->data);
+        //         return;
+        //     } else {
+        //         $resp['error'] = 'WrongIDParameter';
+        //     }
+        // }
 
 
 
@@ -243,7 +260,8 @@ class address extends API {
             $resp['error'] = 'EmptyUserID';
             return;
         }
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+            !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -257,24 +275,20 @@ class address extends API {
     }
 
     public function delete (&$resp, $req) {
-        if (empty($req->id)) {
-            $resp['error'] = 'WrongIDParameter';
-        } else {
-            if (is_numeric($req->id)) {
-                $addressID = intval($req->id);
-                $address = $this->getAddressByID($addressID);
-                if (empty($address)) {
-                    $resp['error'] = 'WrongAddressID';
-                    return;
-                }
-                if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
-                    $resp['error'] = "AccessDenied";
-                    return;
-                }
-                $resp = $this->disableAddressByID($addressID);
-            } else {
-                $resp['error'] = 'WrongIDParameter';
+        if (Request::hasRequestedID()) {
+            $address = $this->getAddressByID($req->id);
+            if (empty($address)) {
+                $resp['error'] = 'WrongAddressID';
+                return;
             }
+            if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
+                $resp['error'] = "AccessDenied";
+                return;
+            }
+            $resp = $this->disableAddressByID($req->id);
+        } else {
+            $resp['error'] = 'WrongIDParameter';
+        }
 
             // $UserID = null;
             // if (is_numeric($req->data['UserID'])) {
@@ -284,7 +298,6 @@ class address extends API {
             //     return;
             // }
             // $resp = $this->createAddress($UserID, $req->data);
-        }
 
 
 

@@ -237,7 +237,7 @@ class products extends API {
             'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
                 $validatedValues = $validatedDataObj->validData;
                 $CustomerID = $app->getSite()->getRuntimeCustomerID();
@@ -509,7 +509,7 @@ class products extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors += $$validatedDataObj->errorMessages;
+            $errors += $validatedDataObj->errorMessages;
 
         if ($success && !empty($ProductID)) {
             $result = data::fetchSingleProductByID($ProductID);
@@ -572,7 +572,7 @@ class products extends API {
             'relatedProductIds' => array('array', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -959,7 +959,7 @@ class products extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors += $$validatedDataObj->errorMessages;
+            $errors += $validatedDataObj->errorMessages;
 
         $result = data::fetchSingleProductByID($ProductID);
         $result['errors'] = $errors;

@@ -145,7 +145,7 @@ class users extends API {
             'p_Others' => array('array', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -208,8 +208,8 @@ class users extends API {
                 $r->addError($e->getMessage());
             }
         else {
-            // $errors = $$validatedDataObj->errorMessages;
-            $r->addErrors($$validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -249,7 +249,7 @@ class users extends API {
             'p_Others' => array('array', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -306,8 +306,8 @@ class users extends API {
                 // $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
             }
         else {
-            // $errors = $$validatedDataObj->errorMessages;
-            $r->addErrors($$validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {

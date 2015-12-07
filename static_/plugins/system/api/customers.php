@@ -250,7 +250,7 @@ class customers extends API {
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfEmpty' => 'system')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -300,8 +300,8 @@ class customers extends API {
                 $r->addError($e->getMessage());
             }
         else {
-            // $errors = $$validatedDataObj->errorMessages;
-            $r->addErrors($$validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -336,7 +336,7 @@ class customers extends API {
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500)
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -413,8 +413,8 @@ class customers extends API {
                 // $errors[] = $e->getMessage();
             }
         else {
-            // $errors = $$validatedDataObj->errorMessages;
-            $r->addErrors($$validatedDataObj->errorMessages);
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         $customer = $this->data->fetchCustomerByID($CustomerID);

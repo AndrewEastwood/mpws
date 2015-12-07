@@ -67,7 +67,7 @@ class email extends API {
     //         'Params' => array('string')
     //     ));
 
-    //     if ($$validatedDataObj->errorsCount == 0)
+    //     if ($validatedDataObj->errorsCount == 0)
     //         try {
 
     //             $app->getDB()->beginTransaction();
@@ -94,7 +94,7 @@ class email extends API {
     //             $errors[] = $e->getMessage();
     //         }
     //     else
-    //         $errors = $$validatedDataObj->errorMessages;
+    //         $errors = $validatedDataObj->errorMessages;
 
     //     $result['errors'] = $errors;
     //     $result['success'] = $success;
@@ -112,7 +112,7 @@ class email extends API {
     //         'Params' => array('skipIfUnset')
     //     ));
 
-    //     if ($$validatedDataObj->errorsCount == 0)
+    //     if ($validatedDataObj->errorsCount == 0)
     //         try {
 
     //             $app->getDB()->beginTransaction();
@@ -132,7 +132,7 @@ class email extends API {
     //             $errors[] = 'EmailUpdateError';
     //         }
     //     else
-    //         $errors = $$validatedDataObj->errorMessages;
+    //         $errors = $validatedDataObj->errorMessages;
 
     //     $result = $this->getEmailByID($AddressID);
     //     $result['errors'] = $errors;

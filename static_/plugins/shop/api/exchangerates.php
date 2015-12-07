@@ -77,7 +77,7 @@ class exchangerates extends API {
             'Rate' => array('numeric', 'notEmpty')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -104,7 +104,7 @@ class exchangerates extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         if ($success && !empty($rateID))
             $result = $this->getExchangeRateByID($rateID);
@@ -127,7 +127,7 @@ class exchangerates extends API {
             'Status' => array('string', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -149,7 +149,7 @@ class exchangerates extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result = $this->getExchangeRateByID($id);
         $result['errors'] = $errors;

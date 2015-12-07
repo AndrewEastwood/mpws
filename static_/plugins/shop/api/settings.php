@@ -366,7 +366,7 @@ class settings extends API {
             // var_dump($type);
             // var_dump($validatedDataObj);
 
-            if (!empty($validatedDataObj) && $$validatedDataObj->errorsCount == 0 && empty($errors)) {
+            if (!empty($validatedDataObj) && $validatedDataObj->errorsCount == 0 && empty($errors)) {
                 try {
 
                     $validatedValues = $validatedDataObj->validData;
@@ -397,8 +397,8 @@ class settings extends API {
                     $errors[] = $e->getMessage();
                 }
             } else {
-                if (isset($$validatedDataObj->errorMessages)) {
-                    $errors += $$validatedDataObj->errorMessages;
+                if (isset($validatedDataObj->errorMessages)) {
+                    $errors += $validatedDataObj->errorMessages;
                 }
             }
 

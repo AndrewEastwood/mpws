@@ -85,7 +85,7 @@ class origins extends API {
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -109,7 +109,7 @@ class origins extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         if ($success && !empty($OriginID))
             $result = $this->getOriginByID($OriginID);
@@ -132,7 +132,7 @@ class origins extends API {
             'Status' => array('string', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -150,7 +150,7 @@ class origins extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;

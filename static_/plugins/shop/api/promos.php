@@ -67,7 +67,7 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -90,7 +90,7 @@ class promos extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         if ($success && !empty($promoID))
             $result = $this->getPromoByID($promoID);
@@ -112,7 +112,7 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -130,7 +130,7 @@ class promos extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result = $this->getPromoByID($promoID);
         $result['errors'] = $errors;

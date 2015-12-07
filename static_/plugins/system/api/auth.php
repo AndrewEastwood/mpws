@@ -40,7 +40,7 @@ class auth extends API {
     public function refreshSessionUserInfo () {
         $user = $this->getAuthenticatedUser();
         if (!empty($user)) {
-            $user = API::getAPI('system:users')->getUserByID($user['ID']);
+            $user = $this->data->fetchUserByID($user['ID']);
         }
         $_SESSION[$this->authKey] = $user;
         $this->updateSessionAuth();
@@ -119,7 +119,7 @@ class auth extends API {
         $prolongation = 0;
         $authID = null;
         if ($user) {
-            $user = API::getAPI('system:users')->getUserByID($user['ID']);
+            $user = $this->data->fetchUserByID($user['ID']);
             $_SESSION[$this->authKey] = $user;
             $authID = $user['ValidationString'];
             if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
@@ -133,7 +133,8 @@ class auth extends API {
 
     public function clearAuthID () {
         if (!empty($_SESSION[$this->authKey])) {
-            API::getAPI('system:users')->setOffline($_SESSION[$this->authKey]['ID']);
+            // API::getAPI('system:users')->setOffline($_SESSION[$this->authKey]['ID']);
+            $this->data->setUserOffline($_SESSION[$this->authKey]['ID']);
         }
         $_SESSION[$this->authKey] = null;
         // $this->permissions = array();
@@ -168,7 +169,7 @@ class auth extends API {
 
             $password = Secure::EncodeUserPassword($password);
 
-            $user = API::getAPI('system:users')->getActiveUserByCredentials($email, $password, true);
+            $user = $this->data->fetchUserByCredentials($email, $password);
             // $UserID = null;
             // var_dump($user);
             // var_dump($config);
@@ -197,7 +198,8 @@ class auth extends API {
                 // unset($user['Addresses']);
                 // $_SESSION[$this->authKey] = $UserID;
                 // set online state for account
-                API::getAPI('system:users')->setOnline($user['ID']);
+                $this->data->setUserOnline($user['ID']);
+                // API::getAPI('system:users')->setOnline($user['ID']);
             }
             // $resp[$this->authKey] = $this->getAuthID();
             // $resp = $this->getAuthenticatedUser();

@@ -120,7 +120,7 @@ class categories extends API {
             'file1' => array('string', 'skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -160,7 +160,7 @@ class categories extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         if ($success && !empty($CategoryID))
             $result = $this->getCategoryByID($CategoryID);
@@ -184,7 +184,7 @@ class categories extends API {
             'file1' => array('string', 'skipIfEmpty')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $validatedValues = $validatedDataObj->validData;
@@ -240,7 +240,7 @@ class categories extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result = $this->getCategoryByID($CategoryID);
         $result['errors'] = $errors;

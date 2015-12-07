@@ -6,11 +6,74 @@ use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\utils as Utils;
 use \engine\lib\api as API;
+use \engine\lib\data as BaseData;
 use \static_\plugins\shop\api\shoputils as ShopUtils;
 use Exception;
 use ArrayObject;
 
-class data {
+class data extends BaseData {
+
+    var $source_products = 'shop_products';
+    var $source_origins = 'shop_origins';
+    var $source_categories = 'shop_categories';
+    var $source_productFeatures = 'shop_productFeatures';
+    var $source_productPrices = 'shop_productPrices';
+    var $source_relations = 'shop_relations';
+    var $source_features = 'shop_features';
+    var $source_productAttributes = 'shop_productAttributes';
+    var $source_deliveryAgencies = 'shop_deliveryAgencies';
+    var $source_settingsAddress = 'shop_settingsAddress';
+    var $source_settingsAlerts = 'shop_settingsAlerts';
+    var $source_settingsExchangeRatesDisplay = 'shop_settingsExchangeRatesDisplay';
+    var $source_settingsFormOrder = 'shop_settingsFormOrder';
+    var $source_settingsMisc = 'shop_settingsMisc';
+    var $source_settingsProduct = 'shop_settingsProduct';
+    var $source_settingsSeo = 'shop_settingsSeo';
+    var $source_settingsWebsite = 'shop_settingsWebsite';
+    var $source_orders = 'shop_orders';
+    var $source_boughts = 'shop_boughts';
+    var $source_promo = 'shop_promo';
+    var $source_currency = 'shop_currency';
+
+
+    function __construct () {
+        global $app;
+
+        parent::__construct();
+
+        // this function is being invoked every time
+        // when you do select any task and process
+        // raw db value before output
+        // $filter = ;
+
+        // create required queries
+        // ==== CUSTOMERS
+        $this->db->createQuery('shopProducts', $this->source_products);
+        $this->db->createQuery('shopOrigins', $this->source_origins);
+        $this->db->createQuery('shopCategories', $this->source_categories);
+        $this->db->createQuery('shopProductFeatures', $this->source_productFeatures);
+        $this->db->createQuery('shopProductPrices', $this->source_productPrices);
+        $this->db->createQuery('shopRelations', $this->source_relations);
+        $this->db->createQuery('shopFeatures', $this->source_features);
+        $this->db->createQuery('shopProductAttributes', $this->source_productAttributes);
+        $this->db->createQuery('shopDeliveryAgencies', $this->source_deliveryAgencies);
+        $this->db->createQuery('shopSettingsAddress', $this->source_settingsAddress);
+        $this->db->createQuery('shopSettingsAlerts', $this->source_settingsAlerts);
+        $this->db->createQuery('shopSettingsExchangeRatesDisplay', $this->source_settingsExchangeRatesDisplay);
+        $this->db->createQuery('shopSettingsFormOrder', $this->source_settingsFormOrder);
+        $this->db->createQuery('shopSettingsMisc', $this->source_settingsMisc);
+        $this->db->createQuery('shopSettingsProduct', $this->source_settingsProduct);
+        $this->db->createQuery('shopSettingsSeo', $this->source_settingsSeo);
+        $this->db->createQuery('shopSettingsWebsite', $this->source_settingsWebsite);
+        $this->db->createQuery('shopOrders', $this->source_orders);
+        $this->db->createQuery('shopBoughts', $this->source_boughts);
+        $this->db->createQuery('shopPromo', $this->source_promo);
+        $this->db->createQuery('shopCurrency', $this->source_currency);
+
+
+    }
+
+
 
     public static function getProductUploadInnerDir ($productID, $subDir = '') {
         $apiCustomer = API::getAPI('system:customers');

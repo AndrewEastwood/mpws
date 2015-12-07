@@ -217,7 +217,7 @@ class data extends BaseData {
         // var_dump($r);
         // var_dump(dbQuery::systemTask_getComplete());
         // var_dump(dbQuery::$queryNameToInstanceMap);
-        die();
+        // die();
     }
 
     // public function getCustomerStatuses () {
@@ -599,11 +599,11 @@ class data extends BaseData {
                         // $conditionOp = '=';
                         switch ($keyToSearch) {
                             case 'id':
-                                $conditionField = "mpws_customer.ID";
+                                $conditionField = "ID"; // mpws_customer.
                                 $valToSearch = intval($valToSearch);
                                 break;
                             case 'n':
-                                $conditionField = "mpws_customer.HostName";
+                                $conditionField = "HostName"; // mpws_customer.
                                 $valToSearch = '%' . $valToSearch . '%';
                                 // $conditionOp = 'like';
                                 break;
@@ -761,6 +761,7 @@ class data extends BaseData {
             ->setAllFields()
             ->setCondition('EMAil', $login)
             ->addCondition('Password', $password)
+            ->addCondition('Status', 'ACTIVE')
             ->addConditionByFlag(!$app->isToolbox(), 'CustomerID', $app->getSite()->getRuntimeCustomerID())
             ->selectSingleItem();
     }
@@ -769,6 +770,7 @@ class data extends BaseData {
         return dbQuery::systemUsers()
             ->setAllFields()
             ->setCondition('Password', $email)
+            ->addCondition('Status', 'ACTIVE')
             ->selectSingleItem();
     }
 
@@ -849,10 +851,27 @@ class data extends BaseData {
     }
 
     public function activateUser ($validationString) {
-        return $this->updateUser($userID, array(
-                'ValidationString' => $validationString,
-                'Status' => 'ACTIVE'
-            ));
+        $r = new result();
+        $data = array(
+            // 'ValidationString' => $validationString,
+            'Status' => 'ACTIVE'
+        );
+        try {
+            $this->db->beginTransaction();
+            dbQuery::systemUsers_Update()
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->setCondition('ValidationString', $validationString)
+                ->addCondition('Status', 'TEMP')
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
 
         // global $app;
         // return $this->db->createOrGetQuery(array(
@@ -871,7 +890,7 @@ class data extends BaseData {
 
     public function setUserOnline ($userID) {
         return $this->updateUser($userID, array(
-            'IsOnline' => true
+                'IsOnline' => true
             ));
         // global $app;
         // return $this->db->createOrGetQuery(array(
@@ -890,7 +909,7 @@ class data extends BaseData {
 
     public function setUserOffline ($userID) {
         return $this->updateUser($userID, array(
-            'IsOnline' => false
+                'IsOnline' => false
             ));
         // global $app;
         // return $this->db->createOrGetQuery(array(

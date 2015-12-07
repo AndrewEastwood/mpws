@@ -11,14 +11,14 @@ use ArrayObject;
 
 class subscribers extends API {
 
-    private function __adjustSubscription (&$sub) {
-        if (empty($sub))
-            return null;
-        $sub['ID'] = intval($sub['ID']);
-        $sub['AccountID'] = intval($sub['AccountID']);
-        $sub['isRemoved'] = $sub['Status'] === 'REMOVED';
-        return $sub;
-    }
+    // private function __adjustSubscription (&$sub) {
+    //     if (empty($sub))
+    //         return null;
+    //     $sub['ID'] = intval($sub['ID']);
+    //     $sub['AccountID'] = intval($sub['AccountID']);
+    //     $sub['isRemoved'] = $sub['Status'] === 'REMOVED';
+    //     return $sub;
+    // }
 
     // public function getEmailByID ($EmailID) {
     //     global $app;
@@ -126,7 +126,7 @@ class subscribers extends API {
             'Params' => array('string')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $app->getDB()->beginTransaction();
@@ -153,7 +153,7 @@ class subscribers extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -171,7 +171,7 @@ class subscribers extends API {
             'Params' => array('skipIfUnset')
         ));
 
-        if ($$validatedDataObj->errorsCount == 0)
+        if ($validatedDataObj->errorsCount == 0)
             try {
 
                 $app->getDB()->beginTransaction();
@@ -191,7 +191,7 @@ class subscribers extends API {
                 $errors[] = 'EmailUpdateError';
             }
         else
-            $errors = $$validatedDataObj->errorMessages;
+            $errors = $validatedDataObj->errorMessages;
 
         $result = $this->getEmailByID($AddressID);
         $result['errors'] = $errors;
