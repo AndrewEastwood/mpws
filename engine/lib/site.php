@@ -119,7 +119,7 @@ class site {
         curl_setopt($ch, CURLOPT_URL, $url . '/?_escaped_fragment_=' . urlencode($_GET['_escaped_fragment_']));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $resp = curl_exec($ch);
+        $resp->setResponse(curl_exec($ch));
         curl_close($ch);
         Response::setResponse($resp);
     }
@@ -137,7 +137,7 @@ class site {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $resp = curl_exec($ch);
+        $resp->setResponse(curl_exec($ch));
         curl_close($ch);
         Response::setResponse($resp);
     }

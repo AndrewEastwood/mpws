@@ -63,7 +63,7 @@ class categories extends API {
         global $app;
         if (empty($categoryID) || !is_numeric($categoryID))
             return null;
-        $config = data::shopGetCategoryItem($categoryID);
+        $config = $this->data->shopGetCategoryItem($categoryID);
         $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
@@ -72,7 +72,7 @@ class categories extends API {
 
     public function getCategoryByName ($categoryName) {
         global $app;
-        $config = data::shopGetCategoryItem();
+        $config = $this->data->shopGetCategoryItem();
         $config['condition']['Name'] = $app->getDB()->createCondition($categoryName);
         $category = $app->getDB()->query($config);
         if (empty($category))
@@ -82,7 +82,7 @@ class categories extends API {
 
     public function getCategoryByExternalKey ($externalKey) {
         global $app;
-        $config = data::shopGetCategoryItem();
+        $config = $this->data->shopGetCategoryItem();
         $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
         $category = $app->getDB()->query($config);
         if (empty($category))
@@ -92,7 +92,7 @@ class categories extends API {
 
     public function getCategories_List (array $options = array()) {
         global $app;
-        $config = data::shopGetCategoryList($options);
+        $config = $this->data->shopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -146,7 +146,7 @@ class categories extends API {
                 }
                 unset($validatedValues['file1']);
 
-                $configCreateCategory = data::shopCreateCategory($validatedValues);
+                $configCreateCategory = $this->data->shopCreateCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -229,7 +229,7 @@ class categories extends API {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = data::shopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = $this->data->shopUpdateCategory($CategoryID, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -257,7 +257,7 @@ class categories extends API {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = data::shopDeleteCategory($CategoryID);
+            $config = $this->data->shopDeleteCategory($CategoryID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -282,7 +282,7 @@ class categories extends API {
     public function getCategoryLocationByCategoryID ($categoryID) {
         global $app;
         // var_dump($categoryID);
-        $configLocation = data::shopCategoryLocationGet($categoryID);
+        $configLocation = $this->data->shopCategoryLocationGet($categoryID);
         $location = $app->getDB()->query($configLocation);
         foreach ($location as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
@@ -320,7 +320,7 @@ class categories extends API {
             return $branch;
         }
 
-        $config = data::shopCatalogTree($selectedCategoryID);
+        $config = $this->data->shopCatalogTree($selectedCategoryID);
         $categories = $app->getDB()->query($config);
         $map = array();
         if (!empty($categories))
@@ -332,57 +332,57 @@ class categories extends API {
         return $tree;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (isset($req->get['tree'])) {
-            $resp = $this->getCatalogTree();
+            $resp->setResponse($this->getCatalogTree());
         } else if (empty($req->id)) {
-            $resp = $this->getCategories_List($req->get);
+            $resp->setResponse($this->getCategories_List($req->get));
         } else {
             if (is_numeric($req->id)) {
                 $CategoryID = intval($req->id);
-                $resp = $this->getCategoryByID($CategoryID);
+                $resp->setResponse($this->getCategoryByID($CategoryID));
             } else {
-                $resp = $this->getCategoryByExternalKey($req->id);
+                $resp->setResponse($this->getCategoryByExternalKey($req->id));
             }
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createCategory($req->data);
+        $resp->setResponse($this->createCategory($req->data));
         // $this->_getOrSetCachedState('changed:category', true);
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $CategoryID = intval($req->id);
-            $resp = $this->updateCategory($CategoryID, $req->data);
+            $resp->setResponse($this->updateCategory($CategoryID, $req->data));
             // $this->_getOrSetCachedState('changed:category', true);
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = 'AccessDenied';
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $CategoryID = intval($req->id);
-            $resp = $this->disableCategory($CategoryID);
+            $resp->setResponse($this->disableCategory($CategoryID));
             // $this->_getOrSetCachedState('changed:category', true);
         }
     }

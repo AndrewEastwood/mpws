@@ -65,7 +65,7 @@ class catalog extends API {
         // var_dump($filterOptionsApplied);
 
         // get all product available statuses
-        $filterOptionsAvailable['filter_commonStatus'] = data::getProductStatuses();
+        $filterOptionsAvailable['filter_commonStatus'] = $this->data->getProductStatuses();
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
@@ -125,7 +125,7 @@ class catalog extends API {
 
         // var_dump($activeTree);
         //filter: get category price edges
-        $dataConfigCategoryPriceEdges = data::getShopCatalogPriceEdges(implode(',', $categoriesIDs));
+        $dataConfigCategoryPriceEdges = $this->data->getShopCatalogPriceEdges(implode(',', $categoriesIDs));
         $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
         $filterOptionsAvailable['filter_commonPriceMax'] = intval(floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval(floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10);
@@ -135,7 +135,7 @@ class catalog extends API {
         // var_dump($dataConfigCategoryPriceEdges);
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = data::shopCatalogBrands(implode(',', $categoriesIDs));
+        $dataConfigCategoryAllBrands = $this->data->shopCatalogBrands(implode(',', $categoriesIDs));
         $dataCategoryAllBrands = $app->getDB()->query($dataConfigCategoryAllBrands);
         if ($dataCategoryAllBrands)
             foreach ($dataCategoryAllBrands as $key => $brandItem) {
@@ -152,7 +152,7 @@ class catalog extends API {
         // return;
 
         // get catalog features
-        $dataConfigAllMatchedProducts = data::getShopCatalogProductList($categoriesIDs);
+        $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
         foreach ($catalogProductIDs as $productItemID) {
@@ -169,7 +169,7 @@ class catalog extends API {
 
         // set data source
         // ---
-        $dataConfigProducts = data::getShopCatalogProductList($categoriesIDs);
+        $dataConfigProducts = $this->data->getShopCatalogProductList($categoriesIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -218,7 +218,7 @@ class catalog extends API {
         $dataProducts = $app->getDB()->query($dataConfigProducts);
 
         // get products count for current filter
-        $dataConfigAllMatchedProducts = data::getShopCatalogProductList($categoriesIDs);
+        $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
         $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
@@ -238,7 +238,7 @@ class catalog extends API {
         $products = array();
         if (!empty($dataProducts)) {
             foreach ($dataProducts as $val) {
-                $products[] = data::fetchSingleProductByID($val['ID']);
+                $products[] = $this->data->fetchSingleProductByID($val['ID']);
             }
         }
         // var_dump($currentProductCount);
@@ -246,7 +246,7 @@ class catalog extends API {
         // $productsInfo = array();
         // if (!empty($dataCategoryInfo))
         //     foreach ($dataCategoryInfo as $val)
-        //         $productsInfo[] = data::fetchSingleProductByID($val['ID']);
+        //         $productsInfo[] = $this->data->fetchSingleProductByID($val['ID']);
 
         // adjust brands, categories and features
         $brands = array();
@@ -255,7 +255,7 @@ class catalog extends API {
         $features = array();
         // var_dump($filterOptionsApplied['filter_categoryBrands']);
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
-            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($brand['ID']);
             if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
@@ -291,7 +291,7 @@ class catalog extends API {
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $categoryID => $categoryItem) {
             // $count = 0;
-            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($categoryID) + $categoryItem['SubIDs'];
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
@@ -324,7 +324,7 @@ class catalog extends API {
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             // $count = 0;
-            $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
+            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($status);
             if (!empty($filterOptionsApplied['filter_commonStatus'])) {
@@ -360,7 +360,7 @@ class catalog extends API {
         foreach ($filterOptionsAvailable['filter_commonFeatures'] as $featureGroup => $featureList) {
             $group = array();
             foreach ($featureList as $key => $featureName) {
-                $dataConfigCategoryInfo = data::getShopCategoryProductInfo();
+                $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
                 $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
                 $arrValues = array($key);
                 if (!empty($filterOptionsApplied['filter_commonFeatures'])) {
@@ -416,37 +416,37 @@ class catalog extends API {
         return $data;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (isset($req->id)) {
             if (is_numeric($req->id)) {
                 $CategoryID = intval($req->id);
-                $resp = $this->getCatalogBrowse($CategoryID);
+                $resp->setResponse($this->getCatalogBrowse($CategoryID));
             } else {
                 $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
                 if (isset($category['ID'])) {
-                    $resp = $this->getCatalogBrowse($category['ID']);
+                    $resp->setResponse($this->getCatalogBrowse($category['ID']));
                 } else {
-                    $resp['error'] = 'UnknownCategory';
+                    $resp->setError('UnknownCategory');
                 }
             }
         } else {
-            $resp['error'] = "WrongSettingsID";
+            $resp->setError('WrongSettingsID');
         }
 
         // if (isset($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $CategoryID = intval($req->id);
-        //         $resp = $this->getCatalogBrowse($CategoryID);
+        //         $resp->setResponse($this->getCatalogBrowse($CategoryID));
         //     } else {
         //         $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
         //         if (isset($category['ID'])) {
-        //             $resp = $this->getCatalogBrowse($category['ID']);
+        //             $resp->setResponse($this->getCatalogBrowse($category['ID']));
         //         } else {
-        //             $resp['error'] = 'UnknownCategory';
+        //             $resp->setError('UnknownCategory');
         //         }
         //     }
         // } else {
-        //     $resp['error'] = '"id" parameter is missed';
+        //     $resp->setError('"id" parameter is missed');
         // }
     }
 

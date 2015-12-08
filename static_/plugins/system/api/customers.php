@@ -465,177 +465,177 @@ class customers extends API {
         // return $result;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         // var_dump($req);
 
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->data->fetchCustomerByID($req->id);
+            $resp->setResponse($this->data->fetchCustomerByID($req->id));
             return;
         }
         // or by ExternalKey
         if (Request::hasRequestedExternalKey()) {
-            $resp = $this->data->fetchCustomerByName($req->externalKey);
+            $resp->setResponse($this->data->fetchCustomerByName($req->externalKey));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp = $this->data->fetchCustomerDataList($req->get);
+            $resp->setResponse($this->data->fetchCustomerDataList($req->get));
         }
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $CustomerID = intval($req->id);
-        //         $resp = $this->data->fetchCustomerByID($CustomerID);
+        //         $resp->setResponse($this->data->fetchCustomerByID($CustomerID));
         //     } else {
-        //         $resp = $this->data->fetchCustomerByName($req->id);
+        //         $resp->setResponse($this->data->fetchCustomerByName($req->id));
         //     }
         // } else {
-        //     $resp = $this->data->fetchCustomerDataList($req->get);
+        //     $resp->setResponse($this->data->fetchCustomerDataList($req->get));
         // }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->ifYouCan('Create') &&
             !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (isset($req->data['switchto'])) {
             if (API::getAPI('system:auth')->ifYouCan('Maintain')) {
                 if (is_numeric($req->data['switchto'])) {
                     $CustomerID = intval($req->data['switchto']);
-                    $resp = $this->switchToCustomerByID($CustomerID);
+                    $resp->setResponse($this->switchToCustomerByID($CustomerID));
                 } else {
-                    $resp['error'] = "WrongCustomerID";
+                    $resp->setError('WrongCustomerID');
                     return;
                 }
             } else {
-                $resp['error'] = "AccessDenied";
+                $resp->setError('AccessDenied');
                 return;
             }
         } else {
-            $resp = $this->createCustomer($req->data);
+            $resp->setResponse($this->createCustomer($req->data));
         }
         // $this->_getOrSetCachedState('changed:product', true);
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->ifYouCan('Edit') &&
             !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
 
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->updateCustomer($req->id, $req->data);
+            $resp->setResponse($this->updateCustomer($req->id, $req->data));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
             return;
         }
 
-        $resp['error'] = 'WrongParameter_id';
+        $resp->setError('WrongParameter_id');
         // if (empty($req->id)) {
-        //     $resp['error'] = 'MissedParameter_id';
+        //     $resp->setError('MissedParameter_id');
         // } else {
         //     if (is_numeric($req->id)) {
         //         $CustomerID = intval($req->id);
-        //         $resp = $this->updateCustomer($CustomerID, $req->data);
+        //         $resp->setResponse($this->updateCustomer($CustomerID, $req->data));
         //     } else {
-        //         $resp['error'] = 'WrongParameter_id';
+        //         $resp->setError('WrongParameter_id');
         //     }
         //     // $this->_getOrSetCachedState('changed:product', true);
         // }
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->ifYouCan('Edit') &&
             !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->updateCustomer($req->id, $req->data, true);
+            $resp->setResponse($this->updateCustomer($req->id, $req->data, true));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
             return;
         }
 
-        $resp['error'] = 'WrongParameter_id';
+        $resp->setError('WrongParameter_id');
         // if (empty($req->id)) {
-        //     $resp['error'] = 'MissedParameter_id';
+        //     $resp->setError('MissedParameter_id');
         // } else {
         //     if (is_numeric($req->id)) {
         //         $CustomerID = intval($req->id);
-        //         $resp = $this->updateCustomer($CustomerID, $req->data, true);
+        //         $resp->setResponse($this->updateCustomer($CustomerID, $req->data, true));
         //     } else {
-        //         $resp['error'] = 'WrongParameter_id';
+        //         $resp->setError('WrongParameter_id');
         //     }
         // }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->ifYouCan('Edit') &&
             !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->archiveCustomer($req->id);
+            $resp->setResponse($this->archiveCustomer($req->id));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
             return;
         }
 
-        $resp['error'] = 'WrongParameter_id';
+        $resp->setError('WrongParameter_id');
         // if (empty($req->id)) {
-        //     $resp['error'] = 'MissedParameter_id';
+        //     $resp->setError('MissedParameter_id');
         // } else {
         //     if (is_numeric($req->id)) {
         //         $CustomerID = intval($req->id);
-        //         $resp = $this->archiveCustomer($CustomerID);
+        //         $resp->setResponse($this->archiveCustomer($CustomerID));
         //     } else {
-        //         $resp['error'] = 'WrongParameter_id';
+        //         $resp->setError('WrongParameter_id');
         //     }
         // }
     }
 
-/*    public function get (&$resp, $req) {
+/*    public function get ($req, $resp) {
         if (!empty($req->id)) {
             if (is_numeric($req->id)) {
                 $ProductID = intval($req->id);
-                $resp = $this->getProductByID($ProductID);
+                $resp->setResponse($this->getProductByID($ProductID));
             } else {
-                $resp = $this->getProductByExternalKey($req->id);
+                $resp->setResponse($this->getProductByExternalKey($req->id));
             }
         } else {
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
                     case 'latest': {
-                        $resp = $this->getProducts_List_Latest($req->get);
+                        $resp->setResponse($this->getProducts_List_Latest($req->get));
                     }
                 }
             } else {
-                $resp = $this->getProducts_List($req->get);
+                $resp->setResponse($this->getProducts_List($req->get));
             }
         }
     }

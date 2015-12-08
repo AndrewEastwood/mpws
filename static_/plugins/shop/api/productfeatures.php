@@ -18,7 +18,7 @@ class productfeatures extends API {
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
-        $config = data::shopCreateFeature($data);
+        $config = $this->data->shopCreateFeature($data);
         $featureID = $app->getDB()->query($config);
         return $featureID;
     }
@@ -26,7 +26,7 @@ class productfeatures extends API {
     public function getFeatures () {
         global $app;
         $tree = array();
-        $config = data::shopGetFeatures();
+        $config = $this->data->shopGetFeatures();
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -39,8 +39,8 @@ class productfeatures extends API {
         return $tree;
     }
 
-    public function get (&$resp, $req) {
-        $resp = $this->getFeatures();
+    public function get ($req, $resp) {
+        $resp->setResponse($this->getFeatures());
     }
 
 }

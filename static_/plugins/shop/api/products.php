@@ -31,11 +31,11 @@ class products extends API {
 
     // TODO: optimmize list query
     public function getProducts_List (array $options = array()) {
-        return data::fetchProducts_List($options);
+        return $this->data->fetchProducts_List($options);
 
 
         // global $app;
-        // $config = data::dbqProducts_MatchedIDs($options);
+        // $config = $this->data->dbqProducts_MatchedIDs($options);
         // if (empty($config))
         //     return null;
         // $self = $this;
@@ -56,7 +56,7 @@ class products extends API {
     public function getNewProducts_List (array $options = array()) {
         global $app;
         // var_dump($options);
-        $config = data::dbqProducts_List_NewItems($options);
+        $config = $this->data->dbqProducts_List_NewItems($options);
         if (empty($config))
             return null;
         $self = $this;
@@ -76,7 +76,7 @@ class products extends API {
     // TODO: optimmize list query
     public function getTopProducts_List (array $options = array()) {
         global $app;
-        $config = data::shopStat_PopularProducts();
+        $config = $this->data->shopStat_PopularProducts();
         if (empty($config))
             return null;
         $self = $this;
@@ -99,7 +99,7 @@ class products extends API {
         $_items = array();
         $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
         foreach ($viewedProductsIDs as $productID) {
-            $_items[] = data::fetchSingleProductByID($productID);
+            $_items[] = $this->data->fetchSingleProductByID($productID);
         }
         $dataList = $app->getDB()->arrayToDataList($_items);
         return $dataList;
@@ -115,7 +115,7 @@ class products extends API {
         //         return $self->fetchSingleProductByID($dbRawItem['ID']);
         //     }
         // );
-        return data::fetchOnSaleProducts_List($listOptions);
+        return $this->data->fetchOnSaleProducts_List($listOptions);
     }
 
     // TODO: optimmize list query
@@ -128,14 +128,14 @@ class products extends API {
         //         return $self->fetchSingleProductByID($dbRawItem['ID']);
         //     }
         // );
-        return data::fetchFeaturedProducts_List($listOptions);
+        return $this->data->fetchFeaturedProducts_List($listOptions);
         // global $app;
         // $options['sort'] = 'shop_products.DateUpdated';
         // $options['order'] = 'DESC';
-        // $options['_fshop_products.Status'] = join(',', data::getProductStatusesWhenAvailable()) . ':IN';
+        // $options['_fshop_products.Status'] = join(',', $this->data->getProductStatusesWhenAvailable()) . ':IN';
         // $options['_fIsFeatured'] = true;
         // // var_dump($options);
-        // $config = data::dbqProducts_MatchedIDs($options);
+        // $config = $this->data->dbqProducts_MatchedIDs($options);
         // if (empty($config))
         //     return null;
         // $self = $this;
@@ -162,14 +162,14 @@ class products extends API {
                 return $self->fetchSingleProductByID($dbRawItem['ID']);
             }
         );
-        return data::fetchSpecialOffersProducts_List($params);
+        return $this->data->fetchSpecialOffersProducts_List($params);
         // global $app;
         // $options['sort'] = 'shop_products.DateUpdated';
         // $options['order'] = 'DESC';
-        // $options['_fshop_products.Status'] = join(',', data::getProductStatusesWhenAvailable()) . ':IN';
+        // $options['_fshop_products.Status'] = join(',', $this->data->getProductStatusesWhenAvailable()) . ':IN';
         // $options['_fIsOffer'] = true;
         // // $options['_fPrevPrice'] = 'Price:>';
-        // $config = data::dbqProducts_MatchedIDs($options);
+        // $config = $this->data->dbqProducts_MatchedIDs($options);
         // if (empty($config))
         //     return null;
         // $self = $this;
@@ -380,7 +380,7 @@ class products extends API {
                 //     } else {
                 //         $data["FieldName"] = $value;
                 //         $data["CustomerID"] = $CustomerID;
-                //         $config = data::shopCreateFeature($data);
+                //         $config = $this->data->shopCreateFeature($data);
                 //         $featureID = $app->getDB()->query($config) ?: null;
                 //         if (isset($featureID) && $featureID >= 0) {
                 //             $productFeaturesIDs[] = $featureID;
@@ -404,7 +404,7 @@ class products extends API {
                 $validatedValues["PrevPrice"] = 0;
                 $validatedValues["SearchText"] = $validatedValues["Name"] . ' ' . $validatedValues["Model"];
                 // var_dump($validatedValues);
-                $config = data::shopCreateProduct($validatedValues);
+                $config = $this->data->shopCreateProduct($validatedValues);
                 // var_dump($config);
                 $ProductID = null;
                 try {
@@ -424,7 +424,7 @@ class products extends API {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
-                        $config = data::shopAddFeatureToProduct($featureData);
+                        $config = $this->data->shopAddFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -445,29 +445,29 @@ class products extends API {
                             $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                             $normalImagePath = $fileName;
 
-                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, data::getProductUploadInnerDir($ProductID, 'md'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, data::getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, data::getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($microImagePath, data::getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, data::getProductUploadInnerDir($ProductID), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->data->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->data->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getProductUploadInnerDir($ProductID), $newFileName);
 
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = data::shopAddAttributeToProduct($attrData);
+                            $config = $this->data->shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
                     // -- BANNER_XXXX
-                    $bannerTypes = data::getProductBannerTypes();
+                    $bannerTypes = $this->data->getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
                         if (!empty($attributes["BANNER"][$bannerType])) {
                             $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
-                                data::getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                                $this->data->getProductUploadInnerDir($ProductID), strtolower($bannerType));
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = $bannerType;
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = data::shopAddAttributeToProduct($attrData);
+                            $config = $this->data->shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -487,17 +487,17 @@ class products extends API {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = data::shopAddAttributeToProduct($attrData);
+                        $config = $this->data->shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
 
                 // update related products
                 if (isset($reqData['relatedProductIds'])) {
-                    $config = data::shopClearProductRelations($ProductID);
+                    $config = $this->data->shopClearProductRelations($ProductID);
                     $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        $app->getDB()->query(data::shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
+                        $app->getDB()->query($this->data->shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 
@@ -512,7 +512,7 @@ class products extends API {
             $errors += $validatedDataObj->errorMessages;
 
         if ($success && !empty($ProductID)) {
-            $result = data::fetchSingleProductByID($ProductID);
+            $result = $this->data->fetchSingleProductByID($ProductID);
         }
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -751,7 +751,7 @@ class products extends API {
                     }
                 }
 
-                $config = data::shopUpdateProduct($ProductID, $validatedValues);
+                $config = $this->data->shopUpdateProduct($ProductID, $validatedValues);
                 try {
                     $app->getDB()->query($config);
                 } catch (Exception $ep) {
@@ -761,14 +761,14 @@ class products extends API {
                 // set new features
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
-                    $config = data::shopClearProductFeatures($ProductID);
+                    $config = $this->data->shopClearProductFeatures($ProductID);
                     $app->getDB()->query($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
-                        $config = data::shopAddFeatureToProduct($featureData);
+                        $config = $this->data->shopAddFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -776,7 +776,7 @@ class products extends API {
                 if ($updateImages) {
                     // get previous product data
                     // we need this to re-adjust images for the product
-                    $currentImages = data::fetchProductImages($ProductID);
+                    $currentImages = $this->data->fetchProductImages($ProductID);
                     $filesUploaded = array();
                     $filesToDelete = array();
                     $filesToKeep = array();
@@ -820,36 +820,36 @@ class products extends API {
                         $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                         $normalImagePath = $fileName;
 
-                        $uploadInfo = Path::moveTemporaryFile($mdImagePath, data::getProductUploadInnerDir($ProductID, 'md'), $newFileName);
-                        $uploadInfo = Path::moveTemporaryFile($smImagePath, data::getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                        $uploadInfo = Path::moveTemporaryFile($xsImagePath, data::getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                        $uploadInfo = Path::moveTemporaryFile($microImagePath, data::getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
-                        $uploadInfo = Path::moveTemporaryFile($normalImagePath, data::getProductUploadInnerDir($ProductID), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->data->getProductUploadInnerDir($ProductID, 'md'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->data->getProductUploadInnerDir($ProductID, 'micro'), $newFileName);
+                        $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getProductUploadInnerDir($ProductID), $newFileName);
 
                         // var_dump($uploadInfo);
                         // $attrData = $initAttrData->getArrayCopy();
                         // $attrData['Attribute'] = 'IMAGE';
                         // $attrData['Value'] = $uploadInfo['filename'];
-                        // $config = data::shopAddAttributeToProduct($attrData);
+                        // $config = $this->data->shopAddAttributeToProduct($attrData);
                         // $app->getDB()->query($config);
 
                         // $newFileName = $ProductID . uniqid(time());
-                        // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, data::getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                        // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, data::getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                        // $this->saveOwnTemporaryUploadedFile($fileName, data::getProductUploadInnerDir($ProductID), $newFileName);
+                        // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->data->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->data->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                        // $this->saveOwnTemporaryUploadedFile($fileName, $this->data->getProductUploadInnerDir($ProductID), $newFileName);
                         $uploadedFileNames[] = $uploadInfo['filename'];
                     }
                     foreach ($filesToDelete as $fileName) {
 
-                        Path::deleteUploadedFile(data::getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
-                        Path::deleteUploadedFile(data::getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
-                        Path::deleteUploadedFile(data::getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
-                        Path::deleteUploadedFile(data::getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
-                        Path::deleteUploadedFile(data::getProductUploadInnerImagePath($fileName, $ProductID));
+                        Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($fileName, $ProductID, 'md'));
+                        Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
+                        Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
+                        Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($fileName, $ProductID, 'micro'));
+                        Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($fileName, $ProductID));
 
-                        // $this->deleteOwnUploadedFile($fileName, data::getProductUploadInnerDir($ProductID, 'sm'));
-                        // $this->deleteOwnUploadedFile($fileName, data::getProductUploadInnerDir($ProductID, 'xs'));
-                        // $this->deleteOwnUploadedFile($fileName, data::getProductUploadInnerDir($ProductID));
+                        // $this->deleteOwnUploadedFile($fileName, $this->data->getProductUploadInnerDir($ProductID, 'sm'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->data->getProductUploadInnerDir($ProductID, 'xs'));
+                        // $this->deleteOwnUploadedFile($fileName, $this->data->getProductUploadInnerDir($ProductID));
                     }
 
                     $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
@@ -860,7 +860,7 @@ class products extends API {
                 // update product banners
                 if ($updateBanners) {
                     $currentBanners = $this->fetchProductBanners($ProductID);
-                    $bannerTypes = data::getProductBannerTypes();
+                    $bannerTypes = $this->data->getProductBannerTypes();
 
                     foreach ($bannerTypes as $bannerType) {
                         // if current typ is already set for product
@@ -868,17 +868,17 @@ class products extends API {
                             $currentBannerFileName = $currentBanners[$bannerType];
                             // if new on si empty we just delete existent
                             if (empty($attributes["BANNER"][$bannerType])) {
-                                Path::deleteUploadedFile(data::getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
+                                Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
                                 $attributes["BANNER"][$bannerType] = null;
                             } elseif ($currentBanners[$bannerType]['name'] != $attributes["BANNER"][$bannerType]) {
-                                Path::deleteUploadedFile(data::getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
+                                Path::deleteUploadedFile($this->data->getProductUploadInnerImagePath($currentBannerFileName, $ProductID));
                                 $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
-                                    data::getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                                    $this->data->getProductUploadInnerDir($ProductID), strtolower($bannerType));
                                 $attributes["BANNER"][$bannerType] = $uploadInfo['filename'];
                             }
                         } elseif (!empty($attributes["BANNER"][$bannerType])) {
                             $uploadInfo = Path::moveTemporaryFile($attributes["BANNER"][$bannerType],
-                                data::getProductUploadInnerDir($ProductID), strtolower($bannerType));
+                                $this->data->getProductUploadInnerDir($ProductID), strtolower($bannerType));
                             $attributes["BANNER"][$bannerType] = $uploadInfo['filename'];
                         }
                     }
@@ -895,26 +895,26 @@ class products extends API {
                     ));
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
-                        $config = data::shopClearProductAttributes($ProductID, 'IMAGE');
+                        $config = $this->data->shopClearProductAttributes($ProductID, 'IMAGE');
                         $app->getDB()->query($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
-                            $config = data::shopAddAttributeToProduct($attrData);
+                            $config = $this->data->shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
                     // -- BANNER_XXXX
-                    $bannerTypes = data::getProductBannerTypes();
+                    $bannerTypes = $this->data->getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
-                        $config = data::shopClearProductAttributes($ProductID, $bannerType);
+                        $config = $this->data->shopClearProductAttributes($ProductID, $bannerType);
                         $app->getDB()->query($config);
                         if (!empty($attributes["BANNER"][$bannerType])) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = $bannerType;
                             $attrData['Value'] = $attributes["BANNER"][$bannerType];
-                            $config = data::shopAddAttributeToProduct($attrData);
+                            $config = $this->data->shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -932,22 +932,22 @@ class products extends API {
                             continue;
                         }
                         // clear existed tags before adding new ones
-                        $config = data::shopClearProductAttributes($ProductID, $key);
+                        $config = $this->data->shopClearProductAttributes($ProductID, $key);
                         $app->getDB()->query($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = data::shopAddAttributeToProduct($attrData);
+                        $config = $this->data->shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
 
                 // update related products
                 if (isset($reqData['relatedProductIds'])) {
-                    $config = data::shopClearProductRelations($ProductID);
+                    $config = $this->data->shopClearProductRelations($ProductID);
                     $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        $app->getDB()->query(data::shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
+                        $app->getDB()->query($this->data->shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 
@@ -961,7 +961,7 @@ class products extends API {
         else
             $errors += $validatedDataObj->errorMessages;
 
-        $result = data::fetchSingleProductByID($ProductID);
+        $result = $this->data->fetchSingleProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -1066,7 +1066,7 @@ class products extends API {
         // we have the product item already in db
         if (isset($data['ID'])) {
             //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
-            $productID = data::productExistsByID($data['ID']);
+            $productID = $this->data->productExistsByID($data['ID']);
             // try to get product item by name and model
         } elseif (isset($data['Model']) && isset($data['OriginName'])) {
             //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
@@ -1112,7 +1112,7 @@ class products extends API {
         $success = false;
         try {
 
-            $productInfo = data::fetchSingleProductShortInfo($productID);
+            $productInfo = $this->data->fetchSingleProductShortInfo($productID);
             $exKey = ShopUtils::genProductExternalKey($productInfo);
 
             // echo 'refreshProductExternalKeyByID(' . $productID . '); >>';
@@ -1122,7 +1122,7 @@ class products extends API {
 
             $app->getDB()->beginTransaction();
 
-            $config = data::updateProductExternalKeyByID($productID, $exKey);
+            $config = $this->data->updateProductExternalKeyByID($productID, $exKey);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -1147,7 +1147,7 @@ class products extends API {
         try {
 
             $app->getDB()->beginTransaction();
-            data::updateProductSearchTextByID($productID);
+            $this->data->updateProductSearchTextByID($productID);
             $app->getDB()->commit();
 
             $success = true;
@@ -1170,7 +1170,7 @@ class products extends API {
         try {
 
             $app->getDB()->beginTransaction();
-            data::updateProductSearchTextByOriginID($originID);
+            $this->data->updateProductSearchTextByOriginID($originID);
             $app->getDB()->commit();
 
             $success = true;
@@ -1201,7 +1201,7 @@ class products extends API {
             //     'Status' => 'ARCHIVED'
             // );
 
-            data::archiveProduct($ProductID);
+            $this->data->archiveProduct($ProductID);
 
             $app->getDB()->commit();
 
@@ -1211,7 +1211,7 @@ class products extends API {
             $errors[] = $e->getMessage();
         }
 
-        $result = data::fetchSingleProductByID($ProductID);
+        $result = $this->data->fetchSingleProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -1226,7 +1226,7 @@ class products extends API {
         try {
 
             $app->getDB()->beginTransaction();
-            data::archiveAllProducts();
+            $this->data->archiveAllProducts();
             $app->getDB()->commit();
 
             $success = true;
@@ -1258,7 +1258,7 @@ class products extends API {
             // );
 
             // $config = 
-            data::setProductAsRemovedByID($ProductID);
+            $this->data->setProductAsRemovedByID($ProductID);
             // $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -1269,7 +1269,7 @@ class products extends API {
             $errors[] = $e->getMessage();
         }
 
-        $result = data::fetchSingleProductByID($ProductID);
+        $result = $this->data->fetchSingleProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -1284,7 +1284,7 @@ class products extends API {
         try {
 
             $app->getDB()->beginTransaction();
-            data::setProductAsRemovedByModelAndOrigin($model, $originName);
+            $this->data->setProductAsRemovedByModelAndOrigin($model, $originName);
             $app->getDB()->commit();
 
             $success = true;
@@ -1304,12 +1304,12 @@ class products extends API {
     public function getProductsArray_TopNonPopular () {
         global $app;
         // get non-popuplar 15 products
-        $config = data::shopStat_NonPopularProducts();
+        $config = $this->data->shopStat_NonPopularProducts();
         $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $data[] = data::fetchSingleProductByID($val['ID']);
+                $data[] = $this->data->fetchSingleProductByID($val['ID']);
             }
         }
         return $data;
@@ -1318,12 +1318,12 @@ class products extends API {
     public function getProductsArray_TopPopular () {
         global $app;
         // get top 15 products
-        $config = data::shopStat_PopularProducts();
+        $config = $this->data->shopStat_PopularProducts();
         $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $product = data::fetchSingleProductByID($val['ProductID']);
+                $product = $this->data->fetchSingleProductByID($val['ProductID']);
                 $product['SoldTotal'] = floatval($val['SoldTotal']);
                 $product['SumTotal'] = floatval($val['SumTotal']);
                 $data[] = $product;
@@ -1338,11 +1338,11 @@ class products extends API {
             return null;
         }
         // get shop products overview:
-        $config = data::shopStat_ProductsOverview($filter);
+        $config = $this->data->shopStat_ProductsOverview($filter);
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
-        $availableStatuses = data::getProductStatuses();
+        $availableStatuses = $this->data->getProductStatuses();
         foreach ($availableStatuses as $key) {
             if (isset($data[$key])) {
                 $res[$key] = intval($data[$key]);
@@ -1361,7 +1361,7 @@ class products extends API {
             !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
-        $config = data::shopStat_ProductsIntensityLastMonth('ACTIVE');
+        $config = $this->data->shopStat_ProductsIntensityLastMonth('ACTIVE');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -1371,7 +1371,7 @@ class products extends API {
             !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
-        $config = data::shopStat_ProductsIntensityLastMonth('PREORDER');
+        $config = $this->data->shopStat_ProductsIntensityLastMonth('PREORDER');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -1381,21 +1381,21 @@ class products extends API {
             !API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return null;
         }
-        $config = data::shopStat_ProductsIntensityLastMonth('DISCOUNT');
+        $config = $this->data->shopStat_ProductsIntensityLastMonth('DISCOUNT');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         // for specific product item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = data::fetchSingleProductByID($req->id);
+            $resp->setResponse($this->data->fetchSingleProductByID($req->id));
             return;
         }
         // or by ExternalKey
         if (Request::hasRequestedExternalKey()) {
-            $resp = data::fetchSingleProductByExternalKey($req->externalKey);
+            $resp->setResponse($this->data->fetchSingleProductByExternalKey($req->externalKey));
             return;
         }
         // for the case when we have to fecth list with products
@@ -1404,36 +1404,36 @@ class products extends API {
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
                     case 'new': {
-                        $resp = $this->getNewProducts_List($listOptions);
+                        $resp->setResponse($this->getNewProducts_List($listOptions));
                         break;
                     }
                     case 'top': {
-                        $resp = $this->getTopProducts_List($listOptions);
+                        $resp->setResponse($this->getTopProducts_List($listOptions));
                         break;
                     }
                     case 'viewed': {
-                        $resp = $this->getViewedProducts_List();
+                        $resp->setResponse($this->getViewedProducts_List());
                         break;
                     }
                     case 'onsale': {
-                        $resp = $this->getOnSaleProducts_List($listOptions);
+                        $resp->setResponse($this->getOnSaleProducts_List($listOptions));
                         break;
                     }
                     case 'featured': {
-                        $resp = $this->getFeaturedProducts_List($listOptions);
+                        $resp->setResponse($this->getFeaturedProducts_List($listOptions));
                         break;
                     }
                     case 'offers': {
-                        $resp = $this->getOffersProducts_List($listOptions);
+                        $resp->setResponse($this->getOffersProducts_List($listOptions));
                         break;
                     }
                     case 'search': {
-                        $resp = $this->getSearchProducts_List($listOptions/*$req->get['text']*/);
+                        $resp->setResponse($this->getSearchProducts_List($listOptions/*$req->get['text']*/));
                         break;
                     }
                 }
             } else {
-                $resp = $this->getProducts_List($listOptions);
+                $resp->setResponse($this->getProducts_List($listOptions));
             }
 
         }
@@ -1441,47 +1441,47 @@ class products extends API {
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $ProductID = intval($req->id);
-        //         $resp = data::fetchSingleProductByID($ProductID);
+        //         $resp->setResponse($this->data->fetchSingleProductByID($ProductID));
         //     } else {
-        //         $resp = $this->getProductByExternalKey($req->id);
+        //         $resp->setResponse($this->getProductByExternalKey($req->id));
         //     }
         // } else {
         // }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') &&
                 !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createProduct($req->data);
+        $resp->setResponse($this->createProduct($req->data));
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') &&
                 !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $ProductID = intval($req->id);
-            $resp = $this->updateProduct($ProductID, $req->data);
+            $resp->setResponse($this->updateProduct($ProductID, $req->data));
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') &&
                 !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->archiveProduct($req->data);
+        $resp->setResponse($this->archiveProduct($req->data));
     }
 
 }

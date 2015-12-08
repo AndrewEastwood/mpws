@@ -41,7 +41,7 @@ class exchangerates extends API {
 
     public function getExchangeRateByID ($agencyID) {
         global $app;
-        $config = data::shopGetExchangeRateByID($agencyID);
+        $config = $this->data->fetchExchangeRateByID($agencyID);
         $data = $app->getDB()->query($config);
         $data = $this->__adjustExchangeRate($data);
         return $data;
@@ -49,7 +49,7 @@ class exchangerates extends API {
 
     public function getExchangeRates_List (array $options = array()) {
         global $app;
-        $config = data::shopGetExchangeRatesList($options);
+        $config = $this->data->fetchExchangeRatesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -88,7 +88,7 @@ class exchangerates extends API {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = data::shopCreateExchangeRate($validatedValues);
+                $configCreateOrigin = $this->data->shopCreateExchangeRate($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $rateID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -138,7 +138,7 @@ class exchangerates extends API {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = data::shopUpdateExchangeRate($id, $validatedValues);
+                $configCreateCategory = $this->data->updateExchangeRate($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -179,7 +179,7 @@ class exchangerates extends API {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = data::shopDeleteExchangeRate($id);
+            $config = $this->data->shopDeleteExchangeRate($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -227,14 +227,14 @@ class exchangerates extends API {
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
         global $app;
-        $config = data::shopGetExchangeRateTo_ByCurrencyName($currencyName);
+        $config = $this->data->fetchExchangeRateTo_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
     public function getExchangeRateFrom_ByCurrencyName ($currencyName) {
         global $app;
-        $config = data::shopGetExchangeRateFrom_ByCurrencyName($currencyName);
+        $config = $this->data->fetchExchangeRateFrom_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
@@ -280,7 +280,7 @@ class exchangerates extends API {
             $valueCurrencyName = $baseCurrencyName;
         }
 
-        $config = data::shopGetExchangeRatesList(array(
+        $config = $this->data->fetchExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
@@ -309,7 +309,7 @@ class exchangerates extends API {
     }
     public function getAllUserUniqCurrencyNames () {
         global $app;
-        $config = data::shopGetExchangeRatesList(array(
+        $config = $this->data->fetchExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
@@ -325,7 +325,7 @@ class exchangerates extends API {
     }
     public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
         global $app;
-        $config = data::shopGetExchangeRateByBothNames($baseCCY, $CCY);
+        $config = $this->data->fetchExchangeRateByBothNames($baseCCY, $CCY);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
@@ -344,14 +344,14 @@ class exchangerates extends API {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (isset($req->get['type'])) {
             switch ($req->get['type']) {
                 case 'currencylist':
-                    $resp = $this->getCurrencyList();
+                    $resp->setResponse($this->getCurrencyList());
                     break;
                 case 'userlist':
-                    $resp = $this->getAllUserUniqCurrencyNames();
+                    $resp->setResponse($this->getAllUserUniqCurrencyNames());
                     break;
                 case 'privatbank': {
                     $ch = curl_init();
@@ -359,52 +359,52 @@ class exchangerates extends API {
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    $resp = json_decode(curl_exec($ch), true);
+                    $resp->setResponse(json_decode(curl_exec($ch), true));
                     curl_close($ch);
                     break;
                 }
             }
         } elseif (empty($req->id)) {
-            $resp = $this->getExchangeRates_List($req->get);
+            $resp->setResponse($this->getExchangeRates_List($req->get));
         } else {
             $agencyID = intval($req->id);
-            $resp = $this->getExchangeRateByID($agencyID);
+            $resp->setResponse($this->getExchangeRateByID($agencyID));
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createOrUpdateExchangeRate($req->data);
+        $resp->setResponse($this->createOrUpdateExchangeRate($req->data));
         // $this->_getOrSetCachedState('changed:agencies', true);
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $agencyID = intval($req->id);
-            $resp = $this->updateExchangeRate($agencyID, $req->data);
+            $resp->setResponse($this->updateExchangeRate($agencyID, $req->data));
             // $this->_getOrSetCachedState('changed:agencies', true);
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = 'AccessDenied';
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $agencyID = intval($req->id);
-            $resp = $this->deleteExchangeRate($agencyID);
+            $resp->setResponse($this->deleteExchangeRate($agencyID));
             // $this->_getOrSetCachedState('changed:agencies', true);
         }
     }

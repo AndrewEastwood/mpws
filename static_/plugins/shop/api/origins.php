@@ -29,7 +29,7 @@ class origins extends API {
         global $app;
         if (empty($originID) || !is_numeric($originID))
             return null;
-        $config = data::shopGetOriginItem($originID);
+        $config = $this->data->shopGetOriginItem($originID);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
@@ -38,7 +38,7 @@ class origins extends API {
 
     public function getOriginByName ($originName) {
         global $app;
-        $config = data::shopGetOriginItem();
+        $config = $this->data->shopGetOriginItem();
         $config['condition']['Name'] = $app->getDB()->createCondition($originName);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
@@ -48,7 +48,7 @@ class origins extends API {
 
     public function getOriginByExternalKey ($externalKey) {
         global $app;
-        $config = data::shopGetOriginItem();
+        $config = $this->data->shopGetOriginItem();
         $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
@@ -58,7 +58,7 @@ class origins extends API {
 
     public function getOrigins_List (array $options = array()) {
         global $app;
-        $config = data::shopGetOriginList($options);
+        $config = $this->data->shopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -92,7 +92,7 @@ class origins extends API {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = data::shopCreateOrigin($validatedValues);
+                $configCreateOrigin = $this->data->shopCreateOrigin($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $OriginID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -139,7 +139,7 @@ class origins extends API {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = data::shopUpdateOrigin($OriginID, $validatedValues);
+                    $configCreateCategory = $this->data->shopUpdateOrigin($OriginID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -169,7 +169,7 @@ class origins extends API {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = data::shopDeleteOrigin($OriginID);
+            $config = $this->data->shopDeleteOrigin($OriginID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -186,55 +186,55 @@ class origins extends API {
         return $result;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (empty($req->id)) {
-            $resp = $this->getOrigins_List($req->get);
+            $resp->setResponse($this->getOrigins_List($req->get));
         } else {
             if (is_numeric($req->id)) {
                 $oringID = intval($req->id);
-                $resp = $this->getOriginByID($oringID);
+                $resp->setResponse($this->getOriginByID($oringID));
             } else {
-                $resp = $this->getOriginByExternalKey($req->id);
+                $resp->setResponse($this->getOriginByExternalKey($req->id));
             }
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createOrigin($req->data);
+        $resp->setResponse($this->createOrigin($req->data));
         // $this->_getOrSetCachedState('changed:origin', true);
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $OriginID = intval($req->id);
-            $resp = $this->updateOrigin($OriginID, $req->data);
+            $resp->setResponse($this->updateOrigin($OriginID, $req->data));
             // $this->_getOrSetCachedState('changed:origin', true);
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = 'AccessDenied';
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $OriginID = intval($req->id);
-            $resp = $this->disableOrigin($OriginID);
+            $resp->setResponse($this->disableOrigin($OriginID));
             // $this->_getOrSetCachedState('changed:origin', true);
         }
     }

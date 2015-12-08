@@ -12,9 +12,9 @@ use ArrayObject;
 
 class search extends API {
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (isset($req->get['text'])) {
-            $resp = $this->search($req->get['text'], $req);
+            $resp->setResponse($this->search($req->get['text'], $req));
         }
     }
 

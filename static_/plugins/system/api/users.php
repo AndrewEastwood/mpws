@@ -524,156 +524,156 @@ class users extends API {
         // return $data;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         $allAccess = API::getAPI('system:auth')->ifYouCanAny('Admin', 'AddUsers', 'Maintain');
          // ||
          //    API::getAPI('system:auth')->ifYouCan('AddUsers') ||
          //    API::getAPI('system:auth')->ifYouCan('Maintain');
 
 
-        // for specific customer item
+        // for specific item
         // by id
         if (Request::hasRequestedID() && $allAccess) {
-            $resp = $this->data->fetchUserByID($req->id);
+            $resp->setResponse($this->data->fetchUserByID($req->id));
             return;
         }
         // or by ExternalKey
         if (Request::hasRequestedExternalKey()) {
-            $resp = $this->data->fetchUserByValidationString($req->externalKey);
+            $resp->setResponse($this->data->fetchUserByValidationString($req->externalKey));
             return;
         }
         // or activate user
         if (empty($req->get['activate'])) {
-            $resp = $this->data->activateUser($req->get['activate']);
+            $resp->setResponse($this->data->activateUser($req->get['activate']));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem() && $allAccess) {
-            $resp = $this->data->fetchUserDataList($req->get);
+            $resp->setResponse($this->data->fetchUserDataList($req->get));
         }
 
-        $resp['error'] = "AccessDenied";
+        $resp->setError('AccessDenied');
 
 
         // // var_dump($req);
         // if (empty($req->id) && $allAccess) {
-        //     $resp = $this->getUsers_List($req->get);
+        //     $resp->setResponse($this->getUsers_List($req->get));
         //     return;
         // } else {
         //     if (is_numeric($req->id) && $allAccess) {
         //         $UserID = intval($req->id);
-        //         $resp = $this->getUserByID($UserID);
+        //         $resp->setResponse($this->getUserByID($UserID));
         //         return;
         //     } elseif (is_string($req->id)) {
-        //         $resp = $this->data->fetchUserByValidationString($req->id);
+        //         $resp->setResponse($this->data->fetchUserByValidationString($req->id));
         //         return;
         //     } elseif (!empty($req->get['activate'])) {
         //         $ValidationString = $req->get['activate'];
-        //         $resp = $this->activateUserByValidationStyring($ValidationString);
+        //         $resp->setResponse($this->activateUserByValidationStyring($ValidationString));
         //         return;
         //     } else {
-        //         $resp['error'] = "AccessDenied";
+        //         $resp->setError('AccessDenied');
         //         return;
         //     }
         // }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-        //     $resp['error'] = "AccessDenied";
+        //     $resp->setError('AccessDenied');
         //     return;
         // }
-        $resp = $this->createUser($req->data);
+        $resp->setResponse($this->createUser($req->data));
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
 
         // for specific user item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->data->updateUser($req->id, $req->data);
+            $resp->setResponse($this->data->updateUser($req->id, $req->data));
             return;
         }
 
         // for the case when we have to fecth list with user
         if (Request::noRequestedItem()) {
-            $resp['error'] = "MissedParameter_id";
+            $resp->setError('MissedParameter_id');
             return;
         }
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $UserID = intval($req->id);
-        //         $resp = $this->updateUser($UserID, $req->data);
+        //         $resp->setResponse($this->updateUser($UserID, $req->data));
         //         return;
         //     } else {
-        //         $resp['error'] = "MissedParameter_id";
+        //         $resp->setError('MissedParameter_id');
         //         return;
         //     }
         // }
-        $resp['error'] = 'UnknownAction';
+        $resp->setError('UnknownAction');
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
 
         // for specific user item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->data->updateUser($req->id, $req->data, true);
+            $resp->setResponse($this->data->updateUser($req->id, $req->data, true));
             return;
         }
 
         // for the case when we have to fecth list with user
         if (Request::noRequestedItem()) {
-            $resp['error'] = "MissedParameter_id";
+            $resp->setError('MissedParameter_id');
             return;
         }
 
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $UserID = intval($req->id);
-        //         $resp = $this->updateUser($UserID, $req->data, true);
+        //         $resp->setResponse($this->updateUser($UserID, $req->data, true));
         //         return;
         //     } else {
-        //         $resp['error'] = "MissedParameter_id";
+        //         $resp->setError('MissedParameter_id');
         //         return;
         //     }
         // }
-        $resp['error'] = 'UnknownAction';
+        $resp->setError('UnknownAction');
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
-            $resp = $this->data->disableUser($req->id);
+            $resp->setResponse($this->data->disableUser($req->id));
             return;
         }
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
             return;
         }
 
-        // $resp['error'] = 'WrongParameter_id';
+        // $resp->setError('WrongParameter_id');
 
 
         // if (!empty($req->id)) {
-        //     $resp = $this->disableUserByID($req->id);
+        //     $resp->setResponse($this->disableUserByID($req->id));
         //     return;
         // }
-        $resp['error'] = 'UnknownAction';
+        $resp->setError('UnknownAction');
     }
 }
 

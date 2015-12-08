@@ -19,7 +19,7 @@ class delivery extends API {
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
         global $app;
-        $config = data::shopGetDeliveryAgencyByID($agencyID);
+        $config = $this->data->shopGetDeliveryAgencyByID($agencyID);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
@@ -29,7 +29,7 @@ class delivery extends API {
 
     public function getDeliveries_List (array $options = array()) {
         global $app;
-        $config = data::shopGetDeliveriesList($options);
+        $config = $this->data->shopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -62,7 +62,7 @@ class delivery extends API {
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreateOrigin = data::shopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = $this->data->shopCreateDeliveryAgent($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $deliveryID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -107,7 +107,7 @@ class delivery extends API {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = data::shopUpdateDeliveryAgent($id, $validatedValues);
+                $configCreateCategory = $this->data->shopUpdateDeliveryAgent($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -135,7 +135,7 @@ class delivery extends API {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = data::shopDeleteDeliveryAgent($id);
+            $config = $this->data->shopDeleteDeliveryAgent($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -172,50 +172,50 @@ class delivery extends API {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (empty($req->id)) {
-            $resp = $this->getDeliveries_List($req->get);
+            $resp->setResponse($this->getDeliveries_List($req->get));
         } else {
             $agencyID = intval($req->id);
-            $resp = $this->getDeliveryAgencyByID($agencyID);
+            $resp->setResponse($this->getDeliveryAgencyByID($agencyID));
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createDeliveryAgency($req->data);
+        $resp->setResponse($this->createDeliveryAgency($req->data));
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (isset($req->data['ID']) && is_numeric($req->data['ID'])) {
             $agencyID = intval($req->data['ID']);
-            $resp = $this->updateDeliveryAgency($agencyID, $req->data);
+            $resp->setResponse($this->updateDeliveryAgency($agencyID, $req->data));
         } else {
-            $resp['error'] = 'ID_IsMissing';
+            $resp->setError('ID_IsMissing');
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp['error'] = 'AccessDenied';
+            $resp->setError('AccessDenied');
             return;
         }
         // var_dump($req);
         if (isset($req->id) && is_numeric($req->id)) {
             $agencyID = intval($req->id);
-            $resp = $this->deleteDeliveryAgency($agencyID);
+            $resp->setResponse($this->deleteDeliveryAgency($agencyID));
         } else {
-            $resp['error'] = 'ID_IsMissing';
+            $resp->setError('ID_IsMissing');
         }
     }
 }

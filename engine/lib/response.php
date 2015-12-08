@@ -4,28 +4,39 @@ namespace engine\lib;
 
 class response {
 
-    static $_RESPONSE = array();
+    var $_RESPONSE = array();
+    protected static $_instance;
 
-    static function setResponse ($resp) {
-        self::$_RESPONSE = $resp;
+    private function __construct () { }
+    private function __clone () {}
+
+    public static function getInstance() {
+        if (empty(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
     }
 
-    static function getResponse () {
-        return self::$_RESPONSE;
+    public function setResponse ($resp) {
+        $this->_RESPONSE = $resp;
     }
 
-    static function getJSONResponse () {
-        // $output = new \engine\lib\dataobject(self::$_RESPONSE);
+    public function getResponse () {
+        return $this->_RESPONSE;
+    }
+
+    public function getJSONResponse () {
+        // $output = new \engine\lib\dataobject($this->_RESPONSE);
         // $_out = $output->toJSON();
-        $_out = json_encode(self::$_RESPONSE);
+        $_out = json_encode($this->_RESPONSE);
         if ($_out === "null")
             $_out = "{}";
         return $_out;
     }
 
-    static function setError ($errorMsg, $headerMsg = false) {
+    public function setError ($errorMsg, $headerMsg = false) {
         if (!empty($errorMsg))
-            self::$_RESPONSE['error'] = $errorMsg;
+            $this->_RESPONSE['error'] = $errorMsg;
         if (!empty($headerMsg))
             header($headerMsg);
     }

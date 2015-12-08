@@ -12,7 +12,7 @@ class route {
     }
 
     // this is how it might be used in any api
-    // public function route ($route, &$resp, $req) {
+    // public function route ($route, $req, $resp) {
     //     $route->if('get:/system/customers/', function () {
 
     //     });

@@ -1,34 +1,56 @@
 <?php
-
 namespace engine\lib;
-
-use \engine\lib\response as Response;
 
 class request {
 
-    private static $PHP_INPUT = false;
+    var $PHP_INPUT = false;
+    protected static $_instance;
 
-    static function setPhpInput ($data) {
-        self::$PHP_INPUT = $data;
+    private function __construct () {
+        $this->PHP_INPUT = file_get_contents('php://input');
+    }
+    private function __clone () {}
+
+    public static function getInstance() {
+        if (empty(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
     }
 
-    static function getScriptName () {
+    public function __get ($name) {
+        $data = $this->getRequestObj();
+        // echo "Getting '$name'\n";
+        if (array_key_exists($name, $data)) {
+            return $data[$name];
+        }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE);
+        return null;
+    }
+
+    public function getScriptName () {
         $name = $_SERVER['REDIRECT_URL'];
         return basename($name, '.js');
     }
 
-    static function getRequestData () {
+    public function getRequestObj () {
         $req = array(
             "get" => $_GET,
             "post" => $_POST,
-            "data" => json_decode(self::$PHP_INPUT, true),
+            "data" => json_decode($this->PHP_INPUT, true),
             "id" => self::getRequestedID(),
             "externalKey" => self::getRequestedExternalKey()
         );
         return (object) $req;
     }
 
-    static function getRequestedExternalKey () {
+    public function getRequestedExternalKey () {
         $req = $_GET;
         if (isset($req->get['id']) && !is_numeric($req->get['id'])) {
             return $req->get['id'];
@@ -36,7 +58,7 @@ class request {
         return null;
     }
 
-    static function getRequestedID () {
+    public function getRequestedID () {
         $req = $_GET;
         if (isset($req->get['id']) && is_numeric($req->get['id'])) {
             return intval($req->get['id']);
@@ -44,49 +66,49 @@ class request {
         return null;
     }
 
-    static function hasRequestedID () {
+    public function hasRequestedID () {
         return is_numeric(self::getRequestedID());
     }
 
-    static function hasRequestedExternalKey () {
+    public function hasRequestedExternalKey () {
         return !empty(self::getRequestedExternalKey()) && !is_numeric(self::getRequestedExternalKey());
     }
 
-    static function noRequestedItem () {
+    public function noRequestedItem () {
         return !isset($_GET['id']);
     }
 
     /* get values */
-    static function pickFromGET($key, $defaultValue = null) {
+    public function pickFromGET($key, $defaultValue = null) {
         if (isset($_GET[$key]))
             return $_GET[$key];
         return $defaultValue;
     }
 
-    static function hasInGet() {
+    public function hasInGet() {
         for ($i = 0, $num = func_num_args(); $i < $num; $i++)
             if (!isset($_GET[func_get_arg($i)]))
                 return false;
         return true;
     }
 
-    static function isPOST () {
+    public function isPOST () {
         return $_SERVER['REQUEST_METHOD'] === "POST";
     }
 
-    static function isGET () {
+    public function isGET () {
         return $_SERVER['REQUEST_METHOD'] === "GET";
     }
 
-    static function isPATCH () {
+    public function isPATCH () {
         return $_SERVER['REQUEST_METHOD'] === "PATCH";
     }
 
-    static function isPUT () {
+    public function isPUT () {
         return $_SERVER['REQUEST_METHOD'] === "PUT";
     }
 
-    static function isDELETE () {
+    public function isDELETE () {
         return $_SERVER['REQUEST_METHOD'] === "DELETE";
     }
 }

@@ -70,12 +70,127 @@ class data extends BaseData {
         $this->db->createQuery('shopPromo', $this->source_promo);
         $this->db->createQuery('shopCurrency', $this->source_currency);
 
+        dbQuery::setQueryFilter(function (&$product) {
+            global $app;
+            // adjusting
+            $productID = intval($product['ID']);
+            $product['ID'] = $productID;
+            $product['OriginID'] = intval($product['OriginID']);
+            $product['CategoryID'] = intval($product['CategoryID']);
+            $product['_category'] = API::getAPI('shop:categories')->getCategoryByID($product['CategoryID']);
+            $product['_origin'] = API::getAPI('shop:origins')->getOriginByID($product['OriginID']);
+            $product['Attributes'] = self::fetchProductAttributes($productID);
+            $product['IsPromo'] = intval($product['IsPromo']) === 1;
+            $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
+            $product['IsOffer'] = intval($product['IsOffer']) === 1;
+            $product['ShowBanner'] = intval($product['ShowBanner']) === 1;
 
+            // create display product title
+            $displayName = array();
+            if (!empty($product['Name'])) {
+                $displayName[] = $product['Name'];
+            }
+            if (!empty($product['_origin'])) {
+                $displayName[] = $product['_origin']['Name'];
+            }
+            if (!empty($product['Model'])) {
+                $displayName[] = $product['Model'];
+            }
+            $product['_displayNameFull'] = implode(' ', $displayName);
+            $product['_displayName'] = implode(' ', array_slice($displayName, 1));
+
+            // misc data
+            if (!$skipRelations) {
+                $product['Relations'] = self::fetchProductRelations($productID);
+            }
+
+            // features
+            $product['Features'] = self::fetchProductFeatures($productID);
+
+            // media
+            $product['Images'] = self::fetchProductImages($productID);
+            $product['Videos'] = self::fetchProductVideos($productID);
+            $product['Banners'] = self::fetchProductBanners($productID);
+
+            // Utils
+            $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
+            $product['viewExtrasInCompare'] = API::getAPI('shop:comparelists')->productIsInCompareList($productID);
+            $product['viewExtrasInCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
+
+            // is available
+            $product['_available'] = in_array($product['Status'], self::getProductStatusesWhenAvailable());
+            $product['_archived'] = in_array($product['Status'], self::getProductStatusesWhenDisabled());
+
+            // promo
+            $promo = API::getAPI('shop:promos')->getSessionPromo();
+            $product['_promo'] = $promo;
+
+            // prices and actual price
+            $price = floatval($product['Price']);
+            $prevprice = floatval($product['PrevPrice']);
+            $actualPrice = 0;
+            $priceHistory = self::fetchProductPriceHistory($productID);
+            if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
+                $product['_promoIsApplied'] = true;
+                $actualPrice = (100 - intval($promo['Discount'])) / 100 * $price;
+            } else {
+                $product['_promoIsApplied'] = false;
+                $actualPrice = $price;
+            }
+            $actualPrice = floatval($actualPrice);
+            $savingValue = $prevprice - $actualPrice;
+            unset($product['Price']);
+            unset($product['PrevPrice']);
+
+            // apply currencies
+            $convertedPrices = API::getAPI('shop:exchangerates')->convertToRates($actualPrice);
+            $convertedPrevPrices = API::getAPI('shop:exchangerates')->convertToRates($prevprice);
+            $convertedSavings = API::getAPI('shop:exchangerates')->convertToRates($savingValue);
+
+            // create product prices object
+            $product['_prices'] = array(
+                'price' => $price,
+                'previous' => $prevprice,
+                'actual' => $actualPrice,
+                'others' => $convertedPrices,
+                'history' => $priceHistory,
+                'previousothers' => $convertedPrevPrices,
+                'savings' => $savingValue,
+                'savingsothers' => $convertedSavings
+            );
+
+            $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
+            $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
+            $product['GoodToShowPreviousPrice'] = $savingValue > 10;
+
+            if (!empty($product['Attributes']['PROMO_TEXT'])) {
+                $product['Attributes']['PROMO_TEXT'] = str_replace('[DisplayName]', $product['_displayName'], $product['Attributes']['PROMO_TEXT']);
+            }
+
+            // // save product into recently viewed list
+            // $isDirectRequestToProduct = Request::hasInGet('id') || Request::hasInGet('params');
+            // if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
+            //     $recentProducts = isset($_SESSION[self::_listKey_Recent]) ? $_SESSION[self::_listKey_Recent] : array();
+            //     $recentProducts[] = $productID;
+            //     $_SESSION[self::_listKey_Recent] = array_unique($recentProducts);
+            // }
+
+            // var_dump($product);
+            return $product;
+        }, 'shopProducts');
+
+        dbQuery::setQueryFilter(function (&$promo) {
+            if (empty($promo))
+                return null;
+            $promo['ID'] = intval($promo['ID']);
+            $promo['Discount'] = floatval($promo['Discount']);
+            $promo['_isExpired'] = strtotime(dbquery::getDate()) > strtotime($promo['DateExpire']);
+            $promo['_isFuture'] = strtotime(dbquery::getDate()) < strtotime($promo['DateStart']);
+            $promo['_isActive'] = !$promo['_isExpired'] && !$promo['_isFuture'];
+        }, 'shopPromo');
     }
 
-
-
-    public static function getProductUploadInnerDir ($productID, $subDir = '') {
+    public function getProductUploadInnerDir ($productID, $subDir = '') {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
         $path = '';
@@ -85,138 +200,33 @@ class data extends BaseData {
             $path = Path::createDirPath($customer['HostName'], 'shop', 'products', $productID, $subDir);
         return $path;
     }
-    public static function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {
+    public function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {
         $path = self::getProductUploadInnerDir($productID, $subDir);
         return $path . $name;
     }
 
-    public static function getProductStatuses () {
+    public function getProductStatuses () {
         return array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
     }
-    public static function getProductStatusesWhenAvailable () {
+    public function getProductStatusesWhenAvailable () {
         return array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT");
     }
-    public static function getProductStatusesWhenDisabled () {
+    public function getProductStatusesWhenDisabled () {
         return array("ARCHIVED", "REMOVED");
     }
-    public static function getProductBannerTypes () {
+    public function getProductBannerTypes () {
         return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
     }
 
     private static function __adjustProduct (&$product, $skipRelations = true) {
-        global $app;
-        // adjusting
-        $productID = intval($product['ID']);
-        $product['ID'] = $productID;
-        $product['OriginID'] = intval($product['OriginID']);
-        $product['CategoryID'] = intval($product['CategoryID']);
-        $product['_category'] = API::getAPI('shop:categories')->getCategoryByID($product['CategoryID']);
-        $product['_origin'] = API::getAPI('shop:origins')->getOriginByID($product['OriginID']);
-        $product['Attributes'] = self::fetchProductAttributes($productID);
-        $product['IsPromo'] = intval($product['IsPromo']) === 1;
-        $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
-        $product['IsOffer'] = intval($product['IsOffer']) === 1;
-        $product['ShowBanner'] = intval($product['ShowBanner']) === 1;
 
-        // create display product title
-        $displayName = array();
-        if (!empty($product['Name'])) {
-            $displayName[] = $product['Name'];
-        }
-        if (!empty($product['_origin'])) {
-            $displayName[] = $product['_origin']['Name'];
-        }
-        if (!empty($product['Model'])) {
-            $displayName[] = $product['Model'];
-        }
-        $product['_displayNameFull'] = implode(' ', $displayName);
-        $product['_displayName'] = implode(' ', array_slice($displayName, 1));
-
-        // misc data
-        if (!$skipRelations) {
-            $product['Relations'] = self::fetchProductRelations($productID);
-        }
-
-        // features
-        $product['Features'] = self::fetchProductFeatures($productID);
-
-        // media
-        $product['Images'] = self::fetchProductImages($productID);
-        $product['Videos'] = self::fetchProductVideos($productID);
-        $product['Banners'] = self::fetchProductBanners($productID);
-
-        // Utils
-        $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
-        $product['viewExtrasInCompare'] = API::getAPI('shop:comparelists')->productIsInCompareList($productID);
-        $product['viewExtrasInCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
-
-        // is available
-        $product['_available'] = in_array($product['Status'], self::getProductStatusesWhenAvailable());
-        $product['_archived'] = in_array($product['Status'], self::getProductStatusesWhenDisabled());
-
-        // promo
-        $promo = API::getAPI('shop:promos')->getSessionPromo();
-        $product['_promo'] = $promo;
-
-        // prices and actual price
-        $price = floatval($product['Price']);
-        $prevprice = floatval($product['PrevPrice']);
-        $actualPrice = 0;
-        $priceHistory = self::fetchProductPriceHistory($productID);
-        if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
-            $product['_promoIsApplied'] = true;
-            $actualPrice = (100 - intval($promo['Discount'])) / 100 * $price;
-        } else {
-            $product['_promoIsApplied'] = false;
-            $actualPrice = $price;
-        }
-        $actualPrice = floatval($actualPrice);
-        $savingValue = $prevprice - $actualPrice;
-        unset($product['Price']);
-        unset($product['PrevPrice']);
-
-        // apply currencies
-        $convertedPrices = API::getAPI('shop:exchangerates')->convertToRates($actualPrice);
-        $convertedPrevPrices = API::getAPI('shop:exchangerates')->convertToRates($prevprice);
-        $convertedSavings = API::getAPI('shop:exchangerates')->convertToRates($savingValue);
-
-        // create product prices object
-        $product['_prices'] = array(
-            'price' => $price,
-            'previous' => $prevprice,
-            'actual' => $actualPrice,
-            'others' => $convertedPrices,
-            'history' => $priceHistory,
-            'previousothers' => $convertedPrevPrices,
-            'savings' => $savingValue,
-            'savingsothers' => $convertedSavings
-        );
-
-        $product['ShopDiscount'] = $prevprice > 0 ? 100 - intval($price * 100 / $prevprice) : 0;
-        $product['IsBigSavings'] = $product['ShopDiscount'] > 5;
-        $product['GoodToShowPreviousPrice'] = $savingValue > 10;
-
-        if (!empty($product['Attributes']['PROMO_TEXT'])) {
-            $product['Attributes']['PROMO_TEXT'] = str_replace('[DisplayName]', $product['_displayName'], $product['Attributes']['PROMO_TEXT']);
-        }
-
-        // // save product into recently viewed list
-        // $isDirectRequestToProduct = Request::hasInGet('id') || Request::hasInGet('params');
-        // if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
-        //     $recentProducts = isset($_SESSION[self::_listKey_Recent]) ? $_SESSION[self::_listKey_Recent] : array();
-        //     $recentProducts[] = $productID;
-        //     $_SESSION[self::_listKey_Recent] = array_unique($recentProducts);
-        // }
-
-        // var_dump($product);
-        return $product;
     }
 
-    public static function fetchProductImages ($productID) {
+    public function fetchProductImages ($productID) {
         global $app;
         $images = array();
         $config = self::dbqProductAttributes($productID, 'IMAGE');
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         // var_dump($data);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -235,11 +245,11 @@ class data extends BaseData {
         return $images;
     }
 
-    public static function fetchProductBanners ($productID) {
+    public function fetchProductBanners ($productID) {
         global $app;
         $banners = array();
         $config = self::dbqProductAttributes($productID, self::getProductBannerTypes());
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if (!empty($item['Value'])) {
@@ -253,7 +263,7 @@ class data extends BaseData {
         // get banner texts
         // $config = self::dbqProductAttributes($productID, array('BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2'));
         // $config['options']['asDict'] = 'Attribute';
-        // $data = $app->getDB()->query($config);
+        // $data = dbquery::query($config);
         // // var_dump($data);
         // foreach ($banners as $type => $value) {
         //     if (isset($data['BANNER_TEXT_LINE1'])) {
@@ -266,11 +276,11 @@ class data extends BaseData {
         return $banners;
     }
 
-    public static function fetchProductVideos ($productID) {
+    public function fetchProductVideos ($productID) {
         global $app;
         $videos = array();
         $config = self::dbqProductAttributes($productID, 'VIDEO');
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $videos[] = $item['Value'];
@@ -279,11 +289,11 @@ class data extends BaseData {
         return $videos;
     }
 
-    public static function fetchProductAttributes ($productID) {
+    public function fetchProductAttributes ($productID) {
         global $app;
         $attr = array();
         $config = self::dbqProductAttributes($productID);
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if ($item['Attribute'] === 'IMAGE' || $item['Attribute'] === 'VIDEO') {
@@ -295,11 +305,11 @@ class data extends BaseData {
         return $attr;
     }
 
-    public static function fetchProductFeatures ($productID) {
+    public function fetchProductFeatures ($productID) {
         global $app;
         $featuresGroups = array();
         $config = self::dbqProductFeatures($productID);
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $value) {
                 if (!isset($featuresGroups[$value['GroupName']])) {
@@ -311,22 +321,22 @@ class data extends BaseData {
         return $featuresGroups;
     }
 
-    public static function fetchProductPrice ($productID) {
+    public function fetchProductPrice ($productID) {
         global $app;
         $price = null;
         $config = self::dbqProductPrice($productID);
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (isset($data['Price'])) {
             $price = floatval($data['Price']);
         }
         return $price;
     }
 
-    public static function fetchProductPriceHistory ($productID) {
+    public function fetchProductPriceHistory ($productID) {
         global $app;
         $prices = array();
         $config = self::dbqProductPriceStats($productID);
-        $data = $app->getDB()->query($config);
+        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $prices[] = array($item['DateCreated'], floatval($item['Price']));
@@ -335,11 +345,11 @@ class data extends BaseData {
         return $prices;
     }
 
-    public static function fetchProductRelations ($productID) {
+    public function fetchProductRelations ($productID) {
         global $app;
         $relations = array();
         $configProductsRelations = self::dbqProductRelations($productID);
-        $relatedItemsIDs = $app->getDB()->query($configProductsRelations);
+        $relatedItemsIDs = dbquery::query($configProductsRelations);
         if (isset($relatedItemsIDs)) {
             foreach ($relatedItemsIDs as $relationItem) {
                 $relatedProductID = intval($relationItem['ProductB_ID']);
@@ -353,82 +363,82 @@ class data extends BaseData {
         return $relations;
     }
 
-    public static function fetchSingleProductByID ($productID) {
+    public function fetchSingleProductByID ($productID) {
         global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
         // $config = self::dbqProduct($productID);
-        // $product = $app->getDB()->query($config);
+        // $product = dbquery::query($config);
         self::dbqProduct($productID)->query();
         if (empty($product))
             return null;
         return self::__adjustProduct($product, false);
     }
 
-    public static function fetchSingleProductByExternalKey ($eKey) {
+    public function fetchSingleProductByExternalKey ($eKey) {
         global $app;
         if (empty($eKey) || !is_string($eKey))
             return null;
         $config = self::dbqProductByExternalKey($eKey);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         if (empty($product))
             return null;
         return self::__adjustProduct($product);
     }
 
-    public static function fetchSingleProductByName ($name) {
+    public function fetchSingleProductByName ($name) {
         global $app;
         if (empty($name) || !is_string($name))
             return null;
         $config = self::dbqProductByName($name);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         if (empty($product))
             return null;
         return self::__adjustProduct($product);
     }
 
-    public static function fetchSingleProductByModel ($modelName) {
+    public function fetchSingleProductByModel ($modelName) {
         global $app;
         if (empty($modelName) || !is_string($modelName))
             return null;
         $config = self::dbqProductByModel($modelName);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         if (empty($product))
             return null;
         return self::__adjustProduct($product);
     }
 
-    public static function fetchSingleProductByModelAndOrigin ($modelName, $originName) {
+    public function fetchSingleProductByModelAndOrigin ($modelName, $originName) {
         global $app;
         if (empty($modelName) || !is_string($modelName))
             return null;
         if (empty($originName) || !is_string($originName))
             return null;
         $config = self::dbqProductByModelAndOrigin($modelName, $originName);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         if (empty($product))
             return null;
         return self::__adjustProduct($product);
     }
 
-    public static function fetchSingleProductShortInfo ($productID) {
+    public function fetchSingleProductShortInfo ($productID) {
         global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
         $config = self::dbqProductShortInfo();
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function fetchProducts_List (array $options = array()) {
+    public function fetchProducts_List (array $options = array()) {
         global $app;
         $config = self::dbqProducts_MatchedIDs($options);
-        $list = $app->getDB()->queryMatchedIDs($config);
+        $list = dbquery::queryMatchedIDs($config);
 
         // var_dump($list);
         $productIDs = $list['ids'];
 
         $config = self::dbqProducts($productIDs);
-        $products = $app->getDB()->query($config);
+        $products = dbquery::query($config);
         if (empty($products))
             return array();
         foreach ($products as $key => $product) {
@@ -438,7 +448,7 @@ class data extends BaseData {
         return $list;
     }
 
-    public static function fetchNewProducts_List (array $options = array()) {
+    public function fetchNewProducts_List (array $options = array()) {
         // global $app;
 
         // $userListOptions = Utils::getIfIssetOrDefault($options, 'list', array());
@@ -459,12 +469,12 @@ class data extends BaseData {
         // $config = self::dbqProducts_MatchedIDs($listOptions);
         // if (empty($config))
         //     return null;
-        // $dataList = $app->getDB()->queryMatchedIDs($config, $listOptions, $callbacks);
+        // $dataList = dbquery::queryMatchedIDs($config, $listOptions, $callbacks);
 
         // return $dataList;
     }
 
-    public static function fetchOnSaleProducts_List (array $options = array()) {
+    public function fetchOnSaleProducts_List (array $options = array()) {
         // global $app;
 
         // $userListOptions = Utils::getIfIssetOrDefault($options, 'list', array());
@@ -485,7 +495,7 @@ class data extends BaseData {
         return self::fetchProducts_List($options);
     }
 
-    public static function fetchFeaturedProducts_List (array $options = array()) {
+    public function fetchFeaturedProducts_List (array $options = array()) {
         // global $app;
 
         // $userListOptions = Utils::getIfIssetOrDefault($options, 'list', array());
@@ -506,74 +516,74 @@ class data extends BaseData {
         return self::fetchProducts_List($options);
     }
 
-    public static function productExistsByID ($productID) {
+    public function productExistsByID ($productID) {
         global $app;
         $config = self::dbqCheckProductExistenceByID($productID);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         return intval($product['ID']);
     }
-    public static function productExistsByExternalKey ($eKey) {
+    public function productExistsByExternalKey ($eKey) {
         global $app;
         $config = self::dbqCheckProductExistenceByExternalKey($productID);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         return intval($product['ID']);
     }
-    public static function productExistsByModelAndOrigin ($modelName, $originName) {
+    public function productExistsByModelAndOrigin ($modelName, $originName) {
         global $app;
         $config = self::dbqCheckProductExistenceByModelAndOrigin($productID);
-        $product = $app->getDB()->query($config);
+        $product = dbquery::query($config);
         return intval($product['ID']);
     }
 
-    public static function archiveProduct ($productID) {
+    public function archiveProduct ($productID) {
         global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($productID),
-                "Status" => $app->getDB()->createCondition("REMOVED", "!="),
+                "ID" => dbquery::createCondition($productID),
+                "Status" => dbquery::createCondition("REMOVED", "!="),
             ),
             "data" => array(
                 "Status" => 'ARCHIVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function archiveAllProducts () {
+    public function archiveAllProducts () {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "Status" => $app->getDB()->createCondition("REMOVED", "!="),
+                "Status" => dbquery::createCondition("REMOVED", "!="),
             ),
             "data" => array(
                 "Status" => 'ARCHIVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function setProductAsRemovedByModelAndOrigin ($modelName, $originName) {
+    public function setProductAsRemovedByModelAndOrigin ($modelName, $originName) {
         global $app;
         $data = array(
             'shop_products.Status' => 'REMOVED',
-            "shop_products.DateUpdated" => $app->getDB()->getDate()
+            "shop_products.DateUpdated" => dbquery::getDate()
         );
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "Model" => $app->getDB()->createCondition($modelName, 'like'),
-                "shop_origins.Name" => $app->getDB()->createCondition($originName),
+                "Model" => dbquery::createCondition($modelName, 'like'),
+                "shop_origins.Name" => dbquery::createCondition($originName),
             ),
             'additional' => array(
                 "shop_origins" => array(
@@ -584,38 +594,38 @@ class data extends BaseData {
             "data" => $data,
             "options" => null
         ));
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function setProductAsRemovedByID ($productID) {
+    public function setProductAsRemovedByID ($productID) {
         global $app;
         $data = array(
             'shop_products.Status' => 'REMOVED',
-            "shop_products.DateUpdated" => $app->getDB()->getDate()
+            "shop_products.DateUpdated" => dbquery::getDate()
         );
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($productID)
+                "ID" => dbquery::createCondition($productID)
             ),
             'additional' => array(),
             "data" => $data,
             "options" => null
         ));
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function updateProductSearchTextByID ($ProductID) {
+    public function updateProductSearchTextByID ($ProductID) {
         global $app;
         $config = self::dbqUpdateProductSearchText($ProductID, null);
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
-    public static function updateProductSearchTextByOriginID ($OriginID) {
+    public function updateProductSearchTextByOriginID ($OriginID) {
         global $app;
         $config = self::dbqUpdateProductSearchText(null, $OriginID);
-        return $app->getDB()->query($config);
+        return dbquery::query($config);
     }
 
     // ------- QUERY CONFIGURATIONS ---------
@@ -640,7 +650,7 @@ class data extends BaseData {
         // $isMultiple = is_array($productID);
         // $limit = $isMultiple ? count($productID) : 1;
 
-        // $config = $app->getDB()->createOrGetQuery(array(
+        // $config = dbquery::createOrGetQuery(array(
         //     "action" => "select",
         //     "source" => "shop_products",
         //     "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis",
@@ -656,11 +666,11 @@ class data extends BaseData {
 
         // if (!is_null($productID)) {
         //     $config["condition"] = array(
-        //         "shop_products.ID" => $app->getDB()->createCondition($productID)
+        //         "shop_products.ID" => dbquery::createCondition($productID)
         //     );
         // }
 
-        // $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses());
+        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses());
 
 
 
@@ -676,23 +686,23 @@ class data extends BaseData {
     private static function dbqProductByName ($productName) {
         global $app;
         $config = self::dbqProduct();
-        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
-        // $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        $config['condition']['Name'] = dbquery::createCondition($productName);
+        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         return $config;
     }
     private static function dbqProductByModel ($modelName) {
         global $app;
         $config = self::dbqProduct();
-        $config['condition']['Model'] = $app->getDB()->createCondition($modelName);
-        // $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        $config['condition']['Model'] = dbquery::createCondition($modelName);
+        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         return $config;
     }
     private static function dbqProductByModelAndOrigin ($modelName, $originName) {
         global $app;
         $config = self::dbqProduct();
-        $config['condition']['Model'] = $app->getDB()->createCondition($modelName);
-        $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
-        // $config['condition']['shop_products.Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        $config['condition']['Model'] = dbquery::createCondition($modelName);
+        $config['condition']['shop_origins.Name'] = dbquery::createCondition($originName);
+        // $config['condition']['shop_products.Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -705,8 +715,8 @@ class data extends BaseData {
         global $app;
         $config = self::dbqProduct();
         // $config['fields'] = array("ID");
-        $config['condition']["shop_products.ExternalKey"] = $app->getDB()->createCondition($externalKey);
-        // $config['condition']['shop_products.Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        $config['condition']["shop_products.ExternalKey"] = dbquery::createCondition($externalKey);
+        // $config['condition']['shop_products.Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         // $config['additional'] = array();
         return $config;
     }
@@ -714,8 +724,8 @@ class data extends BaseData {
         global $app;
         $config = self::dbqProduct($productID);
         $config['fields'] = array("ID");
-        // $config['condition']['ID'] = $app->getDB()->createCondition($productID);
-        // $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['ID'] = dbquery::createCondition($productID);
+        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         $config['additional'] = array();
         return $config;
     }
@@ -723,8 +733,8 @@ class data extends BaseData {
         global $app;
         $config = self::dbqProductByExternalKey($eKey);
         $config['fields'] = array("ID");
-        // $config['condition']['ID'] = $app->getDB()->createCondition($productID);
-        // $config['condition']['Status'] = $app->getDB()->createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['ID'] = dbquery::createCondition($productID);
+        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
         $config['additional'] = array();
         return $config;
     }
@@ -748,7 +758,7 @@ class data extends BaseData {
     }
 
     // TODO: optimmize list query
-    public static function dbqProducts_MatchedIDs (array $options = array()) {
+    public function dbqProducts_MatchedIDs (array $options = array()) {
         global $app;
         $config = self::dbqProduct();
         $config['condition'] = array();
@@ -782,9 +792,9 @@ class data extends BaseData {
 
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%');
-                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["shop_products.Name"] = dbquery::createCondition('%' . $options['_pSearch'] . '%');
+                // $config['condition']["Model"] = dbquery::createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = dbquery::createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
                     $chunks = explode('=', $value);
@@ -829,15 +839,15 @@ class data extends BaseData {
                         // var_dump($valToSearch);
                         // var_dump($conditionOp);
                         if (!empty($conditionField)) {
-                            $config['condition'][$conditionField] = $app->getDB()->createCondition($valToSearch);
+                            $config['condition'][$conditionField] = dbquery::createCondition($valToSearch);
                         }
                     }
-                    // $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["shop_products.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.Description"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Name"] = dbquery::createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Model"] = dbquery::createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.Description"] = dbquery::createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.SKU"] = dbquery::createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["Model"] = dbquery::createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = dbquery::createCondition('%' . $value . '%', 'like');
                 }
             }
         }
@@ -846,29 +856,29 @@ class data extends BaseData {
             if (strlen($options['_pSearchText']) < 5) {
                 return null;
             }
-            $config['condition']["shop_products.SearchText"] = $app->getDB()->createCondition('%' . strtolower($options['_pSearchText']) . '%');
+            $config['condition']["shop_products.SearchText"] = dbquery::createCondition('%' . strtolower($options['_pSearchText']) . '%');
         }
 
         if (empty($options['_pStatus'])) {
-            $config['condition']["shop_products.Status"] = $app->getDB()->createCondition('REMOVED', '!=');
+            $config['condition']["shop_products.Status"] = dbquery::createCondition('REMOVED', '!=');
         } else {
-            $config['condition']["shop_products.Status"] = $app->getDB()->createCondition($options['_pStatus']);
+            $config['condition']["shop_products.Status"] = dbquery::createCondition($options['_pStatus']);
         }
 
         if (!empty($options['_pCategoryExternalKey'])) {
-            $config['condition']["shop_categories.ExternalKey"] = $app->getDB()->createCondition($options['_pCategoryExternalKey']);
+            $config['condition']["shop_categories.ExternalKey"] = dbquery::createCondition($options['_pCategoryExternalKey']);
         }
 
         // var_dump($config['condition']);
         return $config;
     }
 
-    public static function dbqUpdateProductSearchText ($ProductID, $OriginID) {
+    public function dbqUpdateProductSearchText ($ProductID, $OriginID) {
         global $app;
-        $data["shop_products.DateUpdated"] = $app->getDB()->getDate();
+        $data["shop_products.DateUpdated"] = dbquery::getDate();
         $data["SearchText"] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model))";
 
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "data" => $data,
@@ -881,24 +891,24 @@ class data extends BaseData {
             )
         );
         if (isset($ProductID)) {
-            $config['condition']["shop_products.ID"] = $app->getDB()->createCondition($ProductID);
+            $config['condition']["shop_products.ID"] = dbquery::createCondition($ProductID);
         }
         if (isset($OriginID)) {
-            $config['condition']["shop_products.OriginID"] = $app->getDB()->createCondition($OriginID);
+            $config['condition']["shop_products.OriginID"] = dbquery::createCondition($OriginID);
         }
         // var_dump($config);
         return $config;
     }
 
-    public static function updateProductExternalKeyByID ($ProductID, $ExternalKey) {
+    public function updateProductExternalKeyByID ($ProductID, $ExternalKey) {
         global $app;
         $data = array();
-        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
         $data["ExternalKey"] = $ExternalKey;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($ProductID)
+                "ID" => dbquery::createCondition($ProductID)
             ),
             "action" => "update",
             "data" => $data,
@@ -907,12 +917,12 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopCreateProduct ($data) {
+    public function shopCreateProduct ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "insert",
             "data" => $data,
@@ -920,17 +930,17 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopUpdateProduct ($productID, $data) {
+    public function shopUpdateProduct ($productID, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
         if (isset($data['Name'])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($productID)
+                "ID" => dbquery::createCondition($productID)
             ),
             "data" => $data,
             "options" => null
@@ -942,21 +952,21 @@ class data extends BaseData {
 
 
     // Product category (catalog)
-    public static function getShopCatalogProductList ($ids) {
+    public function getShopCatalogProductList ($ids) {
         global $app;
         $config = self::dbqProducts_MatchedIDs();
         if (is_array($ids)) {
             if (count($ids) > 1)
-                $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids, "IN");
+                $config['condition']["shop_products.CategoryID"] = dbquery::createCondition($ids, "IN");
             else
-                $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids[0]);
+                $config['condition']["shop_products.CategoryID"] = dbquery::createCondition($ids[0]);
         } else {
-            $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids);
+            $config['condition']["shop_products.CategoryID"] = dbquery::createCondition($ids);
         }
         return $config;
     }
 
-    public static function getShopCategoryProductInfo () {
+    public function getShopCategoryProductInfo () {
         $config = self::dbqProducts_MatchedIDs();
         $config['fields'] = array("ID");
         $config['limit'] = 0;
@@ -965,13 +975,13 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function dbqProductPrice ($id) {
+    public function dbqProductPrice ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
+                "ID" => dbquery::createCondition($id)
             ),
             "fields" => array("Price"),
             "offset" => 0,
@@ -983,18 +993,18 @@ class data extends BaseData {
     }
 
     // Product price stats >>>>>
-    public static function dbqProductPriceStats ($id) {
+    public function dbqProductPriceStats ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_productPrices",
             "condition" => array(
-                "ProductID" => $app->getDB()->createCondition($id)
+                "ProductID" => dbquery::createCondition($id)
             ),
             "fields" => array("ID", "ProductID", "Price", "DateCreated"),
             "offset" => 0,
             "limit" => 50,
-            "order" => $app->getDB()->createSortOrder('shop_productPrices.DateCreated'),
+            "order" => dbquery::createSortOrder('shop_productPrices.DateCreated'),
             "options" => array()
         ));
     }
@@ -1015,32 +1025,32 @@ class data extends BaseData {
 
 
     // Product relations >>>>>
-    public static function dbqProductRelations ($id) {
+    public function dbqProductRelations ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_relations",
             "condition" => array(
-                "ProductA_ID" => $app->getDB()->createCondition($id)
+                "ProductA_ID" => dbquery::createCondition($id)
             ),
             "fields" => array("ProductB_ID"),
             "offset" => 0,
             "limit" => 0
         ));
     }
-    public static function shopClearProductRelations ($id) {
+    public function shopClearProductRelations ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "delete",
             "source" => "shop_relations",
             "condition" => array(
-                "ProductA_ID" => $app->getDB()->createCondition($id)
+                "ProductA_ID" => dbquery::createCondition($id)
             )
         ));
     }
-    public static function shopSetRelatedProduct ($CustomerID, $id, $relatedProductID) {
+    public function shopSetRelatedProduct ($CustomerID, $id, $relatedProductID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "insert",
             "source" => "shop_relations",
             "data" => array(
@@ -1065,9 +1075,9 @@ class data extends BaseData {
 
 
     // product features & attributes >>>>>
-    public static function dbqProductFeatures ($id) {
+    public function dbqProductFeatures ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_productFeatures",
             "fields" => array("FeatureID"),
@@ -1078,16 +1088,16 @@ class data extends BaseData {
                 )
             ),
             "condition" => array(
-                "ProductID" => $app->getDB()->createCondition($id)
+                "ProductID" => dbquery::createCondition($id)
             ),
             "limit" => 0,
             "options" => array()
         ));
     }
 
-    public static function dbqProductAttributes ($id = null, $type = null) {
+    public function dbqProductAttributes ($id = null, $type = null) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(),
@@ -1100,26 +1110,26 @@ class data extends BaseData {
         ));
 
         if (!empty($id)) {
-            $config['condition']['ProductID'] = $app->getDB()->createCondition($id);
+            $config['condition']['ProductID'] = dbquery::createCondition($id);
         }
         if (!empty($type)) {
             if (is_array($type)) {
-                $config['condition']['Attribute'] = $app->getDB()->createCondition($type, 'IN');
+                $config['condition']['Attribute'] = dbquery::createCondition($type, 'IN');
             } else {
-                $config['condition']['Attribute'] = $app->getDB()->createCondition($type);
+                $config['condition']['Attribute'] = dbquery::createCondition($type);
             }
         }
 
         return $config;
     }
 
-    public static function shopCreateFeature ($data) {
+    public function shopCreateFeature ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["FieldName"] = substr($data["FieldName"], 0, 200);
         $data["GroupName"] = substr($data["GroupName"], 0, 100);
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_features",
             "action" => "insert",
             "data" => $data,
@@ -1127,9 +1137,9 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopGetFeatures () {
+    public function shopGetFeatures () {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_features",
             "fields" => array("ID", "FieldName", "GroupName"),
@@ -1138,11 +1148,11 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopAddFeatureToProduct ($data) {
+    public function shopAddFeatureToProduct ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_productFeatures",
             "action" => "insert",
             "data" => $data,
@@ -1150,10 +1160,10 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopAddAttributeToProduct ($data) {
+    public function shopAddAttributeToProduct ($data) {
         global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
+        $data["DateCreated"] = dbquery::getDate();
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_productAttributes",
             "action" => "insert",
             "data" => $data,
@@ -1161,30 +1171,30 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopClearProductFeatures ($ProductID) {
+    public function shopClearProductFeatures ($ProductID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_productFeatures",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $app->getDB()->createCondition($ProductID)
+                "ProductID" => dbquery::createCondition($ProductID)
             ),
             "options" => null
         ));
     }
 
-    public static function shopClearProductAttributes ($ProductID, $attributeType = false) {
+    public function shopClearProductAttributes ($ProductID, $attributeType = false) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => "shop_productAttributes",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $app->getDB()->createCondition($ProductID)
+                "ProductID" => dbquery::createCondition($ProductID)
             ),
             "options" => null
         ));
         if (!empty($attributeType)) {
-            $config['condition']['Attribute'] = $app->getDB()->createCondition(strtoupper($attributeType));
+            $config['condition']['Attribute'] = dbquery::createCondition(strtoupper($attributeType));
         }
         return $config;
     }
@@ -1198,9 +1208,9 @@ class data extends BaseData {
 
 
     // Product category (catalog) >>>>>
-    public static function shopCatalogBrands ($categoryID) {
+    public function shopCatalogBrands ($categoryID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogBrands",
@@ -1209,9 +1219,9 @@ class data extends BaseData {
         ));
     }
 
-    public static function getShopCatalogPriceEdges ($categoryID) {
+    public function getShopCatalogPriceEdges ($categoryID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogPriceEdges",
@@ -1230,9 +1240,9 @@ class data extends BaseData {
 
 
     // Additional: category location >>>>>
-    public static function shopCategoryLocationGet ($id) {
+    public function shopCategoryLocationGet ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogLocation",
@@ -1249,18 +1259,18 @@ class data extends BaseData {
 
 
     // Shop catalog tree >>>>>
-    public static function shopCatalogTree ($selectedCategoryID = false) {
+    public function shopCatalogTree ($selectedCategoryID = false) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
-                "Status" => $app->getDB()->createCondition("ACTIVE")
+                "Status" => dbquery::createCondition("ACTIVE")
             ),
             "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Image", "Status"),
         ));
         if ($selectedCategoryID !== false) {
-            $config["condition"]["ID"] = $app->getDB()->createCondition($selectedCategoryID);
+            $config["condition"]["ID"] = dbquery::createCondition($selectedCategoryID);
         }
         return $config;
     }
@@ -1282,9 +1292,9 @@ class data extends BaseData {
 
 
     // shop cetegories >>>>>
-    public static function shopGetCategoryItem ($id = null) {
+    public function shopGetCategoryItem ($id = null) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(),
@@ -1297,7 +1307,7 @@ class data extends BaseData {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_categories.ID" => $app->getDB()->createCondition($id)
+                "shop_categories.ID" => dbquery::createCondition($id)
             );
         }
 
@@ -1305,27 +1315,27 @@ class data extends BaseData {
     }
 
     // TODO: optimmize list query
-    public static function shopGetCategoryList (array $options = array()) {
+    public function shopGetCategoryList (array $options = array()) {
         global $app;
         $config = self::shopGetCategoryItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
+            $config['condition']['Status'] = dbquery::createCondition('ACTIVE');
         }
         return $config;
     }
 
-    public static function shopCreateCategory ($data) {
+    public function shopCreateCategory ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_categories",
             "action" => "insert",
             "data" => $data,
@@ -1333,37 +1343,37 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopUpdateCategory ($CategoryID, $data) {
+    public function shopUpdateCategory ($CategoryID, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
         if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
             $data["Name"] = substr($data["Name"], 0, 300);
         }
         // var_dump($data);
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($CategoryID)
+                "ID" => dbquery::createCondition($CategoryID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function shopDeleteCategory ($CategoryID) {
+    public function shopDeleteCategory ($CategoryID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($CategoryID)
+                "ID" => dbquery::createCondition($CategoryID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
@@ -1382,9 +1392,9 @@ class data extends BaseData {
 
 
     // shop origins <<<<<
-    public static function shopGetOriginItem ($id = null) {
+    public function shopGetOriginItem ($id = null) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_origins",
             "condition" => array(),
@@ -1397,7 +1407,7 @@ class data extends BaseData {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_origins.ID" => $app->getDB()->createCondition($id)
+                "shop_origins.ID" => dbquery::createCondition($id)
             );
         }
 
@@ -1405,27 +1415,27 @@ class data extends BaseData {
     }
 
     // TODO: optimmize list query
-    public static function shopGetOriginList (array $options = array()) {
+    public function shopGetOriginList (array $options = array()) {
         global $app;
         $config = self::shopGetOriginItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
+            $config['condition']['Status'] = dbquery::createCondition('ACTIVE');
         }
         return $config;
     }
 
-    public static function shopCreateOrigin ($data) {
+    public function shopCreateOrigin ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_origins",
             "action" => "insert",
             "data" => $data,
@@ -1433,9 +1443,9 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopUpdateOrigin ($OriginID, $data) {
+    public function shopUpdateOrigin ($OriginID, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
         if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
@@ -1443,28 +1453,28 @@ class data extends BaseData {
         if (isset($data["Name"])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($OriginID)
+                "ID" => dbquery::createCondition($OriginID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function shopDeleteOrigin ($OriginID) {
+    public function shopDeleteOrigin ($OriginID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($OriginID)
+                "ID" => dbquery::createCondition($OriginID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
@@ -1491,9 +1501,9 @@ class data extends BaseData {
 
 
     // shop delivery agencies >>>>>
-    public static function shopGetDeliveryAgencyByID ($id = null) {
+    public function shopGetDeliveryAgencyByID ($id = null) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_deliveryAgencies",
             "condition" => array(),
@@ -1505,13 +1515,13 @@ class data extends BaseData {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
+            $config["condition"]["ID"] = dbquery::createCondition($id);
 
         return $config;
     }
 
     // TODO: optimmize list query
-    public static function shopGetDeliveriesList (array $options = array()) {
+    public function shopGetDeliveriesList (array $options = array()) {
         global $app;
         $config = self::shopGetDeliveryAgencyByID();
         $config['fields'] = array("ID");
@@ -1520,11 +1530,11 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopCreateDeliveryAgent ($data) {
+    public function shopCreateDeliveryAgent ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "insert",
             "data" => $data,
@@ -1532,31 +1542,31 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopUpdateDeliveryAgent ($id, $data) {
+    public function shopUpdateDeliveryAgent ($id, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
+        $data["DateUpdated"] = dbquery::getDate();
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
+                "ID" => dbquery::createCondition($id)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function shopDeleteDeliveryAgent ($id) {
+    public function shopDeleteDeliveryAgent ($id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
+                "ID" => dbquery::createCondition($id)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
@@ -1572,7 +1582,7 @@ class data extends BaseData {
 
 
     // shop settings >>>>>
-    // public static function setting
+    // public function setting
     public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES', 'OPENHOURS', 'INFO'*/);
     public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES'*/);
     public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
@@ -1587,27 +1597,27 @@ class data extends BaseData {
         'WEBSITE' => 'shop_settingsWebsite'
     );
 
-    public static function isOneForCustomer ($type) {
+    public function isOneForCustomer ($type) {
         return !in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
     }
-    public static function settingCanBeRemoved ($type) {
+    public function settingCanBeRemoved ($type) {
         return in_array($type, self::$ALLOW_SETTINGS_TO_DELETE);
     }
 
-    public static function getVerifiedSettingsType ($type) {
+    public function getVerifiedSettingsType ($type) {
         return isset(self::$SETTING_TYPE_TO_DBTABLE_MAP[$type]) ? $type : null;
     }
 
-    public static function getSettingsDBTableNameByType ($type) {
+    public function getSettingsDBTableNameByType ($type) {
         if (self::getVerifiedSettingsType($type)) {
             return self::$SETTING_TYPE_TO_DBTABLE_MAP[$type];
         }
         throw new Exception("Unknown shop settings type", 1);
     }
 
-    public static function customerSettingsCount ($type) {
+    public function customerSettingsCount ($type) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => self::getSettingsDBTableNameByType($type),
             "fields" => array("@COUNT(*) AS ItemsCount"),
@@ -1619,9 +1629,9 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopGetSettingByID ($type, $id) {
+    public function shopGetSettingByID ($type, $id) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => self::getSettingsDBTableNameByType($type),
             "condition" => array(),
@@ -1632,12 +1642,12 @@ class data extends BaseData {
             "limit" => 1
         ));
         // if (!is_null($id))
-        $config["condition"]["ID"] = $app->getDB()->createCondition($id);
+        $config["condition"]["ID"] = dbquery::createCondition($id);
         return $config;
     }
-    public static function shopGetSettingByType ($type) {
+    public function shopGetSettingByType ($type) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => self::getSettingsDBTableNameByType($type),
             "fields" => array("*"),
@@ -1650,37 +1660,37 @@ class data extends BaseData {
         }
         return $config;
     }
-    public static function shopGetSettingsAddressActive () {
+    public function shopGetSettingsAddressActive () {
         global $app;
         $config = self::shopGetSettingByType('ADDRESS');
-        $config["condition"]["Status"] =  $app->getDB()->createCondition('ACTIVE');
+        $config["condition"]["Status"] =  dbquery::createCondition('ACTIVE');
         return $config;
     }
-    public static function shopGetSettingsAddressPhones ($addressID) {
+    public function shopGetSettingsAddressPhones ($addressID) {
         global $app;
         $config = self::shopGetSettingByType('PHONES');
-        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         return $config;
     }
-    public static function shopGetSettingsAddressOpenHours ($addressID) {
+    public function shopGetSettingsAddressOpenHours ($addressID) {
         global $app;
         $config = self::shopGetSettingByType('OPENHOURS');
-        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         $config["limit"] = 1;
         $config["options"]["expandSingleRecord"] = true;
         return $config;
     }
-    public static function shopGetSettingsAddressInfo ($addressID) {
+    public function shopGetSettingsAddressInfo ($addressID) {
         global $app;
         $config = self::shopGetSettingByType('INFO');
-        $config["condition"]["ShopAddressID"] = $app->getDB()->createCondition($addressID);
+        $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         $config["limit"] = 1;
         $config["options"]["expandSingleRecord"] = true;
         return $config;
     }
-    public static function shopCreateSetting ($type, $data) {
+    public function shopCreateSetting ($type, $data) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => self::getSettingsDBTableNameByType($type),
             "action" => "insert",
             "data" => $data,
@@ -1691,13 +1701,13 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopUpdateSetting ($type, $id, $data) {
+    public function shopUpdateSetting ($type, $id, $data) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "source" => self::getSettingsDBTableNameByType($type),
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
+                "ID" => dbquery::createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -1705,13 +1715,13 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopRemoveSetting ($type, $id) {
+    public function shopRemoveSetting ($type, $id) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => self::getSettingsDBTableNameByType($type),
             "action" => "delete",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
+                "ID" => dbquery::createCondition($id)
             )
         ));
     }
@@ -1727,9 +1737,9 @@ class data extends BaseData {
 
 
     // Shop order >>>>>
-    public static function shopGetOrderItem ($orderID = null) {
+    public function shopGetOrderItem ($orderID = null) {
         global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
+        $config = dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
@@ -1742,14 +1752,14 @@ class data extends BaseData {
 
         if (!is_null($orderID))
             $config["condition"] = array(
-                "shop_orders.ID" => $app->getDB()->createCondition($orderID)
+                "shop_orders.ID" => dbquery::createCondition($orderID)
             );
 
         return $config;
     }
 
     // TODO: optimmize list query
-    public static function getShopOrderList (array $options = array()) {
+    public function getShopOrderList (array $options = array()) {
         global $app;
         $config = self::shopGetOrderItem();
         $config['fields'] = array("ID");
@@ -1757,56 +1767,56 @@ class data extends BaseData {
         $config['options']['expandSingleRecord'] = false;
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["Hash"] = $app->getDB()->createCondition($options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["Hash"] = dbquery::createCondition($options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = dbquery::createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = dbquery::createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["Hash"] = $app->getDB()->createCondition($value . '%', 'like');
-                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    $config['condition']["Hash"] = dbquery::createCondition($value . '%', 'like');
+                    // $config['condition']["Model"] = dbquery::createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = dbquery::createCondition('%' . $value . '%', 'like');
                 }
             }
         }
         // select for specific user
         if (!empty($options['_pUser'])) {
-            $config['condition']['UserID'] = $app->getDB()->createCondition($options['_pUser']);
+            $config['condition']['UserID'] = dbquery::createCondition($options['_pUser']);
         }
         return $config;
     }
     // TODO: optimmize list query
-    public static function getShopOrderList_Pending () {
+    public function getShopOrderList_Pending () {
         global $app;
         $config = self::getShopOrderList();
-        $config['condition']['Status'] = $app->getDB()->createCondition('NEW');
+        $config['condition']['Status'] = dbquery::createCondition('NEW');
         return $config;
     }
     // TODO: optimmize list query
-    public static function getShopOrderList_Todays () {
+    public function getShopOrderList_Todays () {
         global $app;
         $config = self::getShopOrderList();
-        $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d'), ">");
+        $config['condition']['DateCreated'] = dbquery::createCondition(date('Y-m-d'), ">");
         return $config;
     }
     // TODO: optimmize list query
-    public static function getShopOrderList_Expired () {
+    public function getShopOrderList_Expired () {
         global $app;
         $config = self::getShopOrderList();
-        $config['condition']['Status'] = $app->getDB()->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
-        $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
+        $config['condition']['Status'] = dbquery::createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
+        $config['condition']['DateCreated'] = dbquery::createCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $config;
     }
     // TODO: optimmize list query
-    public static function getShopOrderList_ForUser ($userID) {
+    public function getShopOrderList_ForUser ($userID) {
         global $app;
         $config = self::getShopOrderList();
         $config['condition']['UserID'] = $userID;
         return $config;
     }
-    public static function shopCreateOrder ($data) {
+    public function shopCreateOrder ($data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateUpdated"] = dbquery::getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["Hash"] = substr(md5(time() . md5(time())), 0, 5);
         // adjust values
         if (is_string($data["DeliveryID"])) {
@@ -1815,73 +1825,78 @@ class data extends BaseData {
         if (is_string($data["Warehouse"])) {
             $data["Warehouse"] = null;
         }
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_orders",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
-    public static function shopCreateOrderBought ($data) {
+    public function shopCreateOrderBought ($data) {
         global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = dbquery::getDate();
         $data["IsPromo"] = empty($data["IsPromo"]) ? 0 : 1;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_boughts",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
-    public static function shopGetOrderBoughts ($orderID) {
+    public function shopGetOrderBoughts ($orderID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "condition" => array(
-                "OrderID" => $app->getDB()->createCondition($orderID)
+                "OrderID" => dbquery::createCondition($orderID)
             ),
             "fields" => array("ID", "ProductID", "Price", "SellingPrice", "Quantity", "IsPromo", "DateCreated"),
             "offset" => 0,
             "limit" => 0
         ));
     }
-    public static function getShopOrderByHash ($orderHash) {
-        global $app;
-        $config = self::shopGetOrderItem();
-        $config['condition'] = array(
-            "Hash" => $app->getDB()->createCondition($orderHash)
-        );
-        $config['options'] = array(
-            "expandSingleRecord" => true
-        );
-        $config['limit'] = 1;
-        return $config;
+    public function fetchOrderByHash ($orderHash) {
+        return dbQuery::shopOrders()
+            ->setAllFields()
+            ->setCondition('Hash', $orderHash)
+            // ->addCondition('Status', 'ACTIVE')
+            ->selectSingleItem();
+        // global $app;
+        // $config = self::shopGetOrderItem();
+        // $config['condition'] = array(
+        //     "Hash" => dbquery::createCondition($orderHash)
+        // );
+        // $config['options'] = array(
+        //     "expandSingleRecord" => true
+        // );
+        // $config['limit'] = 1;
+        // return $config;
     }
-    public static function shopUpdateOrder ($orderID, $data) {
+    public function updateOrder ($orderID, $data) {
         global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
+        $data["DateUpdated"] = dbquery::getDate();
+        return dbquery::createOrGetQuery(array(
             "action" => "update",
             "source" => "shop_orders",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($orderID)
+                "ID" => dbquery::createCondition($orderID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
-    public static function shopDisableOrder ($OrderID) {
+    public function disableOrder ($OrderID) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "source" => "shop_orders",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($OrderID)
+                "ID" => dbquery::createCondition($OrderID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $app->getDB()->getDate()
+                "DateUpdated" => dbquery::getDate()
             ),
             "options" => null
         ));
@@ -1902,14 +1917,14 @@ class data extends BaseData {
 
     // >>>> Shop statistics
     // TODO: optimmize list query
-    public static function shopStat_PopularProducts (array $options = array()) {
+    public function shopStat_PopularProducts (array $options = array()) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(shop_boughts.Price * Quantity) AS SumTotal"),
             "condition" => array(
-                "shop_products.Status" => $app->getDB()->createCondition(array("REMOVED", "ARCHIVED"), "NOT IN")
+                "shop_products.Status" => dbquery::createCondition(array("REMOVED", "ARCHIVED"), "NOT IN")
             ),
             "order" => array(
                 "field" => "SoldTotal",
@@ -1928,15 +1943,15 @@ class data extends BaseData {
     }
 
     // TODO: optimmize list query
-    public static function shopStat_NonPopularProducts (array $options = array()) {
+    public function shopStat_NonPopularProducts (array $options = array()) {
         global $app;
-        return $app->getDB()->createOrGetQuery(array(
+        return dbquery::createOrGetQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID"),
             "condition" => array(
-                "Status" => $app->getDB()->createCondition("ACTIVE"),
-                "ID" => $app->getDB()->createCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
+                "Status" => dbquery::createCondition("ACTIVE"),
+                "ID" => dbquery::createCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
             ),
             "order" => array(
                 "field" => "DateCreated",
@@ -1947,7 +1962,7 @@ class data extends BaseData {
         ));
     }
 
-    public static function shopStat_ProductsOverview ($filter = null) {
+    public function shopStat_ProductsOverview ($filter = null) {
         global $app;
         $config = self::dbqProduct();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
@@ -1964,12 +1979,12 @@ class data extends BaseData {
         // var_dump($requestGetData);
         if (!empty($filter)) {
             if (isset($filter['_fCategoryID']))
-                $config['condition']['CategoryID'] = $app->getDB()->createCondition($filter['_fCategoryID']);
+                $config['condition']['CategoryID'] = dbquery::createCondition($filter['_fCategoryID']);
         }
         return $config;
     }
 
-    public static function shopStat_OrdersOverview () {
+    public function shopStat_OrdersOverview () {
         global $app;
         $config = self::shopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
@@ -1986,15 +2001,15 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
+    public function shopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
         global $app;
         if (!is_string($comparator))
-            $comparator = $app->getDB()->DEFAULT_COMPARATOR;
+            $comparator = dbquery::DEFAULT_COMPARATOR;
         $config = self::shopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $app->getDB()->createCondition($status, $comparator),
-            'DateUpdated' => $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => dbquery::createCondition($status, $comparator),
+            'DateUpdated' => dbquery::createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -2009,13 +2024,13 @@ class data extends BaseData {
         return $config;
     }
 
-    public static function shopStat_ProductsIntensityLastMonth ($status) {
+    public function shopStat_ProductsIntensityLastMonth ($status) {
         global $app;
         $config = self::dbqProduct();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $app->getDB()->createCondition($status),
-            'DateUpdated' => $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => dbquery::createCondition($status),
+            'DateUpdated' => dbquery::createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -2049,96 +2064,144 @@ class data extends BaseData {
 
 
     // <<<< Promo area
-    public static function shopGetPromoByHash ($hash, $activeOnly) {
-        global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
-            "action" => "select",
-            "source" => "shop_promo",
-            "condition" => array(
-                "Code" => $app->getDB()->createCondition($hash)
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-
+    public function fetchPromoByHash ($hash, $activeOnly) {
+        $q = dbQuery::shopPromo()
+            ->setAllFields()
+            ->setCondition('Code', $hash);
         if ($activeOnly) {
-            $config['condition']['DateStart'] = $app->getDB()->createCondition($app->getDB()->getDate(), '<=');
-            $config['condition']['DateExpire'] = $app->getDB()->createCondition($app->getDB()->getDate(), '>=');
+            $q->addCondition('DateStart', dbquery::getDate(), '<=');
+            $q->addCondition('DateExpire', dbquery::getDate(), '>=');
         }
+        return $q->selectSingleItem();
 
-        return $config;
+        // global $app;
+        // $config = dbquery::createOrGetQuery(array(
+        //     "action" => "select",
+        //     "source" => "shop_promo",
+        //     "condition" => array(
+        //         "Code" => dbquery::createCondition($hash)
+        //     ),
+        //     "options" => array(
+        //         "expandSingleRecord" => true
+        //     )
+        // ));
+
+        // if ($activeOnly) {
+        //     $config['condition']['DateStart'] = dbquery::createCondition(dbquery::getDate(), '<=');
+        //     $config['condition']['DateExpire'] = dbquery::createCondition(dbquery::getDate(), '>=');
+        // }
+
+        // return $config;
     }
 
-    public static function shopGetPromoByID ($promoID = null) {
-        global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
-            "action" => "select",
-            "source" => "shop_promo",
-            "condition" => array(),
-            "fields" => array("ID", "Code", "DateStart", "DateExpire", "Discount", "DateCreated"),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
+    public function fetchPromoByID ($promoID) {
+        return dbQuery::shopPromo()
+            ->setAllFields()
+            ->setCondition('ID', $promoID)
+            ->selectSingleItem();
 
-        if (!is_null($promoID))
-            $config["condition"] = array(
-                "ID" => $app->getDB()->createCondition($promoID)
-            );
-        return $config;
+        // global $app;
+        // $config = dbquery::createOrGetQuery(array(
+        //     "action" => "select",
+        //     "source" => "shop_promo",
+        //     "condition" => array(),
+        //     "fields" => array("ID", "Code", "DateStart", "DateExpire", "Discount", "DateCreated"),
+        //     "options" => array(
+        //         "expandSingleRecord" => true
+        //     )
+        // ));
+
+        // if (!is_null($promoID))
+        //     $config["condition"] = array(
+        //         "ID" => dbquery::createCondition($promoID)
+        //     );
+        // return $config;
     }
 
     // TODO: optimmize list query
-    public static function shopGetPromoList (array $options = array()) {
-        global $app;
-        $config = self::shopGetPromoByID();
-        $config['fields'] = array("ID");
-        $config['limit'] = 64;
-        $config['options']['expandSingleRecord'] = false;
+    public function fetchPromoList (array $options = array()) {
+        $q = dbQuery::shopPromo()
+            ->setAllFields()
+            ->groupBy('ID')
+            ->addParams($options);
         if (empty($options['expired'])) {
-            $config['condition']['DateExpire'] = $app->getDB()->createCondition($app->getDB()->getDate(), '>=');
+            $q->addCondition('DateExpire', dbquery::getDate(), '>=');
         }
-        return $config;
+        return $q->selectAsDataList();
+
+        // global $app;
+        // $config = self::fetchPromoByID();
+        // $config['fields'] = array("ID");
+        // $config['limit'] = 64;
+        // $config['options']['expandSingleRecord'] = false;
+        // if (empty($options['expired'])) {
+        //     $config['condition']['DateExpire'] = dbquery::createCondition(dbquery::getDate(), '>=');
+        // }
+        // return $config;
     }
 
-    public static function shopCreatePromo ($data) {
-        global $app;
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
-            "action" => "insert",
-            "source" => "shop_promo",
-            "data" => $data,
-            "options" => null
-        ));
+    public function createPromo ($data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::shopPromo()
+                ->setData($data)
+                ->addStandardDateFields()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data["DateCreated"] = dbquery::getDate();
+        // return dbquery::createOrGetQuery(array(
+        //     "action" => "insert",
+        //     "source" => "shop_promo",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function shopUpdatePromo ($promoID, $data) {
-        global $app;
-        return $app->getDB()->createOrGetQuery(array(
-            "action" => "update",
-            "source" => "shop_promo",
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($promoID)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
+    public function updatePromo ($promoID, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            dbQuery::shopPromo()
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->setCondition('ID', $promoID)
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
     }
 
-    public static function shopExpirePromo ($promoID) {
-        global $app;
-        return $app->getDB()->createOrGetQuery(array(
-            "action" => "update",
-            "source" => "shop_promo",
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($promoID)
-            ),
-            "data" => array(
-                "DateExpire" => $app->getDB()->getDate()
-            ),
-            "options" => null
-        ));
+    public function expirePromo ($promoID) {
+        return $this->updatePromo($promoID, array(
+                'DateExpire' => dbquery::getDate()
+            ));
+        // global $app;
+        // return dbquery::createOrGetQuery(array(
+        //     "action" => "update",
+        //     "source" => "shop_promo",
+        //     "condition" => array(
+        //         "ID" => dbquery::createCondition($promoID)
+        //     ),
+        //     "data" => array(
+        //         "DateExpire" => dbquery::getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
     // Promo area >>>>>
 
@@ -2164,119 +2227,192 @@ class data extends BaseData {
 
 
     // shop delivery agencies >>>>>
-    public static function shopGetExchangeRateByID ($id = null) {
-        global $app;
-        $config = $app->getDB()->createOrGetQuery(array(
-            "action" => "select",
-            "source" => "shop_currency",
-            "condition" => array(),
-            "fields" => array("ID", "CurrencyA", "CurrencyB", "Rate"),
-            "options" => array(
-                "expandSingleRecord" => true
-            ),
-            "limit" => 1
-        ));
+    public function fetchExchangeRateByID ($id) {
+        return dbQuery::shopCurrency()
+            ->setAllFields()
+            ->setCondition('ID', $id)
+            ->selectSingleItem();
+        // global $app;
+        // $config = dbquery::createOrGetQuery(array(
+        //     "action" => "select",
+        //     "source" => "shop_currency",
+        //     "condition" => array(),
+        //     "fields" => array("ID", "CurrencyA", "CurrencyB", "Rate"),
+        //     "options" => array(
+        //         "expandSingleRecord" => true
+        //     ),
+        //     "limit" => 1
+        // ));
 
-        if (!is_null($id))
-            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
+        // if (!is_null($id))
+        //     $config["condition"]["ID"] = dbquery::createCondition($id);
 
-        return $config;
+        // return $config;
     }
-    public static function shopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
-        global $app;
-        $config = self::shopGetExchangeRateByID();
-        $config["condition"] = array(
-            "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
-        );
-        return $config;
+    public function fetchExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
+        return dbQuery::shopCurrency()
+            ->setAllFields()
+            ->setCondition('CurrencyB', $currencyNameTo)
+            ->selectSingleItem();
+        // global $app;
+        // $config = self::fetchExchangeRateByID();
+        // $config["condition"] = array(
+        //     "CurrencyB" => dbquery::createCondition($currencyNameTo)
+        // );
+        // return $config;
     }
-    public static function shopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
-        global $app;
-        $config = self::shopGetExchangeRateByID();
-        $config["condition"] = array(
-            "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom)
-        );
-        return $config;
+    public function fetchExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
+        return dbQuery::shopCurrency()
+            ->setAllFields()
+            ->setCondition('CurrencyA', $currencyNameTo)
+            ->selectSingleItem();
+        // global $app;
+        // $config = self::fetchExchangeRateByID();
+        // $config["condition"] = array(
+        //     "CurrencyA" => dbquery::createCondition($currencyNameFrom)
+        // );
+        // return $config;
     }
-    public static function shopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
-        global $app;
-        $config = self::shopGetExchangeRateByID();
-        $config["condition"] = array(
-            "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom),
-            "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
-        );
-        return $config;
+    public function fetchExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
+        return dbQuery::shopCurrency()
+            ->setAllFields()
+            ->setCondition('CurrencyA', $currencyNameFrom)
+            ->setCondition('CurrencyB', $currencyNameTo)
+            ->selectSingleItem();
+        // global $app;
+        // $config = self::fetchExchangeRateByID();
+        // $config["condition"] = array(
+        //     "CurrencyA" => dbquery::createCondition($currencyNameFrom),
+        //     "CurrencyB" => dbquery::createCondition($currencyNameTo)
+        // );
+        // return $config;
     }
 
     // TODO: optimmize list query
-    public static function shopGetExchangeRatesList (array $options = array()) {
-        global $app;
-        $config = self::shopGetExchangeRateByID();
-        $config['fields'] = array("ID");
-        $config['limit'] = 64; // assume that 64 ex.rates nobody will have
-        $config['options']['expandSingleRecord'] = false;
-        if (isset($options['fields'])) {
-            $config['fields'] = $options['fields'];
+    public function fetchExchangeRatesList (array $options = array()) {
+        $q = dbQuery::shopCurrency()
+            ->setAllFields()
+            ->groupBy('ID')
+            ->addParams($options);
+        return $q->selectAsDataList();
+        // global $app;
+        // $config = self::fetchExchangeRateByID();
+        // $config['fields'] = array("ID");
+        // $config['limit'] = 64; // assume that 64 ex.rates nobody will have
+        // $config['options']['expandSingleRecord'] = false;
+        // if (isset($options['fields'])) {
+        //     $config['fields'] = $options['fields'];
+        // }
+        // if (isset($options['limit'])) {
+        //     $config['limit'] = $options['limit'];
+        // }
+        // if (empty($options['removed'])) {
+        //     $config['condition']['Status'] = dbquery::createCondition('ACTIVE');
+        // }
+        // return $config;
+    }
+
+    // public function fetchUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
+    //     // global $app;
+    //     // $config = self::fetchExchangeRateByID();
+    //     // $config['fields'] = array($fieldToGroupBy);
+    //     // $config['limit'] = 0;
+    //     // $config['group'] = $fieldToGroupBy;
+    //     // $config['options']['expandSingleRecord'] = false;
+    //     // return $config;
+    //     $r = new result();
+    //     try {
+    //         $this->db->beginTransaction();
+    //         $itemID = dbQuery::shopCurrency()
+    //             ->setData($data)
+    //             ->addStandardDateFields()
+    //             ->insert();
+    //         $this->db->commit();
+    //         $r->success()
+    //             ->setResult($itemID);
+    //     } catch (Exception $e) {
+    //         $this->db->rollBack();
+    //         $r->fail()
+    //             ->addError($e->getMessage());
+    //     }
+    //     return $r;
+    // }
+
+    public function shopCreateExchangeRate ($data) {
+        // global $app;
+        // $data["DateUpdated"] = dbquery::getDate();
+        // $data["DateCreated"] = dbquery::getDate();
+        // return dbquery::createOrGetQuery(array(
+        //     "source" => "shop_currency",
+        //     "action" => "insert",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::shopCurrency()
+                ->setData($data)
+                ->addStandardDateFields()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
         }
-        if (isset($options['limit'])) {
-            $config['limit'] = $options['limit'];
+        return $r;
+    }
+
+    public function updateExchangeRate ($id, $data) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::shopCurrency()
+                ->setCondition('ID', $id)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
         }
-        if (empty($options['removed'])) {
-            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
-        }
-        return $config;
+        return $r;
+        // global $app;
+        // $data["DateUpdated"] = dbquery::getDate();
+        // return dbquery::createOrGetQuery(array(
+        //     "source" => "shop_currency",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => dbquery::createCondition($id)
+        //     ),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
     }
 
-    public static function shopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
-        global $app;
-        $config = self::shopGetExchangeRateByID();
-        $config['fields'] = array($fieldToGroupBy);
-        $config['limit'] = 0;
-        $config['group'] = $fieldToGroupBy;
-        $config['options']['expandSingleRecord'] = false;
-        return $config;
-    }
-
-    public static function shopCreateExchangeRate ($data) {
-        global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        $data["DateCreated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "shop_currency",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
-
-    public static function shopUpdateExchangeRate ($id, $data) {
-        global $app;
-        $data["DateUpdated"] = $app->getDB()->getDate();
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "shop_currency",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
-            ),
-            "data" => $data,
-            "options" => null
-        ));
-    }
-
-    public static function shopDeleteExchangeRate ($id) {
-        global $app;
-        return $app->getDB()->createOrGetQuery(array(
-            "source" => "shop_currency",
-            "action" => "update",
-            "condition" => array(
-                "ID" => $app->getDB()->createCondition($id)
-            ),
-            "data" => array(
-                "Status" => 'REMOVED',
-                "DateUpdated" => $app->getDB()->getDate()
-            ),
-            "options" => null
-        ));
+    public function shopDeleteExchangeRate ($id) {
+        return $this->updateAddress($id, array(
+                'Status' => 'REMOVED'
+            ));
+        // global $app;
+        // return dbquery::createOrGetQuery(array(
+        //     "source" => "shop_currency",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => dbquery::createCondition($id)
+        //     ),
+        //     "data" => array(
+        //         "Status" => 'REMOVED',
+        //         "DateUpdated" => dbquery::getDate()
+        //     ),
+        //     "options" => null
+        // ));
     }
     // <<<<< shop delivery agencies
 

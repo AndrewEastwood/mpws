@@ -169,12 +169,12 @@ class email extends API {
     // }
 
 
-    // public function get (&$resp, $req) {
+    // public function get ($req, $resp) {
     //     // var_dump($req);
     //     if (isset($req->get['type'])) {
     //         switch ($req->get['type']) {
     //             case 'simplelist': {
-    //                 $resp = $this->getAvailableEmailsSimple_List($req->get);
+    //                 $resp->setResponse($this->getAvailableEmailsSimple_List($req->get));
     //                 break;
     //             }
     //         }
@@ -183,40 +183,40 @@ class email extends API {
     //     if (!empty($req->id)) {
     //         if (is_numeric($req->id)) {
     //             $EmailID = intval($req->id);
-    //             $resp = $this->getEmailByID($EmailID);
+    //             $resp->setResponse($this->getEmailByID($EmailID));
     //         }
     //     } else {
-    //         $resp = $this->getAvailableEmails_List($req->get);
+    //         $resp->setResponse($this->getAvailableEmails_List($req->get));
     //     }
     // }
 
-    // public function post (&$resp, $req) {
+    // public function post ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-    //         $resp['error'] = "AccessDenied";
+    //         $resp->setError('AccessDenied');
     //         return;
     //     }
-    //     $resp = $this->createEmail($req->data);
+    //     $resp->setResponse($this->createEmail($req->data));
     // }
 
-    // public function put (&$resp, $req) {
+    // public function put ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-    //         $resp['error'] = "AccessDenied";
+    //         $resp->setError('AccessDenied');
     //         return;
     //     }
     //     if (empty($req->id)) {
-    //         $resp['error'] = 'MissedParameter_id';
+    //         $resp->setError('MissedParameter_id');
     //     } else {
     //         $EmailID = intval($req->id);
-    //         $resp = $this->_updateEmailByID($EmailID, $req->data);
+    //         $resp->setResponse($this->_updateEmailByID($EmailID, $req->data));
     //     }
     // }
 
-    // public function delete (&$resp, $req) {
+    // public function delete ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-    //         $resp['error'] = "AccessDenied";
+    //         $resp->setError('AccessDenied');
     //         return;
     //     }
-    //     $resp = $this->archiveEmail($req->data);
+    //     $resp->setResponse($this->archiveEmail($req->data));
     // }
 }
 

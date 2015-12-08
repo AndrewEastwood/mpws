@@ -23,6 +23,7 @@ class data extends BaseData {
 
     function __construct () {
         global $app;
+        $self = $this;
 
         parent::__construct();
         
@@ -116,7 +117,7 @@ class data extends BaseData {
             $task['Scheduled'] = intval($task['Scheduled']) === 1;
         }, 'systemTask');
 
-        dbQuery::setQueryFilter(function (&$customer) {
+        dbQuery::setQueryFilter(function (&$customer) use ($self) {
             // adjusting
             $ID = intval($customer['ID']);
             $customer['ID'] = $ID;
@@ -127,9 +128,9 @@ class data extends BaseData {
             if (!empty($customer['Logo'])) {
                 $customer['Logo'] = array(
                     'name' => $customer['Logo'],
-                    'normal' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
-                    'sm' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
-                    'xs' => '/' . Path::getUploadDirectory() . $this->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
+                    'normal' => '/' . Path::getUploadDirectory() . $self->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo']),
+                    'sm' => '/' . Path::getUploadDirectory() . $self->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'sm'),
+                    'xs' => '/' . Path::getUploadDirectory() . $self->getCustomerUploadInnerImagePath($customer['HostName'], $customer['Logo'], 'xs')
                 );
             }
         }, 'systemCustomer');
@@ -142,7 +143,7 @@ class data extends BaseData {
             $address['isRemoved'] = $address['Status'] === 'REMOVED';
         }, 'systemAddress');
 
-        dbQuery::setQueryFilter(function (&$user) {
+        dbQuery::setQueryFilter(function (&$user) use ($self) {
             // adjusting
             $ID = intval($user['ID']);
             $user['ID'] = $ID;
@@ -152,10 +153,10 @@ class data extends BaseData {
             unset($user['Password']);
 
             // attach addresses
-            $user['Addresses'] = $this->fetchUserAddresses($ID);
+            $user['Addresses'] = $self->fetchUserAddresses($ID);
 
             // append user's permissions
-            $permissions = $this->fetchUserPermissionsByUserID($ID);
+            $permissions = $self->fetchUserPermissionsByUserID($ID);
             unset($permissions['ID']);
             unset($permissions['UserID']);
             unset($permissions['DateUpdated']);
@@ -1103,8 +1104,7 @@ class data extends BaseData {
                 ->addStandardDateUpdatedField()
                 ->update();
             $this->db->commit();
-            $r->success()
-                ->setResult($itemID);
+            $r->success();
         } catch (Exception $e) {
             $this->db->rollBack();
             $r->fail()

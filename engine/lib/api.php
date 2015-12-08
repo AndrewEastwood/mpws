@@ -49,11 +49,12 @@ class api {
         }
         $api = self::getAPI($apiKey);
         // invoke api request method
-        $_REQ = Request::getRequestData();
+        // $_REQ = Request::getRequestObj();
         if (isset($api)) {
             // $r = new Route($method, xxx)
             // $api->route(Response::$_RESPONSE, $_REQ);
-            $api->$method(Response::$_RESPONSE, $_REQ);
+            // $api->$method(Response::$_RESPONSE, $_REQ);
+            $api->$method(Request::getInstance(), Response::getInstance());
         } else {
             header("HTTP/1.0 404 Not Found");
             die();

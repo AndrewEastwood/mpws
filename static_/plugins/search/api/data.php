@@ -2,11 +2,12 @@
 namespace static_\plugins\search\api;
 
 use \engine\lib\api as API;
+use \engine\lib\data as BaseData;
 use Exception;
 
-class data {
+class data extends BaseData {
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
         $plugins = $customer['Plugins'];

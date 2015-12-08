@@ -143,17 +143,17 @@ class auth extends API {
 
     public function get (&$resp) {
         // var_dump($_SESSION[$this->authKey]);
-        $resp = $this->getAuthenticatedUser();
+        $resp->setResponse($this->getAuthenticatedUser());
         $this->updateSessionAuth();
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         // $resp[$this->authKey] = $this->clearAuthID();
         $this->clearAuthID();
         $this->updateSessionAuth();
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         global $app;
         // if (isset($req->get['signin'])) {
 
@@ -162,7 +162,7 @@ class auth extends API {
             $remember = $req->post['remember'];
 
             if (empty($email) || empty($password)) {
-                $resp['error'] = 'WrongCredentials';
+                $resp->setError('WrongCredentials');
                 $this->updateSessionAuth();
                 return;
             }
@@ -175,7 +175,7 @@ class auth extends API {
             // var_dump($config);
             // return;
             if (empty($user)) {
-                $resp['error'] = 'WrongCredentials';
+                $resp->setError('WrongCredentials');
                 $this->updateSessionAuth();
                 return;
             } else {
@@ -188,7 +188,7 @@ class auth extends API {
                             return;
                         }
                     } else {
-                        $resp['error'] = 'AccessDenied';
+                        $resp->setError('AccessDenied');
                         $this->clearAuthID();
                         return;
                     }
@@ -202,7 +202,7 @@ class auth extends API {
                 // API::getAPI('system:users')->setOnline($user['ID']);
             }
             // $resp[$this->authKey] = $this->getAuthID();
-            // $resp = $this->getAuthenticatedUser();
+            // $resp->setResponse($this->getAuthenticatedUser());
             // $this->updateSessionAuth();
             $this->get($resp);
 

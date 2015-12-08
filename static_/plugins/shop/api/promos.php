@@ -17,42 +17,42 @@ class promos extends API {
     // PROMO
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getPromoByID ($promoID) {
-        global $app;
-        $config = data::shopGetPromoByID($promoID);
-        $data = $app->getDB()->query($config);
-        $data['ID'] = intval($data['ID']);
-        $data['Discount'] = floatval($data['Discount']);
-        $data['_isExpired'] = strtotime($app->getDB()->getDate()) > strtotime($data['DateExpire']);
-        $data['_isFuture'] = strtotime($app->getDB()->getDate()) < strtotime($data['DateStart']);
-        $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
-        return $data;
-    }
+    // public function getPromoByID ($promoID) {
+    //     global $app;
+    //     $config = $this->data->fetchPromoByID($promoID);
+    //     $data = $app->getDB()->query($config);
+    //     $data['ID'] = intval($data['ID']);
+    //     $data['Discount'] = floatval($data['Discount']);
+    //     $data['_isExpired'] = strtotime($app->getDB()->getDate()) > strtotime($data['DateExpire']);
+    //     $data['_isFuture'] = strtotime($app->getDB()->getDate()) < strtotime($data['DateStart']);
+    //     $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
+    //     return $data;
+    // }
 
-    public function getPromoByHash ($hash, $activeOnly = false) {
-        global $app;
-        $config = data::shopGetPromoByHash($hash, $activeOnly);
-        $data = $app->getDB()->query($config);
-        $data['ID'] = intval($data['ID']);
-        $data['Discount'] = floatval($data['Discount']);
-        return $data;
-    }
+    // public function getPromoByHash ($hash, $activeOnly = false) {
+    //     global $app;
+    //     $config = $this->data->fetchPromoByHash($hash, $activeOnly);
+    //     $data = $app->getDB()->query($config);
+    //     $data['ID'] = intval($data['ID']);
+    //     $data['Discount'] = floatval($data['Discount']);
+    //     return $data;
+    // }
 
-    public function getPromoCodes_List (array $options = array()) {
-        global $app;
-        $config = data::shopGetPromoList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $val)
-                    $_items[] = $self->getPromoByID($val['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        return $dataList;
-    }
+    // public function getPromoCodes_List (array $options = array()) {
+    //     global $app;
+    //     $config = $this->data->fetchPromoList($options);
+    //     $self = $this;
+    //     $callbacks = array(
+    //         "parse" => function ($items) use($self) {
+    //             $_items = array();
+    //             foreach ($items as $val)
+    //                 $_items[] = $self->getPromoByID($val['ID']);
+    //             return $_items;
+    //         }
+    //     );
+    //     $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+    //     return $dataList;
+    // }
 
     public function createPromo ($reqData) {
         global $app;
@@ -74,7 +74,7 @@ class promos extends API {
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreatePromo = data::shopCreatePromo($validatedValues);
+                $configCreatePromo = $this->data->createPromo($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $promoID = $app->getDB()->query($configCreatePromo) ?: null;
@@ -119,7 +119,7 @@ class promos extends API {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = data::shopUpdatePromo($promoID, $validatedValues);
+                    $configCreateCategory = $this->data->updatePromo($promoID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -147,7 +147,7 @@ class promos extends API {
 
         try {
             $app->getDB()->beginTransaction();
-            $config = data::shopExpirePromo($promoID);
+            $config = $this->data->expirePromo($promoID);
             $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
@@ -178,54 +178,75 @@ class promos extends API {
     }
 
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_PROMO'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        if (empty($req->id)) {
-            $resp = $this->getPromoCodes_List($req->get);
-        } else {
-            $promoID = intval($req->id);
-            $resp = $this->getPromoByID($promoID);
+        // for specific item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->data->fetchPromoByID($req->id));
+            return;
         }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp->setResponse($this->data->fetchPromoList($req->get));
+        }
+        // if (empty($req->id)) {
+        //     $resp->setResponse($this->getPromoCodes_List($req->get));
+        // } else {
+        //     $promoID = intval($req->id);
+        //     $resp->setResponse($this->getPromoByID($promoID));
+        // }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PROMO'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createPromo($req->data);
+        $resp->setResponse($this->createPromo($req->data));
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PROMO'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
+            return;
+        }
+        // for specific item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->data->updatePromo($req->id, $req->data));
+            return;
+        }
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            
+            $resp->setError('MissedParameter_id');
+        }
+        // if (empty($req->id)) {
+        //     $resp->setError('MissedParameter_id');
+        // } else {
+        //     $promoID = intval($req->id);
+        //     $resp->setResponse($this->updatePromo($promoID, $req->data));
+        // }
+    }
+
+    public function delete ($req, $resp) {
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PROMO'))) {
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $promoID = intval($req->id);
-            $resp = $this->updatePromo($promoID, $req->data);
-        }
-    }
-
-    public function delete (&$resp, $req) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PROMO'))) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $promoID = intval($req->id);
-            $resp = $this->expirePromo($promoID);
+            $resp->setResponse($this->expirePromo($promoID));
         }
     }
 

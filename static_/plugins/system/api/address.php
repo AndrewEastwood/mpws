@@ -188,49 +188,49 @@ class address extends API {
     // we don't allow get user address
     public function get () {}
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         $UserID = null;
         if (is_numeric($req->data['UserID'])) {
             $UserID = intval($req->data['UserID']);
         } else {
-            $resp['error'] = 'EmptyUserID';
+            $resp->setError('EmptyUserID');
             return;
         }
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (Request::hasRequestedID()) {
-            $resp = $this->createAddress($UserID, $req->data);
+            $resp->setResponse($this->createAddress($UserID, $req->data));
             return;
         } else {
-            $resp['error'] = 'WrongIDParameter';
+            $resp->setError('WrongIDParameter');
         }
-        // $resp = $this->createAddress($UserID, $req->data);
+        // $resp->setResponse($this->createAddress($UserID, $req->data));
 
 
         // if (Request::noRequestedItem()) {
-        //     $resp['error'] = 'WrongIDParameter';
+        //     $resp->setError('WrongIDParameter');
         // } else {
         //     $UserID = null;
         //     if (is_numeric($req->data['UserID'])) {
         //         $UserID = intval($req->data['UserID']);
         //     } else {
-        //         $resp['error'] = 'EmptyUserID';
+        //         $resp->setError('EmptyUserID');
         //         return;
         //     }
         //     ;
         //     if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
         //         !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-        //         $resp['error'] = "AccessDenied";
+        //         $resp->setError('AccessDenied');
         //         return;
         //     }
         //     if (Request::hasRequestedID()) {
-        //         $resp = $this->_updateAddressByID($req->id, $req->data);
+        //         $resp->setResponse($this->_updateAddressByID($req->id, $req->data));
         //         return;
         //     } else {
-        //         $resp['error'] = 'WrongIDParameter';
+        //         $resp->setError('WrongIDParameter');
         //     }
         // }
 
@@ -238,75 +238,75 @@ class address extends API {
 
         // if (!empty($req->id)) {
         //     $AddressID = intval($req->id);
-        //     $resp = $this->_updateAddressByID($AddressID, $req->data);
+        //     $resp->setResponse($this->_updateAddressByID($AddressID, $req->data));
         //     return;
         // }
-        // $resp['error'] = 'WrongIDParameter';
+        // $resp->setError('WrongIDParameter');
     }
-    // public function patch (&$resp, $req) {
+    // public function patch ($req, $resp) {
     //     if (!empty($req->id)) {
     //         $AddressID = intval($req->id);
-    //         $resp = $this->_updateAddressByID($AddressID, $req->data);
+    //         $resp->setResponse($this->_updateAddressByID($AddressID, $req->data));
     //         return;
     //     }
-    //     $resp['error'] = 'WrongIDParameter';
+    //     $resp->setError('WrongIDParameter');
     // }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         $UserID = null;
         if (is_numeric($req->data['UserID'])) {
             $UserID = intval($req->data['UserID']);
         } else {
-            $resp['error'] = 'EmptyUserID';
+            $resp->setError('EmptyUserID');
             return;
         }
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createAddress($UserID, $req->data);
+        $resp->setResponse($this->createAddress($UserID, $req->data));
         // if (!empty($req->data['UserID'])) {
         //     $UserID = intval($req->data['UserID']);
-        //     $resp = $this->createAddress($UserID, $req->data);
+        //     $resp->setResponse($this->createAddress($UserID, $req->data));
         //     return;
         // }
-        // $resp['error'] = 'MissedParameter_UserID';
+        // $resp->setError('MissedParameter_UserID');
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (Request::hasRequestedID()) {
             $address = $this->getAddressByID($req->id);
             if (empty($address)) {
-                $resp['error'] = 'WrongAddressID';
+                $resp->setError('WrongAddressID');
                 return;
             }
             if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
-                $resp['error'] = "AccessDenied";
+                $resp->setError('AccessDenied');
                 return;
             }
-            $resp = $this->disableAddressByID($req->id);
+            $resp->setResponse($this->disableAddressByID($req->id));
         } else {
-            $resp['error'] = 'WrongIDParameter';
+            $resp->setError('WrongIDParameter');
         }
 
             // $UserID = null;
             // if (is_numeric($req->data['UserID'])) {
             //     $UserID = intval($req->data['UserID']);
             // } else {
-            //     $resp['error'] = 'EmptyUserID';
+            //     $resp->setError('EmptyUserID');
             //     return;
             // }
-            // $resp = $this->createAddress($UserID, $req->data);
+            // $resp->setResponse($this->createAddress($UserID, $req->data));
 
 
 
         // if (!empty($req->id)) {
         //     $AddressID = intval($req->id);
-        //     $resp = $this->disableAddressByID($AddressID);
+        //     $resp->setResponse($this->disableAddressByID($AddressID));
         //     return;
         // }
-        // $resp['error'] = 'WrongIDParameter';
+        // $resp->setError('WrongIDParameter');
     }
 }
 

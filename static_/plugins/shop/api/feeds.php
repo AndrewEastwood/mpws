@@ -675,7 +675,7 @@ class feeds extends API {
             $objValidation->setError('Value is not in list.');
             $objValidation->setPromptTitle('Pick from list');
             $objValidation->setPrompt('Please pick a value from the drop-down list.');
-            $objValidation->setFormula1('"' . join(',', data::getProductStatuses()) . '"'); //note this!
+            $objValidation->setFormula1('"' . join(',', $this->data->getProductStatuses()) . '"'); //note this!
         }
         // foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(40);
@@ -936,10 +936,10 @@ class feeds extends API {
         return $res;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_FEEDS'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         // $res = array('gdfgfdgdggd');
@@ -948,20 +948,20 @@ class feeds extends API {
         if (isset($req->get['generate'])) {
             if (API::getAPI('system:auth')->ifYouCan('Maintain') ||
                 API::getAPI('system:auth')->ifYouCan('shop_EXPORT_' . $req->get['generate'])) {
-                $resp = $this->generateProductFeed($req->get['generate']);
+                $resp->setResponse($this->generateProductFeed($req->get['generate']));
                 return;
             } else {
-                $resp['error'] = "AccessDenied";
+                $resp->setError('AccessDenied');
             }
         } else {
-            $resp = $this->getFeeds();
+            $resp->setResponse($this->getFeeds());
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (isset($req->data['name'])) {
@@ -974,15 +974,15 @@ class feeds extends API {
                 API::getAPI('system:tasks')->addTask('shop', 'importProductFeed', $res['basename']);
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
                 // var_dump($res);
-                $resp = $this->__adjustFeedItem(Path::rootPath() . $this->getFeedsUploadDir() . $res['filename']);
+                $resp->setResponse($this->__adjustFeedItem(Path::rootPath() . $this->getFeedsUploadDir() . $res['filename']));
             // }
                 $this->cleanupOldFeeds();
         }
     }
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         $activeTasks = API::getAPI('system:tasks')->getActiveTasksByGroupName('shop');
@@ -997,16 +997,16 @@ class feeds extends API {
                     //-- echo "{ dump: '";
                     $this->importProductFeed($req->get['name']);
                     //-- echo "',";
-                    $resp = $this->getFeeds();
+                    $resp->setResponse($this->getFeeds());
                     // <<<< this part must be moved into separated process
                     $resp['success'] = true;
                 } else {
                     $this->getFeeds();
-                    $resp['error'] = 'CanNotBeStarted';
+                    $resp->setError('CanNotBeStarted');
                 }
             } else {
                 $this->getFeeds();
-                $resp['error'] = 'UnknownTask';
+                $resp->setError('UnknownTask');
             }
         } else if (isset($req->data['cancel']) && isset($req->get['name'])) {
             $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
@@ -1016,25 +1016,25 @@ class feeds extends API {
                 $resp['success'] = true;
             } else {
                 $this->getFeeds();
-                $resp['error'] = 'UnknownTask';
+                $resp->setError('UnknownTask');
             }
         } else if (count($activeTasks)) {
             $this->getFeeds();
-            $resp['error'] = 'ActiveImportFound';
+            $resp->setError('ActiveImportFound');
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         $success = false;
         if (isset($req->get['name'])) {
             $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (isset($taks) && $task['IsRunning']) {
-                $resp['error'] = 'UnableToRemoveActiveTask';
+                $resp->setError('UnableToRemoveActiveTask');
             } else {
                 $feedPath = Path::rootPath() . $this->getFeedFilePathByName($req->get['name']);
                 if (file_exists($feedPath)) {

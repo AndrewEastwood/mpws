@@ -28,7 +28,7 @@ class orders extends API {
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
         global $app;
-        $config = data::shopGetOrderItem($orderID);
+        $config = $this->data->shopGetOrderItem($orderID);
         $order = null;
         $order = $app->getDB()->query($config);
         if (empty($order)) {
@@ -47,7 +47,7 @@ class orders extends API {
 
     public function getOrderByHash ($orderHash) {
         global $app;
-        $config = data::getShopOrderByHash($orderHash);
+        $config = $this->data->fetchOrderByHash($orderHash);
         $order = $app->getDB()->query($config);
 
         if (empty($order)) {
@@ -65,7 +65,7 @@ class orders extends API {
     public function getOrders_ListExpired (array $options = array()) {
         global $app;
         // get expired orders
-        $config = data::getShopOrderList_Expired();
+        $config = $this->data->getShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -86,7 +86,7 @@ class orders extends API {
     public function getOrders_ListTodays (array $options = array()) {
         global $app;
         // get todays orders
-        $config = data::getShopOrderList_Todays();
+        $config = $this->data->getShopOrderList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -107,7 +107,7 @@ class orders extends API {
     public function getOrders_ListPending (array $options = array()) {
         global $app;
         // get expired orders
-        $config = data::getShopOrderList_Pending();
+        $config = $this->data->getShopOrderList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -133,7 +133,7 @@ class orders extends API {
             $options['_pUser'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         // get orders
-        $config = data::getShopOrderList($options);
+        $config = $this->data->getShopOrderList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -310,7 +310,7 @@ class orders extends API {
             // var_dump($dataOrder);
             // return;
 
-            $configOrder = data::shopCreateOrder($dataOrder);
+            $configOrder = $this->data->shopCreateOrder($dataOrder);
             $orderID = $app->getDB()->query($configOrder);
 
             if (empty($orderID)) {
@@ -332,7 +332,7 @@ class orders extends API {
                 $dataBought["SellingPrice"] = $productItem["_prices"]["actual"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = data::shopCreateOrderBought($dataBought);
+                $configBought = $this->data->shopCreateOrderBought($dataBought);
                 $boughtID = $app->getDB()->query($configBought);
 
                 // check for created bought
@@ -389,7 +389,7 @@ class orders extends API {
 
                     $validatedValues = $validatedDataObj->validData;
 
-                    $configUpdateOrder = data::shopUpdateOrder($OrderID, $validatedValues);
+                    $configUpdateOrder = $this->data->updateOrder($OrderID, $validatedValues);
 
                     $app->getDB()->query($configUpdateOrder, true);
 
@@ -419,7 +419,7 @@ class orders extends API {
 
             $app->getDB()->beginTransaction();
 
-            $config = data::shopDisableOrder($OrderID);
+            $config = $this->data->disableOrder($OrderID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -517,11 +517,11 @@ class orders extends API {
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = API::getAPI('shop:delivery')->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
-            $configBoughts = data::shopGetOrderBoughts($orderID);
+            $configBoughts = $this->data->shopGetOrderBoughts($orderID);
             $boughts = $app->getDB()->query($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
-                    $product = data::fetchSingleProductByID($soldItem['ProductID']);
+                    $product = $this->data->fetchSingleProductByID($soldItem['ProductID']);
                     
                     $soldItem['Price'] = floatval($soldItem['Price']);
                     $soldItem['SellingPrice'] = floatval($soldItem['SellingPrice']);
@@ -575,7 +575,7 @@ class orders extends API {
             // get product items
             foreach ($sessionOrderProducts as $purchasingProduct) {
                 // get product
-                $product = data::fetchSingleProductByID($purchasingProduct['ID']);
+                $product = $this->data->fetchSingleProductByID($purchasingProduct['ID']);
                 if (!empty($product)) {
                     // get purchased product quantity
                     $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
@@ -718,7 +718,7 @@ class orders extends API {
             return null;
         }
         // get orders count for each states
-        $config = data::shopStat_OrdersOverview();
+        $config = $this->data->shopStat_OrdersOverview();
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
@@ -740,7 +740,7 @@ class orders extends API {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = data::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $config = $this->data->shopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -750,7 +750,7 @@ class orders extends API {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = data::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+        $config = $this->data->shopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -761,39 +761,39 @@ class orders extends API {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         global $app;
         if (isset($req->id)) {
             if (is_int($req->id) && $req->id !== "temp") {
                 if (API::getAPI('system:auth')->ifYouCan('Admin'))
-                    $resp = $this->getOrderByID($req->id);
+                    $resp->setResponse($this->getOrderByID($req->id));
                 else
-                    $resp['error'] = 'AccessDenied';
+                    $resp->setError('AccessDenied');
                 return;
             } elseif (is_string($req->id) && $req->id === "activeuser") {
-                $resp = $this->getOrders_List(); // show orders for active user only
+                $resp->setResponse($this->getOrders_List()); // show orders for active user only
                 return;
             } else {
-                $resp = $this->getOrderByHash($req->id);
+                $resp->setResponse($this->getOrderByHash($req->id));
                 return;
             }
         } else if ($app->isToolbox()) {
-            $resp = $this->getOrders_List($req->get);
+            $resp->setResponse($this->getOrders_List($req->get));
         } else {
-            $resp = $this->_getOrderTemp();
+            $resp->setResponse($this->_getOrderTemp());
         }
     }
 
     // create new order
     // public useres do that
-    public function post (&$resp, $req) {
-        $resp = $this->createOrder($req->data);
+    public function post ($req, $resp) {
+        $resp->setResponse($this->createOrder($req->data));
     }
 
     // modify existent order status or
     // product quantity in the shopping cart list of temporary order
     // both admin can update any order and public uses as well
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         global $app;
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
@@ -809,16 +809,16 @@ class orders extends API {
             if (!API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER')) {
                 $resp["error"] = "AccessDenied";
             } else {
-                $resp = $this->updateOrder($req->id, $req->data);
+                $resp->setResponse($this->updateOrder($req->id, $req->data));
             }
             // } else {
-                // $resp['error'] = 'AccessDenied';
+                // $resp->setError('AccessDenied');
             // }
             return;
         }
     }
 
-    public function patch (&$resp, $req) {
+    public function patch ($req, $resp) {
         $isTemp = !isset($req->id);
         // for temp order (site side only)
         if ($isTemp) {
@@ -845,28 +845,28 @@ class orders extends API {
                 else
                     API::getAPI('shop:promos')->setSessionPromo(API::getAPI('shop:promos')->getPromoByHash($req->data['promo'], true));
             }
-            $resp = $this->_getOrderTemp();
+            $resp->setResponse($this->_getOrderTemp());
         }
     }
 
     // removes particular product or clears whole shopping cart
-    public function delete (&$resp, $req) { // ????? we must keep all orders
+    public function delete ($req, $resp) { // ????? we must keep all orders
         // global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER'))) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         // if (!$app->isToolbox()) {
-        //     $resp['error'] = 'AccessDenied';
+        //     $resp->setError('AccessDenied');
         //     return;
         // }
         if (!empty($req->id)) {
             $OrderID = intval($req->id);
-            $resp = $this->disableOrderByID($OrderID);
+            $resp->setResponse($this->disableOrderByID($OrderID));
             return;
         }
-        $resp['error'] = 'MissedParameter_id';
+        $resp->setError('MissedParameter_id');
     }
 
 }

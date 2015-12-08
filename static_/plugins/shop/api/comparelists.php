@@ -20,10 +20,10 @@ class comparelists extends API {
 
     public function get (&$resp) {
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
-        $resp = array_values($items);
+        $resp->setResponse(array_values($items));
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (count($items) >= $this->getProductsLimit()) {
             $items['error'] = "ProductLimitExceeded";
@@ -32,16 +32,16 @@ class comparelists extends API {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = data::fetchSingleProductByID($productID);
+                $product = $this->data->fetchSingleProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Compare] = $items;
             }
-            $resp = array_values($items);
+            $resp->setResponse(array_values($items));
         } else
-            $resp['error'] = "MissedParameter_productID";
+            $resp->setError('MissedParameter_productID');
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
@@ -51,7 +51,7 @@ class comparelists extends API {
                 unset($items[$productID]);
             }
             $_SESSION[$this->_listKey_Compare] = $items;
-            $resp = array_values($items);
+            $resp->setResponse(array_values($items));
         }
     }
 

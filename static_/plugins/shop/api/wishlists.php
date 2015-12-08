@@ -24,28 +24,28 @@ class wishlists extends API {
 
     public function get (&$resp) {
         $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
-        $resp = array_values($items);
+        $resp->setResponse(array_values($items));
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         if (count($items) >= $this->getProductsLimit()) {
-            $resp['error'] = "ProductLimitExceeded";
+            $resp->setError('ProductLimitExceeded');
             return;
         }
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = data::fetchSingleProductByID($productID);
+                $product = $this->data->fetchSingleProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $items;
             }
-            $resp = array_values($items);
+            $resp->setResponse(array_values($items));
         } else
-            $resp['error'] = "MissedParameter_productID";
+            $resp->setError('MissedParameter_productID');
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
@@ -55,7 +55,7 @@ class wishlists extends API {
                 unset($items[$productID]);
             }
             $_SESSION[$this->_listKey_Wish] = $items;
-            $resp = array_values($items);
+            $resp->setResponse(array_values($items));
         }
     }
 

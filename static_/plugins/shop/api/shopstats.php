@@ -11,7 +11,7 @@ use ArrayObject;
 
 class shopstats extends API {
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         global $app;
         $self = $this;
         $sources = array();
@@ -67,9 +67,9 @@ class shopstats extends API {
         }
 
         if (isset($sources[$type]))
-            $resp = $sources[$type]($req);
+            $resp->setResponse($sources[$type]($req));
         else
-            $resp['error'] = 'WrongType';
+            $resp->setError('WrongType');
     }
 }
 

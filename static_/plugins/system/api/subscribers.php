@@ -227,55 +227,56 @@ class subscribers extends API {
         return $result;
     }
 
-    public function get (&$resp, $req) {
+    public function get ($req, $resp) {
         if (!empty($req->id)) {
             if (is_numeric($req->id)) {
                 $ProductID = intval($req->id);
-                $resp = $this->getSubscriptionByID($ProductID);
+                $resp->setResponse($this->getSubscriptionByID($ProductID));
             } else {
-                $resp = $this->getSubscriptionByToken($req->id);
+                $resp->setResponse($this->getSubscriptionByToken($req->id));
             }
         } else {
             if (isset($req->get['content'])) {
                 switch ($req->get['content']) {
                     case 'contentent': {
-                        $resp = $this->getActiveByContentSubscribers_List($req->get, $req->get['content']);
+                        $resp->setResponse($this->getActiveByContentSubscribers_List($req->get, $req->get['content']));
                         break;
                     }
                 }
             } else {
-                $resp = $this->getSubscribers_List($req->get);
+                $resp->setResponse($this->getSubscribers_List($req->get));
             }
         }
     }
 
-    public function post (&$resp, $req) {
+    public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->createEmail($req->data);
+        $resp->setResponse($this->createEmail($req->data));
     }
 
-    public function put (&$resp, $req) {
+    public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
         if (empty($req->id)) {
-            $resp['error'] = 'MissedParameter_id';
+            $resp->setError('MissedParameter_id');
         } else {
             $EmailID = intval($req->id);
-            $resp = $this->_updateEmailByID($EmailID, $req->data);
+            $EmailID = intval($req->id);
+            $resp->setResponse($this->_updateEmailByID($EmailID, $req->data));
         }
     }
 
-    public function delete (&$resp, $req) {
+    public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
+            $resp->setError('AccessDenied');
             return;
         }
-        $resp = $this->archiveEmail($req->data);
+        $resp->setResponse($this->archiveEmail($req->data));
     }
 
 }

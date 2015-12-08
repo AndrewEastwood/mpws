@@ -64,7 +64,7 @@ use \engine\lib\middleware as Middlewares;
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-Request::setPhpInput(file_get_contents('php://input'));
+// Request::setPhpInput(file_get_contents('php://input'));
 
 class app {
 
@@ -121,8 +121,13 @@ class app {
     );
     private $keys = null;
     private $db = null;
+    private $req = null;
+    private $resp->setResponse(null);
 
     function __construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
+        // request & responce
+        $this->req = new Request();
+        $this->resp = new Response();
         // keys
         $keys = (object)array(
             'mandrill' => '4tSbctT_FNQrZ0AnClOH_w'
