@@ -31,7 +31,7 @@ class products extends API {
 
     // TODO: optimmize list query
     public function getProducts_List (array $options = array()) {
-        return $this->data->fetchProducts_List($options);
+        return $this->data->fetchProductsDataList($options);
 
 
         // global $app;

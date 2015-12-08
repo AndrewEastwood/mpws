@@ -82,6 +82,10 @@ class dbquery {
         return date(dbquery::$DATE_FORMAT);
     }
 
+    public static function getLike ($value = '') {
+        return '%' . $value . '%';
+    }
+
     /**  As of PHP 5.3.0  */
     public static function __callStatic($name, $args)
     {
@@ -126,6 +130,21 @@ class dbquery {
                 $queryInstance->setFilter('update', $filter);
             }
         }
+    }
+
+    public function genFieldStr ($fieldName) {
+        if (empty($this->source))
+            return $fieldName;
+        return $this->source . '.' . $fieldName;
+    }
+    public function genFieldQueryParamStr ($fieldName) {
+        $prefix = '_f';
+        if (empty($this->source))
+            return $prefix . $fieldName;
+        return $prefix . $this->source . '.' . $fieldName;
+    }
+    public function genDescSortOrderStr ($fieldName) {
+        return '-' . $this->asField($fieldName);
     }
 
     public function cloneQuery ($newQueryName) {
@@ -260,6 +279,9 @@ class dbquery {
         $this->join = array();
     }
     public function ordering ($field, $desc = false) {
+        if ($field[0] == '@') {
+            return $this->orderingExpr(substr($field, 1));
+        }
         if ($field[0] == '-') {
             $desc = true;
             $field = substr($filed, 1);
@@ -311,7 +333,7 @@ class dbquery {
                 $this->stePage($value);
                 continue;
             }
-            if ($key == 'sort') {
+            if ($key == 'sort' || $key == 'sortorder') {
                 $sort = $value;
                 continue;
             }
@@ -334,7 +356,7 @@ class dbquery {
                 // var_dump($parsedValue);
                 // var_dump($count);
                 if ($count === 0)
-                    $dsConfig['condition'][$field] = $this->createCondition($value);
+                    $this->addCondition($field, $value);// $dsConfig['condition'][$field] = $this->createCondition($value);
                 elseif ($count > 2) {
                     $value = $parsedValue[1];
                     $comparator = null;
@@ -343,13 +365,18 @@ class dbquery {
                     // if (strtolower($comparator) === 'in')
                     if ($isArray)
                         $value = explode(',', $parsedValue[1]);
-                    $dsConfig['condition'][$field] = $this->createCondition($value, $comparator);
+                    // $dsConfig['condition'][$field] = $this->createCondition($value, $comparator);
+                    $this->addCondition($field, $value, $comparator);
                 }
             }
         }
 
-        if ($sort != null && $order != null) {
-            $this->ordering($sort, $order);
+        if ($sort != null) {
+            if ($order != null) {
+                $this->ordering($sort, $order);
+            } else {
+                $this->ordering($sort);
+            }
         }
 
         // return $options;
