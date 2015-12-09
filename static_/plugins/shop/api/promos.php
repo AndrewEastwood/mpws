@@ -56,10 +56,11 @@ class promos extends API {
 
     public function createPromo ($reqData) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        $promoID = null;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        // $promoID = null;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'DateStart' => array('string'),
@@ -67,44 +68,44 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
 
-                $validatedValues = $validatedDataObj->validData;
-                $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
-                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+            $validatedValues = $validatedDataObj->validData;
+            $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
+            $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
-                $configCreatePromo = $this->data->createPromo($validatedValues);
+            // $configCreatePromo = $this->data->createPromo($validatedValues);
 
-                $app->getDB()->beginTransaction();
-                $promoID = $app->getDB()->query($configCreatePromo) ?: null;
+            // $app->getDB()->beginTransaction();
+            // $promoID = $app->getDB()->query($configCreatePromo) ?: null;
+            $r = $this->data->createPromo($validatedValues);
 
-                if (empty($promoID))
-                    throw new Exception('PromoCreateError');
-
-                $app->getDB()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
+            if ($r->isEmptyResult()) {
+                throw new Exception('PromoCreateError');
             }
-        else
-            $errors = $validatedDataObj->errorMessages;
+            // $app->getDB()->commit();
+            // $success = true;
+        } else {
+            // $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
+        }
 
-        if ($success && !empty($promoID))
-            $result = $this->getPromoByID($promoID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        if ($r->hasResult()) {
+            $item = $this->data->fetchPromoByID($r->getResult());
+            $r->setResult($item);
+        }
+        // if ($success && !empty($promoID))
+        //     $result = $this->getPromoByID($promoID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
 
-        return $result;
+        return $r->toArray();
     }
 
     public function updatePromo ($promoID, $reqData) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'DateStart' => array('string', 'skipIfUnset'),
@@ -112,54 +113,37 @@ class promos extends API {
             'Discount' => array('numeric')
         ));
 
-        if ($validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
+            $r = $this->data->updatePromo($promoID, $validatedDataObj->validData);
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
+        }
 
-                $validatedValues = $validatedDataObj->validData;
+        if ($r->hasResult()) {
+            $item = $this->data->fetchUserByID($promoID);
+            $r->setResult($item);
+        }
 
-                if (count($validatedValues)) {
-                    $app->getDB()->beginTransaction();
-                    $configCreateCategory = $this->data->updatePromo($promoID, $validatedValues);
-                    $app->getDB()->query($configCreateCategory);
-                    $app->getDB()->commit();
-                }
-
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj->errorMessages;
-
-        $result = $this->getPromoByID($promoID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
+        return $r->toArray();
     }
 
     public function expirePromo ($promoID) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
 
-        try {
-            $app->getDB()->beginTransaction();
-            $config = $this->data->expirePromo($promoID);
-            $app->getDB()->query($config);
-            $app->getDB()->commit();
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = $e->getMessage();
+        $r = null;
+
+        if ($validatedDataObj->errorsCount == 0) {
+            $r = $this->data->expirePromo($promoID);
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        if ($r->hasResult()) {
+            $item = $this->data->fetchUserByID($promoID);
+            $r->setResult($item);
+        }
 
-        return $result;
+        return $r->toArray();
     }
 
 
@@ -193,6 +177,7 @@ class promos extends API {
         // for the case when we have to fecth list with customers
         if (Request::noRequestedItem()) {
             $resp->setResponse($this->data->fetchPromoList($req->get));
+            return;
         }
         // if (empty($req->id)) {
         //     $resp->setResponse($this->getPromoCodes_List($req->get));
@@ -218,15 +203,15 @@ class promos extends API {
             return;
         }
         // for specific item
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp->setError('MissedParameter_id');
+            return;
+        }
         // by id
         if (Request::hasRequestedID()) {
             $resp->setResponse($this->data->updatePromo($req->id, $req->data));
             return;
-        }
-        // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
-            
-            $resp->setError('MissedParameter_id');
         }
         // if (empty($req->id)) {
         //     $resp->setError('MissedParameter_id');
@@ -242,12 +227,20 @@ class promos extends API {
             $resp->setError('AccessDenied');
             return;
         }
-        if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
-        } else {
-            $promoID = intval($req->id);
-            $resp->setResponse($this->expirePromo($promoID));
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->data->expirePromo($req->id));
+            return;
         }
+        if (Request::noRequestedItem()) {
+            $resp->setError('MissedParameter_id');
+            return;
+        }
+        // if (empty($req->id)) {
+        //     $resp->setError('MissedParameter_id');
+        // } else {
+        //     $promoID = intval($req->id);
+        //     $resp->setResponse($this->expirePromo($promoID));
+        // }
     }
 
 

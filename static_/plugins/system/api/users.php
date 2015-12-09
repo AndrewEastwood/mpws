@@ -221,7 +221,7 @@ class users extends API {
         //     $result = $this->getUserByID($UserID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
-        return $result;
+        return $r->toArray();
     }
 
     public function updateUser ($userID, $reqData/*, $isUpdate = false*/) {
