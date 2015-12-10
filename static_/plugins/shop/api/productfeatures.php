@@ -26,7 +26,7 @@ class productfeatures extends API {
     public function getFeatures () {
         global $app;
         $tree = array();
-        $config = $this->data->shopGetFeatures();
+        $config = $this->data->fetchFeaturesArray();
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {

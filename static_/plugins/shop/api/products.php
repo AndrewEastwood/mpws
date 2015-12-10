@@ -95,14 +95,15 @@ class products extends API {
 
     // TODO: optimmize list query
     public function getViewedProducts_List () {
-        global $app;
-        $_items = array();
-        $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
-        foreach ($viewedProductsIDs as $productID) {
-            $_items[] = $this->data->fetchSingleProductByID($productID);
-        }
-        $dataList = $app->getDB()->arrayToDataList($_items);
-        return $dataList;
+        return $this->data->
+        // global $app;
+        // $_items = array();
+        // $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
+        // foreach ($viewedProductsIDs as $productID) {
+        //     $_items[] = $this->data->fetchSingleProductByID($productID);
+        // }
+        // $dataList = $app->getDB()->arrayToDataList($_items);
+        // return $dataList;
     }
 
     // TODO: optimize list quer
@@ -404,7 +405,7 @@ class products extends API {
                 $validatedValues["PrevPrice"] = 0;
                 $validatedValues["SearchText"] = $validatedValues["Name"] . ' ' . $validatedValues["Model"];
                 // var_dump($validatedValues);
-                $config = $this->data->shopCreateProduct($validatedValues);
+                $config = $this->data->createProduct($validatedValues);
                 // var_dump($config);
                 $ProductID = null;
                 try {
@@ -424,7 +425,7 @@ class products extends API {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
-                        $config = $this->data->shopAddFeatureToProduct($featureData);
+                        $config = $this->data->addFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -494,10 +495,10 @@ class products extends API {
 
                 // update related products
                 if (isset($reqData['relatedProductIds'])) {
-                    $config = $this->data->shopClearProductRelations($ProductID);
+                    $config = $this->data->deleteAllProductRelations($ProductID);
                     $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        $app->getDB()->query($this->data->shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
+                        $app->getDB()->query($this->data->addRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 
@@ -751,7 +752,7 @@ class products extends API {
                     }
                 }
 
-                $config = $this->data->shopUpdateProduct($ProductID, $validatedValues);
+                $config = $this->data->updateProduct($ProductID, $validatedValues);
                 try {
                     $app->getDB()->query($config);
                 } catch (Exception $ep) {
@@ -768,7 +769,7 @@ class products extends API {
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
-                        $config = $this->data->shopAddFeatureToProduct($featureData);
+                        $config = $this->data->addFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -944,10 +945,10 @@ class products extends API {
 
                 // update related products
                 if (isset($reqData['relatedProductIds'])) {
-                    $config = $this->data->shopClearProductRelations($ProductID);
+                    $config = $this->data->deleteAllProductRelations($ProductID);
                     $app->getDB()->query($config);
                     foreach ($relatedIDs as $relatedID) {
-                        $app->getDB()->query($this->data->shopSetRelatedProduct($CustomerID, $ProductID, $relatedID));
+                        $app->getDB()->query($this->data->addRelatedProduct($CustomerID, $ProductID, $relatedID));
                     }
                 }
 

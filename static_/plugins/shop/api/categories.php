@@ -13,105 +13,71 @@ use ArrayObject;
 
 class categories extends API {
 
-    private $_statuses = array('ACTIVE', 'REMOVED');
+    // private $_statuses = array('ACTIVE', 'REMOVED');
 
-    public function getCategoryUploadInnerDir ($subDir = '') {
-        $apiCustomer = API::getAPI('system:customers');
-        $customer = $apiCustomer->getRuntimeCustomer();
-        $path = '';
-        if (empty($subDir))
-            $path = Path::createDirPath($customer['HostName'], 'shop', 'categories');
-        else
-            $path = Path::createDirPath($customer['HostName'], 'shop', 'categories', $subDir);
-        return $path;
-    }
-    public function getCategoryUploadInnerImagePath ($name, $subDir = false) {
-        $path = $this->getCategoryUploadInnerDir($subDir);
-        return $path . $name;
-    }
 
     // -----------------------------------------------
     // -----------------------------------------------
     // CATEGORIES
     // -----------------------------------------------
     // -----------------------------------------------
-    private function __adjustCategory (&$category) {
-        $categoryID = intval($category['ID']);
-        $category['ID'] = $categoryID;
-        $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
-        $category['_isRemoved'] = $category['Status'] === 'REMOVED';
-        $category['_location'] = $this->getCategoryLocationByCategoryID($categoryID);
-        if (!empty($category['Image'])) {
-            $category['Image'] = array(
-                'name' => $category['Image'],
-                'normal' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image']),
-                'md' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'md'),
-                'sm' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'sm'),
-                'xs' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'xs'),
-                'micro' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'micro')
-            );
-        }
-        // add sub categoires IDs
-        $category['SubIDs'] = array();
-        // if (!empty($category['childNodes'])) {
-        //     $category['SubIDs'] += array_keys($category['childNodes']);
-        // }
-        return $category;
-    }
+    // private function __adjustCategory (&$category) {
+    // }
 
-    public function getCategoryByID ($categoryID) {
-        global $app;
-        if (empty($categoryID) || !is_numeric($categoryID))
-            return null;
-        $config = $this->data->shopGetCategoryItem($categoryID);
-        $category = $app->getDB()->query($config);
-        if (empty($category))
-            return null;
-        return $this->__adjustCategory($category);
-    }
+    // public function getCategoryByID ($categoryID) {
+    //     global $app;
+    //     if (empty($categoryID) || !is_numeric($categoryID))
+    //         return null;
+    //     $config = $this->data->fetchCategoryByID($categoryID);
+    //     $category = $app->getDB()->query($config);
+    //     if (empty($category))
+    //         return null;
+    //     return $this->__adjustCategory($category);
+    // }
 
-    public function getCategoryByName ($categoryName) {
-        global $app;
-        $config = $this->data->shopGetCategoryItem();
-        $config['condition']['Name'] = $app->getDB()->createCondition($categoryName);
-        $category = $app->getDB()->query($config);
-        if (empty($category))
-            return null;
-        return $this->__adjustCategory($category);
-    }
+    // public function getCategoryByName ($categoryName) {
+    //     global $app;
+    //     $config = $this->data->fetchCategoryByID();
+    //     $config['condition']['Name'] = $app->getDB()->createCondition($categoryName);
+    //     $category = $app->getDB()->query($config);
+    //     if (empty($category))
+    //         return null;
+    //     return $this->__adjustCategory($category);
+    // }
 
-    public function getCategoryByExternalKey ($externalKey) {
-        global $app;
-        $config = $this->data->shopGetCategoryItem();
-        $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
-        $category = $app->getDB()->query($config);
-        if (empty($category))
-            return null;
-        return $this->__adjustCategory($category);
-    }
+    // public function getCategoryByExternalKey ($externalKey) {
+    //     global $app;
+    //     $config = $this->data->fetchCategoryByID();
+    //     $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
+    //     $category = $app->getDB()->query($config);
+    //     if (empty($category))
+    //         return null;
+    //     return $this->__adjustCategory($category);
+    // }
 
-    public function getCategories_List (array $options = array()) {
-        global $app;
-        $config = $this->data->shopGetCategoryList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $val)
-                    $_items[] = $self->getCategoryByID($val['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-        return $dataList;
-    }
+    // public function getCategories_List (array $options = array()) {
+    //     global $app;
+    //     $config = $this->data->fetchCategoryDataList($options);
+    //     $self = $this;
+    //     $callbacks = array(
+    //         "parse" => function ($items) use($self) {
+    //             $_items = array();
+    //             foreach ($items as $val)
+    //                 $_items[] = $self->getCategoryByID($val['ID']);
+    //             return $_items;
+    //         }
+    //     );
+    //     $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
+    //     return $dataList;
+    // }
 
     public function createCategory ($reqData) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
-        $CategoryID = null;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
+        // $CategoryID = null;
+        $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
@@ -137,16 +103,16 @@ class categories extends API {
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
                     $microImagePath = 'micro' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
-                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getCategoryUploadInnerDir('md'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getCategoryUploadInnerDir('micro'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->data->getCategoryUploadInnerDir('md'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getCategoryUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getCategoryUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->data->getCategoryUploadInnerDir('micro'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getCategoryUploadInnerDir(), $newFileName);
                     $validatedValues['Image'] = $uploadInfo['filename'];
                 }
                 unset($validatedValues['file1']);
 
-                $configCreateCategory = $this->data->shopCreateCategory($validatedValues);
+                $configCreateCategory = $this->data->createCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -201,9 +167,9 @@ class categories extends API {
 
                     if ($newFileName !== $currentFileName) {
                         if (empty($newFileName) && !empty($currentFileName)) {
-                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName, 'sm'));
-                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName, 'xs'));
-                            Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($currentFileName));
+                            Path::deleteUploadedFile($this->data->getCategoryUploadInnerImagePath($currentFileName, 'sm'));
+                            Path::deleteUploadedFile($this->data->getCategoryUploadInnerImagePath($currentFileName, 'xs'));
+                            Path::deleteUploadedFile($this->data->getCategoryUploadInnerImagePath($currentFileName));
                             $validatedValues['Image'] = null;
                         }
                         if (!empty($newFileName)) {
@@ -214,11 +180,11 @@ class categories extends API {
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $currentFileName;
                             $microImagePath = 'micro' . Path::getDirectorySeparator() . $currentFileName;
                             $normalImagePath = $currentFileName;
-                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->getCategoryUploadInnerDir('md'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->getCategoryUploadInnerDir('micro'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($mdImagePath, $this->data->getCategoryUploadInnerDir('md'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->data->getCategoryUploadInnerDir('sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->data->getCategoryUploadInnerDir('xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($microImagePath, $this->data->getCategoryUploadInnerDir('micro'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->data->getCategoryUploadInnerDir(), $newFileName);
                             $validatedValues['Image'] = $uploadInfo['filename'];
                         }
                     }
@@ -229,7 +195,7 @@ class categories extends API {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = $this->data->shopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = $this->data->updateCategory($CategoryID, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -251,27 +217,43 @@ class categories extends API {
 
     public function disableCategory ($CategoryID) {
         global $app;
-        $errors = array();
-        $success = false;
 
-        try {
-            $app->getDB()->beginTransaction();
+        $r = null;
 
-            $config = $this->data->shopDeleteCategory($CategoryID);
-            $app->getDB()->query($config);
-
-            $app->getDB()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $app->getDB()->rollBack();
-            $errors[] = 'CategoryDeleteError';
+        if ($validatedDataObj->errorsCount == 0) {
+            $r = $this->data->expirePromo($CategoryID);
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
         }
 
-        $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+        if ($r->hasResult()) {
+            $item = $this->data->fetchUserByID($CategoryID);
+            $r->setResult($item);
+        }
+
+        return $r->toArray();
+        // global $app;
+        // $errors = array();
+        // $success = false;
+
+        // try {
+        //     $app->getDB()->beginTransaction();
+
+        //     $config = $this->data->deleteCategory($CategoryID);
+        //     $app->getDB()->query($config);
+
+        //     $app->getDB()->commit();
+
+        //     $success = true;
+        // } catch (Exception $e) {
+        //     $app->getDB()->rollBack();
+        //     $errors[] = 'CategoryDeleteError';
+        // }
+
+        // $result = $this->getCategoryByID($CategoryID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+        // return $result;
     }
 
     // -----------------------------------------------
