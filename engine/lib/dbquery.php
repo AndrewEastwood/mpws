@@ -275,6 +275,16 @@ class dbquery {
         );
         return $this;
     }
+    public function addJoinByFlag ($flag, $src, $constraint, array $fields) {
+        if (!$flag) return $this;
+        $constraint = explode('=', $constraint);
+        array_splice($constraint, 1, 0, array('='));
+        $this->join[$src] = array(
+            'constraint' => $constraint,
+            'fields' => $fields
+        );
+        return $this;
+    }
     public function clearJoins () {
         $this->join = array();
     }

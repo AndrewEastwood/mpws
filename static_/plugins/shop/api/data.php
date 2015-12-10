@@ -55,13 +55,13 @@ class data extends BaseData {
 
         $this->db->createQuery('shopProductsWithOrigin', $this->source_products)
             ->setJoin('shop_origins', "shop_products.OriginID=shop_origins.ID",
-                    array("@shop_origins.Name AS OriginName"));
+                    array("ID", "@shop_origins.Name AS OriginName"));
 
         $this->db->createQuery('shopProductsWithCatalog', $this->source_products)
             ->setJoin('shop_origins', "shop_products.OriginID=shop_origins.ID",
-                    array("@shop_origins.Name AS OriginName"))
+                    array("ID", "@shop_origins.Name AS OriginName"))
             ->setJoin('shop_categories', "shop_products.CategoryID=shop_categories.ID",
-                    array("@shop_categories.Status AS CategoryStatus", "@shop_categories.ExternalKey AS CategoryExternalKey"))
+                    array("ID", "@shop_categories.Status AS CategoryStatus", "@shop_categories.ExternalKey AS CategoryExternalKey"))
             ->setJoin('shop_productFeatures', "shop_products.CategoryID=shop_productFeatures.ID",
                     array("FeatureID"));
 
@@ -278,7 +278,7 @@ class data extends BaseData {
         return $path;
     }
     public function getProductUploadInnerImagePath ($name, $productID, $subDir = false) {
-        $path = self::getProductUploadInnerDir($productID, $subDir);
+        $path = $this->getProductUploadInnerDir($productID, $subDir);
         return $path . $name;
     }
 
@@ -310,26 +310,27 @@ class data extends BaseData {
         return array('BANNER_LARGE','BANNER_MEDIUM','BANNER_SMALL','BANNER_MICRO');;
     }
 
-    private static function __adjustProduct (&$product, $skipRelations = true) {
+    // private static function __adjustProduct (&$product, $skipRelations = true) {
 
-    }
+    // }
 
     public function fetchProductImages ($productID) {
-        global $app;
+        $data = $this->fetchProductAttributesArray($productID, 'IMAGE');
+        // global $app;
         $images = array();
-        $config = self::fetchProductAttributesArray($productID, 'IMAGE');
-        $data = dbquery::query($config);
+        // $config = self::fetchProductAttributesArray($productID, 'IMAGE');
+        // $data = dbquery::query($config);
         // var_dump($data);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if (!empty($item['Value'])) {
                     $images[] = array(
                         'name' => $item['Value'],
-                        'normal' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID),
-                        'md' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID, 'md'),
-                        'sm' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
-                        'xs' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID, 'xs'),
-                        'micro' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID, 'micro')
+                        'normal' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
+                        'md' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'md'),
+                        'sm' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
+                        'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs'),
+                        'micro' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'micro')
                     );
                 }
             }
@@ -338,16 +339,17 @@ class data extends BaseData {
     }
 
     public function fetchProductBanners ($productID) {
-        global $app;
+        $data = $this->fetchProductAttributesArray($productID, $this->getProductBannerTypes());
+        // global $app;
         $banners = array();
-        $config = self::fetchProductAttributesArray($productID, self::getProductBannerTypes());
-        $data = dbquery::query($config);
+        // $config = self::fetchProductAttributesArray($productID, self::getProductBannerTypes());
+        // $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if (!empty($item['Value'])) {
                     $banners[$item['Attribute']] = array(
                         'name' => $item['Value'],
-                        'banner' => '/' . Path::getUploadDirectory() . self::getProductUploadInnerImagePath($item['Value'], $productID)
+                        'banner' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID)
                     );
                 }
             }
@@ -369,23 +371,29 @@ class data extends BaseData {
     }
 
     public function fetchProductVideos ($productID) {
-        global $app;
+        $data = $this->fetchProductAttributesArray($productID, 'VIDEO');
         $videos = array();
-        $config = self::fetchProductAttributesArray($productID, 'VIDEO');
-        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $videos[] = $item['Value'];
             }
         }
         return $videos;
+        // global $app;
+        // $videos = array();
+        // $config = self::fetchProductAttributesArray($productID, 'VIDEO');
+        // $data = dbquery::query($config);
+        // if (!empty($data)) {
+        //     foreach ($data as $item) {
+        //         $videos[] = $item['Value'];
+        //     }
+        // }
+        // return $videos;
     }
 
     public function fetchProductAttributes ($productID) {
-        global $app;
+        $data = $this->fetchProductAttributesArray($productID)
         $attr = array();
-        $config = self::fetchProductAttributesArray($productID);
-        $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if ($item['Attribute'] === 'IMAGE' || $item['Attribute'] === 'VIDEO') {
@@ -394,7 +402,20 @@ class data extends BaseData {
                 $attr[$item['Attribute']] = $item['Value'];
             }
         }
-        return $attr;
+        return $featuresGroups;
+        // global $app;
+        // $attr = array();
+        // $config = self::fetchProductAttributesArray($productID);
+        // $data = dbquery::query($config);
+        // if (!empty($data)) {
+        //     foreach ($data as $item) {
+        //         if ($item['Attribute'] === 'IMAGE' || $item['Attribute'] === 'VIDEO') {
+        //             continue;
+        //         }
+        //         $attr[$item['Attribute']] = $item['Value'];
+        //     }
+        // }
+        // return $attr;
     }
 
     public function fetchProductFeatures ($productID) {
@@ -402,6 +423,7 @@ class data extends BaseData {
             ->setAllFields()
             ->setCondition('ProductID', $productID)
             ->selectAsArray();
+        $featuresGroups = array();
         if (!empty($data)) {
             foreach ($data as $value) {
                 if (!isset($featuresGroups[$value['GroupName']])) {
@@ -701,7 +723,7 @@ class data extends BaseData {
             // $config['condition']["shop_categories.ExternalKey"] = dbquery::createCondition($options['_pCategoryExternalKey']);
         }
 
-        $q->selectAsDataList();
+        return $q->selectAsDataList();
         // global $app;
         // $config = self::dbqProducts_MatchedIDs($options);
         // $list = dbquery::queryMatchedIDs($config);
@@ -802,25 +824,46 @@ class data extends BaseData {
     }
 
     public function productExistsByID ($productID) {
-        global $app;
-        $config = self::dbqCheckProductExistenceByID($productID);
-        $product = dbquery::query($config);
+        $product = $this->fetchSingleProductShortInfo($productID);
+        // global $app;
+        // $config = self::dbqCheckProductExistenceByID($productID);
+        // $product = dbquery::query($config);
         return intval($product['ID']);
     }
     public function productExistsByExternalKey ($eKey) {
-        global $app;
-        $config = self::dbqCheckProductExistenceByExternalKey($productID);
-        $product = dbquery::query($config);
+        $product = $this->fetchSingleProductByExternalKey($eKey);
+        // global $app;
+        // $config = self::dbqCheckProductExistenceByExternalKey($productID);
+        // $product = dbquery::query($config);
         return intval($product['ID']);
     }
     public function productExistsByModelAndOrigin ($modelName, $originName) {
-        global $app;
-        $config = self::dbqCheckProductExistenceByModelAndOrigin($productID);
-        $product = dbquery::query($config);
+        $product = $this->fetchSingleProductByModelAndOrigin($modelName, $originName);
+        // global $app;
+        // $config = self::dbqCheckProductExistenceByModelAndOrigin($productID);
+        // $product = dbquery::query($config);
         return intval($product['ID']);
     }
 
     public function archiveProduct ($productID) {
+        $r = new result();
+        try {
+            $data = array();
+            $data['Status'] = 'ARCHIVED';
+            $this->db->beginTransaction();
+            dbQuery::shopProducts()
+                ->setCondition('ID', $productID)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
         // global $app;
         // if (empty($productID) || !is_numeric($productID))
         //     return null;
@@ -841,6 +884,24 @@ class data extends BaseData {
     }
 
     public function archiveAllProducts () {
+        $r = new result();
+        try {
+            $data = array();
+            $data['Status'] = 'ARCHIVED';
+            $this->db->beginTransaction();
+            dbQuery::shopProducts()
+                ->clearConditions()
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
         // global $app;
         // $config = dbquery::createOrGetQuery(array(
         //     "source" => "shop_products",
@@ -858,59 +919,130 @@ class data extends BaseData {
     }
 
     public function setProductAsRemovedByModelAndOrigin ($modelName, $originName) {
-        global $app;
-        $data = array(
-            'shop_products.Status' => 'REMOVED',
-            "shop_products.DateUpdated" => dbquery::getDate()
-        );
-        $config = dbquery::createOrGetQuery(array(
-            "source" => "shop_products",
-            "action" => "update",
-            "condition" => array(
-                "Model" => dbquery::createCondition($modelName, 'like'),
-                "shop_origins.Name" => dbquery::createCondition($originName),
-            ),
-            'additional' => array(
-                "shop_origins" => array(
-                    "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
-                    "fields" => array("@shop_origins.Name AS OriginName")
-                )
-            ),
-            "data" => $data,
-            "options" => null
-        ));
-        return dbquery::query($config);
+        $r = new result();
+        try {
+            $data = array();
+            $data['Status'] = 'REMOVED';
+            $this->db->beginTransaction();
+            dbQuery::shopProductsWithOrigin()
+                ->setCondition('Model', $modelName)
+                ->setCondition('OriginName', $originName)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $data = array(
+        //     'shop_products.Status' => 'REMOVED',
+        //     "shop_products.DateUpdated" => dbquery::getDate()
+        // );
+        // $config = dbquery::createOrGetQuery(array(
+        //     "source" => "shop_products",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "Model" => dbquery::createCondition($modelName, 'like'),
+        //         "shop_origins.Name" => dbquery::createCondition($originName),
+        //     ),
+        //     'additional' => array(
+        //         "shop_origins" => array(
+        //             "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+        //             "fields" => array("@shop_origins.Name AS OriginName")
+        //         )
+        //     ),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
+        // return dbquery::query($config);
     }
 
     public function setProductAsRemovedByID ($productID) {
-        global $app;
-        $data = array(
-            'shop_products.Status' => 'REMOVED',
-            "shop_products.DateUpdated" => dbquery::getDate()
-        );
-        $config = dbquery::createOrGetQuery(array(
-            "source" => "shop_products",
-            "action" => "update",
-            "condition" => array(
-                "ID" => dbquery::createCondition($productID)
-            ),
-            'additional' => array(),
-            "data" => $data,
-            "options" => null
-        ));
-        return dbquery::query($config);
+        return $this->updateProduct($productID, array(
+                'Status' => 'REMOVED'
+            ));
+        // global $app;
+        // $data = array(
+        //     'shop_products.Status' => 'REMOVED',
+        //     "shop_products.DateUpdated" => dbquery::getDate()
+        // );
+        // $config = dbquery::createOrGetQuery(array(
+        //     "source" => "shop_products",
+        //     "action" => "update",
+        //     "condition" => array(
+        //         "ID" => dbquery::createCondition($productID)
+        //     ),
+        //     'additional' => array(),
+        //     "data" => $data,
+        //     "options" => null
+        // ));
+        // return dbquery::query($config);
     }
 
-    public function updateProductSearchTextByID ($ProductID) {
-        global $app;
-        $config = self::dbqUpdateProductSearchText($ProductID, null);
-        return dbquery::query($config);
+    public function updateProductSearchTextByID ($productID, $originID = null) {
+        $r = new result();
+        try {
+            $data = array();
+            $data["SearchText"] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model))";
+            $this->db->beginTransaction();
+            dbQuery::shopProductsWithOrigin()
+                ->clearConditions()
+                ->addConditionByFlag(!is_null($productID), 'ID', $productID)
+                ->addConditionByFlag(is_null($productID) && !is_null($originID), 'OriginID', $originID)
+                ->setData($data)
+                ->addStandardDateUpdatedField()
+                // ->clearJoins()
+                // ->addJoinByFlag(!is_null($originID), 'shop_origins'
+                //     'shop_products.OriginID=shop_origins.ID', array('ID'))
+                ->update();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+
+        // global $app;
+        // $data["shop_products.DateUpdated"] = dbquery::getDate();
+        // $data["SearchText"] = "@LOWER(CONCAT_WS(' ', shop_products.Name, shop_origins.Name, shop_products.Model))";
+
+        // $config = dbquery::createOrGetQuery(array(
+        //     "source" => "shop_products",
+        //     "action" => "update",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
+        // $config['additional'] = array(
+        //     "shop_origins" => array(
+        //         "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+        //         "fields" => array('ID')
+        //     )
+        // );
+        // if (isset($ProductID)) {
+        //     $config['condition']["shop_products.ID"] = dbquery::createCondition($ProductID);
+        // }
+        // if (isset($OriginID)) {
+        //     $config['condition']["shop_products.OriginID"] = dbquery::createCondition($OriginID);
+        // }
+        // // var_dump($config);
+        // return $config;
+        // global $app;
+        // $config = self::dbqUpdateProductSearchText($ProductID, null);
+        // return dbquery::query($config);
     }
 
-    public function updateProductSearchTextByOriginID ($OriginID) {
-        global $app;
-        $config = self::dbqUpdateProductSearchText(null, $OriginID);
-        return dbquery::query($config);
+    public function updateProductSearchTextByOriginID ($originID) {
+        return $this->updateProductSearchTextByID(null, $originID);
+        // global $app;
+        // $config = self::dbqUpdateProductSearchText(null, $OriginID);
+        // return dbquery::query($config);
     }
 
     // ------- QUERY CONFIGURATIONS ---------
@@ -1453,23 +1585,26 @@ class data extends BaseData {
     }
 
     public function fetchProductAttributesArray ($id = null, $type = null) {
-        $q = dbquery::shopProductAttributes()
+        return dbquery::shopProductAttributes()
             ->setFields("ProductID", "Attribute", "Value")
-            ->clearConditions();
+            ->clearConditions()
+            ->addConditionByFlag(!empty($id), 'ProductID', $id)
+            ->addConditionByFlag(!empty($type), 'Attribute', $type)
+            ->selectAsArray(100);
 
-        if (!empty($id)) {
-            $q->addCondition('ProductID', $id);
-            // $config['condition']['ProductID'] = dbquery::createCondition($id);
-        }
-        if (!empty($type)) {
-            $q->addCondition('Attribute', $type);
-            // if (is_array($type)) {
-            //     $config['condition']['Attribute'] = dbquery::createCondition($type, 'IN');
-            // } else {
-            //     $config['condition']['Attribute'] = dbquery::createCondition($type);
-            // }
-        }
-        return $q->selectAsArray(100);
+        // if (!empty($id)) {
+        //     $q->addCondition('ProductID', $id);
+        //     // $config['condition']['ProductID'] = dbquery::createCondition($id);
+        // }
+        // if (!empty($type)) {
+        //     $q->addCondition('Attribute', $type);
+        //     // if (is_array($type)) {
+        //     //     $config['condition']['Attribute'] = dbquery::createCondition($type, 'IN');
+        //     // } else {
+        //     //     $config['condition']['Attribute'] = dbquery::createCondition($type);
+        //     // }
+        // }
+        // return $q->selectAsArray(100);
         // global $app;
         // $config = dbquery::createOrGetQuery(array(
         //     "action" => "select",
@@ -1572,42 +1707,87 @@ class data extends BaseData {
     }
 
     public function shopAddAttributeToProduct ($data) {
-        global $app;
-        $data["DateCreated"] = dbquery::getDate();
-        return dbquery::createOrGetQuery(array(
-            "source" => "shop_productAttributes",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
-
-    public function shopClearProductFeatures ($ProductID) {
-        global $app;
-        return dbquery::createOrGetQuery(array(
-            "source" => "shop_productFeatures",
-            "action" => "delete",
-            "condition" => array(
-                "ProductID" => dbquery::createCondition($ProductID)
-            ),
-            "options" => null
-        ));
-    }
-
-    public function shopClearProductAttributes ($ProductID, $attributeType = false) {
-        global $app;
-        $config = dbquery::createOrGetQuery(array(
-            "source" => "shop_productAttributes",
-            "action" => "delete",
-            "condition" => array(
-                "ProductID" => dbquery::createCondition($ProductID)
-            ),
-            "options" => null
-        ));
-        if (!empty($attributeType)) {
-            $config['condition']['Attribute'] = dbquery::createCondition(strtoupper($attributeType));
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            $itemID = dbQuery::shopProductAttributes()
+                ->setData($data)
+                ->addStandardDateCreatedField()
+                ->insert();
+            $this->db->commit();
+            $r->success()
+                ->setResult($itemID);
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
         }
-        return $config;
+        return $r;
+        // global $app;
+        // $data["DateCreated"] = dbquery::getDate();
+        // return dbquery::createOrGetQuery(array(
+        //     "source" => "shop_productAttributes",
+        //     "action" => "insert",
+        //     "data" => $data,
+        //     "options" => null
+        // ));
+    }
+
+    public function shopClearProductFeatures ($productID) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            dbQuery::shopProductFeatures()
+                ->setCondition('ProductID', $productID)
+                ->delete();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // return dbquery::createOrGetQuery(array(
+        //     "source" => "shop_productFeatures",
+        //     "action" => "delete",
+        //     "condition" => array(
+        //         "ProductID" => dbquery::createCondition($ProductID)
+        //     ),
+        //     "options" => null
+        // ));
+    }
+
+    public function shopClearProductAttributes ($productID, $attributeType = false) {
+        $r = new result();
+        try {
+            $this->db->beginTransaction();
+            dbQuery::shopProductFeatures()
+                ->setCondition('ProductID', $productID)
+                ->addConditionByFlag(!empty($attributeType), 'Attribute', strtoupper($attributeType))
+                ->delete();
+            $this->db->commit();
+            $r->success();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $r->fail()
+                ->addError($e->getMessage());
+        }
+        return $r;
+        // global $app;
+        // $config = dbquery::createOrGetQuery(array(
+        //     "source" => "shop_productAttributes",
+        //     "action" => "delete",
+        //     "condition" => array(
+        //         "ProductID" => dbquery::createCondition($ProductID)
+        //     ),
+        //     "options" => null
+        // ));
+        // if (!empty($attributeType)) {
+        //     $config['condition']['Attribute'] = dbquery::createCondition(strtoupper($attributeType));
+        // }
+        // return $config;
     }
     // <<<< product features & attributes
 
