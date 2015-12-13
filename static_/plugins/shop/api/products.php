@@ -381,7 +381,7 @@ class products extends API {
                 //     } else {
                 //         $data["FieldName"] = $value;
                 //         $data["CustomerID"] = $CustomerID;
-                //         $config = $this->data->shopCreateFeature($data);
+                //         $config = $this->data->createFeature($data);
                 //         $featureID = $app->getDB()->query($config) ?: null;
                 //         if (isset($featureID) && $featureID >= 0) {
                 //             $productFeaturesIDs[] = $featureID;
@@ -455,7 +455,7 @@ class products extends API {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = $this->data->shopAddAttributeToProduct($attrData);
+                            $config = $this->data->addAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -468,7 +468,7 @@ class products extends API {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = $bannerType;
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = $this->data->shopAddAttributeToProduct($attrData);
+                            $config = $this->data->addAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -488,7 +488,7 @@ class products extends API {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = $this->data->shopAddAttributeToProduct($attrData);
+                        $config = $this->data->addAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -762,7 +762,7 @@ class products extends API {
                 // set new features
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
-                    $config = $this->data->shopClearProductFeatures($ProductID);
+                    $config = $this->data->clearProductFeatures($ProductID);
                     $app->getDB()->query($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
@@ -831,7 +831,7 @@ class products extends API {
                         // $attrData = $initAttrData->getArrayCopy();
                         // $attrData['Attribute'] = 'IMAGE';
                         // $attrData['Value'] = $uploadInfo['filename'];
-                        // $config = $this->data->shopAddAttributeToProduct($attrData);
+                        // $config = $this->data->addAttributeToProduct($attrData);
                         // $app->getDB()->query($config);
 
                         // $newFileName = $ProductID . uniqid(time());
@@ -896,26 +896,26 @@ class products extends API {
                     ));
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
-                        $config = $this->data->shopClearProductAttributes($ProductID, 'IMAGE');
+                        $config = $this->data->clearProductAttributes($ProductID, 'IMAGE');
                         $app->getDB()->query($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
-                            $config = $this->data->shopAddAttributeToProduct($attrData);
+                            $config = $this->data->addAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
                     // -- BANNER_XXXX
                     $bannerTypes = $this->data->getProductBannerTypes();
                     foreach ($bannerTypes as $bannerType) {
-                        $config = $this->data->shopClearProductAttributes($ProductID, $bannerType);
+                        $config = $this->data->clearProductAttributes($ProductID, $bannerType);
                         $app->getDB()->query($config);
                         if (!empty($attributes["BANNER"][$bannerType])) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = $bannerType;
                             $attrData['Value'] = $attributes["BANNER"][$bannerType];
-                            $config = $this->data->shopAddAttributeToProduct($attrData);
+                            $config = $this->data->addAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -933,12 +933,12 @@ class products extends API {
                             continue;
                         }
                         // clear existed tags before adding new ones
-                        $config = $this->data->shopClearProductAttributes($ProductID, $key);
+                        $config = $this->data->clearProductAttributes($ProductID, $key);
                         $app->getDB()->query($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = $this->data->shopAddAttributeToProduct($attrData);
+                        $config = $this->data->addAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -1015,7 +1015,7 @@ class products extends API {
         $categoryName = null;
         if (isset($data['CategoryID'])) {
             if (is_numeric($data['CategoryID'])) {
-                $category = API::getAPI('shop:categories')->getCategoryByID($data['CategoryID']);
+                $category = $this->data->fetchCategoryByID($data['CategoryID']);
             } else {
                 $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryID']);
             }
@@ -1451,38 +1451,49 @@ class products extends API {
     }
 
     public function post ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
-                !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT'))) {
-            $resp->setError('AccessDenied');
-            return;
+        if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('shop_CREATE_PRODUCT')) {
+            return $resp->setAccessError();
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+        //     (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+        //         !API::getAPI('system:auth')->ifYouCan('shop_CREATE_PRODUCT'))) {
+        //     return return $resp->setAccessError();
+        // }
         $resp->setResponse($this->createProduct($req->data));
     }
 
     public function put ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
-                !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
-            $resp->setError('AccessDenied');
+        if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('shop_EDIT_PRODUCT')) {
+            return $resp->setAccessError();
+        }
+        // if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+        //     (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+        //         !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
+        //     return return $resp->setAccessError();
+        // }
+
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->updateProduct($req->id, $req->data));
             return;
         }
-        if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
-        } else {
-            $ProductID = intval($req->id);
-            $resp->setResponse($this->updateProduct($ProductID, $req->data));
-        }
+        $resp->setWrongItemIdError();
     }
 
     public function delete ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
-            (!API::getAPI('system:auth')->ifYouCan('Admin') &&
-                !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
-            $resp->setError('AccessDenied');
+        if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('shop_EDIT_PRODUCT')) {
+            return $resp->setAccessError();
+        }
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->archiveProduct($req->id, $req->data));
             return;
         }
-        $resp->setResponse($this->archiveProduct($req->data));
+        $resp->setWrongItemIdError();
+        // $resp->setResponse($this->archiveProduct($req->data));
+        // if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+        //     (!API::getAPI('system:auth')->ifYouCan('Admin') &&
+        //         !API::getAPI('system:auth')->ifYouCan('shop_EDIT_PRODUCT'))) {
+        //     return $resp->setWrongItemIdError();
+        // }
     }
 
 }

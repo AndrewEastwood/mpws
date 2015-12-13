@@ -18,7 +18,7 @@ class plugins extends API {
 
     public function get (&$resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $resp->setResponse($this->getInstalledPlugins());

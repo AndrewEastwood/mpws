@@ -246,7 +246,8 @@ class data extends BaseData {
         $r = new Result();
         try {
             $this->db->beginTransaction();
-            $itemID = dbQuery::systemTask_Stop()
+            $itemID = dbQuery::systemTask()
+                ->addStandardDateFields()
                 ->insert($data);
             $this->db->commit();
             $r->success()
@@ -289,6 +290,7 @@ class data extends BaseData {
             $this->db->beginTransaction();
             dbQuery::systemTask_Schedule()
                 ->setCondition('Hash', $hash)
+                ->addStandardDateUpdatedField()
                 ->update();
             $this->db->commit();
             $r->success();
@@ -325,6 +327,7 @@ class data extends BaseData {
             $this->db->beginTransaction();
             dbQuery::systemTask_Start()
                 ->setCondition('Hash', $hash)
+                ->addStandardDateUpdatedField()
                 ->update();
             $this->db->commit();
             $r->success();
@@ -408,6 +411,7 @@ class data extends BaseData {
             $this->db->beginTransaction();
             dbQuery::systemTask_Stop()
                 ->setCondition('ID', $id)
+                ->addStandardDateUpdatedField()
                 ->update();
             $this->db->commit();
             $r->success();
@@ -444,6 +448,7 @@ class data extends BaseData {
             $this->db->beginTransaction();
             dbQuery::systemTask_Complete()
                 ->setCondition('ID', $id)
+                ->addStandardDateUpdatedField()
                 ->addDataItem('Result', $result)
                 ->update();
             $this->db->commit();
@@ -483,6 +488,7 @@ class data extends BaseData {
             return dbQuery::systemTask()
                 ->setAllFields()
                 ->setCondition('Hash', $hash)
+                ->addStandardDateUpdatedField()
                 ->selectSingleItem();
         //     $this->db->commit();
         //     // $result = $this->getSuccessResultObject();
@@ -517,6 +523,7 @@ class data extends BaseData {
             $this->db->beginTransaction();
             dbQuery::systemTask_Delete()
                 ->setCondition('Hash', $hash)
+                ->addStandardDateUpdatedField()
                 ->delete();
             $this->db->commit();
             $r->success();

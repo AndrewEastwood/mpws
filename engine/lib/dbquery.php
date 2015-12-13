@@ -92,6 +92,12 @@ class dbquery {
         return self::get($name);
     }
 
+    public static function setCommonPreFilter ($filter, $queryNameLookup) {
+        foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
+            $queryInstance->setFilter('commPre', $filter);
+        }
+    }
+
     public static function setQueryFilter ($filter, $queryNameLookup) {
         foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
             if (preg_match('/^' . $queryNameLookup . '$/', $queryName)) {
@@ -162,6 +168,7 @@ class dbquery {
         return $this->source;
     }
     public function setAction ($action) {
+        if ($this->actionIsLocked) { return $this; }
         $this->action = $action;
         return $this;
     }
@@ -318,6 +325,10 @@ class dbquery {
     public function setFilter ($type, &$filter) {
         $this->filters[$type] = $filter;
         return $this;
+    }
+
+    public function getLimit () {
+        return $this->limit;
     }
 
     public function addParams (array $params = array()) {
@@ -505,6 +516,21 @@ class dbquery {
         $this->setAction('select');
         return $this->query();
     }
+    public function isInsert () {
+        return $this->action == 'insert';
+    }
+    public function isUpdate () {
+        return $this->action == 'update';
+    }
+    public function isDelete () {
+        return $this->action == 'delete';
+    }
+    public function isCall () {
+        return $this->action == 'call';
+    }
+    public function isSelect () {
+        return $this->action == 'select';
+    }
 
     // select wrappers
     public function selectSingleItem () {
@@ -538,6 +564,7 @@ class dbquery {
         }
         return $data;
     }
+
     public function selectAsDataList ($page = null, $limit = null) {
         if (!is_null($limit)) {
             $this->setLimit($limit);
@@ -575,6 +602,34 @@ class dbquery {
             $count = $dbData[0]['ItemsCount'];
         }
         return $count;
+    }
+
+    public function callProcSingleItem () {
+        $this->lockActionTillQuery('call');
+        return $this->selectSingleItem();
+
+    }
+    public function callProcAsArray ($limit = null) {
+        $this->lockActionTillQuery('call');
+        return $this->selectAsArray($limit);
+
+    }
+    public function callProcAsDict ($dictKey, $dictValue = null, $limit = null) {
+        $this->lockActionTillQuery('call');
+        return $this->selectAsDict($dictKey, $dictValue, $limit);
+
+    }
+    public function callProcAsDataList () {
+        $this->lockActionTillQuery('call');
+        return $this->selectAsDataList($page, $limit);
+    }
+    // public function callProcCount () {
+
+    // }
+
+    private function lockActionTillQuery ($action) {
+        $thus->setAction($action);
+        $this->actionIsLocked = true;
     }
 
     // results
@@ -739,6 +794,12 @@ class dbquery {
 
         $dbData = null;
 
+
+        if (!empty($this->filters['commPre'])) {
+            $filter = $this->filters['commPre'];
+            $filter($this);
+        }
+
         switch ($this->action) {
             case 'call':
                 if (!empty($this->filters['call'])) {
@@ -800,6 +861,8 @@ class dbquery {
         // var_dump($dbData);
 
         $this->setLastResult($dbData);
+
+        $this->actionIsLocked = false;
 
         return $dbData;
     }

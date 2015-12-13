@@ -730,7 +730,7 @@ class feeds extends API {
         $dataProductsList = API::getAPI('shop:products')->getProducts_List($options, false, false);
         $dataCategoriesList = API::getAPI('shop:categories')->getCategories_List($options, false, false);
         
-        $activeDeliveryServices = API::getAPI('shop:delivery')->getActiveDeliveryList();
+        $activeDeliveryServices = API::getAPI('shop:delivery')->getActiveDeliveryArray();
         
         $formSettings = API::getAPI('shop:settings')->getSettingsFormOrder();
         // $websiteSettings = API::getAPI('shop:settings')->getSettingsWebsite();
@@ -939,7 +939,7 @@ class feeds extends API {
     public function get ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_FEEDS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         // $res = array('gdfgfdgdggd');
@@ -951,7 +951,7 @@ class feeds extends API {
                 $resp->setResponse($this->generateProductFeed($req->get['generate']));
                 return;
             } else {
-                $resp->setError('AccessDenied');
+                return $resp->setAccessError();
             }
         } else {
             $resp->setResponse($this->getFeeds());
@@ -961,7 +961,7 @@ class feeds extends API {
     public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         if (isset($req->data['name'])) {
@@ -982,7 +982,7 @@ class feeds extends API {
     public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $activeTasks = API::getAPI('system:tasks')->getActiveTasksByGroupName('shop');
@@ -1027,7 +1027,7 @@ class feeds extends API {
     public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_IMPORT_XLS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $success = false;

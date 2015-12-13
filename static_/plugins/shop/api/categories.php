@@ -24,7 +24,7 @@ class categories extends API {
     // private function __adjustCategory (&$category) {
     // }
 
-    // public function getCategoryByID ($categoryID) {
+    // public function fetchCategoryByID ($categoryID) {
     //     global $app;
     //     if (empty($categoryID) || !is_numeric($categoryID))
     //         return null;
@@ -63,7 +63,7 @@ class categories extends API {
     //         "parse" => function ($items) use($self) {
     //             $_items = array();
     //             foreach ($items as $val)
-    //                 $_items[] = $self->getCategoryByID($val['ID']);
+    //                 $_items[] = $self->fetchCategoryByID($val['ID']);
     //             return $_items;
     //         }
     //     );
@@ -86,12 +86,12 @@ class categories extends API {
             'file1' => array('string', 'skipIfUnset')
         ));
 
-        if ($validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
+            // try {
 
                 $validatedValues = $validatedDataObj->validData;
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
@@ -112,35 +112,44 @@ class categories extends API {
                 }
                 unset($validatedValues['file1']);
 
-                $configCreateCategory = $this->data->createCategory($validatedValues);
-                $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
+                $r = $this->data->createCategory($validatedValues);
+                // $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
+                if ($r->isEmptyResult()) {
+                    $r->addError("CategoryCreateError");
+                    // throw new Exception('CustomerCreateError');
+                }
+                // if ($r->isEmptyResult()) {
+                //     throw new Exception('CategoryCreateError');
+                // }
 
-                if (empty($CategoryID))
-                    throw new Exception('CategoryCreateError');
+                // $app->getDB()->commit();
 
-                $app->getDB()->commit();
+                // $success = true;
+            // } catch (Exception $e) {
+            //     // $app->getDB()->rollBack();
+            //     // $errors[] = $e->getMessage();
+            // }
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
+        }
 
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj->errorMessages;
+        if ($r->isSuccess() && $r->hasResult()) {
+            $category = $this->data->fetchCategoryByID($r->getResult());
+            $r->setResult($category);
+        // }
+        // if ($success && !empty($CategoryID))
+        //     $result = $this->fetchCategoryByID($CategoryID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
 
-        if ($success && !empty($CategoryID))
-            $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
+        return $r->toArray();
     }
 
     public function updateCategory ($CategoryID, $reqData) {
         global $app;
-        $result = array();
-        $errors = array();
-        $success = false;
+        // $result = array();
+        // $errors = array();
+        // $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
@@ -150,13 +159,13 @@ class categories extends API {
             'file1' => array('string', 'skipIfEmpty')
         ));
 
-        if ($validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
+            // try {
 
                 $validatedValues = $validatedDataObj->validData;
 
                 if (isset($reqData['file1'])) {
-                    $category = $this->getCategoryByID($CategoryID);
+                    $category = $this->data->fetchCategoryByID($CategoryID);
 
                     $currentFileName = empty($category['Image']) ? "" : $category['Image']['name'];
                     $newFileName = null;
@@ -193,26 +202,32 @@ class categories extends API {
                     unset($validatedValues['file1']);
                 }
 
-                $app->getDB()->beginTransaction();
+                // $app->getDB()->beginTransaction();
 
-                $configCreateCategory = $this->data->updateCategory($CategoryID, $validatedValues);
-                $app->getDB()->query($configCreateCategory);
+                $this->data->updateCategory($CategoryID, $validatedValues);
+                // $configCreateCategory = $this->data->updateCategory($CategoryID, $validatedValues);
+                // $app->getDB()->query($configCreateCategory);
 
-                $app->getDB()->commit();
+                // $app->getDB()->commit();
 
-                $success = true;
-            } catch (Exception $e) {
-                $app->getDB()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj->errorMessages;
+                // $success = true;
+            // } catch (Exception $e) {
+            //     $app->getDB()->rollBack();
+            //     $errors[] = $e->getMessage();
+            // }
+        } else {
+            $r->addErrors($validatedDataObj->errorMessages);
+        }
 
-        $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        $category = $this->data->fetchCategoryByID($CategoryID);
+        $r->setResult($category);
 
-        return $result;
+        return $r->toArray();
+        // $result = $this->fetchCategoryByID($CategoryID);
+        // $result['errors'] = $errors;
+        // $result['success'] = $success;
+
+        // return $result;
     }
 
     public function disableCategory ($CategoryID) {
@@ -221,13 +236,13 @@ class categories extends API {
         $r = null;
 
         if ($validatedDataObj->errorsCount == 0) {
-            $r = $this->data->expirePromo($CategoryID);
+            $r = $this->data->deleteCategory($CategoryID);
         } else {
             $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
-            $item = $this->data->fetchUserByID($CategoryID);
+            $item = $this->data->fetchCategoryByID($CategoryID);
             $r->setResult($item);
         }
 
@@ -250,7 +265,7 @@ class categories extends API {
         //     $errors[] = 'CategoryDeleteError';
         // }
 
-        // $result = $this->getCategoryByID($CategoryID);
+        // $result = $this->fetchCategoryByID($CategoryID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
         // return $result;
@@ -261,16 +276,16 @@ class categories extends API {
     // CATEGORY BREADCRUMB
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getCategoryLocationByCategoryID ($categoryID) {
-        global $app;
-        // var_dump($categoryID);
-        $configLocation = $this->data->shopCategoryLocationGet($categoryID);
-        $location = $app->getDB()->query($configLocation);
-        foreach ($location as &$categoryItem) {
-            $categoryItem['ID'] = intval($categoryItem['ID']);
-        }
-        return $location;
-    }
+    // public function getCategoryLocationByCategoryID ($categoryID) {
+    //     global $app;
+    //     // var_dump($categoryID);
+    //     $configLocation = $this->data->fetchCategoryLocation($categoryID);
+    //     $location = $app->getDB()->query($configLocation);
+    //     foreach ($location as &$categoryItem) {
+    //         $categoryItem['ID'] = intval($categoryItem['ID']);
+    //     }
+    //     return $location;
+    // }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -302,37 +317,61 @@ class categories extends API {
             return $branch;
         }
 
-        $config = $this->data->shopCatalogTree($selectedCategoryID);
-        $categories = $app->getDB()->query($config);
-        $map = array();
-        if (!empty($categories))
-            foreach ($categories as $key => $value)
-                $map[$value['ID']] = $this->__adjustCategory($value);
+        $categories = $this->data->fetchCatalogTreeDict($selectedCategoryID);
+        // $categories = $app->getDB()->query($config);
+        // $map = array();
+        // if (!empty($categories))
+        //     foreach ($categories as $key => $value)
+        //         $map[$value['ID']] = $this->__adjustCategory($value);
 
-        $tree = getTree($map);
+        // $tree = getTree($map);
+        $tree = getTree($categories);
 
         return $tree;
     }
 
     public function get ($req, $resp) {
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->data->fetchCategoryByID($req->id));
+            return;
+        }
+        // or by ExternalKey
+        if (Request::hasRequestedExternalKey()) {
+            $resp->setResponse($this->data->fetchCategoryByExternalKey($req->externalKey));
+            return;
+        }
+
+        // additional params
         if (isset($req->get['tree'])) {
             $resp->setResponse($this->getCatalogTree());
-        } else if (empty($req->id)) {
-            $resp->setResponse($this->getCategories_List($req->get));
-        } else {
-            if (is_numeric($req->id)) {
-                $CategoryID = intval($req->id);
-                $resp->setResponse($this->getCategoryByID($CategoryID));
-            } else {
-                $resp->setResponse($this->getCategoryByExternalKey($req->id));
-            }
+            return;
+        } 
+
+        // for the case when we have to fecth list with customers
+        if (Request::noRequestedItem()) {
+            $resp->setResponse($this->data->fetchCategoryDataList($req->get));
+            return;
         }
+
+
+        //  if (empty($req->id)) {
+        //     $resp->setResponse($this->data->fetchCategoryDataList($req->get));
+        // } else {
+        //     if (is_numeric($req->id)) {
+        //         $CategoryID = intval($req->id);
+        //         $resp->setResponse($this->fetchCategoryByID($CategoryID));
+        //     } else {
+        //         $resp->setResponse($this->getCategoryByExternalKey($req->id));
+        //     }
+        // }
     }
 
     public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $resp->setResponse($this->createCategory($req->data));
@@ -342,31 +381,45 @@ class categories extends API {
     public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
-        if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
-        } else {
-            $CategoryID = intval($req->id);
-            $resp->setResponse($this->updateCategory($CategoryID, $req->data));
-            // $this->_getOrSetCachedState('changed:category', true);
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->updateCategory($req->id, $req->data));
+            return;
         }
+        // if (empty($req->id)) {
+        //     $resp->setWrongItemIdError();
+        // } else {
+        //     $CategoryID = intval($req->id);
+        //     $resp->setResponse($this->updateCategory($CategoryID, $req->data));
+        //     // $this->_getOrSetCachedState('changed:category', true);
+        // }
+        $resp->setWrongItemIdError();
     }
 
     public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
-        if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
-        } else {
-            $CategoryID = intval($req->id);
-            $resp->setResponse($this->disableCategory($CategoryID));
-            // $this->_getOrSetCachedState('changed:category', true);
+        // for specific customer item
+        // by id
+        if (Request::hasRequestedID()) {
+            $resp->setResponse($this->disableCategory($req->id));
+            return;
         }
+        // if (empty($req->id)) {
+        //     $resp->setWrongItemIdError();
+        // } else {
+        //     $CategoryID = intval($req->id);
+        //     $resp->setResponse($this->disableCategory($CategoryID));
+        //     // $this->_getOrSetCachedState('changed:category', true);
+        // }
+        $resp->setWrongItemIdError();
     }
 
 }

@@ -104,7 +104,7 @@ class exchangerates extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
 
         if ($success && !empty($rateID))
             $result = $this->getExchangeRateByID($rateID);
@@ -149,7 +149,7 @@ class exchangerates extends API {
                 $errors[] = $e->getMessage();
             }
         else
-            $errors = $validatedDataObj->errorMessages;
+            $r->addErrors($validatedDataObj->errorMessages);
 
         $result = $this->getExchangeRateByID($id);
         $result['errors'] = $errors;
@@ -374,7 +374,7 @@ class exchangerates extends API {
 
     public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $resp->setResponse($this->createOrUpdateExchangeRate($req->data));
@@ -383,11 +383,11 @@ class exchangerates extends API {
 
     public function patch ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
+            $resp->setWrongItemIdError();
         } else {
             $agencyID = intval($req->id);
             $resp->setResponse($this->updateExchangeRate($agencyID, $req->data));
@@ -397,11 +397,11 @@ class exchangerates extends API {
 
     public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         if (empty($req->id)) {
-            $resp->setError('MissedParameter_id');
+            $resp->setWrongItemIdError();
         } else {
             $agencyID = intval($req->id);
             $resp->setResponse($this->deleteExchangeRate($agencyID));

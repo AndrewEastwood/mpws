@@ -207,9 +207,7 @@ class users extends API {
                 $app->getDB()->rollBack();
                 $r->addError($e->getMessage());
             }
-        else {
-            // $errors = $validatedDataObj->errorMessages;
-            $r->addErrors($validatedDataObj->errorMessages);
+        else {            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -306,14 +304,11 @@ class users extends API {
                 // $errors['Others'] = Utils::formatExceptionMsg($e->getMessage());
             }
         else {
-            // $errors = $validatedDataObj->errorMessages;
             $r->addErrors($validatedDataObj->errorMessages);
         }
 
-        if ($r->hasResult()) {
-            $user = $this->data->fetchUserByID($userID);
-            $r->setResult($user);
-        }
+        $item = $this->data->fetchUserByID($userID);
+        $r->setResult($item);
         // $result = $this->getUserByID($userID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
@@ -321,12 +316,8 @@ class users extends API {
     }
 
     public function activateUserByValidationStyring ($validationString) {
-        
         $r = $this->data->activateUser($validationString);
-        if ($r->isSuccess()) {
-            $r->setResult($this->data->fetchUserByValidationString($validationString));
-        }
-
+        $r->setResult($this->data->fetchUserByValidationString($validationString));
         return $r->toArray();
         
         // global $app;
@@ -368,29 +359,28 @@ class users extends API {
             // disable all related addresses
             if ($user['Addresses']) {
                 foreach ($user['Addresses'] as $addr) {
-                    $this->data->disableAddress($addr['ID']);
+                    $r = $this->data->disableAddress($addr['ID']);
+                    if ($r->isFailed()) {
+                        throw new Exception("CannotDisableAddress");
+                    }
                 }
             }
-            // $config = data::disableUser($userID);
-            // $app->getDB()->query($config, false);
             $r = $this->data->disableUser($userID);
+            if ($r->isFailed()) {
+                throw new Exception("CannotDisableUser");
+            }
 
             $app->getDB()->unlockTransaction()
                 ->commit();
 
-            // $success = true;
         } catch (Exception $e) {
             $app->getDB()->unlockTransaction()
                 ->rollBack();
+            $r->fail();
             $r->addError($e->getMessage());
-            // $errors[] = 'UserDisableError';
         }
-
         $user = $this->data->fetchUserByID($userID);
         $r->setResult($user);
-        // $result = $this->getUserByID($userID);
-        // $result['errors'] = $errors;
-        // $result['success'] = $success;
         return $r->toArray();
     }
 
@@ -552,7 +542,7 @@ class users extends API {
             $resp->setResponse($this->data->fetchUserDataList($req->get));
         }
 
-        $resp->setError('AccessDenied');
+        return $resp->setAccessError();
 
 
         // // var_dump($req);
@@ -572,7 +562,7 @@ class users extends API {
         //         $resp->setResponse($this->activateUserByValidationStyring($ValidationString));
         //         return;
         //     } else {
-        //         $resp->setError('AccessDenied');
+        //         return $resp->setAccessError();
         //         return;
         //     }
         // }
@@ -580,17 +570,20 @@ class users extends API {
 
     public function post ($req, $resp) {
         // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-        //     $resp->setError('AccessDenied');
+        //     return $resp->setAccessError();
         //     return;
         // }
         $resp->setResponse($this->createUser($req->data));
     }
 
     public function put ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp->setError('AccessDenied');
-            return;
+        if (!API::getAPI('system:auth')->ifYouCanEdit()) {
+            return $resp->setAccessError();
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+        //     return $resp->setAccessError();
+        //     return;
+        // }
 
         // for specific user item
         // by id
@@ -600,28 +593,31 @@ class users extends API {
         }
 
         // for the case when we have to fecth list with user
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $UserID = intval($req->id);
         //         $resp->setResponse($this->updateUser($UserID, $req->data));
         //         return;
         //     } else {
-        //         $resp->setError('MissedParameter_id');
+        //         $resp->setWrongItemIdError();
         //         return;
         //     }
         // }
-        $resp->setError('UnknownAction');
+        $resp->setWrongItemIdError();
     }
 
     public function patch ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp->setError('AccessDenied');
-            return;
+        if (!API::getAPI('system:auth')->ifYouCanEdit()) {
+            return $resp->setAccessError();
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+        //     return $resp->setAccessError();
+        //     return;
+        // }
 
         // for specific user item
         // by id
@@ -631,10 +627,10 @@ class users extends API {
         }
 
         // for the case when we have to fecth list with user
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
 
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
@@ -642,18 +638,21 @@ class users extends API {
         //         $resp->setResponse($this->updateUser($UserID, $req->data, true));
         //         return;
         //     } else {
-        //         $resp->setError('MissedParameter_id');
+        //         $resp->setWrongItemIdError();
         //         return;
         //     }
         // }
-        $resp->setError('UnknownAction');
+        $resp->setWrongItemIdError();
     }
 
     public function delete ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
-            $resp->setError('AccessDenied');
-            return;
+        if (!API::getAPI('system:auth')->ifYouCanEdit()) {
+            return $resp->setAccessError();
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('AddUsers')) {
+        //     return $resp->setAccessError();
+        //     return;
+        // }
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
@@ -661,19 +660,19 @@ class users extends API {
             return;
         }
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
 
-        // $resp->setError('WrongParameter_id');
+        // $resp->setWrongItemIdError();
 
 
         // if (!empty($req->id)) {
         //     $resp->setResponse($this->disableUserByID($req->id));
         //     return;
         // }
-        $resp->setError('UnknownAction');
+        $resp->setWrongItemIdError();
     }
 }
 

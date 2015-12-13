@@ -113,6 +113,50 @@ class auth extends API {
         return $youCan;
     }
 
+    public function ifYouCanDoAnythingYouWant () {
+        return $this->ifYouCan('Maintain');
+    }
+    public function ifYouCanCreate () {
+        if (!$this->ifYouCan('Maintain') || !$this->ifYouCanAll('Admin', 'Create')) {
+            return false;
+        }
+        return true;
+    }
+    public function ifYouCanEdit () {
+        if (!$this->ifYouCan('Maintain') || !$this->ifYouCanAll('Admin', 'Edit')) {
+            return false;
+        }
+        return true;
+    }
+    public function ifYouCanCreateWithAnyOther (/* action or actions */) {
+        $withAny = call_user_func_array(array($this, 'ifYouCanAny'), func_get_args());
+        if (!$this->ifYouCanCreate() && !$withAny) {
+            return false;
+        }
+        return true;
+    }
+    public function ifYouCanCreateWithAllOthers (/* action or actions */) {
+        $withAll = call_user_func_array(array($this, 'ifYouCanAll'), func_get_args());
+        if (!$this->ifYouCanCreate() && !$withAll) {
+            return false;
+        }
+        return true;
+    }
+    public function ifYouCanEditWithAnyOther (/* action or actions */) {
+        $withAny = call_user_func_array(array($this, 'ifYouCanAny'), func_get_args());
+        if (!$this->ifYouCanEdit() && !$withAny) {
+            return false;
+        }
+        return true;
+    }
+    public function ifYouCanEditWithAllOthers (/* action or actions */) {
+        $withAll = call_user_func_array(array($this, 'ifYouCanAll'), func_get_args());
+        if (!$this->ifYouCanEdit() && !$withAll) {
+            return false;
+        }
+        return true;
+    }
+
     public function updateSessionAuth () {
         global $app;
         $user = $this->getAuthenticatedUser();
@@ -188,7 +232,7 @@ class auth extends API {
                             return;
                         }
                     } else {
-                        $resp->setError('AccessDenied');
+                        return $resp->setAccessError();
                         $this->clearAuthID();
                         return;
                     }

@@ -40,6 +40,12 @@ class response {
         if (!empty($headerMsg))
             header($headerMsg);
     }
+    public function setAccessError () {
+        $this->_RESPONSE['error'] = 'AccessDenied';
+    }
+    public function setWrongItemIdError () {
+        $this->_RESPONSE['error'] = 'WrongParameter_id';
+    }
 
 }
 

@@ -597,7 +597,7 @@ class settings extends API {
     public function post ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
@@ -611,7 +611,7 @@ class settings extends API {
     public function put ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
@@ -622,7 +622,7 @@ class settings extends API {
                 $settingID = intval($req->id);
                 $resp->setResponse($this->createOrUpdateSetting($typeObj->type, $req->data, $settingID));
             } else {
-                $resp->setError('WrongSettingsID');
+                $resp->setWrongItemIdError();
             }
         }
     }
@@ -630,11 +630,11 @@ class settings extends API {
     public function delete ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_MENU_SETTINGS'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         // if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-        //     $resp->setError('AccessDenied');
+        //     return $resp->setAccessError();
         //     return;
         // }
         $typeObj = $this->getVerifiedSettingsTypeObj($req);
@@ -645,11 +645,11 @@ class settings extends API {
                 $settingID = intval($req->id);
                 $resp->setResponse($this->removeSetting($typeObj->type, $settingID));
             } else {
-                $resp->setError('WrongSettingsID');
+                $resp->setWrongItemIdError();
             }
         }
         // if (empty($req->id)) {
-        //     $resp->setError('MissedParameter_id');
+        //     $resp->setWrongItemIdError();
         // } elseif (empty($req->get['type'])) {
         //     $resp->setError('MissedParameter_type');
         // } else {

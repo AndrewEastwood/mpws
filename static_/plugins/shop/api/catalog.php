@@ -45,7 +45,8 @@ class catalog extends API {
         $data = array();
         $filterOptions = array(
             /* common options */
-            "filter_viewSortBy" => 'DateUpdated:desc',
+            "id" => $categoryID,
+            "filter_viewSortBy" => '-DateUpdated',
             "filter_viewItemsOnPage" => 16,
             "filter_viewPageNum" => 1,
             "filter_commonPriceMax" => null,
@@ -89,8 +90,8 @@ class catalog extends API {
         }
         // var_dump($filterOptionsApplied);
 
-        $filterOptionsApplied["id"] = $categoryID;
-        $filterOptionsAvailable["id"] = $categoryID;
+        // $filterOptionsApplied["id"] = $categoryID;
+        // $filterOptionsAvailable["id"] = $categoryID;
 
         // var_dump($filterOptionsApplied['filter_commonFeatures']);
 
@@ -105,9 +106,7 @@ class catalog extends API {
 
         $categoriesIDs = array();
         $categoriesNodes = array();
-
         // var_dump($cetegories);
-
         foreach ($cetegories as $categoryItem) {
             $categoriesIDs[] = intval($categoryItem['ID']);
             $categoriesNodes[$categoryItem['ID']] = array(
@@ -122,276 +121,66 @@ class catalog extends API {
         }
 
         // var_dump($categoriesNodes);
-
         // var_dump($activeTree);
         //filter: get category price edges
-        $dataConfigCategoryPriceEdges = $this->data->getShopCatalogPriceEdges(implode(',', $categoriesIDs));
-        $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
-        $filterOptionsAvailable['filter_commonPriceMax'] = intval(floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10);
-        $filterOptionsAvailable['filter_commonPriceMin'] = intval(floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10);
+        $dataCategoryPriceEdges = $this->data->fetchCatalogPriceEdges(implode(',', $categoriesIDs));
+        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] + 10);
+        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] - 10);
         if ($filterOptionsAvailable['filter_commonPriceMin'] < 0) {
             $filterOptionsAvailable['filter_commonPriceMin'] = 0;
         }
         // var_dump($dataConfigCategoryPriceEdges);
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = $this->data->shopCatalogBrands(implode(',', $categoriesIDs));
-        $dataCategoryAllBrands = $app->getDB()->query($dataConfigCategoryAllBrands);
-        if ($dataCategoryAllBrands)
-            foreach ($dataCategoryAllBrands as $key => $brandItem) {
-                $dataCategoryAllBrands[$key]['ID'] = intval($brandItem['ID']);
-            }
+        $dataCategoryAllBrands = $this->data->fetchShopCatalogBrandsArray(implode(',', $categoriesIDs));
+        // if ($dataCategoryAllBrands)
+        //     foreach ($dataCategoryAllBrands as $key => $brandItem) {
+        //         $dataCategoryAllBrands[$key]['ID'] = $brandItem['ID'];
+        //     }
 
         // set categories and brands
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
         $filterOptionsAvailable['filter_categorySubCategories'] = $categoriesNodes ?: array();
-        // var_dump($dataCategoryPriceEdges);
-        // var_dump($dataCategoryAllBrands);
-
-        // var_dump($app->getDB()->get_last_query());
-        // return;
 
         // get catalog features
-        $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
-        $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
-        $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
-        foreach ($catalogProductIDs as $productItemID) {
-            $featureItems = API::getAPI('shop:products')->fetchProductFeatures($productItemID);
-            foreach ($featureItems as $featureGroup => $featureList) {
-                if (!isset($features[$featureGroup])) {
-                    $filterOptionsAvailable['filter_commonFeatures'][$featureGroup] = array();
-                }
-                foreach ($featureList as $key => $featureName) {
-                    $filterOptionsAvailable['filter_commonFeatures'][$featureGroup][$key] = $featureName;
-                }
-            }
-        }
+        // $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
+        // $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
+        // $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
+        // foreach ($catalogProductIDs as $productItemID) {
+        //     $featureItems = API::getAPI('shop:products')->fetchProductFeaturesArray($productItemID);
+        //     foreach ($featureItems as $featureGroup => $featureList) {
+        //         if (!isset($features[$featureGroup])) {
+        //             $filterOptionsAvailable['filter_commonFeatures'][$featureGroup] = array();
+        //         }
+        //         foreach ($featureList as $key => $featureName) {
+        //             $filterOptionsAvailable['filter_commonFeatures'][$featureGroup][$key] = $featureName;
+        //         }
+        //     }
+        // }
+        $filterOptionsAvailable['filter_commonFeatures'] = $this->data->fetchCatalogFeatures($categoryID);
 
         // set data source
         // ---
-        $dataConfigProducts = $this->data->getShopCatalogProductList($categoriesIDs);
+        $productsDataList = $this->data->fetchCatalogProductDataListByCatalogFilter($categoriesIDs,
+            $filterOptionsApplied, $filterOptionsAvailable);
+        // $dataConfigProducts = $this->data->getShopCatalogProductList($categoriesIDs);
 
-        // filter: display intems count
-        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
-            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
-        else
-            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
 
-        if (!empty($filterOptionsApplied['filter_viewPageNum']))
-            $dataConfigProducts['offset'] = ($filterOptionsApplied['filter_viewPageNum'] - 1) * $dataConfigProducts['limit'];
-        else
-            $filterOptionsApplied['filter_viewPageNum'] = $filterOptionsAvailable['filter_viewPageNum'];
-
-        // filter: items sorting
-        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
-        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
-            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
-        else
-            $filterOptionsApplied['filter_viewSortBy'] = null;
-
-        // filter: price 
-        if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMax'] <= $filterOptionsAvailable['filter_commonPriceMax'])
-            $dataConfigProducts['condition']['Price'][] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
-        else
-            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
-
-        if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMin'] >= $filterOptionsAvailable['filter_commonPriceMin'])
-            $dataConfigProducts['condition']['Price'][] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
-        else
-            $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
-
-        // var_dump($filterOptionsApplied);
-        if (count($filterOptionsApplied['filter_commonFeatures']))
-            $dataConfigProducts['condition']["FeatureID"] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
-
-        if (count($filterOptionsApplied['filter_commonStatus']))
-            $dataConfigProducts['condition']["shop_products.Status"] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonStatus'], 'in');
-        else
-            $dataConfigProducts['condition']["shop_products.Status"] = $app->getDB()->createCondition('REMOVED', '!=');
-
-        // filter: brands
-        if (count($filterOptionsApplied['filter_categoryBrands']))
-            $dataConfigProducts['condition']['OriginID'] = $app->getDB()->createCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
-
-        // var_dump($dataConfigProducts);
-        // get products
-        $dataProducts = $app->getDB()->query($dataConfigProducts);
 
         // get products count for current filter
-        $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
-        $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
-        $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
-
-        // var_dump($dataProducts);
-        // var_dump($dataProductsMatches);
-        // var_dump($currentProductsIDs);
-
-        // var_dump($dataProductsTotalCount);
-        // get category info according to product filter
-        // if (isset($dataConfigProducts['condition']['Price']))
-        //     $dataConfigCategoryInfo['condition']['Price'] = $dataConfigProducts['condition']['Price'];
-        // // $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        // $dataCategoryInfo = $app->getDB()->query($dataConfigCategoryInfo);
+        $currentProductCount = $productsDataList['total_entries'];
+        // $dataConfigAllMatchedProducts = $this->data->getShopCatalogProductList($categoriesIDs);
+        // $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
+        // $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
+        // $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
 
         // TODO smth with this
-        $products = array();
-        if (!empty($dataProducts)) {
-            foreach ($dataProducts as $val) {
-                $products[] = $this->data->fetchSingleProductByID($val['ID']);
-            }
-        }
-        // var_dump($currentProductCount);
-
-        // $productsInfo = array();
-        // if (!empty($dataCategoryInfo))
-        //     foreach ($dataCategoryInfo as $val)
-        //         $productsInfo[] = $this->data->fetchSingleProductByID($val['ID']);
-
-        // adjust brands, categories and features
-        $brands = array();
-        $categories = array();
-        $statuses = array();
-        $features = array();
-        // var_dump($filterOptionsApplied['filter_categoryBrands']);
-        foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
-            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
-            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-            $arrValues = array($brand['ID']);
-            if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
-                $arrValues = array_merge($filterOptionsApplied['filter_categoryBrands'], $arrValues);
-            }
-            $arrValues = array_unique($arrValues);
-            // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['OriginID'] = $app->getDB()->createCondition($arrValues, 'IN');
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $count = $this->getUniqueProductsCount($filterData);
-            // if ($brand['Name'] === 'SONY') {
-                // var_dump($brand);
-                // var_dump($filterData);
-                // var_dump($dataConfigCategoryInfo);
-                // var_dump($app->getDB()->get_last_query());
-                // echo PHP_EOL;
-                // echo PHP_EOL;
-            // }
-            // if (isset($filterData) && isset($filterData['ItemsCount'])) {
-            //     $count = $filterData['ItemsCount'];
-            // }
-            $brands[$brand['ID']] = $brand;
-            $brands[$brand['ID']]['ProductCount'] = $count;
-            $brands[$brand['ID']]['Active'] = false;
-            if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
-                $brands[$brand['ID']]['ProductCount'] -= $currentProductCount;
-                $brands[$brand['ID']]['Active'] = true;
-            }
-
-            $dataConfigCategoryInfo['condition']['OriginID'] = $app->getDB()->createCondition($brand['ID']);
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $brands[$brand['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
-        }
-        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $categoryID => $categoryItem) {
-            // $count = 0;
-            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
-            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-            $arrValues = array($categoryID) + $categoryItem['SubIDs'];
-            if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
-                $arrValues = array_merge($filterOptionsApplied['filter_categorySubCategories'], $arrValues);
-            }
-            $arrValues = array_unique($arrValues);
-            // var_dump(">>> values >>>>>>");
-            // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['shop_products.CategoryID'] = $app->getDB()->createCondition($arrValues, 'IN');
-            // var_dump($dataConfigCategoryInfo);
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $count = $this->getUniqueProductsCount($filterData);
-            // var_dump(">>>>results>>>>>>>");
-            // var_dump($filterData);
-            // var_dump("-=-=-=-=-=-=-=-=-=-=-=-=-");
-            // if (isset($filterData) && isset($filterData['ItemsCount'])) {
-            //     $count = $filterData['ItemsCount'];
-            // }
-            $categories[$categoryItem['ExternalKey']] = $categoryItem;
-            $categories[$categoryItem['ExternalKey']]['ProductCount'] = $count;
-            $categories[$categoryItem['ExternalKey']]['Active'] = false;
-            if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
-                $categories[$categoryItem['ExternalKey']]['ProductCount'] -= $currentProductCount;
-                $categories[$categoryItem['ExternalKey']]['Active'] = true;
-            }
-
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $app->getDB()->createCondition($categoryID);
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $categories[$categoryItem['ExternalKey']]['Total'] = $this->getUniqueProductsCount($filterData);
-        }
-        foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
-            // $count = 0;
-            $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
-            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-            $arrValues = array($status);
-            if (!empty($filterOptionsApplied['filter_commonStatus'])) {
-                $arrValues = array_merge($filterOptionsApplied['filter_commonStatus'], $arrValues);
-            }
-            $arrValues = array_unique($arrValues);
-            // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $app->getDB()->createCondition($arrValues, 'IN');
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $count = $this->getUniqueProductsCount($filterData);
-            // if (isset($filterData) && isset($filterData['ItemsCount'])) {
-            //     $count = $filterData['ItemsCount'];
-            // }
-            // var_dump($filterData);
-            // var_dump($dataConfigCategoryInfo);
-            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-            $statuses[$status]['ID'] = $status;
-            $statuses[$status]['ProductCount'] = $count;
-            $statuses[$status]['Active'] = false;
-            // var_dump($filterData);
-            if (!empty($filterOptionsApplied['filter_commonStatus'])) {
-                $statuses[$status]['ProductCount'] -= $currentProductCount;
-                $statuses[$status]['Active'] = true;
-            }
-
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $app->getDB()->createCondition($status);
-            $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-            $statuses[$status]['Total'] = $this->getUniqueProductsCount($filterData);
-        }
-        foreach ($filterOptionsAvailable['filter_commonFeatures'] as $featureGroup => $featureList) {
-            $group = array();
-            foreach ($featureList as $key => $featureName) {
-                $dataConfigCategoryInfo = $this->data->getShopCategoryProductInfo();
-                $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-                $arrValues = array($key);
-                if (!empty($filterOptionsApplied['filter_commonFeatures'])) {
-                    $arrValues = array_merge($filterOptionsApplied['filter_commonFeatures'], $arrValues);
-                }
-                $arrValues = array_unique($arrValues);
-                // var_dump($arrValues);
-                $dataConfigCategoryInfo['condition']['FeatureID'] = $app->getDB()->createCondition($arrValues, 'IN');
-                // var_dump($dataConfigCategoryInfo);
-                $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-                $count = $this->getUniqueProductsCount($filterData);
-                $group[$key]['ID'] = $key;
-                $group[$key]['ProductCount'] = $count;
-                $group[$key]['Active'] = false;
-                $group[$key]['Name'] = $featureName;
-                // var_dump($filterData);
-                if (!empty($filterOptionsApplied['filter_commonFeatures'])) {
-                    $group[$key]['ProductCount'] -= $currentProductCount;
-                    $group[$key]['Active'] = true;
-                }
-                $dataConfigCategoryInfo['condition']['FeatureID'] = $app->getDB()->createCondition(array($key), 'IN');
-                $filterData = $app->getDB()->query($dataConfigCategoryInfo);
-                $group[$key]['Total'] = $this->getUniqueProductsCount($filterData);
-            }
-            $features[$featureGroup] = $group;
-        }
-
-        $filterOptionsAvailable['filter_categoryBrands'] = $brands;
-        $filterOptionsAvailable['filter_categorySubCategories'] = $categories;
-        $filterOptionsAvailable['filter_commonStatus'] = $statuses;
-        $filterOptionsAvailable['filter_commonFeatures'] = $features;
+        // $products = array();
+        // if (!empty($dataProducts)) {
+        //     foreach ($dataProducts as $val) {
+        //         $products[] = $this->data->fetchSingleProductByID($val['ID']);
+        //     }
+        // }
 
         // store data
         $data['items'] = $products;
@@ -400,7 +189,7 @@ class catalog extends API {
             'filterOptionsApplied' => $filterOptionsApplied,
             'info' => array(
                 "count" => $currentProductCount,
-                "category" => API::getAPI('shop:categories')->getCategoryByID($categoryID),
+                "category" => $this->data->fetchCategoryByID($categoryID),
                 "priceEdgesAvailableConverted" => array(
                     "min" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsAvailable['filter_commonPriceMin']),
                     "max" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsAvailable['filter_commonPriceMax'])
@@ -411,34 +200,43 @@ class catalog extends API {
                 )
             )
         );
-        $data['_location'] = API::getAPI('shop:categories')->getCategoryLocationByCategoryID($categoryID);
+        $data['_location'] = $this->data->fetchCategoryLocation($categoryID);
         // return data object
         return $data;
     }
 
     public function get ($req, $resp) {
-        if (isset($req->id)) {
-            if (is_numeric($req->id)) {
-                $CategoryID = intval($req->id);
-                $resp->setResponse($this->getCatalogBrowse($CategoryID));
-            } else {
-                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
-                if (isset($category['ID'])) {
-                    $resp->setResponse($this->getCatalogBrowse($category['ID']));
-                } else {
-                    $resp->setError('UnknownCategory');
-                }
-            }
-        } else {
-            $resp->setError('WrongSettingsID');
+        if (Request::hasRequestedID()) {
+            // if (is_numeric($req->id)) {
+            //     $CategoryID = intval($req->id);
+            $resp->setResponse($this->getCatalogBrowse($CategoryID));
+            return;
+            // } else {
+            //     $category = $this->data->fetchCategoryByExternalKey($req->id);
+            //     if (isset($category['ID'])) {
+            //         $resp->setResponse($this->getCatalogBrowse($category['ID']));
+            //     } else {
+            //         $resp->setError('UnknownCategory');
+            //     }
+            // }
         }
+        if (Request::hasRequestedExternalKey()) {
+            $category = $this->data->fetchCategoryByExternalKey($req->externalKey);
+            if (isset($category['ID'])) {
+                $resp->setResponse($this->getCatalogBrowse($category['ID']));
+            } else {
+                $resp->setError('UnknownCategory');
+            }
+            return;
+        }
+        $resp->setWrongItemIdError();
 
         // if (isset($req->id)) {
         //     if (is_numeric($req->id)) {
         //         $CategoryID = intval($req->id);
         //         $resp->setResponse($this->getCatalogBrowse($CategoryID));
         //     } else {
-        //         $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->id);
+        //         $category = $this->data->fetchCategoryByExternalKey($req->id);
         //         if (isset($category['ID'])) {
         //             $resp->setResponse($this->getCatalogBrowse($category['ID']));
         //         } else {

@@ -401,7 +401,7 @@ class orders extends API {
                     $errors[] = 'OrderUpdateError';
                 }
             else
-                $errors = $validatedDataObj->errorMessages;
+                $r->addErrors($validatedDataObj->errorMessages);
         }
 
         $result = $this->getOrderByID($OrderID);
@@ -648,7 +648,7 @@ class orders extends API {
         }
         // show available cargo-services
         if (isset($order['temp'])) {
-            $info["deliveries"] = API::getAPI('shop:delivery')->getActiveDeliveryList();
+            $info["deliveries"] = API::getAPI('shop:delivery')->getActiveDeliveryArray();
         }
         // $totals['_subs'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_sub"], $orderBaseCurrencyName, $currentRates);
         // $totals['_totals'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_total"], $orderBaseCurrencyName, $currentRates);
@@ -768,7 +768,7 @@ class orders extends API {
                 if (API::getAPI('system:auth')->ifYouCan('Admin'))
                     $resp->setResponse($this->getOrderByID($req->id));
                 else
-                    $resp->setError('AccessDenied');
+                    return $resp->setAccessError();
                 return;
             } elseif (is_string($req->id) && $req->id === "activeuser") {
                 $resp->setResponse($this->getOrders_List()); // show orders for active user only
@@ -812,7 +812,7 @@ class orders extends API {
                 $resp->setResponse($this->updateOrder($req->id, $req->data));
             }
             // } else {
-                // $resp->setError('AccessDenied');
+                // return $resp->setAccessError();
             // }
             return;
         }
@@ -854,11 +854,11 @@ class orders extends API {
         // global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
             (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('shop_EDIT_ORDER'))) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         // if (!$app->isToolbox()) {
-        //     $resp->setError('AccessDenied');
+        //     return $resp->setAccessError();
         //     return;
         // }
         if (!empty($req->id)) {
@@ -866,7 +866,7 @@ class orders extends API {
             $resp->setResponse($this->disableOrderByID($OrderID));
             return;
         }
-        $resp->setError('MissedParameter_id');
+        $resp->setWrongItemIdError();
     }
 
 }

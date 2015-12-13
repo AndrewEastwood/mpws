@@ -233,7 +233,7 @@ class customers extends API {
         // $result = array();
         // $errors = array();
         // $success = false;
-        // $CustomerID = null;
+        // $customerID = null;
         $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
@@ -250,8 +250,8 @@ class customers extends API {
             'Plugins' => array('string', 'skipIfUnset', 'max' => 500, 'defaultValueIfEmpty' => 'system')
         ));
 
-        if ($validatedDataObj->errorsCount == 0)
-            try {
+        if ($validatedDataObj->errorsCount == 0) {
+            // try {
 
                 $validatedValues = $validatedDataObj->validData;
 
@@ -288,37 +288,29 @@ class customers extends API {
                 // $app->getDB()->query($configCreateCustomer, false) ?: null;
 
                 if ($r->isEmptyResult()) {
-                    throw new Exception('CustomerCreateError');
+                    $r->addError("CustomerCreateError");
                 }
 
                 // $app->getDB()->commit();
 
                 // $success = true;
-            } catch (Exception $e) {
-                // $app->getDB()->rollBack();
-                // $errors[] = $e->getMessage();
-                $r->addError($e->getMessage());
-            }
-        else {
-            // $errors = $validatedDataObj->errorMessages;
+            // } catch (Exception $e) {
+            //     // $app->getDB()->rollBack();
+            //     // $errors[] = $e->getMessage();
+            //     $r->addError($e->getMessage());
+            // }
+        } else {
             $r->addErrors($validatedDataObj->errorMessages);
         }
 
-        if ($r->hasResult()) {
-            $customer = $this->data->fetchAddress($r->getResult());
-            $r->setResult($customer);
+        if ($r->isSuccess() && $r->hasResult()) {
+            $item = $this->data->fetchAddress($r->getResult());
+            $r->setResult($item);
         }
-        // $result['errors'] = $errors;
-        // $result['success'] = $success;
-
         return $r->toArray();
     }
 
-    public function updateCustomer ($CustomerID, $reqData, $isPatch = false) {
-        // global $app;
-        // $result = array();
-        // $errors = array();
-        // $success = false;
+    public function updateCustomer ($customerID, $reqData, $isPatch = false) {
         $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
@@ -343,7 +335,7 @@ class customers extends API {
 
                 // update logo
                 if (isset($reqData['file1'])) {
-                    $customer = $this->data->fetchCustomerByID($CustomerID);
+                    $customer = $this->data->fetchCustomerByID($customerID);
 
                     $currentFileName = empty($customer['Logo']) ? "" : $customer['Logo']['name'];
                     $newFileName = null;
@@ -400,7 +392,7 @@ class customers extends API {
                 // $app->getDB()->beginTransaction();
 
                 // $configCreateCustomer = 
-                $r = $this->data->updateCustomer($CustomerID, $validatedValues);
+                $r = $this->data->updateCustomer($customerID, $validatedValues);
                 // $app->getDB()->query($configCreateCustomer, false) ?: null;
 
                 // $app->getDB()->commit();
@@ -412,43 +404,39 @@ class customers extends API {
                 // $app->getDB()->rollBack();
                 // $errors[] = $e->getMessage();
             }
-        else {
-            // $errors = $validatedDataObj->errorMessages;
-            $r->addErrors($validatedDataObj->errorMessages);
+        else {            $r->addErrors($validatedDataObj->errorMessages);
         }
 
-        $customer = $this->data->fetchCustomerByID($CustomerID);
-        $r->setResult($customer);
+        $item = $this->data->fetchCustomerByID($customerID);
+        $r->setResult($item);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
 
         return $r->toArray();
 
-        // $result = $this->data->fetchCustomerByID($CustomerID);
+        // $result = $this->data->fetchCustomerByID($customerID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
 
         // return $result;
     }
 
-    public function archiveCustomer ($CustomerID) {
+    public function archiveCustomer ($customerID) {
         // global $app;
         // $errors = array();
         // $success = false;
 
 
-        $r = $this->data->archiveCustomer($CustomerID);
-        if ($r->hasResult()) {
-            $customer = $this->data->fetchCustomerByID($r->getResult());
-            $r->setResult($customer);
-        }
+        $r = $this->data->archiveCustomer($customerID);
+        $item = $this->data->fetchCustomerByID($customerID);
+        $r->setResult($item);
         return $r->toArray();
 
 
         // try {
         //     $app->getDB()->beginTransaction();
 
-        //     $config = $this->data->archiveCustomer($CustomerID);
+        //     $config = $this->data->archiveCustomer($customerID);
         //     $app->getDB()->query($config, false);
 
         //     $app->getDB()->commit();
@@ -459,7 +447,7 @@ class customers extends API {
         //     $errors[] = 'CustomerArchiveError';
         // }
 
-        // $result = $this->data->fetchCustomerByID($CustomerID);
+        // $result = $this->data->fetchCustomerByID($customerID);
         // $result['errors'] = $errors;
         // $result['success'] = $success;
         // return $result;
@@ -485,8 +473,8 @@ class customers extends API {
         }
         // if (!empty($req->id)) {
         //     if (is_numeric($req->id)) {
-        //         $CustomerID = intval($req->id);
-        //         $resp->setResponse($this->data->fetchCustomerByID($CustomerID));
+        //         $customerID = intval($req->id);
+        //         $resp->setResponse($this->data->fetchCustomerByID($customerID));
         //     } else {
         //         $resp->setResponse($this->data->fetchCustomerByName($req->id));
         //     }
@@ -496,23 +484,20 @@ class customers extends API {
     }
 
     public function post ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
-            !API::getAPI('system:auth')->ifYouCan('Create') &&
-            !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp->setError('AccessDenied');
-            return;
+        if (API::getAPI('system:auth')->ifYouCanCreate()) {
+            return $resp->setAccessError();
         }
         if (isset($req->data['switchto'])) {
-            if (API::getAPI('system:auth')->ifYouCan('Maintain')) {
+            if (API::getAPI('system:auth')->ifYouCanDoAnythingYouWant()) {
                 if (is_numeric($req->data['switchto'])) {
-                    $CustomerID = intval($req->data['switchto']);
-                    $resp->setResponse($this->switchToCustomerByID($CustomerID));
+                    $customerID = intval($req->data['switchto']);
+                    $resp->setResponse($this->switchToCustomerByID($customerID));
                 } else {
-                    $resp->setError('WrongCustomerID');
+                    $resp->setWrongItemIdError();
                     return;
                 }
             } else {
-                $resp->setError('AccessDenied');
+                $resp->setAccessError();
                 return;
             }
         } else {
@@ -522,11 +507,13 @@ class customers extends API {
     }
 
     public function put ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
-            !API::getAPI('system:auth')->ifYouCan('Edit') &&
-            !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp->setError('AccessDenied');
-            return;
+        // if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+        //     !API::getAPI('system:auth')->ifYouCanAll('Admin', 'Edit')) {
+        //     return $resp->setAccessError();
+        //     return;
+        // }
+        if (API::getAPI('system:auth')->ifYouCanEdit()) {
+            return $resp->setAccessError();
         }
 
         // for specific customer item
@@ -535,33 +522,35 @@ class customers extends API {
             $resp->setResponse($this->updateCustomer($req->id, $req->data));
             return;
         }
-        // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        $resp->setWrongItemIdError();
+        // // for the case when we have to fecth list with customers
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
 
-        $resp->setError('WrongParameter_id');
         // if (empty($req->id)) {
-        //     $resp->setError('MissedParameter_id');
+        //     $resp->setWrongItemIdError();
         // } else {
         //     if (is_numeric($req->id)) {
-        //         $CustomerID = intval($req->id);
-        //         $resp->setResponse($this->updateCustomer($CustomerID, $req->data));
+        //         $customerID = intval($req->id);
+        //         $resp->setResponse($this->updateCustomer($customerID, $req->data));
         //     } else {
-        //         $resp->setError('WrongParameter_id');
+        //         $resp->setWrongItemIdError();
         //     }
         //     // $this->_getOrSetCachedState('changed:product', true);
         // }
     }
 
     public function patch ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
-            !API::getAPI('system:auth')->ifYouCan('Edit') &&
-            !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp->setError('AccessDenied');
-            return;
+        if (API::getAPI('system:auth')->ifYouCanEdit()) {
+            return $resp->setAccessError();
         }
+        // if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+        //     !API::getAPI('system:auth')->ifYouCanAll('Admin', 'Edit')) {
+        //     return $resp->setAccessError();
+        //     return;
+        // }
         // for specific customer item
         // by id
         if (Request::hasRequestedID()) {
@@ -569,29 +558,28 @@ class customers extends API {
             return;
         }
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
 
-        $resp->setError('WrongParameter_id');
+        $resp->setWrongItemIdError();
         // if (empty($req->id)) {
-        //     $resp->setError('MissedParameter_id');
+        //     $resp->setWrongItemIdError();
         // } else {
         //     if (is_numeric($req->id)) {
-        //         $CustomerID = intval($req->id);
-        //         $resp->setResponse($this->updateCustomer($CustomerID, $req->data, true));
+        //         $customerID = intval($req->id);
+        //         $resp->setResponse($this->updateCustomer($customerID, $req->data, true));
         //     } else {
-        //         $resp->setError('WrongParameter_id');
+        //         $resp->setWrongItemIdError();
         //     }
         // }
     }
 
     public function delete ($req, $resp) {
-        if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
-            !API::getAPI('system:auth')->ifYouCan('Edit') &&
-            !API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $resp->setError('AccessDenied');
+        if (!API::getAPI('system:auth')->ifYouCan('Maintain') ||
+            !API::getAPI('system:auth')->ifYouCanAll('Admin', 'Edit')) {
+            return $resp->setAccessError();
             return;
         }
         // for specific customer item
@@ -601,20 +589,20 @@ class customers extends API {
             return;
         }
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
-            $resp->setError('MissedParameter_id');
-            return;
-        }
+        // if (Request::noRequestedItem()) {
+        //     $resp->setWrongItemIdError();
+        //     return;
+        // }
 
-        $resp->setError('WrongParameter_id');
+        $resp->setWrongItemIdError();
         // if (empty($req->id)) {
-        //     $resp->setError('MissedParameter_id');
+        //     $resp->setWrongItemIdError();
         // } else {
         //     if (is_numeric($req->id)) {
-        //         $CustomerID = intval($req->id);
-        //         $resp->setResponse($this->archiveCustomer($CustomerID));
+        //         $customerID = intval($req->id);
+        //         $resp->setResponse($this->archiveCustomer($customerID));
         //     } else {
-        //         $resp->setError('WrongParameter_id');
+        //         $resp->setWrongItemIdError();
         //     }
         // }
     }

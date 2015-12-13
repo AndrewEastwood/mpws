@@ -94,7 +94,7 @@ class email extends API {
     //             $errors[] = $e->getMessage();
     //         }
     //     else
-    //         $errors = $validatedDataObj->errorMessages;
+    //         $r->addErrors($validatedDataObj->errorMessages);
 
     //     $result['errors'] = $errors;
     //     $result['success'] = $success;
@@ -132,7 +132,7 @@ class email extends API {
     //             $errors[] = 'EmailUpdateError';
     //         }
     //     else
-    //         $errors = $validatedDataObj->errorMessages;
+    //         $r->addErrors($validatedDataObj->errorMessages);
 
     //     $result = $this->getEmailByID($AddressID);
     //     $result['errors'] = $errors;
@@ -192,7 +192,7 @@ class email extends API {
 
     // public function post ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
-    //         $resp->setError('AccessDenied');
+    //         return $resp->setAccessError();
     //         return;
     //     }
     //     $resp->setResponse($this->createEmail($req->data));
@@ -200,11 +200,11 @@ class email extends API {
 
     // public function put ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-    //         $resp->setError('AccessDenied');
+    //         return $resp->setAccessError();
     //         return;
     //     }
     //     if (empty($req->id)) {
-    //         $resp->setError('MissedParameter_id');
+    //         $resp->setWrongItemIdError();
     //     } else {
     //         $EmailID = intval($req->id);
     //         $resp->setResponse($this->_updateEmailByID($EmailID, $req->data));
@@ -213,7 +213,7 @@ class email extends API {
 
     // public function delete ($req, $resp) {
     //     if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
-    //         $resp->setError('AccessDenied');
+    //         return $resp->setAccessError();
     //         return;
     //     }
     //     $resp->setResponse($this->archiveEmail($req->data));

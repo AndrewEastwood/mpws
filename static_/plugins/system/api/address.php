@@ -93,9 +93,7 @@ class address extends API {
                 // $errors[] = 'UserAddressCreateError';
                 // $errors[] = $e->getMessage();
             }
-        else {
-            // $errors = $validatedDataObj->errorMessages;
-            $r->addErrors($validatedDataObj->errorMessages);
+        else {            $r->addErrors($validatedDataObj->errorMessages);
         }
 
         if ($r->hasResult()) {
@@ -136,7 +134,6 @@ class address extends API {
             // $success = true;
         } else {
             $r->addErrors($validatedDataObj->errorMessages);
-            // $errors = $validatedDataObj->errorMessages;
         }
 
         if ($r->hasResult()) {
@@ -193,20 +190,20 @@ class address extends API {
         if (is_numeric($req->data['UserID'])) {
             $UserID = intval($req->data['UserID']);
         } else {
-            $resp->setError('EmptyUserID');
+            $resp->setWrongItemIdError();
             return;
         }
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         if (Request::hasRequestedID()) {
             $resp->setResponse($this->createAddress($UserID, $req->data));
             return;
-        } else {
-            $resp->setError('WrongIDParameter');
         }
+
+        $resp->setWrongItemIdError();
         // $resp->setResponse($this->createAddress($UserID, $req->data));
 
 
@@ -217,13 +214,13 @@ class address extends API {
         //     if (is_numeric($req->data['UserID'])) {
         //         $UserID = intval($req->data['UserID']);
         //     } else {
-        //         $resp->setError('EmptyUserID');
+        //         $resp->setWrongItemIdError();
         //         return;
         //     }
         //     ;
         //     if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
         //         !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-        //         $resp->setError('AccessDenied');
+        //         return $resp->setAccessError();
         //         return;
         //     }
         //     if (Request::hasRequestedID()) {
@@ -257,12 +254,12 @@ class address extends API {
         if (is_numeric($req->data['UserID'])) {
             $UserID = intval($req->data['UserID']);
         } else {
-            $resp->setError('EmptyUserID');
+            $resp->setWrongItemIdError();
             return;
         }
         if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
             !API::getAPI('system:auth')->isUserIDAuthenticated($UserID)) {
-            $resp->setError('AccessDenied');
+            return $resp->setAccessError();
             return;
         }
         $resp->setResponse($this->createAddress($UserID, $req->data));
@@ -281,20 +278,20 @@ class address extends API {
                 $resp->setError('WrongAddressID');
                 return;
             }
-            if (!API::getAPI('system:auth')->ifYouCan('Maintain') && !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
-                $resp->setError('AccessDenied');
+            if (!API::getAPI('system:auth')->ifYouCan('Maintain') &&
+                !API::getAPI('system:auth')->isUserIDAuthenticated($address['UserID'])) {
+                return $resp->setAccessError();
                 return;
             }
             $resp->setResponse($this->disableAddressByID($req->id));
-        } else {
-            $resp->setError('WrongIDParameter');
         }
+        $resp->setWrongItemIdError();
 
             // $UserID = null;
             // if (is_numeric($req->data['UserID'])) {
             //     $UserID = intval($req->data['UserID']);
             // } else {
-            //     $resp->setError('EmptyUserID');
+            //     $resp->setWrongItemIdError();
             //     return;
             // }
             // $resp->setResponse($this->createAddress($UserID, $req->data));

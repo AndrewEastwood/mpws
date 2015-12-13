@@ -18,7 +18,7 @@ class productfeatures extends API {
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
-        $config = $this->data->shopCreateFeature($data);
+        $config = $this->data->createFeature($data);
         $featureID = $app->getDB()->query($config);
         return $featureID;
     }
