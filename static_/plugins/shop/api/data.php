@@ -128,9 +128,10 @@ class data extends BaseData {
 
         // this runs before each query to db (select, insert, etc)
         dbQuery::setCommonPreFilter(function ($f) use ($app) {
-            if ($f->isSelect()) {
-                $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
-            }
+            // if ($f->isSelect()) {
+            $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            // }
+            $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
         });
 
         dbQuery::setQueryFilter(function (&$product) use ($self) {
@@ -282,6 +283,14 @@ class data extends BaseData {
             $origin['ID'] = intval($origin['ID']);
             $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
         }, 'shopOrigins');
+
+        dbQuery::setQueryFilter(function (&$agency) {
+            if (empty($agency))
+                return null;
+            $agency['ID'] = intval($agency['ID']);
+            $agency['_isRemoved'] = $agency['Status'] === 'REMOVED';
+            $agency['_isActive'] = $agency['Status'] === 'ACTIVE';
+        }, 'shopDeliveryAgencies');
 
 
     }

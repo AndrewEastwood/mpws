@@ -162,7 +162,7 @@ class users extends API {
                 }
                 // filter permissions
                 // $dataPermission = $this->_filterPermissions($dataPermission);
-                $dataUser["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+                // $dataUser["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $dataUser["Password"] = Secure::EncodeUserPassword($validatedValues['Password']);
                 $dataUser["ValidationString"] = Secure::EncodeUserPassword(time());
 

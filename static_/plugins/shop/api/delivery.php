@@ -11,40 +11,8 @@ use ArrayObject;
 
 class delivery extends API {
 
-    // private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // DELIVERY AGENCIES
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // public function getDeliveryAgencyByID ($agencyID) {
-    //     global $app;
-    //     $config = $this->data->fetchDeliveryAgencyByID($agencyID);
-    //     $data = $app->getDB()->query($config);
-    //     $data['ID'] = intval($data['ID']);
-    //     $data['_isRemoved'] = $data['Status'] === 'REMOVED';
-    //     $data['_isActive'] = $data['Status'] === 'ACTIVE';
-    //     return $data;
-    // }
-
-    // public function getDeliveries_List (array $options = array()) {
-    //     global $app;
-    //     $config = $this->data->fetchDeliveriesDataList($options);
-    //     $self = $this;
-    //     $callbacks = array(
-    //         "parse" => function ($items) use($self) {
-    //             $_items = array();
-    //             foreach ($items as $val)
-    //                 $_items[] = $self->getDeliveryAgencyByID($val['ID']);
-    //             return $_items;
-    //         }
-    //     );
-    //     $dataList = $app->getDB()->queryMatchedIDs($config, $options, $callbacks);
-    //     return $dataList;
-    // }
-
     public function createDeliveryAgency ($reqData) {
-        global $app;
+        // global $app;
         $r = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
@@ -54,7 +22,7 @@ class delivery extends API {
 
         if ($validatedDataObj->errorsCount == 0) {
             $validatedValues = $validatedDataObj->validData;
-            $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+            // $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
             $r = $this->data->createDeliveryAgent($validatedValues);
             if ($r->isEmptyResult()) {
                 $r->addError("DeliveryCreateError");

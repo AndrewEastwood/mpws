@@ -105,7 +105,16 @@ class data extends BaseData {
         // $this->db->createQuery('systemAddress_Update', $this->source_address)
         // $this->db->createQuery('systemAddress_Add', $this->source_address)
         // $this->db->createQuery('systemAddress_Archive', $this->source_address)
+        $self = $this;
 
+        // this runs before each query to db (select, insert, etc)
+        dbQuery::setCommonPreFilter(function ($f) use ($app) {
+            // if ($f->isSelect()) {
+            $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            // }
+            $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
+        });
+        
         dbQuery::setQueryFilter(function (&$task) {
             if (empty($task))
                 return null;
