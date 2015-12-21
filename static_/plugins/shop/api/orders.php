@@ -28,7 +28,7 @@ class orders extends API {
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
         global $app;
-        $config = $this->data->shopGetOrderItem($orderID);
+        $config = $this->data->fetchOrderItemByID($orderID);
         $order = null;
         $order = $app->getDB()->query($config);
         if (empty($order)) {
@@ -65,7 +65,7 @@ class orders extends API {
     public function getOrders_ListExpired (array $options = array()) {
         global $app;
         // get expired orders
-        $config = $this->data->getShopOrderList_Expired();
+        $config = $this->data->fetchOrderDataList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -86,7 +86,7 @@ class orders extends API {
     public function getOrders_ListTodays (array $options = array()) {
         global $app;
         // get todays orders
-        $config = $this->data->getShopOrderList_Todays();
+        $config = $this->data->fetchOrderDataList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -107,7 +107,7 @@ class orders extends API {
     public function getOrders_ListPending (array $options = array()) {
         global $app;
         // get expired orders
-        $config = $this->data->getShopOrderList_Pending();
+        $config = $this->data->fetchOrderDataList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['UserID'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
@@ -133,7 +133,7 @@ class orders extends API {
             $options['_pUser'] = $app->getDB()->createCondition(API::getAPI('system:auth')->getAuthenticatedUserID());
         }
         // get orders
-        $config = $this->data->getShopOrderList($options);
+        $config = $this->data->fetchOrderDataList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -436,250 +436,15 @@ class orders extends API {
         return $result;
     }
 
-    private function __attachOrderDetails (&$order) {
-        global $app;
-        // echo "__attachOrderDetails";
-        if (empty($order))
-            return;
+    // private function __attachOrderDetails (&$order) {
 
-        $orderID = isset($order['ID']) ? $order['ID'] : null;
-        $order['promo'] = null;
-        $order['user'] = null;
-        $order['address'] = null;
-        $order['delivery'] = null;
-        $productItems = array();
+    // }
 
-        // set order exchange rates
-        $orderRate = null;
-        $dbDefaultRate = API::getAPI('shop:exchangerates')->getDefaultDBPriceCurrency();
-        if (isset($orderID) && !isset($order['temp'])) {
-            $orderRate = new ArrayObject(API::getAPI('shop:exchangerates')->getExchangeRateByID($order['ExchangeRateID']));
-        } else {
-            $orderRate = new ArrayObject($dbDefaultRate);
-        }
-        $orderBaseCurrencyName = $orderRate['CurrencyA'];
-        $customerCurrencyName = $orderRate['CurrencyB'];
-        $orderRates = new ArrayObject(API::getAPI('shop:exchangerates')->getAvailableConversionOptions($orderBaseCurrencyName));
-
-        $currentRate = $orderRate->getArrayCopy();
-        $customerRate = $orderRate->getArrayCopy();
-
-        $currentRates = $orderRates->getArrayCopy();
-        $customerRates = $orderRates->getArrayCopy();
-
-        $dbCurrencyIsChanged = $orderBaseCurrencyName !== $dbDefaultRate['CurrencyA'];
-
-        // if orderID is set then the order is saved
-        if (isset($orderID) && !isset($order['temp'])) {
-
-            // $orderBaseCurrencyName = $orderRate['CurrencyA'];
-            // $customerCurrencyName = $orderRate['CurrencyB'];
-            // $orderRates = new ArrayObject(API::getAPI('shop:exchangerates')->getAvailableConversionOptions($orderBaseCurrencyName));
-
-            // $currentRate = $orderRate->getArrayCopy();
-            // $customerRate = $orderRate->getArrayCopy();
-            $customerCurrencyName = $order['CustomerCurrencyName'];
-            if ($customerCurrencyName === $orderRate['CurrencyB']) {
-                $customerRate['Rate'] = floatval($order['CustomerCurrencyRate']);
-            }
-
-            // if ($dbCurrencyIsChanged) {
-            //     $currentRate['Rate'] = 1;
-            //     $customerRate['Rate'] = 1;
-            // }
-
-            // $currentRates = $orderRates->getArrayCopy();
-            // $customerRates = $orderRates->getArrayCopy();
-            $customerRates[$customerCurrencyName] = $customerRate['Rate'];
-
-            $order['rates'] = array(
-                'rate' => $customerRate,
-                'actual' => $currentRate['Rate'],
-                'customer' => $customerRate['Rate'],
-                'ourBenefit' => $customerRate['Rate'] - $currentRate['Rate'],
-                'dbCurrencyIsChanged' => $dbCurrencyIsChanged,
-                'orderBaseCurrencyName' => $orderBaseCurrencyName,
-                'defaultDBCurrency' => $dbDefaultRate
-            );
-            // $order['_currencyName'] = $customerCurrencyName;
-            // attach account and address
-            if ($app->getSite()->hasPlugin('system')) {
-                if (isset($order['UserAddressesID']))
-                    $order['address'] = API::getAPI('system:address')->getAddressByID($order['UserAddressesID']);
-                if (isset($order['UserID']))
-                    $order['user'] = API::getAPI('system:users')->getUserByID($order['UserID']);
-                unset($order['UserID']);
-                unset($order['UserAddressesID']);
-            }
-            // get promo
-            if (!empty($order['PromoID']))
-                $order['promo'] = API::getAPI('shop:promos')->getPromoByID($order['PromoID']);
-            if (!empty($order['DeliveryID']))
-                $order['delivery'] = API::getAPI('shop:delivery')->getDeliveryAgencyByID($order['DeliveryID']);
-            // $order['items'] = array();
-            $configBoughts = $this->data->shopGetOrderBoughts($orderID);
-            $boughts = $app->getDB()->query($configBoughts) ?: array();
-            if (!empty($boughts))
-                foreach ($boughts as $soldItem) {
-                    $product = $this->data->fetchSingleProductByID($soldItem['ProductID']);
-                    
-                    $soldItem['Price'] = floatval($soldItem['Price']);
-                    $soldItem['SellingPrice'] = floatval($soldItem['SellingPrice']);
-                    
-                    // save current product info
-                    $product["_original"] = array(
-                        "IsPromo" => $product['IsPromo'],
-                        "_prices" => $product['_prices']
-                    );
-                    // restore product info at purchase moment
-                    $product["IsPromo"] = intval($soldItem['IsPromo']) === 1;
-                    $product["_prices"] = array(
-                        'price' => $soldItem['Price'],
-                        'actual' => $soldItem['SellingPrice'],
-                        'others' => API::getAPI('shop:exchangerates')->convertToRates($soldItem['SellingPrice'], $orderBaseCurrencyName, $customerRates)
-                    );
-                    // get purchased product quantity
-                    $product["_orderQuantity"] = floatval($soldItem['Quantity']);
-                    // get product sub and total by raw price
-                    $_subTotal = $product['_prices']['price'] * $soldItem['Quantity'];
-                    $_total = $product['_prices']['actual'] * $soldItem['Quantity'];
-                    // conversions
-                    $product['_totalSummary'] = array(
-                        "_sub" => $_subTotal,
-                        "_total" => $_total,
-                        "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
-                        "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
-                        "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
-                        "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
-                    );
-
-                    // add into list
-                    $productItems[$product['ID']] = $product;
-                }
-        } else {
-
-            // $productItems = !empty($order['items']) ? $order['items'] : array();
-            $sessionPromo = API::getAPI('shop:promos')->getSessionPromo();
-            $sessionOrderProducts = $this->_getSessionOrderProducts();
-            // re-validate promo
-            if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
-                $sessionPromo = API::getAPI('shop:promos')->getPromoByHash($sessionPromo['Code'], true);
-                if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
-                    API::getAPI('shop:promos')->setSessionPromo($sessionPromo);
-                    $order['promo'] = $sessionPromo;
-                } else {
-                    API::getAPI('shop:promos')->resetSessionPromo();
-                    $order['promo'] = null;
-                }
-            }
-            // get product items
-            foreach ($sessionOrderProducts as $purchasingProduct) {
-                // get product
-                $product = $this->data->fetchSingleProductByID($purchasingProduct['ID']);
-                if (!empty($product)) {
-                    // get purchased product quantity
-                    $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
-                    // get product sub and total by raw price
-                    $_subTotal = $product['_prices']['price'] * $purchasingProduct['_orderQuantity'];
-                    $_total = $product['_prices']['actual'] * $purchasingProduct['_orderQuantity'];
-                    // conversions
-                    $product['_totalSummary'] = array(
-                        "_sub" => $_subTotal,
-                        "_total" => $_total,
-                        "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
-                        "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
-                        "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
-                        "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
-                    );
-                    // add into list
-                    $productItems[$product['ID']] = $product;
-                } else {
-                    
-                }
-            }
-        }
-        // create info data
-        $totals = array(
-            "_sub" => 0,
-            "_total" => 0,
-            "_subs" => array(),
-            "_totals" => array(),
-            "_customer_subs" => array(),
-            "_customer_totals" => array()
-        );
-        $info = array(
-            "productCount" => 0,
-            "productUniqueCount" => count($productItems),
-            "hasPromo" => isset($order['promo']['Discount']) && $order['promo']['Discount'] > 0,
-            "allProductsWithPromo" => true
-        );
-        // order summary currency names
-        $currencyNames = array_keys($currentRates);
-        // calc order totals
-        $totals['_subs'] = array();
-        $totals['_totals'] = array();
-        $totals['_customer_subs'] = array();
-        $totals['_customer_totals'] = array();
-        foreach ($productItems as $product) {
-            // update order totals
-            $totals["_sub"] += floatval($product['_totalSummary']['_sub']);
-            $totals["_total"] += floatval($product['_totalSummary']['_total']);
-            $info["productCount"] += intval($product['_orderQuantity']);
-            $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'];
-            // var_dump($product['_totalSummary']);
-            foreach ($currencyNames as $key) {
-                if (!isset($totals['_subs'][$key])) {
-                    $totals['_subs'][$key] = 0;
-                }
-                $totals['_subs'][$key] += $product['_totalSummary']['_subs'][$key];
-                if (!isset($totals['_totals'][$key])) {
-                    $totals['_totals'][$key] = 0;
-                }
-                $totals['_totals'][$key] += $product['_totalSummary']['_totals'][$key];
-                if (!isset($totals['_customer_subs'][$key])) {
-                    $totals['_customer_subs'][$key] = 0;
-                }
-                $totals['_customer_subs'][$key] += $product['_totalSummary']['_customer_subs'][$key];
-                if (!isset($totals['_customer_totals'][$key])) {
-                    $totals['_customer_totals'][$key] = 0;
-                }
-                $totals['_customer_totals'][$key] += $product['_totalSummary']['_customer_totals'][$key];
-            }
-        }
-        // show available cargo-services
-        if (isset($order['temp'])) {
-            $info["deliveries"] = API::getAPI('shop:delivery')->getActiveDeliveryArray();
-        }
-        // $totals['_subs'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_sub"], $orderBaseCurrencyName, $currentRates);
-        // $totals['_totals'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_total"], $orderBaseCurrencyName, $currentRates);
-        // $totals['_customer_subs'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_sub"], $orderBaseCurrencyName, $customerRates);
-        // $totals['_customer_totals'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_total"], $orderBaseCurrencyName, $customerRates);
-        // calc diffs
-        $totals['_diff_subs'] = array();
-        $totals['_diff_totals'] = array();
-        $totals['_diff_promo'] = array();
-        foreach ($totals['_totals'] as $key => $value) {
-            $totals['_diff_totals'][$key] = $totals['_customer_totals'][$key] - $value;
-        }
-        foreach ($totals['_subs'] as $key => $value) {
-            $totals['_diff_subs'][$key] = $totals['_customer_subs'][$key] - $value;
-        }
-        foreach ($totals['_customer_subs'] as $key => $value) {
-            $totals['_diff_promo'][$key] = $totals['_customer_totals'][$key] - $value;
-        }
-        // append info
-        $order['items'] = $productItems;
-        $order['info'] = $info;
-        $order['totalSummary'] = $totals;
-
-        // TODO: need to calculate subs and totals according to selected currency and rate by customer
-    }
-
-    private function _getOrderTemp () {
-        $order['temp'] = true;
-        $this->__attachOrderDetails($order);
-        return $order;
-    }
+    // private function _getOrderTemp () {
+    //     $order['temp'] = true;
+    //     $this->__attachOrderDetails($order);
+    //     return $order;
+    // }
 
     private function _resetOrderTemp () {
         API::getAPI('shop:promos')->resetSessionPromo();

@@ -152,6 +152,28 @@ class dbquery {
     public function genDescSortOrderStr ($fieldName) {
         return '-' . $this->asField($fieldName);
     }
+    public function genFieldQueryParamDateCreatedStr () {
+        return $this->genFieldQueryParamStr('DateCreated');
+    }
+    public function genFieldQueryParamDateUpdatedStr () {
+        return $this->genFieldQueryParamStr('DateUpdated');
+    }
+
+    public static function genValueQueryParamCondition ($mixin, $condition) {
+        if (is_array($mixin)) {
+            return implode(',', $minxin);
+        }
+        if (!is_numeric($minxin)) {
+            return dbquery::getLike($mixin);
+        }
+        return $mixin . ':' . $condition;
+    }
+    public static function genValueQueryParamDateCondition ($date, $condition) {
+        return $date . ':' . $condition;
+    }
+    public static function genValueQueryParamDateNowCondition ($condition) {
+        return $this->genValueQueryParamDateNowCondition(dbquery::getDate(), $condition);
+    }
 
     public function cloneQuery ($newQueryName) {
         if (dbquery::exists($newQueryName)) {
@@ -221,6 +243,11 @@ class dbquery {
         return $this;
     }
     public function addDataItem ($key, $value) {
+        $this->data[$key] = $value;
+        return $this;
+    }
+    public function addDataItemByFlag ($flag, $key, $value) {
+        if (!$flag) return $this;
         $this->data[$key] = $value;
         return $this;
     }
@@ -325,6 +352,10 @@ class dbquery {
     public function setFilter ($type, &$filter) {
         $this->filters[$type] = $filter;
         return $this;
+    }
+
+    public function getFilter ($type) {
+        return $this->filters[$type];
     }
 
     public function getLimit () {
