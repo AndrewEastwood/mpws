@@ -3,15 +3,19 @@
 namespace engine\lib;
 
 use \engine\lib\data as BaseData;
+use \engine\lib\utils as Utils;
 use Exception;
 use ArrayObject;
+use PDO;
 
 class dbquery {
 
     static $queryNameToInstanceMap = array();
     static $DATE_FORMAT = 'Y-m-d H:i:s';
+    static $tableNamesToColumnsMap = array();
 
     var $defaultLimit = 32;
+    var $actionIsLocked = false;
 
     var $name;
     var $source = null;
@@ -27,6 +31,7 @@ class dbquery {
     var $having = null;
     var $filters = array();
     var $result = null;
+    var $join = array();
 
     function __construct ($queryName, $source, $props = null) {
         if (!is_string($queryName)) {
@@ -66,6 +71,27 @@ class dbquery {
         return $props;
     }
 
+    public static function getTableColumnsList ($tableName) {
+        global $app;
+        $db = $app->getDB()->getDBO();
+        $statement = $db->raw_execute("SHOW COLUMNS FROM `{$tableName}`");
+        $statement = $db->get_last_statement();
+        $rows = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+        $fields = array_flip(Utils::array_pluck($rows, 'Field'));
+        return $fields;
+    }
+
+    public static function tableContainsColumn ($tableName, $columnName) {
+        if (!isset(dbquery::$tableNamesToColumnsMap[$tableName])) {
+            dbquery::$tableNamesToColumnsMap[$tableName] = dbquery::getTableColumnsList($tableName);
+        }
+        return isset(dbquery::$tableNamesToColumnsMap[$tableName]) &&
+            isset(dbquery::$tableNamesToColumnsMap[$tableName][$columnName]);
+    }
+
     public static function exists ($qName) {
         return isset(dbquery::$queryNameToInstanceMap[$qName]);
     }
@@ -92,7 +118,7 @@ class dbquery {
         return self::get($name);
     }
 
-    public static function setCommonPreFilter ($filter, $queryNameLookup) {
+    public static function setCommonPreFilter ($filter) {
         foreach (dbquery::$queryNameToInstanceMap as $queryName => &$queryInstance) {
             $queryInstance->setFilter('commPre', $filter);
         }
@@ -880,8 +906,8 @@ class dbquery {
                 // fetch data
                 $dbData = $db->find_array();
                 // filter fetched data using filter function
-                if (!empty($this->filters['query'])) {
-                    $filter = $this->filters['query'];
+                if (!empty($this->filters['fetch'])) {
+                    $filter = $this->filters['fetch'];
                     foreach ($dbData as $key => &$value) {
                         $filter($value);
                     }

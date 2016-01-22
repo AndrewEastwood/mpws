@@ -16,7 +16,7 @@ class plugins extends API {
         return $allPlugins;
     }
 
-    public function get (&$resp) {
+    public function get ($req, $resp) {
         if (!API::getAPI('system:auth')->ifYouCan('Maintain')) {
             return $resp->setAccessError();
             return;

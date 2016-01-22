@@ -100,7 +100,7 @@ class site {
     }
 
     public function runAsDISPLAY () {
-        Response::setResponse($this->getHtmlPage());
+        return $this->getHtmlPage();
     }
 
     public function runAsSNAPSHOT () {
@@ -110,7 +110,7 @@ class site {
         $ch = curl_init();
         $url = $customer['SnapshotURL'];
         if (empty($url)) {
-            Response::setResponse('Empty SnapshotURL');
+            $resp->setResponse('Empty SnapshotURL');
             return;
         }
         // var_dump($_GET);
@@ -119,9 +119,10 @@ class site {
         curl_setopt($ch, CURLOPT_URL, $url . '/?_escaped_fragment_=' . urlencode($_GET['_escaped_fragment_']));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $resp->setResponse(curl_exec($ch));
+        $result = curl_exec($ch);
         curl_close($ch);
-        Response::setResponse($resp);
+        // $resp->setResponse($resp);
+        return $result;
     }
 
     public function runAsSITEMAP () {
@@ -131,15 +132,15 @@ class site {
         $ch = curl_init();
         $url = $customer['SitemapURL'];
         if (empty($url)) {
-            Response::setResponse('Empty SitemapURL');
+            $resp->setResponse('Empty SitemapURL');
             return;
         }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $resp->setResponse(curl_exec($ch));
+        $result = curl_exec($ch);
         curl_close($ch);
-        Response::setResponse($resp);
+        return $result;
     }
 
     public function runAsAPI () {
@@ -169,8 +170,9 @@ class site {
             'print_response' => Request::isGET()
         );
         $upload_handler = new JqUploadLib($options);
-        Response::setResponse($upload_handler->get_response());
+        $result = $upload_handler->get_response();
         API::getAPI('system:auth')->updateSessionAuth();
+        return $result;
     }
 
 }

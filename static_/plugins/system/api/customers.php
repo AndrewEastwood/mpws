@@ -25,8 +25,10 @@ class customers extends API {
         global $app;
         // echo 'loadActiveCustomer';
         // try to load session customer
+        $isSwitched = false;
         $sessionID = $this->getCustomerSessionID();
-        $isSwitched = $this->switchToCustomerByID($sessionID);
+        if (!is_null($sessionID))
+            $isSwitched = $this->switchToCustomerByID($sessionID);
         if (!$isSwitched) {
             // otherwise try to load default customer
             if (!$this->switchToDefaultCustomer()) {

@@ -122,12 +122,12 @@ class app {
     private $keys = null;
     private $db = null;
     private $req = null;
-    private $resp->setResponse(null);
+    private $resp = null;
 
     function __construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
         // request & responce
-        $this->req = new Request();
-        $this->resp = new Response();
+        $this->req = Request::getInstance();
+        $this->resp = Response::getInstance();
         // keys
         $keys = (object)array(
             'mandrill' => '4tSbctT_FNQrZ0AnClOH_w'
@@ -241,11 +241,11 @@ class app {
     }
 
     public function getResponse () {
-        return Response::getResponse();
+        return $this->resp->getResponse();
     }
 
     public function getJSONResponse () {
-        return Response::getJSONResponse();
+        return $this->resp->getJSONResponse();
     }
 
     public function startApplication () {
@@ -268,24 +268,25 @@ class app {
         // $customer = new $_customerClass();
         // $this->customer = new $_customerScript($this);
         $options = func_get_args();
+        $result = null;
         switch ($this->runMode()) {
             case 'api':
-                $this->getSite()->runAsAPI($options);
+                $result = $this->getSite()->runAsAPI($options);
                 break;
             // case 'auth':
             //     $this->getSite()->runAsAUTH($options);
             //     break;
             case 'upload':
-                $this->getSite()->runAsUPLOAD($options);
+                $result = $this->getSite()->runAsUPLOAD($options);
                 break;
             case 'display':
-                $this->getSite()->runAsDISPLAY($options);
+                $result = $this->getSite()->runAsDISPLAY($options);
                 break;
             case 'snapshot':
-                $this->getSite()->runAsSNAPSHOT($options);
+                $result = $this->getSite()->runAsSNAPSHOT($options);
                 break;
             case 'sitemap':
-                $this->getSite()->runAsSITEMAP($options);
+                $result = $this->getSite()->runAsSITEMAP($options);
                 break;
             // case 'background':
             //     $this->customer->runAsBACKGROUND($options);
@@ -294,6 +295,8 @@ class app {
             // default:
             //     throw new Exception("Error Processing Request: Unknown request type", 1);
         }
+        if (!is_null($result))
+            $this->resp->setResponse($result);
     }
 
     public function getSettings ($option = false) {

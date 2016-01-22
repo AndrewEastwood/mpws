@@ -110,9 +110,11 @@ class data extends BaseData {
         // this runs before each query to db (select, insert, etc)
         dbQuery::setCommonPreFilter(function ($f) use ($app) {
             // if ($f->isSelect()) {
-            $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
-            // }
-            $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            if (dbQuery::tableContainsColumn($f->getSource(), 'CustomerID')) {
+                $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
+                // }
+                $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            }
         });
         
         dbQuery::setQueryFilter(function (&$task) {
