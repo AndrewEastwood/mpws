@@ -33,13 +33,14 @@ class dbquery {
     var $result = null;
     var $join = array();
 
-    function __construct ($queryName, $source, $props = null) {
+    private function __construct ($queryName, $source, $props = null, $isClone = false) {
         if (!is_string($queryName)) {
             throw new Exception("Query name must be a string", 1);
             return;
         }
-        if (dbquery::exists($queryName)) {
+        if (!$isClone && dbquery::exists($queryName)) {
             throw new Exception("Query '$queryName' already exists", 1);
+            return;
         }
         $this->name = $queryName;
         $this->source = $source;
@@ -51,23 +52,57 @@ class dbquery {
                 }
             }
         } // #A <<
-        dbquery::$queryNameToInstanceMap[$queryName] = $this;
+        if (!$isClone)
+            dbquery::$queryNameToInstanceMap[$queryName] = $this;
     }
 
     function __clone () {
         throw new Exception("Use cloneQuery function instead", 1);
     }
 
+    /**
+     * Static constructor / factory
+     */
+    public static function create($queryName, $source, $props = null) {
+        $instance = new self($queryName, $source, $props);
+        return $instance;
+    }
+    public function copy () {
+        $props = $this->packAllProps();
+        $newQueryInstance = new self($this->name, $this->source, $props, true);
+        return $newQueryInstance;
+    }
+    public function cloneQuery ($newQueryName) {
+        if (dbquery::exists($newQueryName)) {
+            throw new Exception("Query '$newQueryName' already exists. Use ::getQueryByName function", 1);
+        }
+        if (empty($newQueryName)) {
+            throw new Exception("You must provide query name", 1);
+        }
+        $props = $this->packAllProps();
+        $newQueryInstance = new self($newQueryName, $this->source, $props, true);
+        return $newQueryInstance;
+    }
+
     private function packAllProps () {
         $props = get_object_vars($this);
-        $props['conditions'] = clone $this->conditions;
-        $props['options'] = clone $this->options;
-        $props['order'] = clone $this->order;
-        $props['fields'] = clone $this->fields;
-        $props['data'] = clone $this->data;
-        $props['saveOptions'] = clone $this->saveOptions;
-        unlink($props['result']);
-        unlink($props['name']);
+        $conditions = new ArrayObject($this->conditions);
+        $options = new ArrayObject($this->options);
+        $order = new ArrayObject($this->order);
+        $fields = new ArrayObject($this->fields);
+        $data = new ArrayObject($this->data);
+        $saveOptions = new ArrayObject($this->saveOptions);
+
+        $props['conditions'] = $conditions->getArrayCopy();
+        $props['options'] = $options->getArrayCopy();
+        $props['order'] = $order->getArrayCopy();
+        $props['fields'] = $fields->getArrayCopy();
+        $props['data'] = $data->getArrayCopy();
+        $props['saveOptions'] = $saveOptions->getArrayCopy();
+
+        unset($props['result']);
+        unset($props['name']);
+
         return $props;
     }
 
@@ -115,7 +150,8 @@ class dbquery {
     /**  As of PHP 5.3.0  */
     public static function __callStatic($name, $args)
     {
-        return self::get($name);
+        $q = self::get($name);
+        return $q->copy();
     }
 
     public static function setCommonPreFilter ($filter) {
@@ -200,18 +236,6 @@ class dbquery {
     public static function genValueQueryParamDateNowCondition ($condition) {
         return $this->genValueQueryParamDateNowCondition(dbquery::getDate(), $condition);
     }
-
-    public function cloneQuery ($newQueryName) {
-        if (dbquery::exists($newQueryName)) {
-            throw new Exception("Query '$newQueryName' already exists. Use ::getQueryByName function", 1);
-        }
-        if (empty($newQueryName)) {
-            throw new Exception("You must provide query name", 1);
-        }
-        $props = $this->packAllProps();
-        $newQueryInstance = new dbquery($newQueryName, $this->source, $props);
-        return $newQueryInstance;
-    }
     public function getSource () {
         return $this->source;
     }
@@ -264,11 +288,20 @@ class dbquery {
         $this->data = $data;
         return $this;
     }
+    public function setDataArgs () {
+        $this->data = func_get_args();
+        return $this;
+    }
     public function addData (array $data) {
         $this->data += $data;
         return $this;
     }
     public function addDataItem ($key, $value) {
+        $this->data[$key] = $value;
+        return $this;
+    }
+    public function setDataItem ($key, $value) {
+        $this->clearData();
         $this->data[$key] = $value;
         return $this;
     }
@@ -302,8 +335,12 @@ class dbquery {
         }
         return $this;
     }
-    public function setLimit ($limit = 100) {
+    public function setLimit ($limit = 32) {
         $this->limit = intval($limit);
+        return $this;
+    }
+    public function setNoLimit () {
+        $this->limit = 0;
         return $this;
     }
     public function setOffset ($offset = 0) {
@@ -685,7 +722,7 @@ class dbquery {
     // }
 
     private function lockActionTillQuery ($action) {
-        $thus->setAction($action);
+        $this->setAction($action);
         $this->actionIsLocked = true;
     }
 

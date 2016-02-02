@@ -84,7 +84,7 @@ class delivery extends API {
     // -----------------------------------------------
 
     public function get ($req, $resp) {
-        if (Request::hasRequestedID() && $allAccess) {
+        if ($req->hasRequestedID() && $allAccess) {
             $resp->setResponse($this->data->fetchDeliveryAgencyByID($req->id));
             return;
         }
@@ -107,7 +107,7 @@ class delivery extends API {
         if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('MENU_SETTINGS')) {
             return $resp->setAccessError();
         }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateDeliveryAgency($req->id, $req->data));
             return;
         }
@@ -129,7 +129,7 @@ class delivery extends API {
         if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('shop_EDIT_PRODUCT')) {
             return $resp->setAccessError();
         }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->deleteDeliveryAgency($req->id));
             return;
         }

@@ -14,7 +14,7 @@ class api {
     // apiKey must in the following format "pluginName:apiName"
     static public function getAPI ($apiKey = false, $forRequest = true) {
         if (empty($apiKey)) {
-            $apiKey = Request::pickFromGET('api');
+            $apiKey = Request::getInstance()->pickFromGET('api');
         }
         $api = null;
         if (isset(self::$cacheApis[$apiKey])) {
@@ -72,6 +72,9 @@ class api {
         // bind plugin owner and data class
         $this->pluginApiName = $pluginApiName;
         $this->data = API::getAPI($pluginApiName . ':data');
+        if (method_exists($this, 'init')) {
+            $this->init();
+        }
     }
 
 }

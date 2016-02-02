@@ -15,3 +15,5 @@ ALTER TABLE `mpws_subscribers` CHANGE `Email` `Email` VARCHAR(300) CHARACTER SET
 ALTER TABLE `mpws_subscribers` CHANGE `Enabled` `Status` ENUM('ACTIVE','REMOVED') NOT NULL;
 ALTER TABLE `mpws_subscribers` CHANGE `DateUpdated` `LastSent` DATETIME NOT NULL AFTER `Status`;
 ALTER TABLE `mpws_subscribers` CHANGE `AccountID` `AccountID` INT(11) NULL;
+
+DROP PROCEDURE `getShopCatalogLocation`; CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCatalogLocation`(IN `catid` INT, IN `cid` INT UNSIGNED ZEROFILL) NOT DETERMINISTIC READS SQL DATA SQL SECURITY DEFINER BEGIN SELECT T2.ID, T2.CustomerID, T2.Name, T2.ExternalKey FROM ( SELECT @r AS _id, (SELECT @r := ParentID FROM shop_categories WHERE ID = _id) AS ParentID, @l := @l + 1 AS lvl FROM (SELECT @r := catid, @l := 0) vars, shop_categories h WHERE @r <> 0 ) T1 JOIN shop_categories T2 ON T1._id = T2.ID WHERE T2.CustomerID = cid ORDER BY T1.lvl DESC; END

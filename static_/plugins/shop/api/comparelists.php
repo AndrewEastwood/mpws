@@ -18,7 +18,7 @@ class comparelists extends API {
         return $this->_productsLimit;
     }
 
-    public function get (&$resp) {
+    public function get ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         $resp->setResponse(array_values($items));
     }

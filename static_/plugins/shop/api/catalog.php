@@ -206,7 +206,7 @@ class catalog extends API {
     }
 
     public function get ($req, $resp) {
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             // if (is_numeric($req->id)) {
             //     $CategoryID = intval($req->id);
             $resp->setResponse($this->getCatalogBrowse($CategoryID));
@@ -220,7 +220,7 @@ class catalog extends API {
             //     }
             // }
         }
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $category = $this->data->fetchCategoryByExternalKey($req->externalKey);
             if (isset($category['ID'])) {
                 $resp->setResponse($this->getCatalogBrowse($category['ID']));

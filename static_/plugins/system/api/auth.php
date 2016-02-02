@@ -185,7 +185,7 @@ class auth extends API {
         return null;
     }
 
-    public function get (&$resp) {
+    public function get ($req, $resp) {
         // var_dump($_SESSION[$this->authKey]);
         $resp->setResponse($this->getAuthenticatedUser());
         $this->updateSessionAuth();

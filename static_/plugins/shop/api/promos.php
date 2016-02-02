@@ -158,12 +158,12 @@ class promos extends API {
         // }
         // for specific item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->fetchPromoByID($req->id));
             return;
         }
         // for the case when we have to fecth list with customers
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     return;
         // }
         $resp->setResponse($this->data->fetchPromoDataList($req->get));
@@ -197,7 +197,7 @@ class promos extends API {
         //     return;
         // }
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->updatePromo($req->id, $req->data));
             return;
         }
@@ -219,7 +219,7 @@ class promos extends API {
         //     return $resp->setAccessError();
         //     return;
         // }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->expirePromo($req->id));
             return;
         }

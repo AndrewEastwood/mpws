@@ -198,7 +198,7 @@ class address extends API {
             return $resp->setAccessError();
             return;
         }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->createAddress($UserID, $req->data));
             return;
         }
@@ -207,7 +207,7 @@ class address extends API {
         // $resp->setResponse($this->createAddress($UserID, $req->data));
 
 
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setError('WrongIDParameter');
         // } else {
         //     $UserID = null;
@@ -223,7 +223,7 @@ class address extends API {
         //         return $resp->setAccessError();
         //         return;
         //     }
-        //     if (Request::hasRequestedID()) {
+        //     if ($req->hasRequestedID()) {
         //         $resp->setResponse($this->_updateAddressByID($req->id, $req->data));
         //         return;
         //     } else {
@@ -272,7 +272,7 @@ class address extends API {
     }
 
     public function delete ($req, $resp) {
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $address = $this->getAddressByID($req->id);
             if (empty($address)) {
                 $resp->setError('WrongAddressID');

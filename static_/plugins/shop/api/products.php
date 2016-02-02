@@ -95,7 +95,8 @@ class products extends API {
 
     // TODO: optimmize list query
     public function getViewedProducts_List () {
-        return $this->data->
+        return $this->data->fetchOnSaleProducts_List();
+        // return $this->data->
         // global $app;
         // $_items = array();
         // $viewedProductsIDs = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
@@ -1390,17 +1391,17 @@ class products extends API {
     public function get ($req, $resp) {
         // for specific product item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->fetchSingleProductByID($req->id));
             return;
         }
         // or by ExternalKey
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $resp->setResponse($this->data->fetchSingleProductByExternalKey($req->externalKey));
             return;
         }
         // for the case when we have to fecth list with products
-        if (Request::noRequestedItem()) {
+        if ($req->noRequestedItem()) {
             $listOptions = $app->getDB()->pickDataListParamsFromRequest($req->get);
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
@@ -1472,7 +1473,7 @@ class products extends API {
         //     return return $resp->setAccessError();
         // }
 
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateProduct($req->id, $req->data));
             return;
         }
@@ -1483,7 +1484,7 @@ class products extends API {
         if (!API::getAPI('system:auth')->ifYouCanEditWithAllOthers('shop_EDIT_PRODUCT')) {
             return $resp->setAccessError();
         }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->archiveProduct($req->id, $req->data));
             return;
         }

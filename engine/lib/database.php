@@ -130,8 +130,8 @@ class database {
         );
     }
 
-    public function createQuery ($name, $source) {
-        return new dbquery($name, $source);
+    public function createQuery ($name, $source, $props = null) {
+        return dbquery::create($name, $source, $props);
     }
 
     public function getQuery ($name) {

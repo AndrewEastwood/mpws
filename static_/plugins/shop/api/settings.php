@@ -11,8 +11,8 @@ use ArrayObject;
 
 class settings extends API {
 
-    public function __construct () {
-        $types = array_keys($this->data->$SETTING_TYPE_TO_DBTABLE_MAP);
+    protected function init () {
+        $types = array_keys($this->data->SETTING_TYPE_TO_DBTABLE_MAP);
         $this->SETTING_TYPE_ARRAY = $types;
         $this->SETTING_TYPE = (object)array_combine($types, $types);
     }

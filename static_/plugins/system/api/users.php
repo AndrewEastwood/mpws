@@ -523,12 +523,12 @@ class users extends API {
 
         // for specific item
         // by id
-        if (Request::hasRequestedID() && $allAccess) {
+        if ($req->hasRequestedID() && $allAccess) {
             $resp->setResponse($this->data->fetchUserByID($req->id));
             return;
         }
         // or by ExternalKey
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $resp->setResponse($this->data->fetchUserByValidationString($req->externalKey));
             return;
         }
@@ -538,7 +538,7 @@ class users extends API {
             return;
         }
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem() && $allAccess) {
+        if ($req->noRequestedItem() && $allAccess) {
             $resp->setResponse($this->data->fetchUserDataList($req->get));
         }
 
@@ -587,13 +587,13 @@ class users extends API {
 
         // for specific user item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->updateUser($req->id, $req->data));
             return;
         }
 
         // for the case when we have to fecth list with user
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }
@@ -621,13 +621,13 @@ class users extends API {
 
         // for specific user item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->updateUser($req->id, $req->data, true));
             return;
         }
 
         // for the case when we have to fecth list with user
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }
@@ -655,12 +655,12 @@ class users extends API {
         // }
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->disableUser($req->id));
             return;
         }
         // for the case when we have to fecth list with customers
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }

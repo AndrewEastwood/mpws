@@ -22,7 +22,7 @@ class wishlists extends API {
         return $this->_productsLimit;
     }
 
-    public function get (&$resp) {
+    public function get ($req, $resp) {
         $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         $resp->setResponse(array_values($items));
     }

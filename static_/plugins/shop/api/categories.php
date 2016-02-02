@@ -136,7 +136,7 @@ class categories extends API {
         if ($r->isSuccess() && $r->hasResult()) {
             $category = $this->data->fetchCategoryByID($r->getResult());
             $r->setResult($category);
-        // }
+        }
         // if ($success && !empty($CategoryID))
         //     $result = $this->fetchCategoryByID($CategoryID);
         // $result['errors'] = $errors;
@@ -299,9 +299,9 @@ class categories extends API {
             $branch = array();
             // echo "#######Looking for element where parentid ==", $parentId, PHP_EOL;
             foreach ($elements as $key => $element) {
-                // echo "~~~Current element ID = ", $element['ParentID'], PHP_EOL;
+                // echo "~~~Current element ParentID = ", $element['ParentID'], PHP_EOL;
                 if ($element['ParentID'] == $parentId) {
-                    // echo "Element is found".PHP_EOL;
+                    // echo "Element is found" . PHP_EOL;
                     // echo "Looking for element child nodes wherer ParentID = ", $key,PHP_EOL;
                     $element['childNodes'] = getTree($elements, $key);
                     $element['SubIDs'] = array_keys($element['childNodes']);
@@ -318,6 +318,9 @@ class categories extends API {
         }
 
         $categories = $this->data->fetchCatalogTreeDict($selectedCategoryID);
+
+        // var_dump($categories);
+        // var_dump($categories);
         // $categories = $app->getDB()->query($config);
         // $map = array();
         // if (!empty($categories))
@@ -325,6 +328,7 @@ class categories extends API {
         //         $map[$value['ID']] = $this->__adjustCategory($value);
 
         // $tree = getTree($map);
+        // var_dump($categories[5]);
         $tree = getTree($categories);
 
         return $tree;
@@ -333,12 +337,12 @@ class categories extends API {
     public function get ($req, $resp) {
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->fetchCategoryByID($req->id));
             return;
         }
         // or by ExternalKey
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $resp->setResponse($this->data->fetchCategoryByExternalKey($req->externalKey));
             return;
         }
@@ -350,7 +354,7 @@ class categories extends API {
         } 
 
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
+        if ($req->noRequestedItem()) {
             $resp->setResponse($this->data->fetchCategoryDataList($req->get));
             return;
         }
@@ -386,7 +390,7 @@ class categories extends API {
         }
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateCategory($req->id, $req->data));
             return;
         }
@@ -408,7 +412,7 @@ class categories extends API {
         }
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->disableCategory($req->id));
             return;
         }

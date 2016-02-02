@@ -131,7 +131,7 @@ class customers extends API {
     public function getRuntimeCustomerID () {
         $ID = $this->getCustomerSessionID();
         if (isset($this->customersCache[$ID])) {
-            return $ID;
+            return intval($ID);
         }
         unset($this->customersCache[$ID]);
         throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by session id=" . $ID, 1);
@@ -460,17 +460,17 @@ class customers extends API {
 
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->data->fetchCustomerByID($req->id));
             return;
         }
         // or by ExternalKey
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $resp->setResponse($this->data->fetchCustomerByName($req->externalKey));
             return;
         }
         // for the case when we have to fecth list with customers
-        if (Request::noRequestedItem()) {
+        if ($req->noRequestedItem()) {
             $resp->setResponse($this->data->fetchCustomerDataList($req->get));
         }
         // if (!empty($req->id)) {
@@ -520,13 +520,13 @@ class customers extends API {
 
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateCustomer($req->id, $req->data));
             return;
         }
         $resp->setWrongItemIdError();
         // // for the case when we have to fecth list with customers
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }
@@ -555,12 +555,12 @@ class customers extends API {
         // }
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateCustomer($req->id, $req->data, true));
             return;
         }
         // for the case when we have to fecth list with customers
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }
@@ -586,12 +586,12 @@ class customers extends API {
         }
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->archiveCustomer($req->id));
             return;
         }
         // for the case when we have to fecth list with customers
-        // if (Request::noRequestedItem()) {
+        // if ($req->noRequestedItem()) {
         //     $resp->setWrongItemIdError();
         //     return;
         // }

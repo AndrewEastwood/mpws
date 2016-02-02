@@ -21,8 +21,8 @@ class request {
     public function __get ($name) {
         $data = $this->getRequestObj();
         // echo "Getting '$name'\n";
-        if (array_key_exists($name, $data)) {
-            return $data[$name];
+        if (isset($data->$name)) {
+            return $data->$name;
         }
 
         $trace = debug_backtrace();
@@ -52,16 +52,16 @@ class request {
 
     public function getRequestedExternalKey () {
         $req = $_GET;
-        if (isset($req->get['id']) && !is_numeric($req->get['id'])) {
-            return $req->get['id'];
+        if (isset($req['id']) && !is_numeric($req['id'])) {
+            return $req['id'];
         }
         return null;
     }
 
     public function getRequestedID () {
         $req = $_GET;
-        if (isset($req->get['id']) && is_numeric($req->get['id'])) {
-            return intval($req->get['id']);
+        if (isset($req['id']) && is_numeric($req['id'])) {
+            return intval($req['id']);
         }
         return null;
     }

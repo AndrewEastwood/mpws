@@ -202,12 +202,12 @@ class origins extends API {
     public function get ($req, $resp) {
         // for specific customer item
         // by id
-        if (Request::hasRequestedID()) {
-            $resp->setResponse($this->fetchOriginByID($req->id));
+        if ($req->hasRequestedID()) {
+            $resp->setResponse($this->data->fetchOriginByID($req->id));
             return;
         }
         // or by ExternalKey
-        if (Request::hasRequestedExternalKey()) {
+        if ($req->hasRequestedExternalKey()) {
             $resp->setResponse($this->data->fetchOriginByExternalKey($req->externalKey));
             return;
         }
@@ -246,7 +246,7 @@ class origins extends API {
         //     return $resp->setAccessError();
         //     return;
         // }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->updateOrigin($req->id, $req->data));
             return;
         }
@@ -268,7 +268,7 @@ class origins extends API {
         //     return $resp->setAccessError();
         //     return;
         // }
-        if (Request::hasRequestedID()) {
+        if ($req->hasRequestedID()) {
             $resp->setResponse($this->disableOrigin($req->id, $req->data));
             return;
         }

@@ -7,6 +7,7 @@ use \engine\lib\path as Path;
 use \engine\lib\utils as Utils;
 use \engine\lib\api as API;
 use \engine\lib\data as BaseData;
+use \engine\lib\dbquery as dbQuery;
 use \static_\plugins\shop\api\shoputils as ShopUtils;
 use Exception;
 use ArrayObject;
@@ -66,9 +67,9 @@ class data extends BaseData {
             ->setJoin('shop_productFeatures', "shop_products.CategoryID=shop_productFeatures.ID",
                     array("FeatureID"));
 
-        $this->db->createQuery('shopCatalogLocation', $thsi->source_proc_catalogLocation);
-        $this->db->createQuery('shopCatalogBrands', $thsi->source_proc_catalogBrands);
-        $this->db->createQuery('shopCatalogPriceEdges', $thsi->source_proc_catalogPriceEdges);
+        $this->db->createQuery('shopCatalogLocation', $this->source_proc_catalogLocation);
+        $this->db->createQuery('shopCatalogBrands', $this->source_proc_catalogBrands);
+        $this->db->createQuery('shopCatalogPriceEdges', $this->source_proc_catalogPriceEdges);
 
             // "shop_categories" => array(
             //     "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
@@ -84,12 +85,12 @@ class data extends BaseData {
             // )
         $this->db->createQuery('shopOrigins', $this->source_origins);
         $this->db->createQuery('shopCategories', $this->source_categories);
-        $this->db->createQuery('shopProductFeatures', $this->source_productFeatures);
-        $this->db->createQuery('shopProductPrices', $this->source_productPrices);
-        $this->db->createQuery('shopRelations', $this->source_relations);
-        $this->db->createQuery('shopFeatures', $this->source_features)
+        $this->db->createQuery('shopProductFeatures', $this->source_productFeatures)
             ->setJoin('shop_features', 'shop_productFeatures.FeatureID=shop_features.ID',
                 array("ID", "FieldName", "GroupName"));
+        $this->db->createQuery('shopProductPrices', $this->source_productPrices);
+        $this->db->createQuery('shopRelations', $this->source_relations);
+        $this->db->createQuery('shopFeatures', $this->source_features);
 
         // return dbquery::createOrGetQuery(array(
         //     "action" => "select",
@@ -132,9 +133,11 @@ class data extends BaseData {
         // this runs before each query to db (select, insert, etc)
         dbQuery::setCommonPreFilter(function ($f) use ($app) {
             // if ($f->isSelect()) {
-            $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
-            // }
-            $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            if (!$f->isCall() && dbQuery::tableContainsColumn($f->getSource(), 'CustomerID')) {
+                $f->addCondition('CustomerID', $app->getSite()->getRuntimeCustomerID());
+                // }
+                $f->addDataItem('CustomerID', $app->getSite()->getRuntimeCustomerID());
+            }
         });
 
         dbQuery::setQueryFilter(function (&$product) use ($self) {
@@ -144,9 +147,10 @@ class data extends BaseData {
             $product['ID'] = $productID;
             $product['OriginID'] = intval($product['OriginID']);
             $product['CategoryID'] = intval($product['CategoryID']);
-            $product['_category'] = $this->data->fetchCategoryByID($product['CategoryID']);
-            $product['_origin'] = API::getAPI('shop:origins')->getOriginByID($product['OriginID']);
-            $product['Attributes'] = self::fetchProductAttributes($productID);
+            $product['CustomerID'] = intval($product['CustomerID']);
+            $product['_category'] = $self->fetchCategoryByID($product['CategoryID']);
+            $product['_origin'] = $self->fetchOriginByID($product['OriginID']);
+            $product['Attributes'] = $self->fetchProductAttributes($productID);
             $product['IsPromo'] = intval($product['IsPromo']) === 1;
             $product['IsFeatured'] = intval($product['IsFeatured']) === 1;
             $product['IsOffer'] = intval($product['IsOffer']) === 1;
@@ -167,17 +171,17 @@ class data extends BaseData {
             $product['_displayName'] = implode(' ', array_slice($displayName, 1));
 
             // misc data
-            if (!$skipRelations) {
-                $product['Relations'] = self::fetchProductRelationsArray($productID);
-            }
+            // if (!$skipRelations) {
+            //     $product['Relations'] = $this->fetchProductRelationsArray($productID);
+            // }
 
             // features
-            $product['Features'] = self::fetchProductFeaturesArray($productID);
+            $product['Features'] = $self->fetchProductFeaturesArray($productID);
 
             // media
-            $product['Images'] = self::fetchProductImages($productID);
-            $product['Videos'] = self::fetchProductVideos($productID);
-            $product['Banners'] = self::fetchProductBanners($productID);
+            $product['Images'] = $self->fetchProductImages($productID);
+            $product['Videos'] = $self->fetchProductVideos($productID);
+            $product['Banners'] = $self->fetchProductBanners($productID);
 
             // Utils
             $product['viewExtrasInWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
@@ -185,8 +189,8 @@ class data extends BaseData {
             $product['viewExtrasInCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
 
             // is available
-            $product['_available'] = in_array($product['Status'], self::getProductStatusesWhenAvailable());
-            $product['_archived'] = in_array($product['Status'], self::getProductStatusesWhenDisabled());
+            $product['_available'] = in_array($product['Status'], $self->getProductStatusesWhenAvailable());
+            $product['_archived'] = in_array($product['Status'], $self->getProductStatusesWhenDisabled());
 
             // promo
             $promo = API::getAPI('shop:promos')->getSessionPromo();
@@ -196,7 +200,7 @@ class data extends BaseData {
             $price = floatval($product['Price']);
             $prevprice = floatval($product['PrevPrice']);
             $actualPrice = 0;
-            $priceHistory = self::fetchProductPriceHistory($productID);
+            $priceHistory = $self->fetchProductPriceHistory($productID);
             if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
                 $product['_promoIsApplied'] = true;
                 $actualPrice = (100 - intval($promo['Discount'])) / 100 * $price;
@@ -237,9 +241,9 @@ class data extends BaseData {
             // // save product into recently viewed list
             // $isDirectRequestToProduct = Request::hasInGet('id') || Request::hasInGet('params');
             // if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
-            //     $recentProducts = isset($_SESSION[self::_listKey_Recent]) ? $_SESSION[self::_listKey_Recent] : array();
+            //     $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             //     $recentProducts[] = $productID;
-            //     $_SESSION[self::_listKey_Recent] = array_unique($recentProducts);
+            //     $_SESSION[$this->_listKey_Recent] = array_unique($recentProducts);
             // }
 
             // var_dump($product);
@@ -251,9 +255,10 @@ class data extends BaseData {
                 return null;
             $categoryID = intval($category['ID']);
             $category['ID'] = $categoryID;
+            $category['CustomerID'] = intval($category['CustomerID']);
             $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
             $category['_isRemoved'] = $category['Status'] === 'REMOVED';
-            $category['_location'] = $this->getCategoryLocationByCategoryID($categoryID);
+            $category['_location'] = $self->fetchCategoryLocation($categoryID);
             if (!empty($category['Image'])) {
                 $category['Image'] = array(
                     'name' => $category['Image'],
@@ -266,6 +271,7 @@ class data extends BaseData {
             }
             // add sub categoires IDs
             $category['SubIDs'] = array();
+            $category['childNodes'] = array();
             // if (!empty($category['childNodes'])) {
             //     $category['SubIDs'] += array_keys($category['childNodes']);
             // }
@@ -276,6 +282,7 @@ class data extends BaseData {
             if (empty($promo))
                 return null;
             $promo['ID'] = intval($promo['ID']);
+            $promo['CustomerID'] = intval($promo['CustomerID']);
             $promo['Discount'] = floatval($promo['Discount']);
             $promo['_isExpired'] = strtotime(dbquery::getDate()) > strtotime($promo['DateExpire']);
             $promo['_isFuture'] = strtotime(dbquery::getDate()) < strtotime($promo['DateStart']);
@@ -293,6 +300,7 @@ class data extends BaseData {
             if (empty($agency))
                 return null;
             $agency['ID'] = intval($agency['ID']);
+            $agency['CustomerID'] = intval($agency['CustomerID']);
             $agency['_isRemoved'] = $agency['Status'] === 'REMOVED';
             $agency['_isActive'] = $agency['Status'] === 'ACTIVE';
         }, 'shopDeliveryAgencies');
@@ -594,7 +602,7 @@ class data extends BaseData {
         $data = $this->fetchProductAttributesArray($productID, 'IMAGE');
         // global $app;
         $images = array();
-        // $config = self::fetchProductAttributesArray($productID, 'IMAGE');
+        // $config = $this->fetchProductAttributesArray($productID, 'IMAGE');
         // $data = dbquery::query($config);
         // var_dump($data);
         if (!empty($data)) {
@@ -618,7 +626,7 @@ class data extends BaseData {
         $data = $this->fetchProductAttributesArray($productID, $this->getProductBannerTypes());
         // global $app;
         $banners = array();
-        // $config = self::fetchProductAttributesArray($productID, self::getProductBannerTypes());
+        // $config = $this->fetchProductAttributesArray($productID, $this->getProductBannerTypes());
         // $data = dbquery::query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -631,7 +639,7 @@ class data extends BaseData {
             }
         }
         // get banner texts
-        // $config = self::fetchProductAttributesArray($productID, array('BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2'));
+        // $config = $this->fetchProductAttributesArray($productID, array('BANNER_TEXT_LINE1', 'BANNER_TEXT_LINE2'));
         // $config['options']['asDict'] = 'Attribute';
         // $data = dbquery::query($config);
         // // var_dump($data);
@@ -657,7 +665,7 @@ class data extends BaseData {
         return $videos;
         // global $app;
         // $videos = array();
-        // $config = self::fetchProductAttributesArray($productID, 'VIDEO');
+        // $config = $this->fetchProductAttributesArray($productID, 'VIDEO');
         // $data = dbquery::query($config);
         // if (!empty($data)) {
         //     foreach ($data as $item) {
@@ -668,7 +676,7 @@ class data extends BaseData {
     }
 
     public function fetchProductAttributes ($productID) {
-        $data = $this->fetchProductAttributesArray($productID)
+        $data = $this->fetchProductAttributesArray($productID);
         $attr = array();
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -678,10 +686,10 @@ class data extends BaseData {
                 $attr[$item['Attribute']] = $item['Value'];
             }
         }
-        return $featuresGroups;
+        return $attr;
         // global $app;
         // $attr = array();
-        // $config = self::fetchProductAttributesArray($productID);
+        // $config = $this->fetchProductAttributesArray($productID);
         // $data = dbquery::query($config);
         // if (!empty($data)) {
         //     foreach ($data as $item) {
@@ -695,7 +703,7 @@ class data extends BaseData {
     }
 
     public function fetchProductFeaturesArray ($productID) {
-        $data = dbquery::shopFeatures()
+        $data = dbquery::shopProductFeatures()
             ->setAllFields()
             ->setCondition('ProductID', $productID)
             ->selectAsArray();
@@ -711,7 +719,7 @@ class data extends BaseData {
         return $featuresGroups;
         // global $app;
         // $featuresGroups = array();
-        // $config = self::dbqProductFeatures($productID);
+        // $config = $this->dbqProductFeatures($productID);
         // $data = dbquery::query($config);
         // if (!empty($data)) {
         //     foreach ($data as $value) {
@@ -736,7 +744,7 @@ class data extends BaseData {
         return $price;
         // global $app;
         // $price = null;
-        // $config = self::dbqProductPrice($productID);
+        // $config = $this->dbqProductPrice($productID);
         // $data = dbquery::query($config);
         // if (isset($data['Price'])) {
         //     $price = floatval($data['Price']);
@@ -772,7 +780,7 @@ class data extends BaseData {
 
         // global $app;
         // $prices = array();
-        // $config = self::dbqProductPriceStats($productID);
+        // $config = $this->dbqProductPriceStats($productID);
         // $data = dbquery::query($config);
         // if (!empty($data)) {
         //     foreach ($data as $item) {
@@ -793,14 +801,14 @@ class data extends BaseData {
             ->selectAsArray();
         // global $app;
         // $relations = array();
-        // $configProductsRelations = self::dbqProductRelations($productID);
+        // $configProductsRelations = $this->dbqProductRelations($productID);
         // $relatedItemsIDs = dbquery::query($configProductsRelations);
         // if (isset($relatedItemsIDs)) {
         //     foreach ($relatedItemsIDs as $relationItem) {
         //         $relatedProductID = intval($relationItem['ProductB_ID']);
         //         if ($relatedProductID === $productID)
         //             continue;
-        //         $relatedProduct = self::fetchSingleProductByID($relatedProductID);
+        //         $relatedProduct = $this->fetchSingleProductByID($relatedProductID);
         //         if (isset($relatedProduct))
         //             $relations[] = $relatedProduct;
         //     }
@@ -816,12 +824,12 @@ class data extends BaseData {
         // global $app;
         // if (empty($productID) || !is_numeric($productID))
         //     return null;
-        // // $config = self::dbqProduct($productID);
+        // // $config = $this->dbqProduct($productID);
         // // $product = dbquery::query($config);
-        // self::dbqProduct($productID)->query();
+        // $this->dbqProduct($productID)->query();
         // if (empty($product))
         //     return null;
-        // return self::__adjustProduct($product, false);
+        // return $this->__adjustProduct($product, false);
     }
 
     public function fetchSingleProductByExternalKey ($eKey) {
@@ -832,11 +840,11 @@ class data extends BaseData {
         // global $app;
         // if (empty($eKey) || !is_string($eKey))
         //     return null;
-        // $config = self::dbqProductByExternalKey($eKey);
+        // $config = $this->dbqProductByExternalKey($eKey);
         // $product = dbquery::query($config);
         // if (empty($product))
         //     return null;
-        // return self::__adjustProduct($product);
+        // return $this->__adjustProduct($product);
     }
 
     public function fetchSingleProductByName ($name) {
@@ -847,11 +855,11 @@ class data extends BaseData {
         // global $app;
         // if (empty($name) || !is_string($name))
         //     return null;
-        // $config = self::dbqProductByName($name);
+        // $config = $this->dbqProductByName($name);
         // $product = dbquery::query($config);
         // if (empty($product))
         //     return null;
-        // return self::__adjustProduct($product);
+        // return $this->__adjustProduct($product);
     }
 
     public function fetchSingleProductByModel ($modelName) {
@@ -862,11 +870,11 @@ class data extends BaseData {
         // global $app;
         // if (empty($modelName) || !is_string($modelName))
         //     return null;
-        // $config = self::dbqProductByModel($modelName);
+        // $config = $this->dbqProductByModel($modelName);
         // $product = dbquery::query($config);
         // if (empty($product))
         //     return null;
-        // return self::__adjustProduct($product);
+        // return $this->__adjustProduct($product);
     }
 
     public function fetchSingleProductByModelAndOrigin ($modelName, $originName) {
@@ -886,11 +894,11 @@ class data extends BaseData {
         //     return null;
         // if (empty($originName) || !is_string($originName))
         //     return null;
-        // $config = self::dbqProductByModelAndOrigin($modelName, $originName);
+        // $config = $this->dbqProductByModelAndOrigin($modelName, $originName);
         // $product = dbquery::query($config);
         // if (empty($product))
         //     return null;
-        // return self::__adjustProduct($product);
+        // return $this->__adjustProduct($product);
     }
 
     public function fetchSingleProductShortInfo ($productID) {
@@ -901,7 +909,7 @@ class data extends BaseData {
         // global $app;
         // if (empty($productID) || !is_numeric($productID))
         //     return null;
-        // $config = self::dbqProductShortInfo();
+        // $config = $this->dbqProductShortInfo();
         // return dbquery::query($config);
     }
 
@@ -1001,18 +1009,18 @@ class data extends BaseData {
 
         return $q->selectAsDataList();
         // global $app;
-        // $config = self::dbqProducts_MatchedIDs($options);
+        // $config = $this->dbqProducts_MatchedIDs($options);
         // $list = dbquery::queryMatchedIDs($config);
 
         // // var_dump($list);
         // $productIDs = $list['ids'];
 
-        // $config = self::dbqProducts($productIDs);
+        // $config = $this->dbqProducts($productIDs);
         // $products = dbquery::query($config);
         // if (empty($products))
         //     return array();
         // foreach ($products as $key => $product) {
-        //     $products[$key] = self::__adjustProduct($product);
+        //     $products[$key] = $this->__adjustProduct($product);
         // }
         // $list['items'] = $products;
         // return $list;
@@ -1035,11 +1043,11 @@ class data extends BaseData {
         // hardcoded params
         // $options['sort'] = '-shop_products.DateCreated';
         // $listOptions['order'] = 'DESC';
-        // $listOptions['_fshop_products.Status'] = join(',', self::getProductStatusesWhenAvailable()) . ':IN';
+        // $listOptions['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         // $options['_fIsFeatured'] = true;
 
-        // return self::fetchProductsDataList($options);
-        // $config = self::dbqProducts_MatchedIDs($listOptions);
+        // return $this->fetchProductsDataList($options);
+        // $config = $this->dbqProducts_MatchedIDs($listOptions);
         // if (empty($config))
         //     return null;
         // $dataList = dbquery::queryMatchedIDs($config, $listOptions, $callbacks);
@@ -1070,7 +1078,7 @@ class data extends BaseData {
         // $options['_fshop_products.Price'] = '';
         // $options['_fshop_products.Status'] = '';
 
-        // return self::fetchProductsDataList($options);
+        // return $this->fetchProductsDataList($options);
     }
 
     public function fetchFeaturedProducts_List (array $options = array()) {
@@ -1093,30 +1101,30 @@ class data extends BaseData {
         // hardcoded params
         // $options['sort'] = 'shop_products.DateUpdated';
         // $options['order'] = 'DESC';
-        // $options['_fshop_products.Status'] = join(',', self::getProductStatusesWhenAvailable()) . ':IN';
+        // $options['_fshop_products.Status'] = join(',', $this->getProductStatusesWhenAvailable()) . ':IN';
         // $options['_fIsFeatured'] = true;
 
-        // return self::fetchProductsDataList($options);
+        // return $this->fetchProductsDataList($options);
     }
 
     public function productExistsByID ($productID) {
         $product = $this->fetchSingleProductShortInfo($productID);
         // global $app;
-        // $config = self::dbqCheckProductExistenceByID($productID);
+        // $config = $this->dbqCheckProductExistenceByID($productID);
         // $product = dbquery::query($config);
         return intval($product['ID']);
     }
     public function productExistsByExternalKey ($eKey) {
         $product = $this->fetchSingleProductByExternalKey($eKey);
         // global $app;
-        // $config = self::dbqCheckProductExistenceByExternalKey($productID);
+        // $config = $this->dbqCheckProductExistenceByExternalKey($productID);
         // $product = dbquery::query($config);
         return intval($product['ID']);
     }
     public function productExistsByModelAndOrigin ($modelName, $originName) {
         $product = $this->fetchSingleProductByModelAndOrigin($modelName, $originName);
         // global $app;
-        // $config = self::dbqCheckProductExistenceByModelAndOrigin($productID);
+        // $config = $this->dbqCheckProductExistenceByModelAndOrigin($productID);
         // $product = dbquery::query($config);
         return intval($product['ID']);
     }
@@ -1310,14 +1318,14 @@ class data extends BaseData {
         // // var_dump($config);
         // return $config;
         // global $app;
-        // $config = self::dbqUpdateProductSearchText($productID, null);
+        // $config = $this->dbqUpdateProductSearchText($productID, null);
         // return dbquery::query($config);
     }
 
     public function updateProductSearchTextByOriginID ($originID) {
         return $this->updateProductSearchTextByID(null, $originID);
         // global $app;
-        // $config = self::dbqUpdateProductSearchText(null, $originID);
+        // $config = $this->dbqUpdateProductSearchText(null, $originID);
         // return dbquery::query($config);
     }
 
@@ -1332,7 +1340,7 @@ class data extends BaseData {
         // $dbq = new dbquery('shopProduct');
         // $dbq->setSource('shop_products')
         //     ->addCondition('ID', $productID)
-        //     ->addCondition('Status', self::getProductStatuses())
+        //     ->addCondition('Status', $this->getProductStatuses())
         //     ->setFields("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Synopsis",
         //         "Description", "Model", "SKU", "Price", "PrevPrice",
         //         "IsPromo", "IsFeatured", "IsOffer", "ShowBanner", "Status", "SearchText",
@@ -1363,7 +1371,7 @@ class data extends BaseData {
         //     );
         // }
 
-        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses());
+        // $config['condition']['Status'] = dbquery::createCondition($this->getProductStatuses());
 
 
 
@@ -1374,28 +1382,28 @@ class data extends BaseData {
         if (empty($productIDs)) {
             throw new Exception("dbqProducts: empty ids", 1);
         }
-        return self::dbqProduct($productIDs);
+        return $this->dbqProduct($productIDs);
     }
     private static function dbqProductByName ($productName) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['condition']['Name'] = dbquery::createCondition($productName);
-        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         return $config;
     }
     private static function dbqProductByModel ($modelName) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['condition']['Model'] = dbquery::createCondition($modelName);
-        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         return $config;
     }
     private static function dbqProductByModelAndOrigin ($modelName, $originName) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['condition']['Model'] = dbquery::createCondition($modelName);
         $config['condition']['shop_origins.Name'] = dbquery::createCondition($originName);
-        // $config['condition']['shop_products.Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['shop_products.Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -1406,40 +1414,40 @@ class data extends BaseData {
     }
     private static function dbqProductByExternalKey ($externalKey) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         // $config['fields'] = array("ID");
         $config['condition']["shop_products.ExternalKey"] = dbquery::createCondition($externalKey);
-        // $config['condition']['shop_products.Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['shop_products.Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         // $config['additional'] = array();
         return $config;
     }
     private static function dbqCheckProductExistenceByID ($productID) {
         global $app;
-        $config = self::dbqProduct($productID);
+        $config = $this->dbqProduct($productID);
         $config['fields'] = array("ID");
         // $config['condition']['ID'] = dbquery::createCondition($productID);
-        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array();
         return $config;
     }
     private static function dbqCheckProductExistenceByExternalKey ($eKey) {
         global $app;
-        $config = self::dbqProductByExternalKey($eKey);
+        $config = $this->dbqProductByExternalKey($eKey);
         $config['fields'] = array("ID");
         // $config['condition']['ID'] = dbquery::createCondition($productID);
-        // $config['condition']['Status'] = dbquery::createCondition(self::getProductStatuses(), 'IN');
+        // $config['condition']['Status'] = dbquery::createCondition($this->getProductStatuses(), 'IN');
         $config['additional'] = array();
         return $config;
     }
     private static function dbqCheckProductExistenceByModelAndOrigin ($modelName, $originName) {
         global $app;
-        $config = self::dbqProductByModelAndOrigin($modelName, $originName);
+        $config = $this->dbqProductByModelAndOrigin($modelName, $originName);
         $config['fields'] = array("ID");
         return $config;
     }
     private static function dbqProductShortInfo ($productID) {
         global $app;
-        $config = self::dbqProduct($productID);
+        $config = $this->dbqProduct($productID);
         $config["fields"] = array("Name", "Model");
         $config['additional'] = array(
             "shop_origins" => array(
@@ -1453,7 +1461,7 @@ class data extends BaseData {
     // TODO: optimmize list query
     public function dbqProducts_MatchedIDs (array $options = array()) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['condition'] = array();
         // $config["fields"] = array("ID");
         $config['limit'] = Utils::getIfIssetOrDefault($options, 'limit', 32);
@@ -1686,7 +1694,7 @@ class data extends BaseData {
     // Product category (catalog)
     public function getShopCatalogProductList ($ids) {
         // global $app;
-        // $config = self::dbqProducts_MatchedIDs();
+        // $config = $this->dbqProducts_MatchedIDs();
         // if (is_array($ids)) {
         //     if (count($ids) > 1)
         //         $config['condition']["shop_products.CategoryID"] = dbquery::createCondition($ids, "IN");
@@ -1705,7 +1713,7 @@ class data extends BaseData {
             ->groupBy('ID')
             ->orderingExpr('shop_products.DateUpdated DESC, shop_products.Status') // default sorting
             ->addParams($options);
-        // $config = self::dbqProducts_MatchedIDs();
+        // $config = $this->dbqProducts_MatchedIDs();
         // $config['fields'] = array("ID");
         // $config['limit'] = 0;
         // $config['group'] = null;
@@ -2120,12 +2128,9 @@ class data extends BaseData {
         // ));
     }
     public function fetchCategoryLocation ($id) {
-        $q = dbQuery::shopCatalogLocation()
-            ->setAllFields()
-            ->setCondition('Status', 'ACTIVE');
-        if ($selectedCategoryID !== false) {
-            $q->addCondition('ID', $selectedCategoryID);
-        }
+        global $app;
+        $q = dbQuery::shopCatalogLocation();
+        $q->setDataArgs($id, $app->getSite()->getRuntimeCustomerID());
         $locations = $q->callProcAsArray();
         foreach ($locations as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
@@ -2164,7 +2169,7 @@ class data extends BaseData {
             ->ordering($filterDefault['filter_viewSortBy'])
             ->setCondition($this->source_categories . '.ID', $categoryIDs);
 
-        $q->addCondition()
+        $q->addCondition();
 
         // filter: display intems count
         if (!empty($filterUser['filter_viewItemsOnPage']))
@@ -2174,9 +2179,9 @@ class data extends BaseData {
             $filterUser['limit'] = $q->getLimit();
             // $filterUser['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
 
-        if (!empty($filterUser['filter_viewPageNum']))
+        if (!empty($filterUser['filter_viewPageNum'])) ;
             // $dataConfigProducts['offset'] = ($filterUser['filter_viewPageNum'] - 1) * $dataConfigProducts['limit'];
-        else
+        else ;
             // $filterUser['filter_viewPageNum'] = $filterDefault['filter_viewPageNum'];
 
         // filter: items sorting
@@ -2341,6 +2346,7 @@ class data extends BaseData {
     }
     public function fetchCatalogTreeDict ($selectedCategoryID = false) {
         $q = dbQuery::shopCategories()
+            ->setNoLimit()
             ->setAllFields()
             ->setCondition('Status', 'ACTIVE');
         if ($selectedCategoryID !== false) {
@@ -2443,7 +2449,7 @@ class data extends BaseData {
         }
         return $q->selectAsDataList();
         // global $app;
-        // $config = self::fetchCategoryByID();
+        // $config = $this->fetchCategoryByID();
         // $config['fields'] = array("ID");
         // $config['limit'] = 64;
         // $config['options']['expandSingleRecord'] = false;
@@ -2653,7 +2659,7 @@ class data extends BaseData {
         }
         return $q->selectAsDataList();
         // global $app;
-        // $config = self::fetchOriginByID();
+        // $config = $this->fetchOriginByID();
         // $config['fields'] = array("ID");
         // $config['limit'] = 64;
         // $config['options']['expandSingleRecord'] = false;
@@ -2841,9 +2847,9 @@ class data extends BaseData {
 
     // shop settings >>>>>
     // public function setting
-    public static $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES', 'OPENHOURS', 'INFO'*/);
-    public static $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES'*/);
-    public static $SETTING_TYPE_TO_DBTABLE_MAP = array(
+    var $ALLOW_MULTIPLE_SETTINGS = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES', 'OPENHOURS', 'INFO'*/);
+    var $ALLOW_SETTINGS_TO_DELETE = array('ADDRESS', 'EXCHANAGERATESDISPLAY'/*, 'PHONES'*/);
+    var $SETTING_TYPE_TO_DBTABLE_MAP = array(
         'ADDRESS' => 'shop_settingsAddress',
         'ALERTS' => 'shop_settingsAlerts',
         'EXCHANAGERATES' => '',
@@ -2856,19 +2862,19 @@ class data extends BaseData {
     );
 
     public function isOneForCustomer ($type) {
-        return !in_array($type, self::$ALLOW_MULTIPLE_SETTINGS);
+        return !in_array($type, $this->ALLOW_MULTIPLE_SETTINGS);
     }
     public function settingCanBeRemoved ($type) {
-        return in_array($type, self::$ALLOW_SETTINGS_TO_DELETE);
+        return in_array($type, $this->ALLOW_SETTINGS_TO_DELETE);
     }
 
     public function getVerifiedSettingsType ($type) {
-        return isset(self::$SETTING_TYPE_TO_DBTABLE_MAP[$type]) ? $type : null;
+        return isset($this->SETTING_TYPE_TO_DBTABLE_MAP[$type]) ? $type : null;
     }
 
     public function getSettingsDBTableNameByType ($type) {
-        if (self::getVerifiedSettingsType($type)) {
-            return self::$SETTING_TYPE_TO_DBTABLE_MAP[$type];
+        if ($this->getVerifiedSettingsType($type)) {
+            return $this->SETTING_TYPE_TO_DBTABLE_MAP[$type];
         }
         throw new Exception("Unknown shop settings type", 1);
     }
@@ -2877,7 +2883,7 @@ class data extends BaseData {
         global $app;
         $config = dbquery::createOrGetQuery(array(
             "action" => "select",
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "fields" => array("@COUNT(*) AS ItemsCount"),
             "options" => array(
                 "expandSingleRecord" => true
@@ -2891,7 +2897,7 @@ class data extends BaseData {
         global $app;
         $config = dbquery::createOrGetQuery(array(
             "action" => "select",
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "condition" => array(),
             "fields" => array("*"),
             "options" => array(
@@ -2907,12 +2913,12 @@ class data extends BaseData {
         global $app;
         $config = dbquery::createOrGetQuery(array(
             "action" => "select",
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "fields" => array("*"),
             "limit" => 0,
             "options" => array()
         ));
-        if (self::isOneForCustomer($type)) {
+        if ($this->isOneForCustomer($type)) {
             $config["limit"] = 1;
             $config["options"]["expandSingleRecord"] = true;
         }
@@ -2920,19 +2926,19 @@ class data extends BaseData {
     }
     public function shopGetSettingsAddressActive () {
         global $app;
-        $config = self::shopGetSettingByType('ADDRESS');
+        $config = $this->shopGetSettingByType('ADDRESS');
         $config["condition"]["Status"] =  dbquery::createCondition('ACTIVE');
         return $config;
     }
     public function shopGetSettingsAddressPhones ($addressID) {
         global $app;
-        $config = self::shopGetSettingByType('PHONES');
+        $config = $this->shopGetSettingByType('PHONES');
         $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         return $config;
     }
     public function shopGetSettingsAddressOpenHours ($addressID) {
         global $app;
-        $config = self::shopGetSettingByType('OPENHOURS');
+        $config = $this->shopGetSettingByType('OPENHOURS');
         $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         $config["limit"] = 1;
         $config["options"]["expandSingleRecord"] = true;
@@ -2940,7 +2946,7 @@ class data extends BaseData {
     }
     public function shopGetSettingsAddressInfo ($addressID) {
         global $app;
-        $config = self::shopGetSettingByType('INFO');
+        $config = $this->shopGetSettingByType('INFO');
         $config["condition"]["ShopAddressID"] = dbquery::createCondition($addressID);
         $config["limit"] = 1;
         $config["options"]["expandSingleRecord"] = true;
@@ -2949,7 +2955,7 @@ class data extends BaseData {
     public function shopCreateSetting ($type, $data) {
         global $app;
         return dbquery::createOrGetQuery(array(
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "action" => "insert",
             "data" => $data,
             "options" => null,
@@ -2962,7 +2968,7 @@ class data extends BaseData {
     public function shopUpdateSetting ($type, $id, $data) {
         global $app;
         $config = dbquery::createOrGetQuery(array(
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "action" => "update",
             "condition" => array(
                 "ID" => dbquery::createCondition($id)
@@ -2976,7 +2982,7 @@ class data extends BaseData {
     public function shopRemoveSetting ($type, $id) {
         global $app;
         return dbquery::createOrGetQuery(array(
-            "source" => self::getSettingsDBTableNameByType($type),
+            "source" => $this->getSettingsDBTableNameByType($type),
             "action" => "delete",
             "condition" => array(
                 "ID" => dbquery::createCondition($id)
@@ -3056,7 +3062,7 @@ class data extends BaseData {
 
         return $q->selectAsDataList();
         // global $app;
-        // $config = self::fetchOrderItemByID();
+        // $config = $this->fetchOrderItemByID();
         // $config['fields'] = array("ID");
         // $config['limit'] = 64;
         // $config['options']['expandSingleRecord'] = false;
@@ -3085,7 +3091,7 @@ class data extends BaseData {
         $listParams[dbquery::shopOrders()->genFieldQueryParamStr('Status')] = 'NEW';
         return $this->fetchOrderDataList($options + $listParams);
         // global $app;
-        // $config = self::fetchOrderDataList();
+        // $config = $this->fetchOrderDataList();
         // $config['condition']['Status'] = dbquery::createCondition('NEW');
         // return $config;
     }
@@ -3095,7 +3101,7 @@ class data extends BaseData {
         $listParams[dbquery::shopOrders()->genFieldQueryParamDateCreatedStr()] = dbquery::genValueQueryParamDateNowCondition('>');
         return $this->fetchOrderDataList($options + $listParams);
         // global $app;
-        // $config = self::fetchOrderDataList();
+        // $config = $this->fetchOrderDataList();
         // $config['condition']['DateCreated'] = dbquery::createCondition(date('Y-m-d'), ">");
         // return $config;
     }
@@ -3106,7 +3112,7 @@ class data extends BaseData {
         $listParams[dbquery::shopOrders()->genFieldQueryParamDateCreatedStr()] = dbquery::genValueQueryParamDateCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $this->fetchOrderDataList($options + $listParams);
         // global $app;
-        // $config = self::fetchOrderDataList();
+        // $config = $this->fetchOrderDataList();
         // $config['condition']['Status'] = dbquery::createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
         // $config['condition']['DateCreated'] = dbquery::createCondition(date('Y-m-d', strtotime("-1 week")), "<");
         // return $config;
@@ -3117,7 +3123,7 @@ class data extends BaseData {
         $listParams[dbquery::shopOrders()->genFieldQueryParamStr('UserID')] = $userID;
         return $this->fetchOrderDataList($options + $listParams);
         // global $app;
-        // $config = self::fetchOrderDataList();
+        // $config = $this->fetchOrderDataList();
         // $config['condition']['UserID'] = $userID;
         // return $config;
     }
@@ -3211,7 +3217,7 @@ class data extends BaseData {
             // ->addCondition('Status', 'ACTIVE')
             ->selectSingleItem();
         // global $app;
-        // $config = self::fetchOrderItemByID();
+        // $config = $this->fetchOrderItemByID();
         // $config['condition'] = array(
         //     "Hash" => dbquery::createCondition($orderHash)
         // );
@@ -3331,7 +3337,7 @@ class data extends BaseData {
 
     public function shopStat_ProductsOverview ($filter = null) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -3353,7 +3359,7 @@ class data extends BaseData {
 
     public function shopStat_OrdersOverview () {
         global $app;
-        $config = self::fetchOrderItemByID();
+        $config = $this->fetchOrderItemByID();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -3372,7 +3378,7 @@ class data extends BaseData {
         global $app;
         if (!is_string($comparator))
             $comparator = dbquery::DEFAULT_COMPARATOR;
-        $config = self::fetchOrderItemByID();
+        $config = $this->fetchOrderItemByID();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => dbquery::createCondition($status, $comparator),
@@ -3393,7 +3399,7 @@ class data extends BaseData {
 
     public function shopStat_ProductsIntensityLastMonth ($status) {
         global $app;
-        $config = self::dbqProduct();
+        $config = $this->dbqProduct();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => dbquery::createCondition($status),
@@ -3497,7 +3503,7 @@ class data extends BaseData {
         return $q->selectAsDataList();
 
         // global $app;
-        // $config = self::fetchPromoByID();
+        // $config = $this->fetchPromoByID();
         // $config['fields'] = array("ID");
         // $config['limit'] = 64;
         // $config['options']['expandSingleRecord'] = false;
@@ -3622,7 +3628,7 @@ class data extends BaseData {
             ->setCondition('CurrencyB', $currencyNameTo)
             ->selectSingleItem();
         // global $app;
-        // $config = self::fetchExchangeRateByID();
+        // $config = $this->fetchExchangeRateByID();
         // $config["condition"] = array(
         //     "CurrencyB" => dbquery::createCondition($currencyNameTo)
         // );
@@ -3634,7 +3640,7 @@ class data extends BaseData {
             ->setCondition('CurrencyA', $currencyNameTo)
             ->selectSingleItem();
         // global $app;
-        // $config = self::fetchExchangeRateByID();
+        // $config = $this->fetchExchangeRateByID();
         // $config["condition"] = array(
         //     "CurrencyA" => dbquery::createCondition($currencyNameFrom)
         // );
@@ -3647,7 +3653,7 @@ class data extends BaseData {
             ->setCondition('CurrencyB', $currencyNameTo)
             ->selectSingleItem();
         // global $app;
-        // $config = self::fetchExchangeRateByID();
+        // $config = $this->fetchExchangeRateByID();
         // $config["condition"] = array(
         //     "CurrencyA" => dbquery::createCondition($currencyNameFrom),
         //     "CurrencyB" => dbquery::createCondition($currencyNameTo)
@@ -3663,7 +3669,7 @@ class data extends BaseData {
             ->addParams($options);
         return $q->selectAsDataList();
         // global $app;
-        // $config = self::fetchExchangeRateByID();
+        // $config = $this->fetchExchangeRateByID();
         // $config['fields'] = array("ID");
         // $config['limit'] = 64; // assume that 64 ex.rates nobody will have
         // $config['options']['expandSingleRecord'] = false;
@@ -3681,7 +3687,7 @@ class data extends BaseData {
 
     // public function fetchUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
     //     // global $app;
-    //     // $config = self::fetchExchangeRateByID();
+    //     // $config = $this->fetchExchangeRateByID();
     //     // $config['fields'] = array($fieldToGroupBy);
     //     // $config['limit'] = 0;
     //     // $config['group'] = $fieldToGroupBy;
